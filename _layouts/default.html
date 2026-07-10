@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }} | {{ site.title }}</title>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+</head>
+<body>
+  <nav class="top-nav">
+    <div class="nav-brand">
+      <a href="{{ '/' | relative_url }}">
+        <img src="{{ '/assets/img/logo.svg' | relative_url }}" alt="Hermes Agent" width="32" height="32">
+        <span>راهنمای فارسی Hermes Agent</span>
+      </a>
+    </div>
+    <div class="nav-links">
+      <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank">سایت اصلی</a>
+      <a href="https://github.com/NousResearch/hermes-agent" target="_blank">GitHub</a>
+    </div>
+  </nav>
+  {{ content }}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</body>
+</html>

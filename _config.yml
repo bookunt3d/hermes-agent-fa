@@ -1,0 +1,19 @@
+title: راهنمای فارسی Hermes Agent
+description: ترجمه فارسی داکیومنت رسمی Hermes Agent
+url: ""
+baseurl: ""
+permalink: pretty
+markdown: kramdown
+highlighter: rouge
+exclude:
+  - scraped
+  - scrape.py
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+
+defaults:
+  - scope:
+      path: "docs"
+    values:
+      layout: "docs"
