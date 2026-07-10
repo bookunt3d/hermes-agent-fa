@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Ntfy"
-permalink: /docs/user-guide/messaging_ntfy/
+permalink: /docs/user-guide/messaging/ntfy/
 ---
 
 - 

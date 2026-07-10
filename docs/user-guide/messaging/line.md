@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Line"
-permalink: /docs/user-guide/messaging_line/
+permalink: /docs/user-guide/messaging/line/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Email"
-permalink: /docs/user-guide/messaging_email/
+permalink: /docs/user-guide/messaging/email/
 ---
 
 - 

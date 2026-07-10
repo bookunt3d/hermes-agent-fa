@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Secrets_Onepassword"
-permalink: /docs/user-guide/secrets_onepassword/
+permalink: /docs/user-guide/secrets/onepassword/
 ---
 
 - 

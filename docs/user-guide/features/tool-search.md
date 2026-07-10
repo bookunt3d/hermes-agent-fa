@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Tool Search"
-permalink: /docs/user-guide/features_tool-search/
+permalink: /docs/user-guide/features/tool-search/
 ---
 
 - 

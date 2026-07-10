@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Lsp"
-permalink: /docs/user-guide/features_lsp/
+permalink: /docs/user-guide/features/lsp/
 ---
 
 - 

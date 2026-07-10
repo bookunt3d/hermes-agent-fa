@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Mixture Of Agents"
-permalink: /docs/user-guide/features_mixture-of-agents/
+permalink: /docs/user-guide/features/mixture-of-agents/
 ---
 
 - 

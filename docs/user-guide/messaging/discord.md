@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Discord"
-permalink: /docs/user-guide/messaging_discord/
+permalink: /docs/user-guide/messaging/discord/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Acp"
-permalink: /docs/user-guide/features_acp/
+permalink: /docs/user-guide/features/acp/
 ---
 
 - 

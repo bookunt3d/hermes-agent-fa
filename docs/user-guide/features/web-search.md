@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Web Search"
-permalink: /docs/user-guide/features_web-search/
+permalink: /docs/user-guide/features/web-search/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Skins"
-permalink: /docs/user-guide/features_skins/
+permalink: /docs/user-guide/features/skins/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Api Server"
-permalink: /docs/user-guide/features_api-server/
+permalink: /docs/user-guide/features/api-server/
 ---
 
 - 

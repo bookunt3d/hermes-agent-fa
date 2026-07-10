@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Irc"
-permalink: /docs/user-guide/messaging_irc/
+permalink: /docs/user-guide/messaging/irc/
 ---
 
 - 

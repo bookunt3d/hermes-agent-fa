@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Photon"
-permalink: /docs/user-guide/messaging_photon/
+permalink: /docs/user-guide/messaging/photon/
 ---
 
 - 

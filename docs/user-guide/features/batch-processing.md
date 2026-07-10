@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Batch Processing"
-permalink: /docs/user-guide/features_batch-processing/
+permalink: /docs/user-guide/features/batch-processing/
 ---
 
 - 

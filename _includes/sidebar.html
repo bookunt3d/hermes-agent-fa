@@ -1,6 +1,6 @@
-<aside class="sidebar">
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">شروع سریع</span>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-section" data-section="getting-started">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">شروع سریع ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/getting-started/quickstart/' | relative_url }}">راهنمای شروع سریع</a></li>
       <li><a href="{{ '/docs/getting-started/installation/' | relative_url }}">نصب</a></li>
@@ -12,8 +12,8 @@
     </ul>
   </div>
 
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">استفاده از Hermes</span>
+  <div class="sidebar-section" data-section="user-guide">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">استفاده از Hermes ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/user-guide/cli/' | relative_url }}">رابط خط فرمان (CLI)</a></li>
       <li><a href="{{ '/docs/user-guide/tui/' | relative_url }}">رابط متنی (TUI)</a></li>
@@ -34,8 +34,8 @@
     </ul>
   </div>
 
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">امکانات</span>
+  <div class="sidebar-section" data-section="features">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">امکانات ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/user-guide/features/overview/' | relative_url }}">نمای کلی</a></li>
       <li><a href="{{ '/docs/user-guide/features/context-files/' | relative_url }}">فایل‌های زمینه</a></li>
@@ -85,8 +85,8 @@
     </ul>
   </div>
 
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">پلتفرم‌های پیام‌رسان</span>
+  <div class="sidebar-section" data-section="messaging">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">پلتفرم‌های پیام‌رسان ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/user-guide/messaging/' | relative_url }}">نمای کلی</a></li>
       <li><a href="{{ '/docs/user-guide/messaging/telegram/' | relative_url }}">تلگرام</a></li>
@@ -121,16 +121,16 @@
     </ul>
   </div>
 
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">یکپارچه‌سازی‌ها</span>
+  <div class="sidebar-section" data-section="integrations">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">یکپارچه‌سازی‌ها ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/integrations/nous-portal/' | relative_url }}">Nous Portal</a></li>
       <li><a href="{{ '/docs/integrations/providers/' | relative_url }}">ارائه‌دهندگان</a></li>
     </ul>
   </div>
 
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">راهنماها</span>
+  <div class="sidebar-section" data-section="guides">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">راهنماها ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/guides/tips/' | relative_url }}">نکات و ترفندها</a></li>
       <li><a href="{{ '/docs/guides/use-mcp-with-hermes/' | relative_url }}">استفاده از MCP</a></li>
@@ -165,8 +165,8 @@
     </ul>
   </div>
 
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">راهنمای توسعه‌دهنده</span>
+  <div class="sidebar-section" data-section="developer-guide">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">توسعه ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/developer-guide/architecture/' | relative_url }}">معماری</a></li>
       <li><a href="{{ '/docs/developer-guide/contributing/' | relative_url }}">مشارکت در توسعه</a></li>
@@ -200,8 +200,8 @@
     </ul>
   </div>
 
-  <div class="sidebar-section">
-    <span class="sidebar-section-title">مرجع</span>
+  <div class="sidebar-section" data-section="reference">
+    <span class="sidebar-section-title" onclick="toggleSection(this)">مرجع ▾</span>
     <ul class="sidebar-links">
       <li><a href="{{ '/docs/reference/cli-commands/' | relative_url }}">دستورات CLI</a></li>
       <li><a href="{{ '/docs/reference/slash-commands/' | relative_url }}">دستورات اسلش</a></li>
@@ -218,3 +218,30 @@
     </ul>
   </div>
 </aside>
+
+<script>
+// Toggle sidebar sections
+function toggleSection(titleEl) {
+  const section = titleEl.parentElement;
+  section.classList.toggle('collapsed');
+}
+
+// Auto-expand current page's section
+(function() {
+  const path = window.location.pathname;
+  const sections = document.querySelectorAll('.sidebar-section');
+  sections.forEach(s => {
+    const links = s.querySelectorAll('a');
+    let found = false;
+    links.forEach(a => {
+      if (path === a.getAttribute('href') || path === a.getAttribute('href') + 'index.html') {
+        found = true;
+        a.classList.add('active');
+      }
+    });
+    if (!found) {
+      s.classList.add('collapsed');
+    }
+  });
+})();
+</script>

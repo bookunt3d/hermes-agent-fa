@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Context References"
-permalink: /docs/user-guide/features_context-references/
+permalink: /docs/user-guide/features/context-references/
 ---
 
 - 

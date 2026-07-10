@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Google"
-permalink: /docs/user-guide/messaging_google/
+permalink: /docs/user-guide/messaging/google/
 ---
 
 # 404

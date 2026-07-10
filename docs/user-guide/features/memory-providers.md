@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Memory Providers"
-permalink: /docs/user-guide/features_memory-providers/
+permalink: /docs/user-guide/features/memory-providers/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Extending The Dashboard"
-permalink: /docs/user-guide/features_extending-the-dashboard/
+permalink: /docs/user-guide/features/extending-the-dashboard/
 ---
 
 - 

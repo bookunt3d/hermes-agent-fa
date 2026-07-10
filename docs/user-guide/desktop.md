@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "اپلیکیشن دسکتاپ"
-permalink: /user-guide/desktop/
+permalink: /docs/user-guide/desktop/
 ---
 
 - 

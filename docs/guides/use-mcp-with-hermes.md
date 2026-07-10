@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "استفاده از MCP"
-permalink: /guides/use-mcp-with-hermes/
+permalink: /docs/guides/use-mcp-with-hermes/
 ---
 
 - 

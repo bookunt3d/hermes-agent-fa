@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Wecom"
-permalink: /docs/user-guide/messaging_wecom/
+permalink: /docs/user-guide/messaging/wecom/
 ---
 
 - 

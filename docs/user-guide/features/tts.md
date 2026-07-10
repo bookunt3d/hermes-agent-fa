@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Tts"
-permalink: /docs/user-guide/features_tts/
+permalink: /docs/user-guide/features/tts/
 ---
 
 - 

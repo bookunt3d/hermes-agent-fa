@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Raft"
-permalink: /docs/user-guide/messaging_raft/
+permalink: /docs/user-guide/messaging/raft/
 ---
 
 # Raft Setup

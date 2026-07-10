@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "سؤالات متداول"
-permalink: /reference/faq/
+permalink: /docs/reference/faq/
 ---
 
 - 

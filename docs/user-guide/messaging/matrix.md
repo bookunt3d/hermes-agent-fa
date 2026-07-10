@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Matrix"
-permalink: /docs/user-guide/messaging_matrix/
+permalink: /docs/user-guide/messaging/matrix/
 ---
 
 - 

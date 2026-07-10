@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "گیت‌وی‌های چند پروفایلی"
-permalink: /user-guide/multi-profile-gateways/
+permalink: /docs/user-guide/multi-profile-gateways/
 ---
 
 - 

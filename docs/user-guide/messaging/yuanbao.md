@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Yuanbao"
-permalink: /docs/user-guide/messaging_yuanbao/
+permalink: /docs/user-guide/messaging/yuanbao/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Slack"
-permalink: /docs/user-guide/messaging_slack/
+permalink: /docs/user-guide/messaging/slack/
 ---
 
 - 

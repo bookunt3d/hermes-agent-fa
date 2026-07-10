@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Feishu"
-permalink: /docs/user-guide/messaging_feishu/
+permalink: /docs/user-guide/messaging/feishu/
 ---
 
 - 

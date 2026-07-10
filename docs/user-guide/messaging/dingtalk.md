@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Dingtalk"
-permalink: /docs/user-guide/messaging_dingtalk/
+permalink: /docs/user-guide/messaging/dingtalk/
 ---
 
 - 

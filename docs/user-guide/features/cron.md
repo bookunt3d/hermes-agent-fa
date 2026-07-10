@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Cron"
-permalink: /docs/user-guide/features_cron/
+permalink: /docs/user-guide/features/cron/
 ---
 
 - 

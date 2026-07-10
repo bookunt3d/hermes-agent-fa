@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Homeassistant"
-permalink: /docs/user-guide/messaging_homeassistant/
+permalink: /docs/user-guide/messaging/homeassistant/
 ---
 
 - 

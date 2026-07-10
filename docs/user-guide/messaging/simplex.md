@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Simplex"
-permalink: /docs/user-guide/messaging_simplex/
+permalink: /docs/user-guide/messaging/simplex/
 ---
 
 - 

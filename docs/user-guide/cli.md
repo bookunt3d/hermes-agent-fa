@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "رابط خط فرمان (CLI)"
-permalink: /user-guide/cli/
+permalink: /docs/user-guide/cli/
 ---
 
 - 

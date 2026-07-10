@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Tool Gateway"
-permalink: /docs/user-guide/features_tool-gateway/
+permalink: /docs/user-guide/features/tool-gateway/
 ---
 
 - 

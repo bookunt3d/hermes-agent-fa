@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Sms"
-permalink: /docs/user-guide/messaging_sms/
+permalink: /docs/user-guide/messaging/sms/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Provider Routing"
-permalink: /docs/user-guide/features_provider-routing/
+permalink: /docs/user-guide/features/provider-routing/
 ---
 
 - 

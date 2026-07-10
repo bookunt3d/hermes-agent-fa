@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "دستورات CLI"
-permalink: /reference/cli-commands/
+permalink: /docs/reference/cli-commands/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Qqbot"
-permalink: /docs/user-guide/messaging_qqbot/
+permalink: /docs/user-guide/messaging/qqbot/
 ---
 
 - 

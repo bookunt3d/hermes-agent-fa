@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Weixin"
-permalink: /docs/user-guide/messaging_weixin/
+permalink: /docs/user-guide/messaging/weixin/
 ---
 
 - 

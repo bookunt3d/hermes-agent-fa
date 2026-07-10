@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Pets"
-permalink: /docs/user-guide/features_pets/
+permalink: /docs/user-guide/features/pets/
 ---
 
 - 

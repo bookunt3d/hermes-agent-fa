@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Secrets_Bitwarden"
-permalink: /docs/user-guide/secrets_bitwarden/
+permalink: /docs/user-guide/secrets/bitwarden/
 ---
 
 - 

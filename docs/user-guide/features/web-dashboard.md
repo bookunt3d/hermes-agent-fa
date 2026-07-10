@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Web Dashboard"
-permalink: /docs/user-guide/features_web-dashboard/
+permalink: /docs/user-guide/features/web-dashboard/
 ---
 
 - 

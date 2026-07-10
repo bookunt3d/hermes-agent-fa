@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Vision"
-permalink: /docs/user-guide/features_vision/
+permalink: /docs/user-guide/features/vision/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Deliverable Mode"
-permalink: /docs/user-guide/features_deliverable-mode/
+permalink: /docs/user-guide/features/deliverable-mode/
 ---
 
 - 

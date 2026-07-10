@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Docker"
-permalink: /user-guide/docker/
+permalink: /docs/user-guide/docker/
 ---
 
 - 

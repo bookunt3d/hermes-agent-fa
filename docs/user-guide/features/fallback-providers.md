@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Fallback Providers"
-permalink: /docs/user-guide/features_fallback-providers/
+permalink: /docs/user-guide/features/fallback-providers/
 ---
 
 - 

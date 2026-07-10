@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Plugins"
-permalink: /docs/user-guide/features_plugins/
+permalink: /docs/user-guide/features/plugins/
 ---
 
 - 

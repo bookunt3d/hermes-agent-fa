@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Spotify"
-permalink: /docs/user-guide/features_spotify/
+permalink: /docs/user-guide/features/spotify/
 ---
 
 - 

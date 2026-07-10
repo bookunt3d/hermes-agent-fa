@@ -182,7 +182,13 @@ body {
   color: var(--text-muted);
   font-size: 10.5px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: color 0.2s;
 }
+.sidebar-section-title:hover { color: var(--accent-2); }
+.sidebar-section.collapsed .sidebar-links { display: none; }
+.sidebar-section.collapsed .sidebar-section-title::after { content: ''; }
+.sidebar-links a.active { color: var(--accent-2); border-right-color: var(--accent-1); background: rgba(108,92,231,0.08); font-weight: 500; }
 .sidebar-links { list-style: none; padding: 0; }
 .sidebar-links a {
   display: block;

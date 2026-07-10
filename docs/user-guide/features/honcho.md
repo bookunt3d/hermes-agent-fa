@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Honcho"
-permalink: /docs/user-guide/features_honcho/
+permalink: /docs/user-guide/features/honcho/
 ---
 
 - 

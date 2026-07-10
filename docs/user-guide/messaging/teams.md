@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Teams"
-permalink: /docs/user-guide/messaging_teams/
+permalink: /docs/user-guide/messaging/teams/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "حالت صوتی"
-permalink: /user-guide/features/voice-mode/
+permalink: /docs/user-guide/features/voice-mode/
 ---
 
 - 

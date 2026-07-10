@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Credential Pools"
-permalink: /docs/user-guide/features_credential-pools/
+permalink: /docs/user-guide/features/credential-pools/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "ویندوز (بومی)"
-permalink: /user-guide/windows-native/
+permalink: /docs/user-guide/windows-native/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Open Webui"
-permalink: /docs/user-guide/messaging_open-webui/
+permalink: /docs/user-guide/messaging/open-webui/
 ---
 
 - 

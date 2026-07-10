@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Telegram"
-permalink: /docs/user-guide/messaging_telegram/
+permalink: /docs/user-guide/messaging/telegram/
 ---
 
 - 

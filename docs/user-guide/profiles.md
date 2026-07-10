@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "پروفایل‌ها"
-permalink: /user-guide/profiles/
+permalink: /docs/user-guide/profiles/
 ---
 
 - 

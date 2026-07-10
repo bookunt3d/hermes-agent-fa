@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "رابط متنی (TUI)"
-permalink: /user-guide/tui/
+permalink: /docs/user-guide/tui/
 ---
 
 - 

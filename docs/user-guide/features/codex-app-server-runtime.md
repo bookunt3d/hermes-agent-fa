@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Codex App Server Runtime"
-permalink: /docs/user-guide/features_codex-app-server-runtime/
+permalink: /docs/user-guide/features/codex-app-server-runtime/
 ---
 
 - 

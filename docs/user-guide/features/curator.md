@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Curator"
-permalink: /docs/user-guide/features_curator/
+permalink: /docs/user-guide/features/curator/
 ---
 
 - 

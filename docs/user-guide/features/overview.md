@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Overview"
-permalink: /docs/user-guide/features_overview/
+permalink: /docs/user-guide/features/overview/
 ---
 
 - 

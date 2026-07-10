@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Image Generation"
-permalink: /docs/user-guide/features_image-generation/
+permalink: /docs/user-guide/features/image-generation/
 ---
 
 - 

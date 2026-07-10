@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Browser"
-permalink: /docs/user-guide/features_browser/
+permalink: /docs/user-guide/features/browser/
 ---
 
 - 

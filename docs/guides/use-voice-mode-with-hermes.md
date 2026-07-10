@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "استفاده از حالت صوتی"
-permalink: /guides/use-voice-mode-with-hermes/
+permalink: /docs/guides/use-voice-mode-with-hermes/
 ---
 
 - 

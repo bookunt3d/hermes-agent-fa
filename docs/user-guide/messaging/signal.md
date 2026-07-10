@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Signal"
-permalink: /docs/user-guide/messaging_signal/
+permalink: /docs/user-guide/messaging/signal/
 ---
 
 - 

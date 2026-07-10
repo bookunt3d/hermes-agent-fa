@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Wecom Callback"
-permalink: /docs/user-guide/messaging_wecom-callback/
+permalink: /docs/user-guide/messaging/wecom-callback/
 ---
 
 - 

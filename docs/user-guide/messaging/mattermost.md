@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Mattermost"
-permalink: /docs/user-guide/messaging_mattermost/
+permalink: /docs/user-guide/messaging/mattermost/
 ---
 
 - 

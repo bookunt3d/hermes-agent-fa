@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Kanban Worker Lanes"
-permalink: /docs/user-guide/features_kanban-worker-lanes/
+permalink: /docs/user-guide/features/kanban-worker-lanes/
 ---
 
 - 

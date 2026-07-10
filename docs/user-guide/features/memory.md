@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "حافظه"
-permalink: /user-guide/features/memory/
+permalink: /docs/user-guide/features/memory/
 ---
 
 - 

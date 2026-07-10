@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Msgraph Webhook"
-permalink: /docs/user-guide/messaging_msgraph-webhook/
+permalink: /docs/user-guide/messaging/msgraph-webhook/
 ---
 
 - 

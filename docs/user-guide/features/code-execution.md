@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Code Execution"
-permalink: /docs/user-guide/features_code-execution/
+permalink: /docs/user-guide/features/code-execution/
 ---
 
 - 

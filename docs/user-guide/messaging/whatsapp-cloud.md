@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Whatsapp Cloud"
-permalink: /docs/user-guide/messaging_whatsapp-cloud/
+permalink: /docs/user-guide/messaging/whatsapp-cloud/
 ---
 
 - 

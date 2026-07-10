@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_X Search"
-permalink: /docs/user-guide/features_x-search/
+permalink: /docs/user-guide/features/x-search/
 ---
 
 - 

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Kanban"
-permalink: /docs/user-guide/features_kanban/
+permalink: /docs/user-guide/features/kanban/
 ---
 
 - 

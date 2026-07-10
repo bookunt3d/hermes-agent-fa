@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Computer Use"
-permalink: /docs/user-guide/features_computer-use/
+permalink: /docs/user-guide/features/computer-use/
 ---
 
 - 

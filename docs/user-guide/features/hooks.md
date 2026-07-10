@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Hooks"
-permalink: /docs/user-guide/features_hooks/
+permalink: /docs/user-guide/features/hooks/
 ---
 
 - 

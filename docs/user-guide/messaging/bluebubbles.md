@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Bluebubbles"
-permalink: /docs/user-guide/messaging_bluebubbles/
+permalink: /docs/user-guide/messaging/bluebubbles/
 ---
 
 - 

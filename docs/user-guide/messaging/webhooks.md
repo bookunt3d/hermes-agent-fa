@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Webhooks"
-permalink: /docs/user-guide/messaging_webhooks/
+permalink: /docs/user-guide/messaging/webhooks/
 ---
 
 - 

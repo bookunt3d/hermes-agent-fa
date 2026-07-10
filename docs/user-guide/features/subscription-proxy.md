@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Subscription Proxy"
-permalink: /docs/user-guide/features_subscription-proxy/
+permalink: /docs/user-guide/features/subscription-proxy/
 ---
 
 - 

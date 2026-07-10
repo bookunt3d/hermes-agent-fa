@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "پیکربندی"
-permalink: /user-guide/configuration/
+permalink: /docs/user-guide/configuration/
 ---
 
 - 

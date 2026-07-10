@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Messaging_Whatsapp"
-permalink: /docs/user-guide/messaging_whatsapp/
+permalink: /docs/user-guide/messaging/whatsapp/
 ---
 
 - 

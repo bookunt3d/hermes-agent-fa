@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Built In Plugins"
-permalink: /docs/user-guide/features_built-in-plugins/
+permalink: /docs/user-guide/features/built-in-plugins/
 ---
 
 - 

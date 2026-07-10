@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "Features_Goals"
-permalink: /docs/user-guide/features_goals/
+permalink: /docs/user-guide/features/goals/
 ---
 
 - 
