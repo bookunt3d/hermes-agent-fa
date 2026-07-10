@@ -1,0 +1,465 @@
+- 
+- Messaging Platforms
+- Chinese platforms
+- Weixin (WeChat)
+
+# Weixin (WeChat)
+
+Connect Hermes toWeChat(微信), Tencent's personal messaging platform. The adapter uses Tencent'siLink Bot APIfor personal WeChat accounts — this is distinct from WeCom (Enterprise WeChat). Messages are delivered via long-polling, so no public endpoint or webhook is required.
+
+This adapter is forpersonal WeChat accounts(微信). If you need enterprise/corporate WeChat, see theWeCom adapterinstead.
+
+QR login connects Hermes to aniLink bot identity(e.g.a5ace6fd482e@im.bot),nota fully scriptable ordinary personal WeChat account. Consequences:
+
+`a5ace6fd482e@im.bot`
+- The iLink bot identity generallycannot be invited into ordinary WeChat groupsthe way a normal contact can.
+- iLink typicallydoes not deliver ordinary WeChat group events(including@-mentions of the personal account used for QR login) to the gateway for most bot-type accounts.
+- @-mentioning the personal WeChat account used to scan the QR code isnotthe same as@-mentioning the iLink bot — the bot is a separate identity.
+- TheWEIXIN_GROUP_POLICY/WEIXIN_GROUP_ALLOWED_USERSsettings below only take effect when iLink actually returns group events for your account type. If it doesn't, group messages will never reach Hermes regardless of policy.
+
+`@`
+`@`
+`@`
+`WEIXIN_GROUP_POLICY`
+`WEIXIN_GROUP_ALLOWED_USERS`
+
+In practice, most deployments only get DMs to the iLink bot working reliably. If group delivery doesn't work after configuration, the limitation is on the iLink side, not in Hermes. The gateway logs aWARNINGat startup wheneverWEIXIN_GROUP_POLICYis set to anything other thandisabled.
+
+`WARNING`
+`WEIXIN_GROUP_POLICY`
+`disabled`
+
+## Prerequisites​
+
+- A personal WeChat account
+- Python packages:aiohttpandcryptography
+- Terminal QR rendering is included when Hermes is installed with themessagingextra
+
+`aiohttp`
+`cryptography`
+`messaging`
+
+Install the required dependencies:
+
+```
+pip install aiohttp cryptography# Optional: for terminal QR code displaycd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"
+```
+
+## Setup​
+
+### 1. Run the Setup Wizard​
+
+The easiest way to connect your WeChat account is through the interactive setup:
+
+```
+hermes gateway setup
+```
+
+SelectWeixinwhen prompted. The wizard will:
+
+1. Request a QR code from the iLink Bot API
+2. Display the QR code in your terminal (or provide a URL)
+3. Wait for you to scan the QR code with the WeChat mobile app
+4. Prompt you to confirm the login on your phone
+5. Save the account credentials automatically to~/.hermes/weixin/accounts/
+
+`~/.hermes/weixin/accounts/`
+
+Once confirmed, you'll see a message like:
+
+```
+微信连接成功，account_id=your-account-id
+```
+
+The wizard stores theaccount_id,token, andbase_urlso you don't need to configure them manually.
+
+`account_id`
+`token`
+`base_url`
+
+### 2. Configure Environment Variables​
+
+After initial QR login, set at minimum the account ID in~/.hermes/.env:
+
+`~/.hermes/.env`
+
+```
+WEIXIN_ACCOUNT_ID=your-account-id# Optional: override the token (normally auto-saved from QR login)# WEIXIN_TOKEN=your-bot-token# Optional: restrict accessWEIXIN_DM_POLICY=openWEIXIN_ALLOWED_USERS=user_id_1,user_id_2# Optional: restore legacy multiline splitting behavior# WEIXIN_SPLIT_MULTILINE_MESSAGES=true# Optional: home channel for cron/notificationsWEIXIN_HOME_CHANNEL=chat_idWEIXIN_HOME_CHANNEL_NAME=Home
+```
+
+### 3. Start the Gateway​
+
+```
+hermes gateway
+```
+
+The adapter will restore saved credentials, connect to the iLink API, and begin long-polling for messages.
+
+## Features​
+
+- Long-poll transport— no public endpoint, webhook, or WebSocket needed
+- QR code login— scan-to-connect setup viahermes gateway setup
+- DM messaging— configurable access policies; group messaging depends on iLink actually delivering group events for the connected identity (often not the case for iLink bot accounts — see the warning above)
+- Media support— images, video, files, and voice messages
+- AES-128-ECB encrypted CDN— automatic encryption/decryption for all media transfers
+- Context token persistence— disk-backed reply continuity across restarts
+- Markdown formatting— preserves Markdown, including headers, tables, and code blocks, so WeChat clients that support Markdown can render it natively
+- Smart message chunking— messages stay as a single bubble when under the limit; only oversized payloads split at logical boundaries
+- Typing indicators— shows "typing…" status in the WeChat client while the agent processes
+- SSRF protection— outbound media URLs are validated before download
+- Message deduplication— 5-minute sliding window prevents double-processing
+- Automatic retry with backoff— recovers from transient API errors
+
+`hermes gateway setup`
+
+## Configuration Options​
+
+Set these inconfig.yamlunderplatforms.weixin.extra:
+
+`config.yaml`
+`platforms.weixin.extra`
+| Key | Default | Description |
+| --- | --- | --- |
+| account_id | — | iLink Bot account ID (required) |
+| token | — | iLink Bot token (required, auto-saved from QR login) |
+| base_url | https://ilinkai.weixin.qq.com | iLink API base URL |
+| cdn_base_url | https://novac2c.cdn.weixin.qq.com/c2c | CDN base URL for media transfer |
+| dm_policy | open | DM access:open,allowlist,disabled,pairing |
+| group_policy | disabled | Group access:open,allowlist,disabled |
+| allow_from | [] | User IDs allowed for DMs (when dm_policy=allowlist) |
+| group_allow_from | [] | Group IDs allowed (when group_policy=allowlist) |
+| split_multiline_messages | false | Whentrue, split multi-line replies into multiple chat messages (legacy behavior). Whenfalse, keep multi-line replies as one message unless they exceed the length limit. |
+| text_batch_delay_seconds | 3.0 | Quiet period (seconds) before a buffered burst of rapid text messages is flushed as one combined request. iLink delivers messages individually, so this debounce avoids one agent invocation per fragment. Set0to dispatch each message immediately. |
+| text_batch_split_delay_seconds | 5.0 | Extended flush delay used when the latest fragment is near the split threshold (long messages iLink may have chunked). |
+
+`account_id`
+`token`
+`base_url`
+`https://ilinkai.weixin.qq.com`
+`cdn_base_url`
+`https://novac2c.cdn.weixin.qq.com/c2c`
+`dm_policy`
+`open`
+`open`
+`allowlist`
+`disabled`
+`pairing`
+`group_policy`
+`disabled`
+`open`
+`allowlist`
+`disabled`
+`allow_from`
+`[]`
+`group_allow_from`
+`[]`
+`split_multiline_messages`
+`false`
+`true`
+`false`
+`text_batch_delay_seconds`
+`3.0`
+`0`
+`text_batch_split_delay_seconds`
+`5.0`
+
+## Access Policies​
+
+### DM Policy​
+
+Controls who can send direct messages to the bot:
+
+| Value | Behavior |
+| --- | --- |
+| open | Anyone can DM the bot (default) |
+| allowlist | Only user IDs inallow_fromcan DM |
+| disabled | All DMs are ignored |
+| pairing | Pairing mode (for initial setup) |
+
+`open`
+`allowlist`
+`allow_from`
+`disabled`
+`pairing`
+
+```
+WEIXIN_DM_POLICY=allowlistWEIXIN_ALLOWED_USERS=user_id_1,user_id_2
+```
+
+WEIXIN_ALLOWED_USERSis aninbound filter, not an invitation system. QR
+login connects one iLink bot identity to Hermes. Other people do not scan the
+Hermes QR code with their own accounts; they must message the connected iLink
+bot/contact through WeChat, and Hermes will process the DM only if the sender's
+Weixin user ID is present inWEIXIN_ALLOWED_USERS.
+
+`WEIXIN_ALLOWED_USERS`
+`WEIXIN_ALLOWED_USERS`
+
+A practical setup flow is:
+
+1. Pair Hermes once withhermes gateway setupand note the connected iLink bot
+account.
+2. Have each allowed user send a direct message to that bot/contact.
+3. Read the sender/user ID from the gateway logs or the inbound event payload.
+4. Add those IDs toWEIXIN_ALLOWED_USERS, then restart the gateway.
+
+`hermes gateway setup`
+`WEIXIN_ALLOWED_USERS`
+
+If only the account that scanned the QR code can talk to Hermes, verify that the
+other users are messaging the iLink bot identity itself, not the personal WeChat
+account that performed the QR login. The iLink bot is a separate identity, and
+ordinary WeChat contact/group routing can be limited by Tencent's iLink behavior.
+
+### Group Policy​
+
+Controls which groups the bot responds inwhen iLink delivers group events for the connected identity. For QR-login iLink bot identities (e.g....@im.bot), group events are typically not delivered at all, so this policy may have no effect — see the iLink bot limitation warning at the top of the page.
+
+`...@im.bot`
+| Value | Behavior |
+| --- | --- |
+| open | Bot responds in all groups (if events are delivered) |
+| allowlist | Bot only responds in group IDs listed ingroup_allow_from(if events are delivered) |
+| disabled | All group messages are ignored (default) |
+
+`open`
+`allowlist`
+`group_allow_from`
+`disabled`
+
+```
+WEIXIN_GROUP_POLICY=allowlist# NOTE: this is a comma-separated list of group chat IDs, NOT member user IDs,# despite the variable name containing "USERS". Keep this in mind when configuring.WEIXIN_GROUP_ALLOWED_USERS=group_id_1,group_id_2
+```
+
+The default group policy isdisabledfor Weixin (unlike WeCom where it defaults toopen). This is intentional — personal WeChat accounts may be in many groups, and iLink bot identities typically can't receive ordinary WeChat group messages at all. The gateway logs aWARNINGat startup if you setWEIXIN_GROUP_POLICYto anything other thandisabled.
+
+`disabled`
+`open`
+`WARNING`
+`WEIXIN_GROUP_POLICY`
+`disabled`
+
+## Media Support​
+
+### Inbound (receiving)​
+
+The adapter receives media attachments from users, downloads them from the WeChat CDN, decrypts them, and caches them locally for agent processing:
+
+| Type | How it's handled |
+| --- | --- |
+| Images | Downloaded, AES-decrypted, and cached as JPEG. |
+| Video | Downloaded, AES-decrypted, and cached as MP4. |
+| Files | Downloaded, AES-decrypted, and cached. Original filename is preserved. |
+| Voice | If a text transcription is available, it's extracted as text. Otherwise the audio (SILK format) is downloaded and cached. |
+
+Quoted messages:Media from quoted (replied-to) messages is also extracted, so the agent has context about what the user is replying to.
+
+### AES-128-ECB Encrypted CDN​
+
+WeChat media files are transferred through an encrypted CDN. The adapter handles this transparently:
+
+- Inbound:Encrypted media is downloaded from the CDN usingencrypted_query_paramURLs, then decrypted with AES-128-ECB using the per-file key provided in the message payload.
+- Outbound:Files are encrypted locally with a random AES-128-ECB key, uploaded to the CDN, and the encrypted reference is included in the outbound message.
+- The AES key is 16 bytes (128-bit). Keys may arrive as raw base64 or hex-encoded — the adapter handles both formats.
+- This requires thecryptographyPython package.
+
+`encrypted_query_param`
+`cryptography`
+
+No configuration is needed — encryption and decryption happen automatically.
+
+### Outbound (sending)​
+
+| Method | What it sends |
+| --- | --- |
+| send | Text messages with Markdown formatting |
+| send_image/send_image_file | Native image messages (via CDN upload) |
+| send_document | File attachments (via CDN upload) |
+| send_video | Video messages (via CDN upload) |
+
+`send`
+`send_image`
+`send_image_file`
+`send_document`
+`send_video`
+
+All outbound media goes through the encrypted CDN upload flow:
+
+1. Generate a random AES-128 key
+2. Encrypt the file with AES-128-ECB + PKCS#7 padding
+3. Request an upload URL from the iLink API (getuploadurl)
+4. Upload the ciphertext to the CDN
+5. Send the message with the encrypted media reference
+
+`getuploadurl`
+
+## Context Token Persistence​
+
+The iLink Bot API requires acontext_tokento be echoed back with each outbound message for a given peer. The adapter maintains a disk-backed context token store:
+
+`context_token`
+- Tokens are saved per account+peer to~/.hermes/weixin/accounts/<account_id>.context-tokens.json
+- On startup, previously saved tokens are restored
+- Every inbound message updates the stored token for that sender
+- Outbound messages automatically include the latest context token
+
+`~/.hermes/weixin/accounts/<account_id>.context-tokens.json`
+
+This ensures reply continuity even after gateway restarts.
+
+## Markdown Formatting​
+
+WeChat clients connected through the iLink Bot API can render Markdown directly, so the adapter preserves Markdown instead of rewriting it:
+
+- Headersstay as Markdown headings (#,##, ...)
+- Tablesstay as Markdown tables
+- Code fencesstay as fenced code blocks
+- Excessive blank linesare collapsed to double newlines outside fenced code blocks
+
+`#`
+`##`
+
+## Message Chunking​
+
+Messages are delivered as a single chat message whenever they fit within the platform limit. Only oversized payloads are split for delivery:
+
+- Maximum message length:4000 characters
+- Messages under the limit stay intact even when they contain multiple paragraphs or line breaks
+- Oversized messages split at logical boundaries (paragraphs, blank lines, code fences)
+- Code fences are kept intact whenever possible (never split mid-block unless the fence itself exceeds the limit)
+- Oversized individual blocks fall back to the base adapter's truncation logic
+- A 0.3 s inter-chunk delay prevents WeChat rate-limit drops when multiple chunks are sent
+
+## Typing Indicators​
+
+The adapter shows typing status in the WeChat client:
+
+1. When a message arrives, the adapter fetches atyping_ticketvia thegetconfigAPI
+2. Typing tickets are cached for 10 minutes per user
+3. send_typingsends a typing-start signal;stop_typingsends a typing-stop signal
+4. The gateway automatically triggers typing indicators while the agent processes a message
+
+`typing_ticket`
+`getconfig`
+`send_typing`
+`stop_typing`
+
+## Long-Poll Connection​
+
+The adapter uses HTTP long-polling (not WebSocket) to receive messages:
+
+### How It Works​
+
+1. Connect:Validates credentials and starts the poll loop
+2. Poll:Callsgetupdateswith a 35-second timeout; the server holds the request until messages arrive or the timeout expires
+3. Dispatch:Inbound messages are dispatched concurrently viaasyncio.create_task
+4. Sync buffer:A persistent sync cursor (get_updates_buf) is saved to disk so the adapter resumes from the correct position after restarts
+
+`getupdates`
+`asyncio.create_task`
+`get_updates_buf`
+
+### Retry Behavior​
+
+On API errors, the adapter uses a simple retry strategy:
+
+| Condition | Behavior |
+| --- | --- |
+| Transient error (1st–2nd) | Retry after 2 seconds |
+| Repeated errors (3+) | Back off for 30 seconds, then reset counter |
+| Session expired (errcode=-14) | Pause for 10 minutes (re-login may be needed) |
+| Timeout | Immediately re-poll (normal long-poll behavior) |
+
+`errcode=-14`
+
+### Deduplication​
+
+Inbound messages are deduplicated using message IDs with a 5-minute window. This prevents double-processing during network hiccups or overlapping poll responses.
+
+### Token Lock​
+
+Only one Weixin gateway instance can use a given token at a time. The adapter acquires a scoped lock on startup and releases it on shutdown. If another gateway is already using the same token, startup fails with an informative error message.
+
+## All Environment Variables​
+
+| Variable | Required | Default | Description |
+| --- | --- | --- | --- |
+| WEIXIN_ACCOUNT_ID | ✅ | — | iLink Bot account ID (from QR login) |
+| WEIXIN_TOKEN | ✅ | — | iLink Bot token (auto-saved from QR login) |
+| WEIXIN_BASE_URL | — | https://ilinkai.weixin.qq.com | iLink API base URL |
+| WEIXIN_CDN_BASE_URL | — | https://novac2c.cdn.weixin.qq.com/c2c | CDN base URL for media transfer |
+| WEIXIN_DM_POLICY | — | open | DM access policy:open,allowlist,disabled,pairing |
+| WEIXIN_GROUP_POLICY | — | disabled | Group access policy:open,allowlist,disabled |
+| WEIXIN_ALLOWED_USERS | — | (empty) | Comma-separated user IDs for DM allowlist |
+| WEIXIN_GROUP_ALLOWED_USERS | — | (empty) | Comma-separatedgroup chat IDs(not member user IDs) for group allowlist. The variable name is legacy — it expects group IDs, not user IDs. |
+| WEIXIN_HOME_CHANNEL | — | — | Chat ID for cron/notification output |
+| WEIXIN_HOME_CHANNEL_NAME | — | Home | Display name for the home channel |
+| WEIXIN_ALLOW_ALL_USERS | — | — | Gateway-level flag to allow all users (used by setup wizard) |
+
+`WEIXIN_ACCOUNT_ID`
+`WEIXIN_TOKEN`
+`WEIXIN_BASE_URL`
+`https://ilinkai.weixin.qq.com`
+`WEIXIN_CDN_BASE_URL`
+`https://novac2c.cdn.weixin.qq.com/c2c`
+`WEIXIN_DM_POLICY`
+`open`
+`open`
+`allowlist`
+`disabled`
+`pairing`
+`WEIXIN_GROUP_POLICY`
+`disabled`
+`open`
+`allowlist`
+`disabled`
+`WEIXIN_ALLOWED_USERS`
+`WEIXIN_GROUP_ALLOWED_USERS`
+`WEIXIN_HOME_CHANNEL`
+`WEIXIN_HOME_CHANNEL_NAME`
+`Home`
+`WEIXIN_ALLOW_ALL_USERS`
+
+## Troubleshooting​
+
+| Problem | Fix |
+| --- | --- |
+| Weixin startup failed: aiohttp and cryptography are required | Install both:pip install aiohttp cryptography |
+| Weixin startup failed: WEIXIN_TOKEN is required | Runhermes gateway setupto complete QR login, or setWEIXIN_TOKENmanually |
+| Weixin startup failed: WEIXIN_ACCOUNT_ID is required | SetWEIXIN_ACCOUNT_IDin your.envor runhermes gateway setup |
+| Another local Hermes gateway is already using this Weixin token | Stop the other gateway instance first — only one poller per token is allowed |
+| Session expired (errcode=-14) | Your login session has expired. Re-runhermes gateway setupto scan a new QR code |
+| QR code expired during setup | The QR auto-refreshes up to 3 times. If it keeps expiring, check your network connection |
+| Bot doesn't respond to DMs | CheckWEIXIN_DM_POLICY— if set toallowlist, the sender must be inWEIXIN_ALLOWED_USERS |
+| Bot ignores group messages | Group policy defaults todisabled. SetWEIXIN_GROUP_POLICY=openorallowlist— but note that QR-login iLink bot identities (...@im.bot) typically cannot receive ordinary WeChat group messages at all. If the gateway logs show no raw inbound events for group messages, the limitation is on the iLink side, not in Hermes. |
+| Media download/upload fails | Ensurecryptographyis installed. Check network access tonovac2c.cdn.weixin.qq.com |
+| Blocked unsafe URL (SSRF protection) | The outbound media URL points to a private/internal address. Only public URLs are allowed |
+| Voice messages show as text | If WeChat provides a transcription, the adapter uses the text. This is expected behavior |
+| Messages appear duplicated | The adapter deduplicates by message ID. If you see duplicates, check if multiple gateway instances are running |
+| iLink POST ... HTTP 4xx/5xx | API error from the iLink service. Check your token validity and network connectivity |
+| Terminal QR code doesn't render | Reinstall with the messaging extra:cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]". Alternatively, open the URL printed above the QR |
+
+`Weixin startup failed: aiohttp and cryptography are required`
+`pip install aiohttp cryptography`
+`Weixin startup failed: WEIXIN_TOKEN is required`
+`hermes gateway setup`
+`WEIXIN_TOKEN`
+`Weixin startup failed: WEIXIN_ACCOUNT_ID is required`
+`WEIXIN_ACCOUNT_ID`
+`.env`
+`hermes gateway setup`
+`Another local Hermes gateway is already using this Weixin token`
+`errcode=-14`
+`hermes gateway setup`
+`WEIXIN_DM_POLICY`
+`allowlist`
+`WEIXIN_ALLOWED_USERS`
+`disabled`
+`WEIXIN_GROUP_POLICY=open`
+`allowlist`
+`...@im.bot`
+`cryptography`
+`novac2c.cdn.weixin.qq.com`
+`Blocked unsafe URL (SSRF protection)`
+`iLink POST ... HTTP 4xx/5xx`
+`cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"`

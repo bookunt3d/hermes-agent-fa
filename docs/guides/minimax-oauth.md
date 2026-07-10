@@ -1,0 +1,301 @@
+---
+layout: docs
+title: "OAuth MiniMax"
+permalink: /docs/guides/minimax-oauth/
+---
+
+# MiniMax OAuth
+
+Hermes Agent supportsMiniMaxthrough a browser-based OAuth login flow, using the same credentials as theMiniMax portal. No API key or credit card is required — log in once and Hermes automatically refreshes your session.
+
+The transport reuses theanthropic_messagesadapter (MiniMax exposes an Anthropic Messages-compatible endpoint at/anthropic), so all existing tool-calling, streaming, and context features work without any adapter changes.
+
+`anthropic_messages`
+`/anthropic`
+
+## Overview​
+
+| Item | Value |
+| --- | --- |
+| Provider ID | minimax-oauth |
+| Display name | MiniMax (OAuth) |
+| Auth type | Browser OAuth (PKCE redirect flow) |
+| Transport | Anthropic Messages-compatible (anthropic_messages) |
+| Models | MiniMax-M2.7,MiniMax-M2.7-highspeed |
+| Global endpoint | https://api.minimax.io/anthropic |
+| China endpoint | https://api.minimaxi.com/anthropic |
+| Requires env var | No (MINIMAX_API_KEYisnotused for this provider) |
+
+`minimax-oauth`
+`anthropic_messages`
+`MiniMax-M2.7`
+`MiniMax-M2.7-highspeed`
+`https://api.minimax.io/anthropic`
+`https://api.minimaxi.com/anthropic`
+`MINIMAX_API_KEY`
+
+## Prerequisites​
+
+- Python 3.9+
+- Hermes Agent installed
+- A MiniMax account atminimax.io(global) orminimaxi.com(China)
+- A browser available on the local machine (or use--no-browserfor remote sessions)
+
+`--no-browser`
+
+## Quick Start​
+
+```
+# Launch the provider and model pickerhermes model# → Select "MiniMax (OAuth)" from the provider list# → Hermes opens your browser to the MiniMax authorization page# → Approve access in the browser# → Select a model (MiniMax-M2.7 or MiniMax-M2.7-highspeed)# → Start chattinghermes
+```
+
+After the first login, credentials are stored under~/.hermes/auth.jsonand are refreshed automatically before each session.
+
+`~/.hermes/auth.json`
+
+## Logging In Manually​
+
+You can trigger a login without going through the model picker:
+
+```
+hermes auth add minimax-oauth
+```
+
+### China region​
+
+If your account is on the China platform (minimaxi.com), use the API-key-basedminimax-cnprovider instead —minimax-cnis registered withauth_type="api_key"only (no OAuth flow). ConfigureMINIMAX_CN_API_KEY(and optionallyMINIMAX_CN_BASE_URL) directly:
+
+`minimaxi.com`
+`minimax-cn`
+`minimax-cn`
+`auth_type="api_key"`
+`MINIMAX_CN_API_KEY`
+`MINIMAX_CN_BASE_URL`
+
+```
+echo 'MINIMAX_CN_API_KEY=your-key' >> ~/.hermes/.env
+```
+
+### Remote / headless sessions​
+
+On servers or containers where no browser is available:
+
+```
+hermes auth add minimax-oauth --no-browser
+```
+
+Hermes will print the verification URL and user code — open the URL on any device and enter the code when prompted.
+
+## The OAuth Flow​
+
+Hermes implements a PKCE browser OAuth flow against the MiniMax OAuth endpoints:
+
+1. Hermes generates a PKCE verifier / challenge pair and a random state value.
+2. It POSTs to{base_url}/oauth/codewith the challenge and receives auser_codeandverification_uri.
+3. Your browser opensverification_uri. If prompted, enter theuser_code.
+4. Hermes polls{base_url}/oauth/tokenuntil the token arrives (or the deadline passes).
+5. Tokens (access_token,refresh_token, expiry) are saved to~/.hermes/auth.jsonunder theminimax-oauthkey.
+
+`{base_url}/oauth/code`
+`user_code`
+`verification_uri`
+`verification_uri`
+`user_code`
+`{base_url}/oauth/token`
+`access_token`
+`refresh_token`
+`~/.hermes/auth.json`
+`minimax-oauth`
+
+Token refresh (standard OAuthrefresh_tokengrant) runs automatically at each session start when the access token is within 60 seconds of expiry.
+
+`refresh_token`
+
+## Checking Login Status​
+
+```
+hermes doctor
+```
+
+The◆ Auth Providerssection will show:
+
+`◆ Auth Providers`
+
+```
+✓ MiniMax OAuth  (logged in, region=global)
+```
+
+or, if not logged in:
+
+```
+⚠ MiniMax OAuth  (not logged in)
+```
+
+## Switching Models​
+
+```
+hermes model# → Select "MiniMax (OAuth)"# → Pick from the model list
+```
+
+Or set the model directly:
+
+```
+hermes config set model.default MiniMax-M2.7hermes config set model.provider minimax-oauth
+```
+
+## Configuration Reference​
+
+After login,~/.hermes/config.yamlwill contain entries similar to:
+
+`~/.hermes/config.yaml`
+
+```
+model:  default: MiniMax-M2.7  provider: minimax-oauth  base_url: https://api.minimax.io/anthropic
+```
+
+### Region endpoints​
+
+| Provider id | Portal | Inference endpoint |
+| --- | --- | --- |
+| minimax-oauth(global) | https://api.minimax.io | https://api.minimax.io/anthropic |
+| minimax-cn(China) | https://api.minimaxi.com | https://api.minimaxi.com/anthropic |
+
+`minimax-oauth`
+`https://api.minimax.io`
+`https://api.minimax.io/anthropic`
+`minimax-cn`
+`https://api.minimaxi.com`
+`https://api.minimaxi.com/anthropic`
+
+### Provider aliases​
+
+All of the following resolve tominimax-oauth:
+
+`minimax-oauth`
+
+```
+hermes --provider minimax-oauth    # canonicalhermes --provider minimax-portal   # aliashermes --provider minimax-global   # aliashermes --provider minimax_oauth    # alias (underscore form)
+```
+
+## Environment Variables​
+
+Theminimax-oauthprovider doesnotuseMINIMAX_API_KEYorMINIMAX_BASE_URL. Those variables are for the API-key-basedminimaxandminimax-cnproviders only.
+
+`minimax-oauth`
+`MINIMAX_API_KEY`
+`MINIMAX_BASE_URL`
+`minimax`
+`minimax-cn`
+| Variable | Effect |
+| --- | --- |
+| MINIMAX_API_KEY | Used byminimaxprovider only — ignored forminimax-oauth |
+| MINIMAX_CN_API_KEY | Used byminimax-cnprovider only — ignored forminimax-oauth |
+
+`MINIMAX_API_KEY`
+`minimax`
+`minimax-oauth`
+`MINIMAX_CN_API_KEY`
+`minimax-cn`
+`minimax-oauth`
+
+To useminimax-oauthas the active provider, setmodel.provider: minimax-oauthinconfig.yaml(usehermes setupfor the guided flow), or pass--provider minimax-oauthfor a single invocation:
+
+`minimax-oauth`
+`model.provider: minimax-oauth`
+`config.yaml`
+`hermes setup`
+`--provider minimax-oauth`
+
+```
+hermes --provider minimax-oauth
+```
+
+## Models​
+
+| Model | Best for |
+| --- | --- |
+| MiniMax-M2.7 | Long-context reasoning, complex tool-calling |
+| MiniMax-M2.7-highspeed | Lower latency, lighter tasks, auxiliary calls |
+
+`MiniMax-M2.7`
+`MiniMax-M2.7-highspeed`
+
+Both models support up to 200,000 tokens of context.
+
+MiniMax-M2.7-highspeedis also used automatically as the auxiliary model for vision and delegation tasks whenminimax-oauthis the primary provider.
+
+`MiniMax-M2.7-highspeed`
+`minimax-oauth`
+
+## Troubleshooting​
+
+### Token expired — not re-logging in automatically​
+
+Hermes refreshes the token on every session start if it is within 60 seconds of expiry. If the access token is already expired (for example, after a long offline period), the refresh happens automatically on the next request. If refresh fails withrefresh_token_reusedorinvalid_grant, Hermes marks the session as requiring re-login.
+
+`refresh_token_reused`
+`invalid_grant`
+
+When the refresh failure is terminal (HTTP 4xx,invalid_grant, revoked grant, etc.), Hermes marks the refresh token as dead and quarantines it locally so it doesn't keep replaying the doomed exchange. The agent surfaces a single "re-authentication required" message and stays out of the way until you log in again.
+
+`invalid_grant`
+
+Fix:runhermes auth add minimax-oauthagain to start a fresh login. The quarantine clears on the next successful exchange.
+
+`hermes auth add minimax-oauth`
+
+### Authorization timed out​
+
+The device-code flow has a finite expiry window. If you don't approve the login in time, Hermes raises a timeout error.
+
+Fix:re-runhermes auth add minimax-oauth(orhermes model). The flow starts fresh.
+
+`hermes auth add minimax-oauth`
+`hermes model`
+
+### State mismatch (possible CSRF)​
+
+Hermes detected that thestatevalue returned by the authorization server does not match what it sent.
+
+`state`
+
+Fix:re-run the login. If it persists, check for a proxy or redirect that is modifying the OAuth response.
+
+### Logging in from a remote server​
+
+Ifhermescannot open a browser window, use--no-browser:
+
+`hermes`
+`--no-browser`
+
+```
+hermes auth add minimax-oauth --no-browser
+```
+
+Hermes prints the URL and code. Open the URL on any device and complete the flow there.
+
+### "Not logged into MiniMax OAuth" error at runtime​
+
+The auth store has no credentials forminimax-oauth. You have not logged in yet, or the credential file was deleted.
+
+`minimax-oauth`
+
+Fix:runhermes modeland select MiniMax (OAuth), or runhermes auth add minimax-oauth.
+
+`hermes model`
+`hermes auth add minimax-oauth`
+
+## Logging Out​
+
+To remove stored MiniMax OAuth credentials:
+
+```
+hermes auth logout minimax-oauth
+```
+
+## See Also​
+
+- AI Providers reference
+- Environment Variables
+- Configuration
+- hermes doctor

@@ -1,0 +1,534 @@
+---
+layout: docs
+title: "مرجع ابزارها"
+permalink: /docs/reference/tools-reference/
+---
+
+- 
+- Reference
+- Tools & Skills Reference
+- Built-in Tools Reference
+
+# Built-in Tools Reference
+
+This page documents Hermes' built-in tools, grouped by toolset. Availability varies by platform, credentials, and enabled toolsets.
+
+Quick counts (current registry):~73 tools — 10 browser tools (core) + 2 CDP-gated browser tools, 4 file tools, 4 Home Assistant tools, 3 terminal tools (terminal,process,read_terminal), 2 web tools, 5 Feishu tools, 7 Spotify tools (registered by the bundledspotifyplugin), 5 Yuanbao tools, 9 kanban tools (registered when the kanban dispatcher spawns the agent), 3 project tools (desktop/GUI sessions), 2 Discord tools, and a handful of standalone tools (memory,clarify,delegate_task,execute_code,cronjob,session_search,skill_view/skill_manage/skills_list,text_to_speech,image_generate,video_generate,vision_analyze,video_analyze,todo,computer_use).
+
+`terminal`
+`process`
+`read_terminal`
+`spotify`
+`memory`
+`clarify`
+`delegate_task`
+`execute_code`
+`cronjob`
+`session_search`
+`skill_view`
+`skill_manage`
+`skills_list`
+`text_to_speech`
+`image_generate`
+`video_generate`
+`vision_analyze`
+`video_analyze`
+`todo`
+`computer_use`
+
+In addition to built-in tools, Hermes can load tools dynamically from MCP servers. MCP tools appear with the prefixmcp_<server>_(e.g.,mcp_github_create_issuefor thegithubMCP server). SeeMCP Integrationfor configuration.
+
+`mcp_<server>_`
+`mcp_github_create_issue`
+`github`
+
+## browsertoolset​
+
+`browser`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| browser_back | Navigate back to the previous page in browser history. Requires browser_navigate to be called first. | — |
+| browser_click | Click on an element identified by its ref ID from the snapshot (e.g., '@e5'). The ref IDs are shown in square brackets in the snapshot output. Requires browser_navigate and browser_snapshot to be called first. | — |
+| browser_console | Get browser console output and JavaScript errors from the current page. Returns console.log/warn/error/info messages and uncaught JS exceptions. Use this to detect silent JavaScript errors, failed API calls, and application warnings. Requi… | — |
+| browser_get_images | Get a list of all images on the current page with their URLs and alt text. Useful for finding images to analyze with the vision tool. Requires browser_navigate to be called first. | — |
+| browser_navigate | Navigate to a URL in the browser. Initializes the session and loads the page. Must be called before other browser tools. For simple information retrieval, prefer web_search or web_extract (faster, cheaper). Use browser tools when you need… | — |
+| browser_press | Press a keyboard key. Useful for submitting forms (Enter), navigating (Tab), or keyboard shortcuts. Requires browser_navigate to be called first. | — |
+| browser_scroll | Scroll the page in a direction. Use this to reveal more content that may be below or above the current viewport. Requires browser_navigate to be called first. | — |
+| browser_snapshot | Get a text-based snapshot of the current page's accessibility tree. Returns interactive elements with ref IDs (like @e1, @e2) for browser_click and browser_type. full=false (default): compact view with interactive elements. full=true: comp… | — |
+| browser_type | Type text into an input field identified by its ref ID. Clears the field first, then types the new text. Requires browser_navigate and browser_snapshot to be called first. | — |
+| browser_vision | Take a screenshot of the current page and analyze it with vision AI. Use this when you need to visually understand what's on the page - especially useful for CAPTCHAs, visual verification challenges, complex layouts, or when the text snaps… | — |
+
+`browser_back`
+`browser_click`
+`browser_console`
+`browser_get_images`
+`browser_navigate`
+`browser_press`
+`browser_scroll`
+`browser_snapshot`
+`browser_type`
+`browser_vision`
+
+## browsertoolset (CDP-gated tools)​
+
+`browser`
+
+These two tools live in thebrowsertoolset but only register when a Chrome DevTools Protocol endpoint is reachable at session start — via/browser connect,browser.cdp_urlconfig, a Browserbase session, or Camofox.
+
+`browser`
+`/browser connect`
+`browser.cdp_url`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| browser_cdp | Send a raw Chrome DevTools Protocol command. Escape hatch for browser operations not covered by the higher-levelbrowser_*tools. Seehttps://chromedevtools.github.io/devtools-protocol/ | CDP endpoint |
+| browser_dialog | Respond to a native JavaScript dialog (alert / confirm / prompt / beforeunload). Callbrowser_snapshotfirst — pending dialogs appear in itspending_dialogsfield. Then callbrowser_dialog(action='accept'|'dismiss'). | CDP endpoint |
+
+`browser_cdp`
+`browser_*`
+`browser_dialog`
+`browser_snapshot`
+`pending_dialogs`
+`browser_dialog(action='accept'|'dismiss')`
+
+## clarifytoolset​
+
+`clarify`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| clarify | Ask the user a question when you need clarification, feedback, or a decision before proceeding. Supports two modes: 1.Multiple choice— provide up to 4 choices. The user picks one or types their own answer via a 5th 'Other' option. 2.… | — |
+
+`clarify`
+
+## code_executiontoolset​
+
+`code_execution`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| execute_code | Run a Python script that can call Hermes tools programmatically. Use this when you need 3+ tool calls with processing logic between them, need to filter/reduce large tool outputs before they enter your context, need conditional branching (… | — |
+
+`execute_code`
+
+## cronjobtoolset​
+
+`cronjob`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| cronjob | Unified scheduled-task manager. Useaction="create","list","update","pause","resume","run", or"remove"to manage jobs. Supports skill-backed jobs with one or more attached skills, andskills=[]on update clears attached skills. Cron runs happen in fresh sessions with no current-chat context. | — |
+
+`cronjob`
+`action="create"`
+`"list"`
+`"update"`
+`"pause"`
+`"resume"`
+`"run"`
+`"remove"`
+`skills=[]`
+
+## delegationtoolset​
+
+`delegation`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| delegate_task | Spawn one or more subagents to work on tasks in isolated contexts. Each subagent gets its own conversation, terminal session, and toolset. Only the final summary is returned -- intermediate tool results never enter your context window. TWO… | — |
+
+`delegate_task`
+
+## feishu_doctoolset​
+
+`feishu_doc`
+
+Scoped to the Feishu document-comment intelligent-reply handler (gateway/platforms/feishu_comment.py). Not exposed onhermes-clior the regular Feishu chat adapter.
+
+`gateway/platforms/feishu_comment.py`
+`hermes-cli`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| feishu_doc_read | Read the full text content of a Feishu/Lark document (Docx, Doc, or Sheet) given its file_type and token. | Feishu app credentials |
+
+`feishu_doc_read`
+
+## feishu_drivetoolset​
+
+`feishu_drive`
+
+Scoped to the Feishu document-comment handler. Drives comment read/write operations on drive files.
+
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| feishu_drive_add_comment | Add a top-level comment on a Feishu/Lark document or file. | Feishu app credentials |
+| feishu_drive_list_comments | List whole-document comments on a Feishu/Lark file, most recent first. | Feishu app credentials |
+| feishu_drive_list_comment_replies | List replies on a specific Feishu comment thread (whole-doc or local-selection). | Feishu app credentials |
+| feishu_drive_reply_comment | Post a reply on a Feishu comment thread, with optional@-mention. | Feishu app credentials |
+
+`feishu_drive_add_comment`
+`feishu_drive_list_comments`
+`feishu_drive_list_comment_replies`
+`feishu_drive_reply_comment`
+`@`
+
+## filetoolset​
+
+`file`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| patch | Targeted find-and-replace edits in files. Use this instead of sed/awk in terminal. Uses fuzzy matching (9 strategies) so minor whitespace/indentation differences won't break it. Returns a unified diff. Auto-runs syntax checks after editing… | — |
+| read_file | Read a text file with line numbers and pagination. Use this instead of cat/head/tail in terminal. Output format: 'LINE_NUM|CONTENT'. Suggests similar filenames if not found. Use offset and limit for large files. NOTE: Cannot read images o… | — |
+| search_files | Search file contents or find files by name. Use this instead of grep/rg/find/ls in terminal. Ripgrep-backed, faster than shell equivalents. Content search (target='content'): Regex search inside files. Output modes: full matches with line… | — |
+| write_file | Write content to a file, completely replacing existing content. Use this instead of echo/cat heredoc in terminal. Creates parent directories automatically. OVERWRITES the entire file — use 'patch' for targeted edits. | — |
+
+`patch`
+`read_file`
+`search_files`
+`write_file`
+
+## homeassistanttoolset​
+
+`homeassistant`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| ha_call_service | Call a Home Assistant service to control a device. Use ha_list_services to discover available services and their parameters for each domain. | — |
+| ha_get_state | Get the detailed state of a single Home Assistant entity, including all attributes (brightness, color, temperature setpoint, sensor readings, etc.). | — |
+| ha_list_entities | List Home Assistant entities. Optionally filter by domain (light, switch, climate, sensor, binary_sensor, cover, fan, etc.) or by area name (living room, kitchen, bedroom, etc.). | — |
+| ha_list_services | List available Home Assistant services (actions) for device control. Shows what actions can be performed on each device type and what parameters they accept. Use this to discover how to control devices found via ha_list_entities. | — |
+
+`ha_call_service`
+`ha_get_state`
+`ha_list_entities`
+`ha_list_services`
+
+## computer_usetoolset​
+
+`computer_use`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| computer_use | Background desktop control via cua-driver — screenshots (SOM / vision / AX), click / drag / scroll / type / key / wait, list_apps, focus_app. Does NOT steal the user's cursor or keyboard focus. Works with any tool-capable model. macOS, Windows, and Linux. | cua-driveron$PATH(install viahermes tools). |
+
+`computer_use`
+`cua-driver`
+`$PATH`
+`hermes tools`
+
+Honcho tools(honcho_profile,honcho_search,honcho_context,honcho_reasoning,honcho_conclude) are no longer built-in. They are available via the Honcho memory provider plugin atplugins/memory/honcho/. SeeMemory Providersfor installation and usage.
+
+`honcho_profile`
+`honcho_search`
+`honcho_context`
+`honcho_reasoning`
+`honcho_conclude`
+`plugins/memory/honcho/`
+
+## image_gentoolset​
+
+`image_gen`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| image_generate | Generate images from text prompts (text-to-image) or edit/transform an existing image (image-to-image) via the user-configured backend (FAL.ai, OpenAI, OpenAI Codex auth, xAI, Krea). Passimage_urlto edit an image andreference_image_urlsfor style references; omit both for text-to-image. The model is user-configured and not selectable by the agent. Returns a single image URL or local path. | FAL_KEY / OPENAI_API_KEY / Codex OAuth / xAI OAuth / KREA_API_KEY |
+
+`image_generate`
+`image_url`
+`reference_image_urls`
+
+## kanbantoolset​
+
+`kanban`
+
+Registered when the agent is either (a) spawned by the kanban dispatcher (HERMES_KANBAN_TASKenv set) or (b) running in a profile that explicitly enables thekanbantoolset. Task-scoped workers use lifecycle tools for their assigned task; orchestrator profiles additionally get board-routing tools likekanban_listandkanban_unblock. SeeKanban Multi-Agentfor the full workflow.
+
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_list`
+`kanban_unblock`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| kanban_show | Show the active kanban task assigned to this worker (title, description, comments, dependencies). | HERMES_KANBAN_TASKorkanbantoolset |
+| kanban_list | List board tasks with filters. Orchestrator-only; hidden from dispatcher-spawned task workers. | profile withkanbantoolset |
+| kanban_complete | Mark the current task done with a structured handoff payload (results, artifacts, follow-ups). | HERMES_KANBAN_TASKorkanbantoolset |
+| kanban_block | Block the current task on a question for the user — the dispatcher pauses, surfaces the question, and resumes once a human replies. | HERMES_KANBAN_TASKorkanbantoolset |
+| kanban_heartbeat | Send a progress heartbeat during a long-running operation so the dispatcher knows the worker is still alive. | HERMES_KANBAN_TASKorkanbantoolset |
+| kanban_comment | Add a comment to the task thread without changing its state — useful for surfacing intermediate findings. | HERMES_KANBAN_TASKorkanbantoolset |
+| kanban_create | Fan out child tasks from the current task. Used by orchestrators and follow-up-spawning workers. | HERMES_KANBAN_TASKorkanbantoolset |
+| kanban_link | Link tasks with a parent → child dependency edge. | HERMES_KANBAN_TASKorkanbantoolset |
+| kanban_unblock | Return a blocked task toready. Orchestrator-only; hidden from dispatcher-spawned task workers. | profile withkanbantoolset |
+
+`kanban_show`
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_list`
+`kanban`
+`kanban_complete`
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_block`
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_heartbeat`
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_comment`
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_create`
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_link`
+`HERMES_KANBAN_TASK`
+`kanban`
+`kanban_unblock`
+`ready`
+`kanban`
+
+## projecttoolset​
+
+`project`
+
+Tools for driving desktopProjects— named, multi-folder workspaces. Registered when theprojecttoolset is enabled (primarily the desktop app / dashboard surfaces).
+
+`project`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| project_create | Create a desktop Project (a named workspace) and switch this chat into it. Passpathto anchor it to a repo/folder. | — |
+| project_list | List the desktop Projects and which one is active. | — |
+| project_switch | Switch this chat into an existing Project (by name, slug, or id); moves the session workspace to the project's primary folder. | — |
+
+`project_create`
+`path`
+`project_list`
+`project_switch`
+
+## memorytoolset​
+
+`memory`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| memory | Save important information to persistent memory that survives across sessions. Your memory appears in your system prompt at session start -- it's how you remember things about the user and your environment between conversations. WHEN TO SA… | — |
+
+`memory`
+
+## session_searchtoolset​
+
+`session_search`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| session_search | Search past sessions stored in the local session DB, or scroll inside one. FTS5-backed retrieval; returns actual messages from the DB (no LLM calls). Three shapes: discovery (passquery), scroll (passsession_id+around_message_id), browse (no args). | — |
+
+`session_search`
+`query`
+`session_id`
+`around_message_id`
+
+## skillstoolset​
+
+`skills`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| skill_manage | Manage skills (create, update, delete). Skills are your procedural memory — reusable approaches for recurring task types. New skills go to ~/.hermes/skills/; existing skills can be modified wherever they live. Actions: create (full SKILL.m… | — |
+| skill_view | Skills allow for loading information about specific tasks and workflows, as well as scripts and templates. Load a skill's full content or access its linked files (references, templates, scripts). First call returns SKILL.md content plus a… | — |
+| skills_list | List available skills (name + description). Use skill_view(name) to load full content. | — |
+
+`skill_manage`
+`skill_view`
+`skills_list`
+
+## terminaltoolset​
+
+`terminal`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| process | Manage background processes started with terminal(background=true). Actions: 'list' (show all), 'poll' (check status + new output), 'log' (full output with pagination), 'wait' (block until done or timeout), 'kill' (terminate), 'write' (sen… | — |
+| terminal | Execute shell commands on a Linux environment. Filesystem persists between calls. Setbackground=truefor long-running servers. Setnotify_on_complete=true(withbackground=true) to get an automatic notification when the process finishes — no polling needed. Do NOT use cat/head/tail — use read_file. Do NOT use grep/rg/find — use search_files. | — |
+| read_terminal | Read what's currently shown in the in-app terminal pane of the Hermes desktop GUI (the embedded shell beside this chat). Desktop-app only. | — |
+
+`process`
+`terminal`
+`background=true`
+`notify_on_complete=true`
+`background=true`
+`read_terminal`
+
+## todotoolset​
+
+`todo`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| todo | Manage your task list for the current session. Use for complex tasks with 3+ steps or when the user provides multiple tasks. Call with no parameters to read the current list. Writing: - Provide 'todos' array to create/update items - merge=… | — |
+
+`todo`
+
+## visiontoolset​
+
+`vision`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| vision_analyze | Analyze images using AI vision. On vision-capable main models, returns the raw image pixels as a multimodal tool result so the model sees them natively on its next turn. On text-only main models, falls back to an auxiliary vision model that describes the image and returns the description as text. Tool signature is identical either way. | — |
+
+`vision_analyze`
+
+## videotoolset​
+
+`video`
+
+Opt-in toolset (not loaded in the defaulthermes-cliset). Add via--toolsets videoor includevideoin yourtoolsets:config.
+
+`hermes-cli`
+`--toolsets video`
+`video`
+`toolsets:`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| video_analyze | Analyze video content from a URL or file path — captions, scene breakdowns, key timestamps, and visual descriptions. | — |
+
+`video_analyze`
+
+## video_gentoolset​
+
+`video_gen`
+
+Opt-in toolset (not loaded in the defaulthermes-cliset). Add via--toolsets video_genor enable it inhermes tools→ Video Generation, which also walks you through picking a backend.
+
+`hermes-cli`
+`--toolsets video_gen`
+`hermes tools`
+
+Backends ship as plugins underplugins/video_gen/<name>/:
+
+`plugins/video_gen/<name>/`
+- xAI Grok-Imagine— text-to-video and image-to-video (SuperGrok OAuth orXAI_API_KEY).
+- FAL.ai— Veo 3.1, Pixverse v6, Kling O3 (requiresFAL_KEY).
+
+`XAI_API_KEY`
+`FAL_KEY`
+
+The singlevideo_generatetool covers both modalities — passimage_urlto animate a still, omit it to generate from text alone. The active backend auto-routes to the right endpoint. The tool's description is rebuilt at session start to reflect the active backend's actual capabilities (modalities, aspect ratios, resolutions, duration range, max reference images, audio support). SeeVideo Generation Provider Pluginsfor backend authoring.
+
+`video_generate`
+`image_url`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| video_generate | Generate a video from a text prompt (text-to-video) or animate a still image (image-to-video) using the user's configured video generation backend. Passimage_urlto animate that image; omit it to generate from text alone. The backend auto-routes to the right endpoint. Returns either an HTTP URL or an absolute file path in thevideofield. | Activevideo_genplugin + its credential (e.g.XAI_API_KEY,FAL_KEY) |
+
+`video_generate`
+`image_url`
+`video`
+`video_gen`
+`XAI_API_KEY`
+`FAL_KEY`
+
+## webtoolset​
+
+`web`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| web_search | Search the web for information. Returns up to 5 results by default with titles, URLs, and descriptions. Accepts an optionallimit(1-100, default 5). The query is passed through to the configured backend, so operators such assite:domain,filetype:pdf,intitle:word,-term, and"exact phrase"may work when the backend supports them. | EXA_API_KEY or PARALLEL_API_KEY or FIRECRAWL_API_KEY or TAVILY_API_KEY |
+| web_extract | Extract content from web page URLs. Returns page content in markdown format. Also works with PDF URLs — pass the PDF link directly and it converts to markdown text. Pages under 5000 chars return full markdown; larger pages are LLM-summarized. | EXA_API_KEY or PARALLEL_API_KEY or FIRECRAWL_API_KEY or TAVILY_API_KEY |
+
+`web_search`
+`limit`
+`site:domain`
+`filetype:pdf`
+`intitle:word`
+`-term`
+`"exact phrase"`
+`web_extract`
+
+## x_searchtoolset​
+
+`x_search`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| x_search | Search X (Twitter) posts, profiles, and threads using xAI's built-inx_searchResponses tool. Use this for current discussion, reactions, or claims on X rather than general web pages. Off by default — opt in viahermes tools→ 🐦 X (Twitter) Search. Schema is only registered when xAI credentials are configured (check_fn-gated). | XAI_API_KEYorxAI Grok OAuth (SuperGrok / Premium+) login |
+
+`x_search`
+`x_search`
+`hermes tools`
+
+## ttstoolset​
+
+`tts`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| text_to_speech | Convert text to speech audio. Returns a MEDIA: path that the platform delivers as a voice message. On Telegram it plays as a voice bubble, on Discord/WhatsApp as an audio attachment. In CLI mode, saves to ~/voice-memos/. Voice and provider… | — |
+
+`text_to_speech`
+
+## discordtoolset​
+
+`discord`
+
+Registered on thehermes-discordplatform toolset (gateway only). Uses the same bot token as the messaging adapter.
+
+`hermes-discord`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| discord | Read and participate in a Discord server. Actions includesearch_members,fetch_messages,send_message,react,fetch_channel,list_channels, and more. | DISCORD_BOT_TOKEN |
+
+`discord`
+`search_members`
+`fetch_messages`
+`send_message`
+`react`
+`fetch_channel`
+`list_channels`
+`DISCORD_BOT_TOKEN`
+
+## discord_admintoolset​
+
+`discord_admin`
+
+Registered on thehermes-discordplatform toolset. Moderation actions require the bot to hold the matching Discord permissions.
+
+`hermes-discord`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| discord_admin | Manage a Discord server via the REST API: list guilds/channels/roles, create/edit/delete channels, manage role grants, timeouts, kicks, and bans. | DISCORD_BOT_TOKEN+ bot permissions |
+
+`discord_admin`
+`DISCORD_BOT_TOKEN`
+
+## spotifytoolset​
+
+`spotify`
+
+Registered by the bundledspotifyplugin. Requires an OAuth token — runhermes spotify setuponce to authorize.
+
+`spotify`
+`hermes spotify setup`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| spotify_playback | Control Spotify playback, inspect the active playback state, or fetch recently played tracks. | Spotify OAuth |
+| spotify_devices | List Spotify Connect devices or transfer playback to a different device. | Spotify OAuth |
+| spotify_queue | Inspect the user's Spotify queue or add an item to it. | Spotify OAuth |
+| spotify_search | Search the Spotify catalog for tracks, albums, artists, playlists, shows, or episodes. | Spotify OAuth |
+| spotify_playlists | List, inspect, create, update, and modify Spotify playlists. | Spotify OAuth |
+| spotify_albums | Fetch Spotify album metadata or album tracks. | Spotify OAuth |
+| spotify_library | List, save, or remove the user's saved Spotify tracks or albums. | Spotify OAuth |
+
+`spotify_playback`
+`spotify_devices`
+`spotify_queue`
+`spotify_search`
+`spotify_playlists`
+`spotify_albums`
+`spotify_library`
+
+## hermes-yuanbaotoolset​
+
+`hermes-yuanbao`
+
+Registered only on thehermes-yuanbaoplatform toolset. Yuanbao is Tencent's chat app; these tools drive its DM/group/sticker APIs.
+
+`hermes-yuanbao`
+| Tool | Description | Requires environment |
+| --- | --- | --- |
+| yb_query_group_info | Query basic info about a group (called "派/Pai" in the app): name, owner, member count. | Yuanbao credentials |
+| yb_query_group_members | Query members of a group (for@-mentions, finding a user by name, listing bots). | Yuanbao credentials |
+| yb_send_dm | Send a private/direct message to a user in a group, with optional media files. | Yuanbao credentials |
+| yb_search_sticker | Search the built-in Yuanbao sticker (TIM face) catalogue by keyword. | Yuanbao credentials |
+| yb_send_sticker | Send a built-in sticker to the current Yuanbao chat. | Yuanbao credentials |
+
+`yb_query_group_info`
+`yb_query_group_members`
+`@`
+`yb_send_dm`
+`yb_search_sticker`
+`yb_send_sticker`

@@ -1,0 +1,249 @@
+---
+layout: docs
+title: "کاتالوگ مهارت‌های اختیاری"
+permalink: /docs/reference/optional-skills-catalog/
+---
+
+- 
+- Features
+- Skills
+- Optional Skills Catalog
+
+# Optional Skills Catalog
+
+Optional skills ship with hermes-agent underoptional-skills/but arenot active by default. Install them explicitly:
+
+`optional-skills/`
+
+```
+hermes skills install official/<category>/<skill>
+```
+
+For example:
+
+```
+hermes skills install official/blockchain/solanahermes skills install official/mlops/flash-attention
+```
+
+Each skill below links to a dedicated page with its full definition, setup, and usage.
+
+To uninstall:
+
+```
+hermes skills uninstall <skill-name>
+```
+
+## autonomous-ai-agents​
+
+| Skill | Description |
+| --- | --- |
+| antigravity-cli | Operate the Antigravity CLI (agy): plugins, auth, sandbox. |
+| blackbox | Delegate coding tasks to Blackbox AI CLI agent. Multi-model agent with built-in judge that runs tasks through multiple LLMs and picks the best result. Requires the blackbox CLI and a Blackbox AI API key. |
+| grok | Delegate coding to xAI Grok Build CLI (features, PRs). |
+| honcho | Configure and use Honcho memory with Hermes -- cross-session user modeling, multi-profile peer isolation, observation config, dialectic reasoning, session summaries, and context budget enforcement. Use when setting up Honcho, troubleshoo... |
+| openhands | Delegate coding to OpenHands CLI (model-agnostic, LiteLLM). |
+
+## blockchain​
+
+| Skill | Description |
+| --- | --- |
+| evm | Read-only EVM client: wallets, tokens, gas across 8 chains. |
+| hyperliquid | Hyperliquid market data, account history, trade review. |
+| solana | Query Solana blockchain data with USD pricing — wallet balances, token portfolios with values, transaction details, NFTs, whale detection, and live network stats. Uses Solana RPC + CoinGecko. No API key required. |
+
+## communication​
+
+| Skill | Description |
+| --- | --- |
+| one-three-one-rule | Structured decision-making framework for technical proposals and trade-off analysis. When the user faces a choice between multiple approaches (architecture decisions, tool selection, refactoring strategies, migration paths), this skill p... |
+
+## creative​
+
+| Skill | Description |
+| --- | --- |
+| baoyu-article-illustrator | Article illustrations: type × style × palette consistency. |
+| baoyu-comic | Knowledge comics (知识漫画): educational, biography, tutorial. |
+| blender-mcp | Control Blender directly from Hermes via socket connection to the blender-mcp addon. Create 3D objects, materials, animations, and run arbitrary Blender Python (bpy) code. Use when user wants to create or modify anything in Blender. |
+| concept-diagrams | Generate flat, minimal light/dark-aware SVG diagrams as standalone HTML files, using a unified educational visual language with 9 semantic color ramps, sentence-case typography, and automatic dark mode. Best suited for educational and no... |
+| creative-ideation | Generate ideas via named methods from creative practice. |
+| hyperframes | Create HTML-based video compositions, animated title cards, social overlays, captioned talking-head videos, audio-reactive visuals, and shader transitions using HyperFrames. HTML is the source of truth for video. Use when the user wants... |
+| kanban-video-orchestrator | Plan, set up, and monitor a multi-agent video production pipeline backed by Hermes Kanban. Use when the user wants to make ANY video — narrative film, product/marketing, music video, explainer, ASCII/terminal art, abstract/generative loo... |
+| meme-generation | Generate real meme images by picking a template and overlaying text with Pillow. Produces actual .png meme files. |
+| pixel-art | Pixel art w/ era palettes (NES, Game Boy, PICO-8). |
+
+## devops​
+
+| Skill | Description |
+| --- | --- |
+| inference-sh-cli | Run 150+ AI apps via inference.sh CLI (infsh) — image generation, video creation, LLMs, search, 3D, social automation. Uses the terminal tool. Triggers: inference.sh, infsh, ai apps, flux, veo, image generation, video generation, seedrea... |
+| docker-management | Manage Docker containers, images, volumes, networks, and Compose stacks — lifecycle ops, debugging, cleanup, and Dockerfile optimization. |
+| hermes-s6-container-supervision | Modify, debug, or extend the s6-overlay supervision tree inside the Hermes Agent Docker image — adding new services, debugging profile gateways, understanding the Architecture B main-program pattern. |
+| pinggy-tunnel | Zero-install localhost tunnels over SSH via Pinggy. |
+| watchers | Poll RSS, JSON APIs, and GitHub with watermark dedup. |
+
+## dogfood​
+
+| Skill | Description |
+| --- | --- |
+| adversarial-ux-test | Roleplay the most difficult, tech-resistant user for your product. Browse the app as that persona, find every UX pain point, then filter complaints through a pragmatism layer to separate real problems from noise. Creates actionable ticke... |
+
+## email​
+
+| Skill | Description |
+| --- | --- |
+| agentmail | Give the agent its own dedicated email inbox via AgentMail. Send, receive, and manage email autonomously using agent-owned email addresses (e.g.hermes-agent@agentmail.to). |
+
+## finance​
+
+| Skill | Description |
+| --- | --- |
+| 3-statement-model | Build fully-integrated 3-statement models (IS, BS, CF) in Excel with working capital schedules, D&A roll-forwards, debt schedule, and the plugs that make cash and retained earnings tie. Pairs with excel-author. |
+| comps-analysis | Build comparable company analysis in Excel — operating metrics, valuation multiples, statistical benchmarking vs peer sets. Pairs with excel-author. Use for public-company valuation, IPO pricing, sector benchmarking, or outlier detection. |
+| dcf-model | Build institutional-quality DCF valuation models in Excel — revenue projections, FCF build, WACC, terminal value, Bear/Base/Bull scenarios, 5x5 sensitivity tables. Pairs with excel-author. Use for intrinsic-value equity analysis. |
+| excel-author | Build auditable Excel workbooks headless with openpyxl — blue/black/green cell conventions, formulas over hardcodes, named ranges, balance checks, sensitivity tables. Use for financial models, audit outputs, reconciliations. |
+| lbo-model | Build leveraged buyout models in Excel — sources & uses, debt schedule, cash sweep, exit multiple, IRR/MOIC sensitivity. Pairs with excel-author. Use for PE screening, sponsor-case valuation, or illustrative LBO in a pitch. |
+| merger-model | Build accretion/dilution (merger) models in Excel — pro-forma P&L, synergies, financing mix, EPS impact. Pairs with excel-author. Use for M&A pitches, board materials, or deal evaluation. |
+| pptx-author | Build PowerPoint decks headless with python-pptx. Pairs with excel-author for model-backed decks where every number traces to a workbook cell. Use for pitch decks, IC memos, earnings notes. |
+| stocks | Stock quotes, history, search, compare, crypto via Yahoo. |
+
+## gaming​
+
+| Skill | Description |
+| --- | --- |
+| minecraft-modpack-server | Host modded Minecraft servers (CurseForge, Modrinth). |
+| pokemon-player | Play Pokemon via headless emulator + RAM reads. |
+
+## health​
+
+| Skill | Description |
+| --- | --- |
+| fitness-nutrition | Gym workout planner and nutrition tracker. Search 690+ exercises by muscle, equipment, or category via wger. Look up macros and calories for 380,000+ foods via USDA FoodData Central. Compute BMI, TDEE, one-rep max, macro splits, and body... |
+| neuroskill-bci | Connect to a running NeuroSkill instance and incorporate the user's real-time cognitive and emotional state (focus, relaxation, mood, cognitive load, drowsiness, heart rate, HRV, sleep staging, and 40+ derived EXG scores) into responses.... |
+
+## mcp​
+
+| Skill | Description |
+| --- | --- |
+| fastmcp | Build, test, inspect, install, and deploy MCP servers with FastMCP in Python. Use when creating a new MCP server, wrapping an API or database as MCP tools, exposing resources or prompts, or preparing a FastMCP server for Claude Code, Cur... |
+| mcporter | Use the mcporter CLI to list, configure, auth, and call MCP servers/tools directly (HTTP or stdio), including ad-hoc servers, config edits, and CLI/type generation. |
+
+## migration​
+
+| Skill | Description |
+| --- | --- |
+| openclaw-migration | Migrate a user's OpenClaw customization footprint into Hermes Agent. Imports Hermes-compatible memories, SOUL.md, command allowlists, user skills, and selected workspace assets from ~/.openclaw, then reports exactly what could not be mig... |
+
+## mlops​
+
+| Skill | Description |
+| --- | --- |
+| huggingface-accelerate | Simplest distributed training API. 4 lines to add distributed support to any PyTorch script. Unified API for DeepSpeed/FSDP/Megatron/DDP. Automatic device placement, mixed precision (FP16/BF16/FP8). Interactive config, single launch comm... |
+| axolotl | Axolotl: YAML LLM fine-tuning (LoRA, DPO, GRPO). |
+| chroma | Open-source embedding database for AI applications. Store embeddings and metadata, perform vector and full-text search, filter by metadata. Simple 4-function API. Scales from notebooks to production clusters. Use for semantic search, RAG... |
+| clip | OpenAI's model connecting vision and language. Enables zero-shot image classification, image-text matching, and cross-modal retrieval. Trained on 400M image-text pairs. Use for image search, content moderation, or vision-language tasks w... |
+| dspy | DSPy: declarative LM programs, auto-optimize prompts, RAG. |
+| faiss | Facebook's library for efficient similarity search and clustering of dense vectors. Supports billions of vectors, GPU acceleration, and various index types (Flat, IVF, HNSW). Use for fast k-NN search, large-scale vector retrieval, or whe... |
+| optimizing-attention-flash | Optimizes transformer attention with Flash Attention for 2-4x speedup and 10-20x memory reduction. Use when training/running transformers with long sequences (>512 tokens), encountering GPU memory issues with attention, or need faster in... |
+| guidance | Control LLM output with regex and grammars, guarantee valid JSON/XML/code generation, enforce structured formats, and build multi-step workflows with Guidance - Microsoft Research's constrained generation framework |
+| huggingface-tokenizers | Fast tokenizers optimized for research and production. Rust-based implementation tokenizes 1GB in <20 seconds. Supports BPE, WordPiece, and Unigram algorithms. Train custom vocabularies, track alignments, handle padding/truncation. Integ... |
+| instructor | Extract structured data from LLM responses with Pydantic validation, retry failed extractions automatically, parse complex JSON with type safety, and stream partial results with Instructor - battle-tested structured output library |
+| lambda-labs-gpu-cloud | Reserved and on-demand GPU cloud instances for ML training and inference. Use when you need dedicated GPU instances with simple SSH access, persistent filesystems, or high-performance multi-node clusters for large-scale training. |
+| llava | Large Language and Vision Assistant. Enables visual instruction tuning and image-based conversations. Combines CLIP vision encoder with Vicuna/LLaMA language models. Supports multi-turn image chat, visual question answering, and instruct... |
+| modal-serverless-gpu | Serverless GPU cloud platform for running ML workloads. Use when you need on-demand GPU access without infrastructure management, deploying ML models as APIs, or running batch jobs with automatic scaling. |
+| nemo-curator | GPU-accelerated data curation for LLM training. Supports text/image/video/audio. Features fuzzy deduplication (16× faster), quality filtering (30+ heuristics), semantic deduplication, PII redaction, NSFW detection. Scales across GPUs wit... |
+| obliteratus | OBLITERATUS: abliterate LLM refusals (diff-in-means). |
+| outlines | Outlines: structured JSON/regex/Pydantic LLM generation. |
+| peft-fine-tuning | Parameter-efficient fine-tuning for LLMs using LoRA, QLoRA, and 25+ methods. Use when fine-tuning large models (7B-70B) with limited GPU memory, when you need to train <1% of parameters with minimal accuracy loss, or for multi-adapter se... |
+| pinecone | Managed vector database for production AI applications. Fully managed, auto-scaling, with hybrid search (dense + sparse), metadata filtering, and namespaces. Low latency (<100ms p95). Use for production RAG, recommendation systems, or se... |
+| pytorch-fsdp | Expert guidance for Fully Sharded Data Parallel training with PyTorch FSDP - parameter sharding, mixed precision, CPU offloading, FSDP2 |
+| pytorch-lightning | High-level PyTorch framework with Trainer class, automatic distributed training (DDP/FSDP/DeepSpeed), callbacks system, and minimal boilerplate. Scales from laptop to supercomputer with same code. Use when you want clean training loops w... |
+| qdrant-vector-search | High-performance vector similarity search engine for RAG and semantic search. Use when building production RAG systems requiring fast nearest neighbor search, hybrid search with filtering, or scalable vector storage with Rust-powered per... |
+| sparse-autoencoder-training | Provides guidance for training and analyzing Sparse Autoencoders (SAEs) using SAELens to decompose neural network activations into interpretable features. Use when discovering interpretable features, analyzing superposition, or studying... |
+| simpo-training | Simple Preference Optimization for LLM alignment. Reference-free alternative to DPO with better performance (+6.4 points on AlpacaEval 2.0). No reference model needed, more efficient than DPO. Use for preference alignment when want simpl... |
+| slime-rl-training | Provides guidance for LLM post-training with RL using slime, a Megatron+SGLang framework. Use when training GLM models, implementing custom data generation workflows, or needing tight Megatron-LM integration for RL scaling. |
+| stable-diffusion-image-generation | State-of-the-art text-to-image generation with Stable Diffusion models via HuggingFace Diffusers. Use when generating images from text prompts, performing image-to-image translation, inpainting, or building custom diffusion pipelines. |
+| tensorrt-llm | Optimizes LLM inference with NVIDIA TensorRT for maximum throughput and lowest latency. Use for production deployment on NVIDIA GPUs (A100/H100), when you need 10-100x faster inference than PyTorch, or for serving models with quantizatio... |
+| distributed-llm-pretraining-torchtitan | Provides PyTorch-native distributed LLM pretraining using torchtitan with 4D parallelism (FSDP2, TP, PP, CP). Use when pretraining Llama 3.1, DeepSeek V3, or custom models at scale from 8 to 512+ GPUs with Float8, torch.compile, and dist... |
+| fine-tuning-with-trl | TRL: SFT, DPO, PPO, GRPO, reward modeling for LLM RLHF. |
+| unsloth | Unsloth: 2-5x faster LoRA/QLoRA fine-tuning, less VRAM. |
+| whisper | OpenAI's general-purpose speech recognition model. Supports 99 languages, transcription, translation to English, and language identification. Six model sizes from tiny (39M params) to large (1550M params). Use for speech-to-text, podcast... |
+
+## payments​
+
+| Skill | Description |
+| --- | --- |
+| mpp-agent | Pay HTTP 402 APIs via Machine Payments Protocol (MPP). |
+| stripe-link-cli | Agent payments via Stripe Link — cards, SPT, approvals. |
+| stripe-projects | Provision SaaS services + sync creds via Stripe Projects. |
+
+## productivity​
+
+| Skill | Description |
+| --- | --- |
+| canvas | Canvas LMS integration — fetch enrolled courses and assignments using API token authentication. |
+| here.now | Publish static sites to {slug}.here.now and store private files in cloud Drives for agent-to-agent handoff. |
+| memento-flashcards | Spaced-repetition flashcard system. Create cards from facts or text, chat with flashcards using free-text answers graded by the agent, generate quizzes from YouTube transcripts, review due cards with adaptive scheduling, and export/impor... |
+| shop | Shop catalog search, checkout, order tracking, returns. |
+| shopify | Shopify Admin & Storefront GraphQL APIs via curl. Products, orders, customers, inventory, metafields. |
+| siyuan | SiYuan Note API for searching, reading, creating, and managing blocks and documents in a self-hosted knowledge base via curl. |
+| telephony | Give Hermes phone capabilities without core tool changes. Provision and persist a Twilio number, send and receive SMS/MMS, make direct calls, and place AI-driven outbound calls through Bland.ai or Vapi. |
+
+## research​
+
+| Skill | Description |
+| --- | --- |
+| bioinformatics | Gateway to 400+ bioinformatics skills from bioSkills and ClawBio. Covers genomics, transcriptomics, single-cell, variant calling, pharmacogenomics, metagenomics, structural biology, and more. Fetches domain-specific reference material on... |
+| darwinian-evolver | Evolve prompts/regex/SQL/code with Imbue's evolution loop. |
+| domain-intel | Passive domain reconnaissance using Python stdlib. Subdomain discovery, SSL certificate inspection, WHOIS lookups, DNS records, domain availability checks, and bulk multi-domain analysis. No API keys required. |
+| drug-discovery | Pharmaceutical research assistant for drug discovery workflows. Search bioactive compounds on ChEMBL, calculate drug-likeness (Lipinski Ro5, QED, TPSA, synthetic accessibility), look up drug-drug interactions via OpenFDA, interpret ADMET... |
+| duckduckgo-search | Free web search via DuckDuckGo — text, news, images, videos. No API key needed. Prefer theddgsCLI when installed; use the Python DDGS library only after verifying thatddgsis available in the current runtime. |
+| gitnexus-explorer | Index a codebase with GitNexus and serve an interactive knowledge graph via web UI + Cloudflare tunnel. |
+| osint-investigation | Public-records OSINT investigation framework — SEC EDGAR filings, USAspending contracts, Senate lobbying, OFAC sanctions, ICIJ offshore leaks, NYC property records (ACRIS), OpenCorporates registries, CourtListener court records, Wayback... |
+| parallel-cli | Optional vendor skill for Parallel CLI — agent-native web search, extraction, deep research, enrichment, FindAll, and monitoring. Prefer JSON output and non-interactive flows. |
+| qmd | Search personal knowledge bases, notes, docs, and meeting transcripts locally using qmd — a hybrid retrieval engine with BM25, vector search, and LLM reranking. Supports CLI and MCP integration. |
+| scrapling | Web scraping with Scrapling - HTTP fetching, stealth browser automation, Cloudflare bypass, and spider crawling via CLI and Python. |
+| searxng-search | Free meta-search via SearXNG — aggregates results from 70+ search engines. Self-hosted or use a public instance. No API key needed. Falls back automatically when the web search toolset is unavailable. |
+
+`ddgs`
+`ddgs`
+
+## security​
+
+| Skill | Description |
+| --- | --- |
+| 1password | Set up and use 1Password CLI (op). Use when installing the CLI, enabling desktop app integration, signing in, and reading/injecting secrets for commands. |
+| godmode | Jailbreak LLMs: Parseltongue, GODMODE, ULTRAPLINIAN. |
+| oss-forensics | Supply chain investigation, evidence recovery, and forensic analysis for GitHub repositories. Covers deleted commit recovery, force-push detection, IOC extraction, multi-source evidence collection, hypothesis formation/validation, and st... |
+| sherlock | OSINT username search across 400+ social networks. Hunt down social media accounts by username. |
+| unbroker | Autonomously remove your info from data-broker sites. |
+| web-pentest | Authorized web application penetration testing — reconnaissance, vulnerability analysis, proof-based exploitation, and professional reporting. Adapts Shannon's "No Exploit, No Report" methodology with hard guardrails for scope, authoriza... |
+
+## software-development​
+
+| Skill | Description |
+| --- | --- |
+| code-wiki | Generate wiki docs + Mermaid diagrams for any codebase. |
+| rest-graphql-debug | Debug REST/GraphQL APIs: status codes, auth, schemas, repro. |
+| subagent-driven-development | Execute plans via delegate_task subagents (2-stage review). |
+
+## web-development​
+
+| Skill | Description |
+| --- | --- |
+| cloudflare-temporary-deploy | Deploy a Worker live, no account, via wrangler --temporary. |
+| page-agent | Embed alibaba/page-agent into your own web application — a pure-JavaScript in-page GUI agent that ships as a single <script> tag or npm package and lets end-users of your site drive the UI with natural language ("click login, fill userna... |
+
+## Contributing Optional Skills​
+
+To add a new optional skill to the repository:
+
+1. Create a directory underoptional-skills/<category>/<skill-name>/
+2. Add aSKILL.mdwith standard frontmatter (name, description, version, author)
+3. Include any supporting files inreferences/,templates/, orscripts/subdirectories
+4. Submit a pull request — the skill will appear in this catalog and get its own docs page once merged
+
+`optional-skills/<category>/<skill-name>/`
+`SKILL.md`
+`references/`
+`templates/`
+`scripts/`
