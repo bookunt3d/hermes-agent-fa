@@ -4,55 +4,322 @@ title: راهنمای فارسی Hermes Agent
 permalink: /
 ---
 
-<div style="text-align: center; padding: 80px 20px; max-width: 800px; margin: 0 auto;">
-  <h1 style="font-size: 2.5em; margin-bottom: 24px;">🇮🇷 راهنمای فارسی Hermes Agent</h1>
-  <p style="font-size: 1.2em; color: var(--text-secondary); margin-bottom: 40px;">
-    ترجمه کامل داکیومنت رسمی <a href="https://hermes-agent.nousresearch.com/docs/">Hermes Agent</a>
-  </p>
-  
-  <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-bottom: 60px;">
-    <a href="{{ '/docs/getting-started/quickstart/' | relative_url }}" style="display: inline-block; padding: 12px 24px; background: var(--accent); color: white; border-radius: 8px; text-decoration: none; font-weight: 600;">شروع سریع →</a>
-    <a href="https://hermes-agent.nousresearch.com/" style="display: inline-block; padding: 12px 24px; background: var(--bg-tertiary); color: var(--text-primary); border-radius: 8px; text-decoration: none; font-weight: 600;">دانلود دسکتاپ</a>
-    <a href="https://github.com/NousResearch/hermes-agent" style="display: inline-block; padding: 12px 24px; background: var(--bg-tertiary); color: var(--text-primary); border-radius: 8px; text-decoration: none; font-weight: 600;">GitHub</a>
-  </div>
+<style>
+  .hero {
+    text-align: center;
+    padding: 100px 24px 60px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(108,92,231,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .hero > * { position: relative; z-index: 1; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(108, 92, 231, 0.12);
+    border: 1px solid rgba(108, 92, 231, 0.25);
+    border-radius: 100px;
+    font-size: 13px;
+    color: var(--accent-2);
+    font-weight: 500;
+    margin-bottom: 28px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--accent-3);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+  .hero h1 {
+    font-size: 3.2em;
+    font-weight: 900;
+    margin-bottom: 20px;
+    line-height: 1.2;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #e8e8f0 0%, #a29bfe 50%, #00cec9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-subtitle {
+    font-size: 1.15em;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.9;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: var(--transition);
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--gradient-1);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(108, 92, 231, 0.35);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(108, 92, 231, 0.5);
+    color: #fff;
+  }
+  .btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-2px);
+    color: var(--text-primary);
+  }
 
-  <h2 style="margin-bottom: 24px;">فهرست مطالب</h2>
-  
-  <div style="text-align: right; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
-    <div style="padding: 20px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border);">
-      <h3 style="margin-bottom: 12px;">🚀 شروع سریع</h3>
-      <ul style="list-style: none; padding: 0;">
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/getting-started/quickstart/' | relative_url }}">راهنمای شروع سریع</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/getting-started/installation/' | relative_url }}">نصب</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/getting-started/platform-support/' | relative_url }}">پشتیبانی از پلتفرم‌ها</a></li>
-      </ul>
-    </div>
-    
-    <div style="padding: 20px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border);">
-      <h3 style="margin-bottom: 12px;">📖 راهنمای کاربر</h3>
-      <ul style="list-style: none; padding: 0;">
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/user-guide/cli/' | relative_url }}">رابط خط فرمان</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/user-guide/configuration/' | relative_url }}">پیکربندی</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/user-guide/desktop/' | relative_url }}">اپلیکیشن دسکتاپ</a></li>
-      </ul>
-    </div>
-    
-    <div style="padding: 20px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border);">
-      <h3 style="margin-bottom: 12px;">🔧 امکانات</h3>
-      <ul style="list-style: none; padding: 0;">
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/user-guide/features/skills/' | relative_url }}">مهارت‌ها</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/user-guide/features/memory/' | relative_url }}">حافظه</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/user-guide/features/tools/' | relative_url }}">ابزارها</a></li>
-      </ul>
-    </div>
-    
-    <div style="padding: 20px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--border);">
-      <h3 style="margin-bottom: 12px;">📚 مرجع</h3>
-      <ul style="list-style: none; padding: 0;">
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/reference/cli-commands/' | relative_url }}">دستورات CLI</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/reference/faq/' | relative_url }}">سؤالات متداول</a></li>
-        <li style="margin-bottom: 8px;"><a href="{{ '/docs/guides/tips/' | relative_url }}">نکات و ترفندها</a></li>
-      </ul>
-    </div>
+  /* ═══ Section ═══ */
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 60px 24px;
+  }
+  .section-title {
+    font-size: 1.8em;
+    font-weight: 800;
+    text-align: center;
+    margin-bottom: 48px;
+    color: var(--text-primary);
+  }
+
+  /* ═══ Cards Grid ═══ */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: var(--transition);
+    text-decoration: none;
+    display: block;
+  }
+  .card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-glow);
+  }
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 18px;
+  }
+  .card-icon.purple { background: rgba(108, 92, 231, 0.15); }
+  .card-icon.teal { background: rgba(0, 206, 201, 0.15); }
+  .card-icon.pink { background: rgba(253, 121, 168, 0.15); }
+  .card-icon.blue { background: rgba(116, 185, 255, 0.15); }
+  .card h3 {
+    font-size: 1.15em;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+  }
+  .card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 0;
+    line-height: 1.7;
+  }
+
+  /* ═══ Quick Links Table ═══ */
+  .quick-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin-top: 32px;
+  }
+  .quick-table th {
+    background: var(--bg-tertiary);
+    padding: 16px 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: right;
+    font-size: 14px;
+  }
+  .quick-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(108, 92, 231, 0.06);
+  }
+  .quick-table tr:last-child td { border-bottom: none; }
+  .quick-table tr:hover td { background: rgba(108, 92, 231, 0.04); }
+  .quick-table a { font-weight: 600; }
+
+  /* ═══ Footer ═══ */
+  .site-footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+  }
+  .site-footer a { color: var(--text-secondary); }
+</style>
+
+<!-- ═══ Hero Section ═══ -->
+<section class="hero">
+  <div class="hero-badge">ترجمه رسمی داکیومنت</div>
+  <h1>راهنمای فارسی<br>Hermes Agent</h1>
+  <p class="hero-subtitle">
+    Agent هوشمند خود بهبودی ساخته‌شده توسط Nous Research.
+    تنها agent با حلقه یادگیری داخلی که از تجربه مهارت می‌سازد.
+  </p>
+  <div class="hero-actions">
+    <a href="{{ '/docs/getting-started/quickstart/' | relative_url }}" class="btn btn-primary">
+      🚀 شروع سریع
+    </a>
+    <a href="https://hermes-agent.nousresearch.com/" class="btn btn-secondary" target="_blank">
+      دانلود دسکتاپ
+    </a>
+    <a href="https://github.com/NousResearch/hermes-agent" class="btn btn-secondary" target="_blank">
+      GitHub
+    </a>
   </div>
-</div>
+</section>
+
+<!-- ═══ Categories ═══ -->
+<section class="section">
+  <h2 class="section-title">فهرست مطالب</h2>
+  <div class="cards-grid">
+    <a href="{{ '/docs/getting-started/quickstart/' | relative_url }}" class="card">
+      <div class="card-icon purple">🚀</div>
+      <h3>شروع سریع</h3>
+      <p>نصب در ۶۰ ثانیه، راهنمای شروع سریع، پشتیبانی از پلتفرم‌ها و مسیر یادگیری</p>
+    </a>
+    <a href="{{ '/docs/user-guide/cli/' | relative_url }}" class="card">
+      <div class="card-icon teal">📖</div>
+      <h3>راهنمای کاربر</h3>
+      <p>رابط خط فرمان، TUI، دسکتاپ، ویندوز، پیکربندی، جلسات و پروفایل‌ها</p>
+    </a>
+    <a href="{{ '/docs/user-guide/features/skills/' | relative_url }}" class="card">
+      <div class="card-icon pink">🔧</div>
+      <h3>امکانات</h3>
+      <p>مهارت‌ها، حافظه، ابزارها، MCP، حالت صوتی، شخصیت و فایل‌های زمینه</p>
+    </a>
+    <a href="{{ '/docs/user-guide/messaging/' | relative_url }}" class="card">
+      <div class="card-icon blue">💬</div>
+      <h3>پیام‌رسانی</h3>
+      <p>اتصال به تلگرام، دیسکورد، اسلک، واتساپ و سایر پلتفرم‌ها</p>
+    </a>
+    <a href="{{ '/docs/integrations/nous-portal/' | relative_url }}" class="card">
+      <div class="card-icon purple">🔗</div>
+      <h3>یکپارچه‌سازی</h3>
+      <p>Nous Portal، MCP، ابزارهای خارجی و اتصال به سرویس‌ها</p>
+    </a>
+    <a href="{{ '/docs/guides/tips/' | relative_url }}" class="card">
+      <div class="card-icon teal">💡</div>
+      <h3>نکات و ترفندها</h3>
+      <p>بهترین شیوه‌ها، ترفندهای پیشرفته و راهنمای حل مشکلات</p>
+    </a>
+    <a href="{{ '/docs/developer-guide/architecture/' | relative_url }}" class="card">
+      <div class="card-icon pink">🏗️</div>
+      <h3>معماری</h3>
+      <p>ساختار داخلی، سیستم پلاگین و راهنمای توسعه</p>
+    </a>
+    <a href="{{ '/docs/reference/cli-commands/' | relative_url }}" class="card">
+      <div class="card-icon blue">📚</div>
+      <h3>مرجع</h3>
+      <p>دستورات CLI، سؤالات متداول و راهنمای عیب‌یابی</p>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ Quick Links ═══ -->
+<section class="section" style="padding-top: 0;">
+  <table class="quick-table">
+    <thead>
+      <tr>
+        <th>لینک</th>
+        <th>توضیح</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>🚀 <a href="{{ '/docs/getting-started/installation/' | relative_url }}">نصب</a></td>
+        <td>نصب در ۶۰ ثانیه روی Linux، macOS، WSL2، ویندوز یا اندروید</td>
+      </tr>
+      <tr>
+        <td>📖 <a href="{{ '/docs/getting-started/quickstart/' | relative_url }}">شروع سریع</a></td>
+        <td>اولین مکالمه و ویژگی‌های کلیدی</td>
+      </tr>
+      <tr>
+        <td>🗺️ <a href="{{ '/docs/getting-started/learning-path/' | relative_url }}">مسیر یادگیری</a></td>
+        <td>مستندات مناسب سطح تجربه شما</td>
+      </tr>
+      <tr>
+        <td>⚙️ <a href="{{ '/docs/user-guide/configuration/' | relative_url }}">پیکربندی</a></td>
+        <td>تنظیم مدل‌ها، API keys و رفتار agent</td>
+      </tr>
+      <tr>
+        <td>💡 <a href="{{ '/docs/guides/tips/' | relative_url }}">نکات و ترفندها</a></td>
+        <td>ترفندها و بهترین شیوه‌ها</td>
+      </tr>
+      <tr>
+        <td>🔧 <a href="{{ '/docs/reference/cli-commands/' | relative_url }}">دستورات CLI</a></td>
+        <td>مرجع کامل دستورات</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer class="site-footer">
+  <p>
+    ترجمه فارسی <a href="https://hermes-agent.nousresearch.com/docs/" target="_blank">داکیومنت Hermes Agent</a>
+    &nbsp;·&nbsp;
+    <a href="https://github.com/NousResearch/hermes-agent" target="_blank">GitHub</a>
+    &nbsp;·&nbsp;
+    <a href="https://discord.gg/hermes-agent" target="_blank">Discord</a>
+  </p>
+</footer>

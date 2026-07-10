@@ -1,16 +1,19 @@
 title: راهنمای فارسی Hermes Agent
 description: ترجمه فارسی داکیومنت رسمی Hermes Agent
-url: ""
-baseurl: ""
+url: "https://bookunt3d.github.io"
+baseurl: "/hermes-agent-fa"
 permalink: pretty
 markdown: kramdown
 highlighter: rouge
 exclude:
   - scraped
   - scrape.py
+  - build_docs.py
   - README.md
   - Gemfile
   - Gemfile.lock
+  - node_modules
+  - vendor
 
 defaults:
   - scope:
