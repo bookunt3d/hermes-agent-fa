@@ -8,166 +8,166 @@ permalink: /guides/use-voice-mode-with-hermes/
 - Guides & Tutorials
 - Use Voice Mode with Hermes
 
-# Use Voice Mode with Hermes
+# استفاده از حالت صوتی با Hermes
 
-This guide is the practical companion to theVoice Mode feature reference.
+این راهنما همراه عملی مرجع ویژگی حالت صوتی است.
 
-[Voice Mode feature reference](/docs/user-guide/features/voice-mode)
+[مرجع ویژگی حالت صوتی](/docs/user-guide/features/voice-mode)
 
-If the feature page explains what voice mode can do, this guide shows how to actually use it well.
+اگر صفحه ویژگی توضیح می‌دهد حالت صوتی چه کاری می‌تواند انجام دهد، این راهنما نشان می‌دهد چگونه واقعاً به خوبی از آن استفاده کنید.
 
-Nous Portalbundles both the LLM and TTS through one OAuth — voice mode works end-to-end with no extra credentials.
+Nous Portal هر دو LLM و TTS را از طریق یک OAuth بسته‌بندی می‌کند — حالت صوتی از ابتدا تا انتها بدون اعتبارنامه اضافی کار می‌کند.
 
 [Nous Portal](/docs/integrations/nous-portal)
 
-## What voice mode is good for​
+## حالت صوتی برای چه چیزی خوب است
 
-Voice mode is especially useful when:
+حالت صوتی به ویژه وقتی مفید است که:
 
-- you want a hands-free CLI workflow
-- you want spoken responses in Telegram or Discord
-- you want Hermes sitting in a Discord voice channel for live conversation
-- you want quick idea capture, debugging, or back-and-forth while walking around instead of typing
+- می‌خواهید یک workflow CLI بدون دست داشته باشید
+- می‌خواهید پاسخ‌های گفتاری در Telegram یا Discord داشته باشید
+- می‌خواهید Hermes در یک کانال صوتی Discord برای مکالمه زنده بنشیند
+- می‌خواهید ایده‌گیری سریع، عیب‌یابی یا رفت و برگشت حین راه رفتن به جای تایپ کردن داشته باشید
 
-## Choose your voice mode setup​
+## تنظیم حالت صوتی خود را انتخاب کنید
 
-There are really three different voice experiences in Hermes.
+در واقع سه تجربه صوتی متفاوت در Hermes وجود دارد.
 
-| Mode | Best for | Platform |
+| حالت | بهترین برای | پلتفرم |
 | --- | --- | --- |
-| Interactive microphone loop | Personal hands-free use while coding or researching | CLI |
-| Voice replies in chat | Spoken responses alongside normal messaging | Telegram, Discord |
-| Live voice channel bot | Group or personal live conversation in a VC | Discord voice channels |
+| حلقه میکروفون تعاملی | استفاده شخصی بدون دست حین کدنویسی یا تحقیق | CLI |
+| پاسخ‌های صوتی در چت | پاسخ‌های گفتاری در کنار پیام‌رسانی عادی | Telegram، Discord |
+| ربات کانال صوتی زنده | مکالمه زنده گروهی یا شخصی در VC | کانال‌های صوتی Discord |
 
-A good path is:
+یک مسیر خوب:
 
-1. get text working first
-2. enable voice replies second
-3. move to Discord voice channels last if you want the full experience
+1. ابتدا متن را کارآمد کنید
+2. سپس پاسخ‌های صوتی را فعال کنید
+3. در نهایت اگر تجربه کامل می‌خواهید به کانال‌های صوتی Discord بروید
 
-## Step 1: make sure normal Hermes works first​
+## مرحله ۱: مطمئن شوید Hermes عادی ابتدا کار می‌کند
 
-Before touching voice mode, verify that:
+قبل از دست زدن به حالت صوتی، تأیید کنید که:
 
-- Hermes starts
-- your provider is configured
-- the agent can answer text prompts normally
+- Hermes شروع می‌شود
+- ارائه‌دهنده شما پیکربندی شده
+- agent می‌تواند به پرامپت‌های متنی به طور عادی پاسخ دهد
 
 ```
 hermes
 ```
 
-Ask something simple:
+چیز ساده‌ای بپرسید:
 
 ```
 What tools do you have available?
 ```
 
-If that is not solid yet, fix text mode first.
+اگر هنوز محکم نیست، ابتدا حالت متن را تعمیر کن.
 
-## Step 2: install the right extras​
+## مرحله ۲: extras درست را نصب کنید
 
-### CLI microphone + playback​
+### میکروفون CLI + پخش
 
 ```
 cd ~/.hermes/hermes-agent && uv pip install -e ".[voice]"
 ```
 
-### Messaging platforms​
+### پلتفرم‌های پیام‌رسانی
 
 ```
 cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"
 ```
 
-### Premium ElevenLabs TTS​
+### ElevenLabs TTS پریمیوم
 
 ```
 cd ~/.hermes/hermes-agent && uv pip install -e ".[tts-premium]"
 ```
 
-### Local NeuTTS (optional)​
+### NeuTTS محلی (اختیاری)
 
 ```
 python -m pip install -U neutts[all]
 ```
 
-### Everything​
+### همه چیز
 
 ```
 cd ~/.hermes/hermes-agent && uv pip install -e ".[all]"
 ```
 
-## Step 3: install system dependencies​
+## مرحله ۳: وابستگی‌های سیستم را نصب کنید
 
-### macOS​
+### macOS
 
 ```
 brew install portaudio ffmpeg opusbrew install espeak-ng
 ```
 
-### Ubuntu / Debian​
+### Ubuntu / Debian
 
 ```
 sudo apt install portaudio19-dev ffmpeg libopus0sudo apt install espeak-ng
 ```
 
-Why these matter:
+چرا اینها مهم هستند:
 
-- portaudio→ microphone input / playback for CLI voice mode
-- ffmpeg→ audio conversion for TTS and messaging delivery
-- opus→ Discord voice codec support
-- espeak-ng→ phonemizer backend for NeuTTS
+- `portaudio` → ورودی میکروفون / پخش برای حالت صوتی CLI
+- `ffmpeg` → تبدیل صدا برای TTS و تحویل پیام‌رسانی
+- `opus` → پشتیبانی کدک صوتی Discord
+- `espeak-ng` → پشتیبان Phonemizer برای NeuTTS
 
 `portaudio`
 `ffmpeg`
 `opus`
 `espeak-ng`
 
-## Step 4: choose STT and TTS providers​
+## مرحله ۴: ارائه‌دهندگان STT و TTS را انتخاب کنید
 
-Hermes supports both local and cloud speech stacks.
+Hermes از هر دو پشته گفتار محلی و ابری پشتیبانی می‌کند.
 
-### Easiest / cheapest setup​
+### آسان‌ترین / ارزان‌ترین تنظیم
 
-Use local STT and free Edge TTS:
+از STT محلی و Edge TTS رایگان استفاده کنید:
 
-- STT provider:local
-- TTS provider:edge
+- ارائه‌دهنده STT: `local`
+- ارائه‌دهنده TTS: `edge`
 
 `local`
 `edge`
 
-This is usually the best place to start.
+این معمولاً بهترین نقطه شروع است.
 
-### Environment file example​
+### مثال فایل محیطی
 
-Add to~/.hermes/.env:
+به `~/.hermes/.env` اضافه کنید:
 
 `~/.hermes/.env`
 
 ```
-# Cloud STT options (local needs no key)GROQ_API_KEY=***VOICE_TOOLS_OPENAI_KEY=***# Premium TTS (optional)ELEVENLABS_API_KEY=***
+# گزینه‌های STT ابری (محلی نیازی به کلید ندارد)GROQ_API_KEY=***VOICE_TOOLS_OPENAI_KEY=***# TTS پریمیوم (اختیاری)ELEVENLABS_API_KEY=***
 ```
 
-### Provider recommendations​
+### توصیه‌های ارائه‌دهنده
 
-#### Speech-to-text​
+#### گفتار به متن
 
-- local→ best default for privacy and zero-cost use
-- groq→ very fast cloud transcription
-- openai→ good paid fallback
+- `local` → بهترین پیش‌فرض برای حریم خصوصی و استفاده بدون هزینه
+- `groq` → رونویسی ابری بسیار سریع
+- `openai` → بازگشت پولی خوب
 
 `local`
 `groq`
 `openai`
 
-#### Text-to-speech​
+#### متن به گفتار
 
-- edge→ free and good enough for most users
-- neutts→ free local/on-device TTS
-- elevenlabs→ best quality
-- openai→ good middle ground
-- mistral→ multilingual, native Opus
+- `edge` → رایگان و برای اکثر کاربران به اندازه کافی خوب
+- `neutts` → TTS محلی/روی دستگاه رایگان
+- `elevenlabs` → بهترین کیفیت
+- `openai` → میانه خوب
+- `mistral` → چند زبانه، Opus بومی
 
 `edge`
 `neutts`
@@ -175,11 +175,11 @@ Add to~/.hermes/.env:
 `openai`
 `mistral`
 
-### If you usehermes setup​
+### اگر از `hermes setup` استفاده می‌کنید
 
 `hermes setup`
 
-If you choose NeuTTS in the setup wizard, Hermes checks whetherneuttsis already installed. If it is missing, the wizard tells you NeuTTS needs the Python packageneuttsand the system packageespeak-ng, offers to install them for you, installsespeak-ngwith your platform package manager, and then runs:
+اگر NeuTTS را در جادوگر راه‌اندازی انتخاب کنید، Hermes بررسی می‌کند آیا `neutts` از قبل نصب شده است. اگر وجود نداشته باشد، جادوگر به شما می‌گوید NeuTTS به پکیج Python `neutts` و پکیج سیستم `espeak-ng` نیاز دارد، پیشنهاد می‌کند آنها را برای شما نصب کند، `espeak-ng` را با مدیر پکیج پلتفرم شما نصب می‌کند و سپس اجرا می‌کند:
 
 `neutts`
 `neutts`
@@ -190,17 +190,17 @@ If you choose NeuTTS in the setup wizard, Hermes checks whetherneuttsis already 
 python -m pip install -U neutts[all]
 ```
 
-If you skip that install or it fails, the wizard falls back to Edge TTS.
+اگر آن نصب را رد کنید یا ناموفق باشد، جادوگر به Edge TTS بازمی‌گردد.
 
-## Step 5: recommended config​
+## مرحله ۵: config توصیه شده
 
 ```
 voice:  record_key: "ctrl+b"  max_recording_seconds: 120  auto_tts: false  beep_enabled: true  silence_threshold: 200  silence_duration: 3.0stt:  provider: "local"  local:    model: "base"tts:  provider: "edge"  edge:    voice: "en-US-AriaNeural"
 ```
 
-This is a good conservative default for most people.
+این یک پیش‌فرض خوب محافظه‌کارانه برای اکثر افراد است.
 
-If you want local TTS instead, switch thettsblock to:
+اگر TTS محلی به جای آن می‌خواهید، بلوک `tts` را به این سوئیچ کنید:
 
 `tts`
 
@@ -208,98 +208,98 @@ If you want local TTS instead, switch thettsblock to:
 tts:  provider: "neutts"  neutts:    ref_audio: ''    ref_text: ''    model: neuphonic/neutts-air-q4-gguf    device: cpu
 ```
 
-## Use case 1: CLI voice mode​
+## کاربرد ۱: حالت صوتی CLI
 
-## Turn it on​
+## آن را فعال کنید
 
-Start Hermes:
+Hermes را راه‌اندازی کنید:
 
 ```
 hermes
 ```
 
-Inside the CLI:
+در داخل CLI:
 
 ```
 /voice on
 ```
 
-### Recording flow​
+### جریان ضبط
 
-Default key:
+کلید پیش‌فرض:
 
-- Ctrl+B
-
-`Ctrl+B`
-
-Workflow:
-
-1. pressCtrl+B
-2. speak
-3. wait for silence detection to stop recording automatically
-4. Hermes transcribes and responds
-5. if TTS is on, it speaks the answer
-6. the loop can automatically restart for continuous use
+- `Ctrl+B`
 
 `Ctrl+B`
 
-### Useful commands​
+workflow:
+
+1. `Ctrl+B` را فشار دهید
+2. صحبت کنید
+3. منتظر تشخیص سکوت باشید تا ضبط را به طور خودکار متوقف کند
+4. Hermes رونویسی و پاسخ می‌دهد
+5. اگر TTS فعال باشد، پاسخ را بیان می‌کند
+6. حلقه می‌تواند برای استفاده پیوسته به طور خودکار شروع شود
+
+`Ctrl+B`
+
+### دستورات مفید
 
 ```
 /voice/voice on/voice off/voice tts/voice status
 ```
 
-### Good CLI workflows​
+### workflowهای خوب CLI
 
-#### Walk-up debugging​
+#### عیب‌یابی در حین راه رفتن
 
-Say:
+بگویید:
 
 ```
 I keep getting a docker permission error. Help me debug it.
 ```
 
-Then continue hands-free:
+سپس بدون دست ادامه دهید:
 
-- "Read the last error again"
-- "Explain the root cause in simpler terms"
-- "Now give me the exact fix"
+- «خطا آخر را دوباره بخوان»
+- «علت اصلی را به زبان ساده‌تر توضیح بده»
+- «حالا دقیق تعمیر را به من بده»
 
-#### Research / brainstorming​
+#### تحقیق / طوفان فکری
 
-Great for:
+عالی برای:
 
-- walking around while thinking
-- dictating half-formed ideas
-- asking Hermes to structure your thoughts in real time
+- راه رفتن حین فکر کردن
+- رونویسی ایده‌های نیمه شکل‌گرفته
+- از Hermes بخواهید افکار شما را در لحظه ساختار دهد
 
-#### Accessibility / low-typing sessions​
+#### دسترسی / نشست‌های کم تایپ
 
-If typing is inconvenient, voice mode is one of the fastest ways to stay in the full Hermes loop.
+اگر تایپ کردن ناراحت‌کننده است، حالت صوتی یکی از سریع‌ترین راه‌ها برای ماندن در حلقه کامل Hermes است.
 
-## Tuning CLI behavior​
+## تنظیم رفتار CLI
 
-### Silence threshold​
+### آستانه سکوت
 
-If Hermes starts/stops too aggressively, tune:
+اگر Hermes بیش از حد تهاجمی شروع/متوقف می‌شود، تنظیم کنید:
 
 ```
 voice:  silence_threshold: 250
 ```
 
-Higher threshold = less sensitive.
+آستانه بالاتر = حساسیت کمتر.
 
-### Silence duration​
+### مدت سکوت
 
-If you pause a lot between sentences, increase:
+اگر بین جملات زیاد مکث می‌کنید، افزایش دهید:
 
 ```
 voice:  silence_duration: 4.0
 ```
 
-### Record key​
+### کلید ضبط
 
-IfCtrl+Bconflicts with your terminal or tmux habits:
+اگر `Ctrl+B` با ترمینال یا عادت‌های tmux شما تداخل دارد:
 
 `Ctrl+B`
 
@@ -307,208 +307,208 @@ IfCtrl+Bconflicts with your terminal or tmux habits:
 voice:  record_key: "ctrl+space"
 ```
 
-## Use case 2: voice replies in Telegram or Discord​
+## کاربرد ۲: پاسخ‌های صوتی در Telegram یا Discord
 
-This mode is simpler than full voice channels.
+این حالت ساده‌تر از کانال‌های صوتی کامل است.
 
-Hermes stays a normal chat bot, but can speak replies.
+Hermes یک ربات چت عادی باقی می‌ماند اما می‌تواند پاسخ‌ها را بیان کند.
 
-### Start the gateway​
+### راه‌اندازی gateway
 
 ```
 hermes gateway
 ```
 
-### Turn on voice replies​
+### فعال کردن پاسخ‌های صوتی
 
-Inside Telegram or Discord:
+در داخل Telegram یا Discord:
 
 ```
 /voice on
 ```
 
-or
+یا
 
 ```
 /voice tts
 ```
 
-### Modes​
+### حالت‌ها
 
-| Mode | Meaning |
+| حالت | معنی |
 | --- | --- |
-| off | text only |
-| voice_only | speak only when the user sent voice |
-| all | speak every reply |
+| off | فقط متن |
+| voice_only | فقط وقتی کاربر صدا فرستاده بیان کند |
+| all | هر پاسخی را بیان کند |
 
 `off`
 `voice_only`
 `all`
 
-### When to use which mode​
+### چه زمانی از کدام حالت استفاده کنید
 
-- /voice onif you want spoken replies only for voice-originating messages
-- /voice ttsif you want a full spoken assistant all the time
+- `/voice on` اگر فقط برای پیام‌های صوتی پاسخ گفتاری می‌خواهید
+- `/voice tts` اگر یک دستیار گفتاری کامل همیشه می‌خواهید
 
 `/voice on`
 `/voice tts`
 
-### Good messaging workflows​
+### workflowهای خوب پیام‌رسانی
 
-#### Telegram assistant on your phone​
+#### دستیار Telegram در گوشی شما
 
-Use when:
+وقتی استفاده کنید:
 
-- you are away from your machine
-- you want to send voice notes and get quick spoken replies
-- you want Hermes to function like a portable research or ops assistant
+- از ماشین خود دور هستید
+- می‌خواهید یادداشت‌های صوتی ارسال کنید و پاسخ‌های گفتاری سریع دریافت کنید
+- می‌خواهید Hermes مانند یک دستیار تحقیقاتی یا عملیاتی قابل حمل عمل کند
 
-#### Discord DMs with spoken output​
+#### DMهای Discord با خروجی گفتاری
 
-Useful when you want private interaction without server-channel mention behavior.
+مفید وقتی تعامل خصوصی بدون رفتار mention کانال سرور می‌خواهید.
 
-## Use case 3: Discord voice channels​
+## کاربرد ۳: کانال‌های صوتی Discord
 
-This is the most advanced mode.
+این پیشرفته‌ترین حالت است.
 
-Hermes joins a Discord VC, listens to user speech, transcribes it, runs the normal agent pipeline, and speaks replies back into the channel.
+Hermes به یک VC Discord می‌پیوندد، به گفتار کاربران گوش می‌دهد، آن را رونویسی می‌کند، خط لول agent عادی را اجرا می‌کند و پاسخ‌ها را در کانال بیان می‌کند.
 
-## Required Discord permissions​
+## دسترسی‌های مورد نیاز Discord
 
-In addition to the normal text-bot setup, make sure the bot has:
+علاوه بر راه‌اندازی متنی عادت ربات، مطمئن شوید ربات دارد:
 
 - Connect
 - Speak
-- preferably Use Voice Activity
+- ترجیحاً Use Voice Activity
 
-Also enable privileged intents in the Developer Portal:
+همچنین intentهای特权‌دار را در Developer Portal فعال کنید:
 
 - Presence Intent
 - Server Members Intent
 - Message Content Intent
 
-## Join and leave​
+## پیوستن و ترک
 
-In a Discord text channel where the bot is present:
+در یک کانال متنی Discord که ربات در آن حضور دارد:
 
 ```
 /voice join/voice leave/voice status
 ```
 
-### What happens when joined​
+### وقتی می‌پیوندد چه اتفاقی می‌افتد
 
-- users speak in the VC
-- Hermes detects speech boundaries
-- transcripts are posted in the associated text channel
-- Hermes responds in text and audio
-- the text channel is the one where/voice joinwas issued
+- کاربران در VC صحبت می‌کنند
+- Hermes مرزهای گفتار را تشخیص می‌دهد
+- رونویسی‌ها در کانال متنی مرتبط پست می‌شوند
+- Hermes به صورت متنی و صوتی پاسخ می‌دهد
+- کانال متنی همان است که `/voice join` در آن صادر شده
 
 `/voice join`
 
-### Best practices for Discord VC use​
+### بهترین شیوه‌ها برای استفاده از VC Discord
 
-- keepDISCORD_ALLOWED_USERStight
-- use a dedicated bot/testing channel at first
-- verify STT and TTS work in ordinary text-chat voice mode before trying VC mode
+- `DISCORD_ALLOWED_USERS` را باریک نگه دارید
+- ابتدا از یک کانال اختصاصی ربات/تست استفاده کنید
+- STT و TTS را در حالت چت متنی عادی قبل از امتحان حالت VC تأیید کنید
 
 `DISCORD_ALLOWED_USERS`
 
-## Voice quality recommendations​
+## توصیه‌های کیفیت صدا
 
-### Best quality setup​
+### بهترین تنظیم کیفیت
 
-- STT: locallarge-v3or Groqwhisper-large-v3
+- STT: محلی `large-v3` یا Groq `whisper-large-v3`
 - TTS: ElevenLabs
 
 `large-v3`
 `whisper-large-v3`
 
-### Best speed / convenience setup​
+### بهترین تنظیم سرعت / راحتی
 
-- STT: localbaseor Groq
+- STT: محلی `base` یا Groq
 - TTS: Edge
 
 `base`
 
-### Best zero-cost setup​
+### بهترین تنظیم بدون هزینه
 
-- STT: local
+- STT: محلی
 - TTS: Edge
 
-## Common failure modes​
+## حالت‌های خرابی رایج
 
-### "No audio device found"​
+### «No audio device found»
 
-Installportaudio.
+`portaudio` را نصب کنید.
 
 `portaudio`
 
-### "Bot joins but hears nothing"​
+### «ربات می‌پیوندد اما چیزی نمی‌شنود»
 
-Check:
+بررسی کنید:
 
-- your Discord user ID is inDISCORD_ALLOWED_USERS
-- you are not muted
-- privileged intents are enabled
-- the bot has Connect/Speak permissions
+- شناسه کاربر Discord شما در `DISCORD_ALLOWED_USERS` باشد
+- بی‌صدا نباشید
+- intentهای特权‌دار فعال باشند
+- ربات دسترسی‌های Connect/Speak داشته باشد
 
 `DISCORD_ALLOWED_USERS`
 
-### "It transcribes but does not speak"​
+### «رونویسی می‌کند اما بیان نمی‌کند»
 
-Check:
+بررسی کنید:
 
-- TTS provider config
-- API key / quota for ElevenLabs or OpenAI
-- ffmpeginstall for Edge conversion paths
+- پیکربندی ارائه‌دهنده TTS
+- کلید API / سهمیه برای ElevenLabs یا OpenAI
+- نصب `ffmpeg` برای مسیرهای تبدیل Edge
 
 `ffmpeg`
 
-### "Whisper outputs garbage"​
+### «Whisper متن زباله برمی‌گرداند»
 
-Try:
+امتحان کنید:
 
-- quieter environment
-- highersilence_threshold
-- different STT provider/model
-- shorter, clearer utterances
+- محیط ساکت‌تر
+- `silence_threshold` بالاتر در config
+- مدل/ارائه‌دهنده STT متفاوت
+- عبارات کوتاه‌تر و واضح‌تر
 
 `silence_threshold`
 
-### "It works in DMs but not in server channels"​
+### «در DMها کار می‌کند اما در کانال‌های سرور نه»
 
-That is often mention policy.
+این اغلب سیاست mention است.
 
-By default, the bot needs an@mentionin Discord server text channels unless configured otherwise.
+به طور پیش‌فرض، ربات در کانال‌های متنی سرور Discord به `@mention` نیاز دارد مگر اینکه پیکربندی شده باشد.
 
 `@mention`
 
-## Suggested first-week setup​
+## تنظیم هفته اول پیشنهادی
 
-If you want the shortest path to success:
+اگر کوتاه‌ترین مسیر موفقیت را می‌خواهید:
 
-1. get text Hermes working
-2. installhermes-agent[voice]
-3. use CLI voice mode with local STT + Edge TTS
-4. then enable/voice onin Telegram or Discord
-5. only after that, try Discord VC mode
+1. Hermes متنی را کارآمد کنید
+2. `hermes-agent[voice]` را نصب کنید
+3. از حالت صوتی CLI با STT محلی + Edge TTS استفاده کنید
+4. سپس `/voice on` را در Telegram یا Discord فعال کنید
+5. فقط پس از آن، حالت VC Discord را امتحان کنید
 
 `hermes-agent[voice]`
 `/voice on`
 
-That progression keeps the debugging surface small.
+این پیشرفت سطح عیب‌یابی را کوچک نگه می‌دارد.
 
-## Where to read next​
+## جایی که باید بعد بخوانید
 
-- Voice Mode feature reference
-- Messaging Gateway
-- Discord setup
-- Telegram setup
-- Configuration
+- مرجع ویژگی حالت صوتی
+- دروازه پیام‌رسانی
+- راه‌اندازی Discord
+- راه‌اندازی Telegram
+- پیکربندی
 
-[Voice Mode feature reference](/docs/user-guide/features/voice-mode)
-[Messaging Gateway](/docs/user-guide/messaging)
-[Discord setup](/docs/user-guide/messaging/discord)
-[Telegram setup](/docs/user-guide/messaging/telegram)
-[Configuration](/docs/user-guide/configuration)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/use-voice-mode-with-hermes.md)
+[مرجع ویژگی حالت صوتی](/docs/user-guide/features/voice-mode)
+[دروازه پیام‌رسانی](/docs/user-guide/messaging)
+[راه‌اندازی Discord](/docs/user-guide/messaging/discord)
+[راه‌اندازی Telegram](/docs/user-guide/messaging/telegram)
+[پیکربندی](/docs/user-guide/configuration)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/use-voice-mode-with-hermes.md)

@@ -1,61 +1,49 @@
 ---
 layout: docs
 title: "دامنه مدیریت‌شده"
-permalink: /user-guide/managed-scope/
+permalink: /docs/user-guide/managed-scope/
 ---
 
 - 
-- Using Hermes
-- Managed Scope
+- استفاده از Hermes
+- دامنه مدیریت‌شده
 
-# Managed Scope
+# دامنه مدیریت‌شده
 
-Managed scopelets an administrator push a baseline of configuration and
-secrets that a standard (non-root) usercannot override. It is intended for
-fleet/org deployments where IT needs to pin, for example, the model provider, a
-shared API base URL, orsecurity.redact_secrets: trueacross every user on a
-machine.
+دامنه مدیریت‌شده به یک مدیر اجازه می‌دهد تا پیکربندی پایه و رمزهای عبور را به کاربران استاندارد (غیر root) تحمیل کند و آن‌ها نتوانند آن‌ها را تغییر دهند. این قابلیت برای استقرارهای ناوگان/سازمانی در نظر گرفته شده است، جایی که بخش IT نیاز دارد مثلاً ارائه‌دهنده مدل، آدرس base URL مشترک API، یا `security.redact_secrets: true` را برای هر کاربر روی یک ماشین ثابت نگه دارد.
 
 `security.redact_secrets: true`
 
-When a managed scope is present, the values it specifies win over the user's~/.hermes/config.yaml,~/.hermes/.env, and even the shell environment — for
-exactly the keys it pins. Everything else stays fully user-controlled.
+وقتی یک دامنه مدیریت‌شده وجود دارد، مقادیری که مشخص می‌کند بر مقادیر `~/.hermes/config.yaml`، `~/.hermes/.env` و حتی محیط shell کاربر اولویت دارد — دقیقاً برای کلیدهایی که ثابت می‌کند. بقیه تنظیمات کاملاً تحت کنترل کاربر باقی می‌مانند.
 
 `~/.hermes/config.yaml`
 `~/.hermes/.env`
 
-A package-manager–managed install (declarative-distro / formula) blocksallconfig mutation and tells you to use your package manager. Managed scope is a
-separate mechanism: it injectsspecific immutable valueson a per-key basis
-rather than locking the whole config. The two are independent and can coexist.
+نصب توسط مدیر بسته (distro بیانی / formula) تمام تغییرات پیکربندی را مسدود می‌کند و به شما می‌گوید از مدیر بسته خود استفاده کنید. دامنه مدیریت‌شده مکانیزم جداگانه‌ای است: مقادیر غیرقابل تغییر مشخصی را به صورت کلید-به-کلید تزریق می‌کند، نه اینکه کل پیکربندی را قفل کند. این دو مکانیزم مستقل هستند و می‌توانند همزمان وجود داشته باشند.
 
-## Where it lives​
+## محل قرارگیری
 
-Managed scope is read from a system-level directory, default/etc/hermes:
+دامنه مدیریت‌شده از یک فهرست سطح سیستم خوانده می‌شود، که به صورت پیش‌فرض `/etc/hermes` است:
 
 `/etc/hermes`
 
 ```
-/etc/hermes/├── config.yaml     # managed config layer (wins over ~/.hermes/config.yaml)└── .env            # managed env layer (wins over ~/.hermes/.env + shell)
+/etc/hermes/
+├── config.yaml     # managed config layer (wins over ~/.hermes/config.yaml)
+└── .env            # managed env layer (wins over ~/.hermes/.env + shell)
 ```
 
-The directory and files are owned byroot(directory mode0755, files0644): readable by everyone, writable only by an administrator.That
-filesystem permission is the enforcement mechanism— a standard user can read
-the managed files but cannot edit them.
+فهرست و فایل‌ها متعلق به root هستند (حالت فهرست `0755`، فایل‌ها `0644`): برای همه قابل خواندن، فقط توسط مدیر قابل نوشتن است. مجوز فایل‌سیستم مکانیزم اجرایی است — یک کاربر استاندارد می‌تواند فایل‌های مدیریت‌شده را بخواند اما نمی‌تواند آن‌ها را ویرایش کند.
 
 `root`
 `0755`
 `0644`
 
-Either file is optional. A missing managed directory or missing file simply
-means "no managed scope," and configuration resolves exactly as it does without
-the feature.
+هر کدام از فایل‌ها اختیاری هستند. نبود فهرست مدیریت‌شده یا فایل به سادگی به معنای «بدون دامنه مدیریت‌شده» است و پیکربندی دقیقاً مانند زمانی که این قابلیت وجود ندارد حل می‌شود.
 
-### Relocating the directory​
+### جابه‌جایی فهرست
 
-The location can be relocated with theHERMES_MANAGED_DIRenvironment variable
-(for containers or non-/etcdeployments). This is a deployment/bootstrap path
-knob — likeHERMES_HOME— set by the same administrator who owns the managed
-files. It isnever persistedto any.envby Hermes.
+مکان را می‌توان با متغیر محیطی `HERMES_MANAGED_DIR` (برای کانتینرها یا استقرارهای غیر `/etc`) تغییر داد. این یک تنظیم مسیر استقرار/راه‌اندازی اولیه است — مانند `HERMES_HOME` — که توسط همان مدیری که فایل‌های مدیریت‌شده را مالکیت می‌کند تنظیم می‌شود. هرگز توسط Hermes در هیچ `.env` ذخیره نمی‌شود.
 
 `HERMES_MANAGED_DIR`
 `/etc`
@@ -63,108 +51,109 @@ files. It isnever persistedto any.envby Hermes.
 `.env`
 
 ```
-# Point managed scope at a custom directory (set by IT / the deployment, not the user)export HERMES_MANAGED_DIR=/opt/org/hermes-policy
+# Point managed scope at a custom directory (set by IT / the deployment, not the user)
+export HERMES_MANAGED_DIR=/opt/org/hermes-policy
 ```
 
-A user who can setHERMES_MANAGED_DIRcan repoint managed scope at a directory
-they control, defeating it. In a real deployment this variable should be fixed
-by the administrator (e.g. baked into the service unit / container image), not
-left user-settable.hermes doctorreports theresolvedmanaged directory so
-a redirect is visible.
+کاربری که بتواند `HERMES_MANAGED_DIR` را تنظیم کند می‌تواند دامنه مدیریت‌شده را به فهرستی که خودش کنترل می‌کند منتقل کند و آن را بی‌اثر کند. در یک استقرار واقعی، این متغیر باید توسط مدیر ثابت شود (مثلاً در واحد سرویس / تصویر کانتینر قرار گیرد)، نه اینکه قابل تنظیم توسط کاربر باشد. `hermes doctor` فهرست مدیریت‌شده حل‌شده را گزارش می‌دهد تا هرگونه تغییر مسیر قابل مشاهده باشد.
 
 `HERMES_MANAGED_DIR`
 `hermes doctor`
 
-## Precedence​
+## اولویت‌بندی
 
-For the keys a managed layer specifies, the order is (highest wins):
+برای کلیدهایی که لایه مدیریت‌شده مشخص می‌کند، ترتیب اولویت (بالاترین اولویت دارد):
 
-| Tier | config.yaml | .env |
+| لایه | config.yaml | .env |
 | --- | --- | --- |
-| 1 | /etc/hermes/config.yaml(managed) | /etc/hermes/.env(managed) |
-| 2 | ~/.hermes/config.yaml(user) | ~/.hermes/.env(user) |
-| 3 | built-in defaults | pre-existing shell environment |
+| 1 | `/etc/hermes/config.yaml` (مدیریت‌شده) | `/etc/hermes/.env` (مدیریت‌شده) |
+| 2 | `~/.hermes/config.yaml` (کاربر) | `~/.hermes/.env` (کاربر) |
+| 3 | مقادیر پیش‌فرض داخلی | محیط shell موجود |
 
 `/etc/hermes/config.yaml`
 `/etc/hermes/.env`
 `~/.hermes/config.yaml`
 `~/.hermes/.env`
 
-Merging isleaf-level: pinningmodel.defaultdoes not freeze the rest ofmodel.*. A managedconfig.yamlof:
+ادغام در سطح برگ انجام می‌شود: ثابت کردن `model.default` بقیه `model.*` را فریز نمی‌کند. یک `config.yaml` مدیریت‌شده مانند زیر:
 
 `model.default`
 `model.*`
 `config.yaml`
 
 ```
-model:  default: org/standard-model
+model:
+  default: org/standard-model
 ```
 
-forcesmodel.defaultfor every user while leavingmodel.fallback(and every
-other key) under user control.
+`model.default` را برای هر کاربر اجباری می‌کند در حالی که `model.fallback` (و هر کلید دیگر) تحت کنترل کاربر باقی می‌ماند.
 
 `model.default`
 `model.fallback`
 
-For the keys it pins, managed scope deliberately wins over the shell environment
-too — otherwise it would not be "managed." This is the one place that inverts the
-usual "an environment variable overrides config.yaml" rule, and it applies only
-to the specific keys the managed layer specifies.
+برای کلیدهایی که ثابت می‌کند، دامنه مدیریت‌شده عمداً بر محیط shell هم اولویت دارد — در غیر این صورت «مدیریت‌شده» نبود. این تنها جایی است که قاعده معمول «متغیر محیطی بر config.yaml اولویت دارد» را معکوس می‌کند و فقط برای کلیدهای مشخصی که لایه مدیریت‌شده تعیین می‌کند اعمال می‌شود.
 
-## Seeing what's managed​
+## مشاهده آنچه مدیریت می‌شود
 
 ```
-hermes config        # shows a header naming the managed source + the pinned keyshermes doctor        # reports the resolved managed dir + pinned key counts
+hermes config        # shows a header naming the managed source + the pinned keys
+hermes doctor        # reports the resolved managed dir + pinned key counts
 ```
 
-If you try to change a managed value, Hermes refuses and names the source:
+اگر سعی کنید مقدار مدیریت‌شده‌ای را تغییر دهید، Hermes رد می‌کند و منبع را نام می‌برد:
 
 ```
-$ hermes config set model.default my/modelCannot set 'model.default': it is managed by your administrator(/etc/hermes/config.yaml) and cannot be changed.
+$ hermes config set model.default my/model
+Cannot set 'model.default': it is managed by your administrator
+(/etc/hermes/config.yaml) and cannot be changed.
 ```
 
-The same applies to managed secrets —hermes config set/ setup will not write
-a user value for an env key pinned by the managed.env.
+همین موضوع در مورد رمزهای عبور مدیریت‌شده هم صادق است — `hermes config set` مقدار کاربر را برای کلید env که توسط `.env` مدیریت‌شده ثابت شده نمی‌نویسد.
 
 `hermes config set`
 `.env`
 
-## Setting up a managed scope (administrators)​
+## راه‌اندازی دامنه مدیریت‌شده (مدیران)
 
 ```
-sudo mkdir -p /etc/hermes# Pin some config values for every user on this machinesudo tee /etc/hermes/config.yaml >/dev/null <<'YAML'model:  provider: noussecurity:  redact_secrets: trueYAML# Optionally pin a shared, non-sensitive env valuesudo tee /etc/hermes/.env >/dev/null <<'ENV'OPENAI_API_BASE=https://inference.example.com/v1ENVsudo chmod 0755 /etc/hermessudo chmod 0644 /etc/hermes/config.yaml /etc/hermes/.env
+sudo mkdir -p /etc/hermes
+# Pin some config values for every user on this machine
+sudo tee /etc/hermes/config.yaml >/dev/null <<'YAML'
+model:
+  provider: nous
+security:
+  redact_secrets: true
+YAML
+# Optionally pin a shared, non-sensitive env value
+sudo tee /etc/hermes/.env >/dev/null <<'ENV'
+OPENAI_API_BASE=https://inference.example.com/v1
+ENV
+sudo chmod 0755 /etc/hermes
+sudo chmod 0644 /etc/hermes/config.yaml /etc/hermes/.env
 ```
 
-Changes take effect on the next Hermes start (a malformed managed file is logged
-loudly and ignored — it never blocks startup, but the admin should checkhermes doctorto confirm the policy is being applied).
+تغییرات در شروع بعدی Hermes اعمال می‌شوند (یک فایل مدیریت‌شده نادرست با شدت بالا لاگ می‌شود و نادیده گرفته می‌شود — هرگز شروع را مسدود نمی‌کند، اما مدیر باید `hermes doctor` را بررسی کند تا مطمئن شود سیاست اعمال می‌شود).
 
 `hermes doctor`
 
-## Security model and limitations (v1)​
+## مدل امنیتی و محدودیت‌ها (v1)
 
-- Enforcement is filesystem permissions only.If a user has write access to
-the managed directory (or runs Hermes asroot), managed scope is advisory.
-- The managed.envis world-readable(0644), so any local user can read
-secrets pushed through it. Use it for shared, non-sensitive values (an org API
-base URL, feature defaults) rather than high-sensitivity secrets.
-- The agent's own tools are not hard-blocked from a managedenvvalue.A
-managed environment variable is applied at startup, but nothing stops the
-agent from setting a different value inside its own subprocess shell. v1 is a
-management-convenience boundary against a normal user, not an un-escapable
-sandbox.
+- اجرا فقط از طریق مجوزهای فایل‌سیستم انجام می‌شود. اگر کاربر به فهرست مدیریت‌شده دسترسی نوشتن داشته باشد (یا Hermes را به عنوان root اجرا کند)، دامنه مدیریت‌شده فقط توصیه‌ای است.
+- `.env` مدیریت‌شده برای همه قابل خواندن (`0644`) است، بنابراین هر کاربر محلی می‌تواند رمزهای عبوری که از طریق آن ارسال می‌شوند را بخواند. از آن برای مقادیر مشترک غیرحساس (آدرس base URL سازمانی، مقادیر پیش‌فرض ویژگی‌ها) به جای رمزهای عبور با حساسیت بالا استفاده کنید.
+- ابزارهای خود عامل از مقدار `.env` مدیریت‌شده به صورت سخت مسدود نیستند. متغیر محیطی مدیریت‌شده در شروع اعمال می‌شود، اما هیچ چیز مانع از تنظیم مقدار متفاوتی توسط عامل در shell فرعی خودش نمی‌شود. v1 یک مرز راحتی مدیریتی در برابر کاربر عادی است، نه یک sandbox غیرقابل فرار.
 
 `root`
 `.env`
 `0644`
 
-The following are intentionallyout of scope for v1and may come later:
+موارد زیر عمداً **خارج از م scope v1** هستند و ممکن است بعداً اضافه شوند:
 
-- A hard boundary that the agent itself cannot escape.
-- Native managed locations on macOS and Windows (v1 is Linux/POSIX-first).
-- Drop-in fragment directories (managed.d/) for layered policy.
-- Signed / integrity-checked managed files.
-- Remote / device-management (MDM) delivery.
-- Tighter (group-scoped) permissions for managed secrets.
+- مرز سختی که خود عامل نتواند از آن فرار کند.
+- مکان‌های مدیریت‌شده بومی در macOS و Windows (v1 اولویت با Linux/POSIX است).
+- فهرست‌های قطعه‌ای (managed.d/) برای سیاست لایه‌ای.
+- فایل‌های مدیریت‌شده امضاشده / بررسی‌شده از نظر یکپارچگی.
+- تحویل راه دور / مدیریت دستگاه (MDM).
+- مجوزهای دقیق‌تر (با دامنه گروهی) برای رمزهای عبور مدیریت‌شده.
 
 `managed.d/`
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/managed-scope.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/managed-scope.md)

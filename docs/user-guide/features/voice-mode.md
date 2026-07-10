@@ -5,64 +5,61 @@ permalink: /user-guide/features/voice-mode/
 ---
 
 - 
-- Features
-- Media & Web
-- Voice Mode
+- ویژگی‌ها
+- رسانه و وب
+- حالت صوتی
 
-# Voice Mode
+# حالت صوتی
 
-Hermes Agent supports full voice interaction across CLI and messaging platforms. Talk to the agent using your microphone, hear spoken replies, and have live voice conversations in Discord voice channels.
+Hermes Agent از تعامل کامل صوتی در CLI و پلتفرم‌های پیام‌رسانی پشتیبانی می‌کند. با عامل با میکروفون خود صحبت کنید، پاسخ‌های گفتاری بشنوید و مکالمات صوتی زنده در کانال‌های صوتی Discord داشته باشید.
 
-If you want a practical setup walkthrough with recommended configurations and real usage patterns, seeUse Voice Mode with Hermes.
+اگر راهنمای عملی راه‌اندازی با پیکربندی‌های توصیه شده و الگوهای استفاده واقعی می‌خواهید، [Use Voice Mode with Hermes](/docs/guides/use-voice-mode-with-hermes) را ببینید.
 
-[Use Voice Mode with Hermes](/docs/guides/use-voice-mode-with-hermes)
+## پیش‌نیازها
 
-## Prerequisites​
+قبل از استفاده از ویژگی‌های صوتی، مطمئن شوید:
 
-Before using voice features, make sure you have:
-
-1. Hermes Agent installed— via the install script (seeInstallation)
-2. An LLM provider configured— runhermes modelor set your preferred provider credentials in~/.hermes/.env
-3. A working base setup— runhermesto verify the agent responds to text before enabling voice
+1. Hermes Agent نصب شده — از طریق اسکریپت نصب (به Installation مراجعه کنید)
+2. یک ارائه‌دهنده LLM پیکربندی شده — hermes model را اجرا کنید یا اعتبارنامه ارائه‌دهنده ترجیحی خود را در ~/.hermes/.env تنظیم کنید
+3. یک تنظیم پایه کاری — hermes را اجرا کنید تا مطمئن شوید عامل به متن پاسخ می‌دهد قبل از فعال کردن صدا
 
 [Installation](/docs/getting-started/installation)
 `hermes model`
 `~/.hermes/.env`
 `hermes`
 
-The~/.hermes/directory and defaultconfig.yamlare created automatically the first time you runhermes. You only need to create~/.hermes/.envmanually for API keys.
+پوشه ~/.hermes/ و config.yaml پیش‌فرض در اولین اجرای hermes به طور خودکار ایجاد می‌شوند. فقط برای کلیدهای API باید ~/.hermes/.env را به صورت دستی ایجاد کنید.
 
 `~/.hermes/`
 `config.yaml`
 `hermes`
 `~/.hermes/.env`
 
-A paidNous Portalsubscription supplies the LLM (step 2)andOpenAI TTS via the Tool Gateway — no separate OpenAI key needed. On a fresh install,hermes setup --portalwires both up at once.
+یک اشتراک [Nous Portal](/docs/user-guide/features/tool-gateway) پولی LLM (مرحله 2) و OpenAI TTS از طریق Tool Gateway را فراهم می‌کند — نیازی به کلید جداگانه OpenAI نیست. در یک نصب تازه، hermes setup --portal هر دو را به یکباره سیم‌بندی می‌کند.
 
-[Nous Portal](/docs/user-guide/features/tool-gateway)
 `hermes setup --portal`
 
-## Overview​
+## نمای کلی
 
-| Feature | Platform | Description |
+| ویژگی | پلتفرم | توضیح |
 | --- | --- | --- |
-| Interactive Voice | CLI | Press Ctrl+B to record, agent auto-detects silence and responds |
-| Auto Voice Reply | Telegram, Discord | Agent sends spoken audio alongside text responses |
-| Voice Channel | Discord | Bot joins VC, listens to users speaking, speaks replies back |
+| صدای تعاملی | CLI | کلید Ctrl+B را فشار دهید تا ضبط کنید، عامل سکوت را به طور خودکار تشخیص داده و پاسخ می‌دهد |
+| پاسخ صوتی خودکار | Telegram, Discord | عامل پاسخ صوتی در کنار پاسخ‌های متنی ارسال می‌کند |
+| کانال صوتی | Discord | ربات به VC می‌پیوندد، به کاربران صحبت کننده گوش می‌دهد و پاسخ‌ها را بازگو می‌کند |
 
-## Requirements​
+## الزامات
 
-### Python Packages​
+### بسته‌های پایتون
 
 ```
-# CLI voice mode (microphone + audio playback)cd ~/.hermes/hermes-agent && uv pip install -e ".[voice]"# Discord + Telegram messaging (includes discord.py[voice] for VC support)cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"# Premium TTS (ElevenLabs)cd ~/.hermes/hermes-agent && uv pip install -e ".[tts-premium]"# Local TTS (NeuTTS, optional)python -m pip install -U neutts[all]# Everything at oncecd ~/.hermes/hermes-agent && uv pip install -e ".[all]"
+# حالت صوتی CLI (میکروفون + پخش صدا)cd ~/.hermes/hermes-agent && uv pip install -e ".[voice]"# پیام‌رسانی Discord + Telegram (شامل discord.py[voice] برای پشتیبانی VC)cd ~/.hermes/hermes-agent && uv pip install -e ".[messaging]"# TTS پریمیوم (ElevenLabs)cd ~/.hermes/hermes-agent && uv pip install -e ".[tts-premium]"# TTS محلی (NeuTTS، اختیاری)python -m pip install -U neutts[all]# همه یکجاcd ~/.hermes/hermes-agent && uv pip install -e ".[all]"
 ```
 
-| Extra | Packages | Required For |
+| اضافی | بسته‌ها | نیاز برای |
 | --- | --- | --- |
-| voice | sounddevice,numpy | CLI voice mode |
-| messaging | discord.py[voice],python-telegram-bot,aiohttp | Discord & Telegram bots |
-| tts-premium | elevenlabs | ElevenLabs TTS provider |
+| voice | sounddevice,numpy | حالت صوتی CLI |
+| messaging | discord.py[voice],python-telegram-bot,aiohttp | ربات‌های Discord & Telegram |
+| tts-premium | elevenlabs | ارائه‌دهنده TTS ElevenLabs |
 
 `voice`
 `sounddevice`
@@ -74,152 +71,149 @@ A paidNous Portalsubscription supplies the LLM (step 2)andOpenAI TTS via the Too
 `tts-premium`
 `elevenlabs`
 
-Optional local TTS provider: installneuttsseparately withpython -m pip install -U neutts[all]. On first use it downloads the model automatically.
+ارائه‌دهنده TTS محلی اختیاری: neutts را جداگانه با python -m pip install -U neutts[all] نصب کنید. در اولین استفاده مدل را به طور خودکار دانلود می‌کند.
 
 `neutts`
 `python -m pip install -U neutts[all]`
 
-discord.py[voice]installsPyNaCl(for voice encryption) andopus bindingsautomatically. This is required for Discord voice channel support.
+discord.py[voice] به طور خودکار PyNaCl (برای رمزگذاری صدا) و opus bindings را نصب می‌کند. این برای پشتیبانی کانال صوتی Discord لازم است.
 
 `discord.py[voice]`
 
-### System Dependencies​
+### وابستگی‌های سیستم
 
 ```
-# macOSbrew install portaudio ffmpeg opusbrew install espeak-ng   # for NeuTTS# Ubuntu/Debiansudo apt install portaudio19-dev ffmpeg libopus0sudo apt install espeak-ng   # for NeuTTS
+# macOSbrew install portaudio ffmpeg opusbrew install espeak-ng   # برای NeuTTS# Ubuntu/Debiansudo apt install portaudio19-dev ffmpeg libopus0sudo apt install espeak-ng   # برای NeuTTS
 ```
 
-| Dependency | Purpose | Required For |
+| وابستگی | هدف | نیاز برای |
 | --- | --- | --- |
-| PortAudio | Microphone input and audio playback | CLI voice mode |
-| ffmpeg | Audio format conversion (MP3 → Opus, PCM → WAV) | All platforms |
-| Opus | Discord voice codec | Discord voice channels |
-| espeak-ng | Phonemizer backend | Local NeuTTS provider |
+| PortAudio | ورودی میکروفون و پخش صدا | حالت صوتی CLI |
+| ffmpeg | تبدیل قالب صدا (MP3 → Opus، PCM → WAV) | همه پلتفرم‌ها |
+| Opus | کدک صوتی Discord | کانال‌های صوتی Discord |
+| espeak-ng | پشتیبان phonemizer | ارائه‌دهنده محلی NeuTTS |
 
-### API Keys​
+### کلیدهای API
 
-Add to~/.hermes/.env:
+به ~/.hermes/.env اضافه کنید:
 
 `~/.hermes/.env`
 
 ```
-# Speech-to-Text — local provider needs NO key at all# pip install faster-whisper          # Free, runs locally, recommendedGROQ_API_KEY=your-key                 # Groq Whisper — fast, free tier (cloud)VOICE_TOOLS_OPENAI_KEY=your-key       # OpenAI Whisper — paid (cloud)# Text-to-Speech (optional — Edge TTS and NeuTTS work without any key)ELEVENLABS_API_KEY=***           # ElevenLabs — premium quality# VOICE_TOOLS_OPENAI_KEY above also enables OpenAI TTS
+# گفتار به متن — ارائه‌دهنده محلی نیازی به کلید ندارد# pip install faster-whisper          # رایگان، محلی اجرا می‌شود، توصیه شدهGROQ_API_KEY=your-key                 # Groq Whisper — سریع، سطح رایگان (ابرهای)VOICE_TOOLS_OPENAI_KEY=your-key       # OpenAI Whisper — پولی (ابرهای)# متن به گفتار (اختیاری — Edge TTS و NeuTTS بدون هیچ کلیدی کار می‌کنند)ELEVENLABS_API_KEY=***           # ElevenLabs — کیفیت پریمیوم# VOICE_TOOLS_OPENAI_KEY بالا همچنین OpenAI TTS را فعال می‌کند
 ```
 
-Iffaster-whisperis installed, voice mode works withzero API keysfor STT. The model (~150 MB forbase) downloads automatically on first use.
+اگر faster-whisper نصب باشد، حالت صوتی بدون هیچ کلید API برای STT کار می‌کند. مدل (~150 مگابایت برای base) در اولین استفاده به طور خودکار دانلود می‌شود.
 
 `faster-whisper`
 `base`
 
-## CLI Voice Mode​
+## حالت صوتی CLI
 
-Voice mode is available in both theclassic CLI(hermes chat) and theTUI(hermes --tui). Behavior is identical across both — same slash commands, same VAD silence detection, same streaming TTS, same hallucination filter. The TUI additionally forwards crash-forensic logs to~/.hermes/logs/so push-to-talk failures on exotic audio backends can be reported with a full stack trace rather than disappearing silently.
+حالت صوتی در [CLI کلاسیک](/docs/reference/cli-commands) (hermes chat) و [TUI](/docs/reference/cli-commands) (hermes --tui) در دسترس است. رفتار در هر دو یکسان است — دستورات اسلش یکسان، تشخیص سکوت VAD یکسان، TTS جریانی یکسان، فیلتر توهم یکسان. TUI علاوه بر این گزارش‌های اشکال‌زدایی crash را به ~/.hermes/logs/ ارسال می‌کند تا خرابی‌های push-to-talk در backendهای صوتی غیرمعمول با stack trace کامل قابل گزارش باشند.
 
 `hermes chat`
 `hermes --tui`
 `~/.hermes/logs/`
 
-### Quick Start​
+### شروع سریع
 
-Start the CLI and enable voice mode:
-
-```
-hermes                # Start the interactive CLI
-```
-
-Then use these commands inside the CLI:
+CLI را شروع کنید و حالت صوتی را فعال کنید:
 
 ```
-/voice          Toggle voice mode on/off/voice on       Enable voice mode/voice off      Disable voice mode/voice tts      Toggle TTS output/voice status   Show current state
+hermes                # شروع CLI تعاملی
 ```
 
-### How It Works​
+سپس از این دستورات در CLI استفاده کنید:
 
-1. Start the CLI withhermesand enable voice mode with/voice on
-2. Press Ctrl+B— a beep plays (880Hz), recording starts
-3. Speak— a live audio level bar shows your input:● [▁▂▃▅▇▇▅▂] ❯
-4. Stop speaking— after 3 seconds of silence, recording auto-stops
-5. Two beepsplay (660Hz) confirming the recording ended
-6. Audio is transcribed via Whisper and sent to the agent
-7. If TTS is enabled, the agent's reply is spoken aloud
-8. Recordingautomatically restarts— speak again without pressing any key
+```
+/voice          حالت صوتی را روشن/خاموش کنید/voice on       حالت صوتی را فعال کنید/voice off      حالت صوتی را غیرفعال کنید/voice tts      خروجی TTS را روشن/خاموش کنید/voice status   وضعیت فعلی را نشان دهید
+```
+
+### نحوه کار
+
+1. CLI را با hermes شروع کنید و حالت صوتی را با /voice on فعال کنید
+2. کلید Ctrl+B را فشار دهید — بیپی پخش می‌شود (880Hz)، ضبط شروع می‌شود
+3. صحبت کنید — یک نوار سطح صدای زنده ورودی شما را نشان می‌دهد:● [▁▂▃▅▇▇▅▂] ❯
+4. صحبت کردن را متوقف کنید — پس از 3 ثانیه سکوت، ضبط به طور خودکار متوقف می‌شود
+5. دو بیپ پخش می‌شود (660Hz) که پایان ضبط را تأیید می‌کند
+6. صدا از طریق Whisper رونویسی شده و به عامل ارسال می‌شود
+7. اگر TTS فعال باشد، پاسخ عامل با صدا بازگو می‌شود
+8. ضبط به طور خودکار مجدداً شروع می‌شود — بدون فشار دادن هیچ کلیدی دوباره صحبت کنید
 
 `hermes`
 `/voice on`
 `● [▁▂▃▅▇▇▅▂] ❯`
 
-This loop continues until you pressCtrl+Bduring recording (exits continuous mode) or 3 consecutive recordings detect no speech.
+این حلقه تا زمانی ادامه می‌یابد که Ctrl+B را در حین ضبط فشار دهید (از حالت مداوم خارج شوید) یا 3 ضبط متوالی هیچ گفتاری تشخیص ندهند.
 
-The record key is configurable viavoice.record_keyin~/.hermes/config.yaml(default:ctrl+b).
+کلید ضبط از طریق voice.record_key در ~/.hermes/config.yaml قابل پیکربندی است (پیش‌فرض: ctrl+b).
 
 `voice.record_key`
 `~/.hermes/config.yaml`
 `ctrl+b`
 
-### Silence Detection​
+### تشخیص سکوت
 
-Two-stage algorithm detects when you've finished speaking:
+الگوریتم دو مرحله‌ای تشخیص می‌دهد چه زمانی صحبت کردن را متوقف کرده‌اید:
 
-1. Speech confirmation— waits for audio above the RMS threshold (200) for at least 0.3s, tolerating brief dips between syllables
-2. End detection— once speech is confirmed, triggers after 3.0 seconds of continuous silence
+1. تأیید گفتار — منتظر صدای بالای آستانه RMS (200) حداقل 0.3 ثانیه می‌ماند، کوتاهی بین هجاها را تحمل می‌کند
+2. تشخیص پایان — وقتی گفتار تأیید شد، پس از 3.0 ثانیه سکوت متوالی فعال می‌شود
 
-If no speech is detected at all for 15 seconds, recording stops automatically.
+اگر اصلاً گفتاری تشخیص داده نشود، ضبط بعد از 15 ثانیه به طور خودکار متوقف می‌شود.
 
-Bothsilence_thresholdandsilence_durationare configurable inconfig.yaml. You can also disable the record start/stop beeps withvoice.beep_enabled: false.
+هر دو silence_threshold و silence_duration در config.yaml قابل پیکربندی هستند. همچنین می‌توانید بیپ‌های شروع/پایان ضبط را با voice.beep_enabled: false غیرفعال کنید.
 
 `silence_threshold`
 `silence_duration`
 `config.yaml`
 `voice.beep_enabled: false`
 
-### Streaming TTS​
+### TTS جریانی
 
-When TTS is enabled, the agent speaks its replysentence-by-sentenceas it generates text — you don't wait for the full response:
+وقتی TTS فعال باشد، عامل پاسخ خود را جمله به جمله در حین تولید متن بازگو می‌کند — منتظر پاسخ کامل نمی‌مانید:
 
-1. Buffers text deltas into complete sentences (min 20 chars)
-2. Strips markdown formatting and<think>blocks
-3. Generates and plays audio per sentence in real-time
+1. دلتاهای متن را در جملات کامل بافر می‌کند (حداقل 20 کاراکتر)
+2. قالب‌بندی markdown و بلوک‌های <think> را حذف می‌کند
+3. برای هر جمله به صورت بلادرنگ صدا تولید و پخش می‌کند
 
 `<think>`
 
-### Hallucination Filter​
+### فیلتر توهم
 
-Whisper sometimes generates phantom text from silence or background noise ("Thank you for watching", "Subscribe", etc.). The agent filters these out using a set of 26 known hallucination phrases across multiple languages, plus a regex pattern that catches repetitive variations.
+Whisper گاهی متن توهمی از سکوت یا نویز پس‌زمینه تولید می‌کند ("Thank you for watching"، "Subscribe" و غیره). عامل اینها را با مجموعه‌ای از 26 عبارت توهم شناخته شده در چندین زبان به علاوه یک الگوی regex که تغییرات تکراری را می‌گیرد فیلتر می‌کند.
 
-## Gateway Voice Reply (Telegram & Discord)​
+## پاسخ صوتی گیت‌وی (Telegram & Discord)
 
-If you haven't set up your messaging bots yet, see the platform-specific guides:
-
-- Telegram Setup Guide
-- Discord Setup Guide
+اگر هنوز ربات‌های پیام‌رسانی خود را راه‌اندازی نکرده‌اید، راهنماهای خاص پلتفرم را ببینید:
 
 [Telegram Setup Guide](/docs/user-guide/messaging/telegram)
 [Discord Setup Guide](/docs/user-guide/messaging/discord)
 
-Start the gateway to connect to your messaging platforms:
+گیت‌وی را برای اتصال به پلتفرم‌های پیام‌رسانی خود شروع کنید:
 
 ```
-hermes gateway        # Start the gateway (connects to configured platforms)hermes gateway setup  # Interactive setup wizard for first-time configuration
+hermes gateway        # شروع گیت‌وی (به پلتفرم‌های پیکربندی شده متصل می‌شود)hermes gateway setup  # جادوگر راه‌اندازی تعاملی برای پیکربندی اولیه
 ```
 
-### Discord: Channels vs DMs​
+### Discord: کانال‌ها در مقابل DMها
 
-The bot supports two interaction modes on Discord:
+ربات دو حالت تعاملی در Discord پشتیبانی می‌کند:
 
-| Mode | How to Talk | Mention Required | Setup |
+| حالت | نحوه صحبت کردن | نیاز به اشاره | راه‌اندازی |
 | --- | --- | --- | --- |
-| Direct Message (DM) | Open the bot's profile → "Message" | No | Works immediately |
-| Server Channel | Type in a text channel where the bot is present | Yes (@botname) | Bot must be invited to the server |
+| پیام مستقیم (DM) | پروفایل ربات → "Message" را باز کنید | خیر | بلافاصله کار می‌کند |
+| کانال سرور | در یک کانال متنی که ربات در آن حضور دارد تایپ کنید | بله (@botname) | ربات باید به سرور دعوت شود |
 
 `@botname`
 
-DM (recommended for personal use):Just open a DM with the bot and type — no @mention needed. Voice replies and all commands work the same as in channels.
+DM (توصیه شده برای استفاده شخصی): فقط یک DM با ربات باز کنید و تایپ کنید — نیازی به @mention نیست. پاسخ‌های صوتی و همه دستورات دقیقاً مانند کانال‌ها کار می‌کنند.
 
-Server channels:The bot only responds when you @mention it (e.g.@hermesbyt4 hello). Make sure you select thebot userfrom the mention popup, not the role with the same name.
+کانال‌های سرور: ربات فقط وقتی به آن اشاره کنید (مثلاً @hermesbyt4 hello) پاسخ می‌دهد. مطمئن شوید که کاربر bot را از پاپ‌آپ mention انتخاب می‌کنید، نه نقشی با همان نام.
 
 `@hermesbyt4 hello`
 
-To disable the mention requirement in server channels, add to~/.hermes/.env:
+برای غیرفعال کردن الزام اشاره در کانال‌های سرور، به ~/.hermes/.env اضافه کنید:
 
 `~/.hermes/.env`
 
@@ -227,27 +221,27 @@ To disable the mention requirement in server channels, add to~/.hermes/.env:
 DISCORD_REQUIRE_MENTION=false
 ```
 
-Or set specific channels as free-response (no mention needed):
+یا کانال‌های خاصی را به عنوان پاسخ آزاد (بدون نیاز به اشاره) تنظیم کنید:
 
 ```
 DISCORD_FREE_RESPONSE_CHANNELS=123456789,987654321
 ```
 
-### Commands​
+### دستورات
 
-These work in both Telegram and Discord (DMs and text channels):
+اینها در هر دو Telegram و Discord (DMs و کانال‌های متنی) کار می‌کنند:
 
 ```
-/voice          Toggle voice mode on/off/voice on       Voice replies only when you send a voice message/voice tts      Voice replies for ALL messages/voice off      Disable voice replies/voice status   Show current setting
+/voice          حالت صوتی را روشن/خاموش کنید/voice on       فقط وقتی پیام صوتی ارسال می‌کنید پاسخ صوتی دهید/voice tts      پاسخ صوتی به همه پیام‌ها/voice off      پاسخ‌های صوتی را غیرفعال کنید/voice status   تنظیم فعلی را نشان دهید
 ```
 
-### Modes​
+### حالت‌ها
 
-| Mode | Command | Behavior |
+| حالت | دستور | رفتار |
 | --- | --- | --- |
-| off | /voice off | Text only (default) |
-| voice_only | /voice on | Speaks reply only when you send a voice message |
-| all | /voice tts | Speaks reply to every message |
+| off | /voice off | فقط متن (پیش‌فرض) |
+| voice_only | /voice on | فقط وقتی پیام صوتی ارسال می‌کنید پاسخ می‌دهد |
+| all | /voice tts | به هر پیامی پاسخ می‌دهد |
 
 `off`
 `/voice off`
@@ -256,149 +250,145 @@ These work in both Telegram and Discord (DMs and text channels):
 `all`
 `/voice tts`
 
-Voice mode setting is persisted across gateway restarts.
+تنظیم حالت صوتی در راه‌اندازی مجدد گیت‌وی پایدار می‌ماند.
 
-### Platform Delivery​
+### تحویل پلتفرم
 
-| Platform | Format | Notes |
+| پلتفرم | قالب | یادداشت‌ها |
 | --- | --- | --- |
-| Telegram | Voice bubble (Opus/OGG) | Plays inline in chat. ffmpeg converts MP3 → Opus if needed |
-| Discord | Native voice bubble (Opus/OGG) | Plays inline like a user voice message. Falls back to file attachment if voice bubble API fails |
+| Telegram | حباب صوتی (Opus/OGG) | در چت به صورت درون‌خطی پخش می‌شود. ffmpeg در صورت نیاز MP3 → Opus تبدیل می‌کند |
+| Discord | حباب صوتی بومی (Opus/OGG) | مانند پیام صوتی کاربر درون‌خطی پخش می‌شود. در صورت خرابی API حباب صوتی به پیوست فایل بازمی‌گردد |
 
-## Discord Voice Channels​
+## کانال‌های صوتی Discord
 
-The most immersive voice feature: the bot joins a Discord voice channel, listens to users speaking, transcribes their speech, processes through the agent, and speaks the reply back in the voice channel.
+ویژگی صوتی غوطه‌ورتر: ربات به یک کانال صوتی Discord می‌پیوندد، به صحبت کردن کاربران گوش می‌دهد، گفتار آنها را رونویسی می‌کند، از طریق عامل پردازش می‌کند و پاسخ را در کانال صوتی بازگو می‌کند.
 
-### Setup​
+### راه‌اندازی
 
-#### 1. Discord Bot Permissions​
+#### 1. مجوزهای ربات Discord
 
-If you already have a Discord bot set up for text (seeDiscord Setup Guide), you need to add voice permissions.
+اگر قبلاً یک ربات Discord برای متن راه‌اندازی کرده‌اید (به Discord Setup Guide مراجعه کنید)، باید مجوزهای صوتی را اضافه کنید.
 
 [Discord Setup Guide](/docs/user-guide/messaging/discord)
 
-Go to theDiscord Developer Portal→ your application →Installation→Default Install Settings→Guild Install:
+به [Discord Developer Portal](https://discord.com/developers/applications) → application شما → Installation → Default Install Settings → Guild Install بروید:
 
-[Discord Developer Portal](https://discord.com/developers/applications)
+این مجوزها را به مجوزهای متنی موجود اضافه کنید:
 
-Add these permissions to the existing text permissions:
-
-| Permission | Purpose | Required |
+| مجوز | هدف | لازم |
 | --- | --- | --- |
-| Connect | Join voice channels | Yes |
-| Speak | Play TTS audio in voice channels | Yes |
-| Use Voice Activity | Detect when users are speaking | Recommended |
+| Connect | پیوستن به کانال‌های صوتی | بله |
+| Speak | پخش صدا در کانال‌های صوتی | بله |
+| Use Voice Activity | تشخیص صحبت کردن کاربران | توصیه شده |
 
-Updated Permissions Integer:
+عدد مجوز به‌روز شده:
 
-| Level | Integer | What's Included |
+| سطح | عدد | شامل چه چیزی |
 | --- | --- | --- |
-| Text only | 309237763136 | View Channels, Send Messages, Read History, Embeds, Attachments, Threads, Reactions, Create Public Threads |
-| Text + Voice | 309240908864 | All above + Connect, Speak |
+| فقط متن | 309237763136 | مشاهده کانال‌ها، ارسال پیام‌ها، خواندن تاریخچه، جاسازی‌ها، پیوست‌ها، رشته‌ها، واکنش‌ها، ایجاد رشته‌های عمومی |
+| متن + صدا | 309240908864 | همه موارد بالا + Connect، Speak |
 
 `309237763136`
 `309240908864`
 
-Re-invite the botwith the updated permissions URL:
+ربات را با URL مجوز به‌روز شده مجدداً دعوت کنید:
 
 ```
 https://discord.com/oauth2/authorize?client_id=YOUR_APP_ID&scope=bot+applications.commands&permissions=309240908864
 ```
 
-ReplaceYOUR_APP_IDwith your Application ID from the Developer Portal.
+YOUR_APP_ID را با Application ID خود از Developer Portal جایگزین کنید.
 
 `YOUR_APP_ID`
 
-Re-inviting the bot to a server it's already in will update its permissions without removing it. You won't lose any data or configuration.
+دعوت مجدد ربات به سروری که در آن حضور دارد، مجوزهایش را بدون حذف آن به‌روز می‌کند. هیچ داده یا پیکربندی‌ای را از دست نخواهید داد.
 
-#### 2. Privileged Gateway Intents​
+#### 2. Intentهای دروازه امتیازی
 
-In theDeveloper Portal→ your application →Bot→Privileged Gateway Intents, enable all three:
+در [Developer Portal](https://discord.com/developers/applications) → application شما → Bot → Privileged Gateway Intents، هر سه را فعال کنید:
 
-[Developer Portal](https://discord.com/developers/applications)
-
-| Intent | Purpose |
+| Intent | هدف |
 | --- | --- |
-| Presence Intent | Detect user online/offline status |
-| Server Members Intent | Resolve usernames inDISCORD_ALLOWED_USERSto numeric IDs (conditional) |
-| Message Content Intent | Read text message content in channels |
+| Presence Intent | تشخیص وضعیت آنلاین/آفلاین کاربر |
+| Server Members Intent | حل نام‌های کاربری در DISCORD_ALLOWED_USERS به شناسه‌های عددی (شرطی) |
+| Message Content Intent | خواندن محتوای پیام متنی در کانال‌ها |
 
 `DISCORD_ALLOWED_USERS`
 
-Message Content Intentis required.Server Members Intentis only needed if yourDISCORD_ALLOWED_USERSlist uses usernames — if you use numeric user IDs, you can leave it OFF. Voice-channel SSRC → user_id mapping comes from Discord's SPEAKING opcode on the voice websocket and doesnotrequire the Server Members Intent.
+Message Content Intent لازم است. Server Members Intent فقط در صورتی لازم است که لیست DISCORD_ALLOWED_USERS شما از نام‌های کاربری استفاده کند — اگر از شناسه‌های عددی کاربر استفاده می‌کنید، می‌توانید آن را OFF بگذارید. نگاشت SSRC → user_id کانال صوتی از کد opcode SPEAKING Discord در websocket صوتی می‌آید و به Server Members Intent نیاز ندارد.
 
 `DISCORD_ALLOWED_USERS`
 
-#### 3. Opus Codec​
+#### 3. کدک Opus
 
-The Opus codec library must be installed on the machine running the gateway:
+کتابخانه کدک Opus باید روی ماشینی که گیت‌وی را اجرا می‌کند نصب شده باشد:
 
 ```
 # macOS (Homebrew)brew install opus# Ubuntu/Debiansudo apt install libopus0
 ```
 
-The bot auto-loads the codec from:
+ربات کدک را از اینجا بارگذاری می‌کند:
 
-- macOS:/opt/homebrew/lib/libopus.dylib
-- Linux:libopus.so.0
+- macOS: /opt/homebrew/lib/libopus.dylib
+- Linux: libopus.so.0
 
 `/opt/homebrew/lib/libopus.dylib`
 `libopus.so.0`
 
-#### 4. Environment Variables​
+#### 4. متغیرهای محیطی
 
 ```
-# ~/.hermes/.env# Discord bot (already configured for text)DISCORD_BOT_TOKEN=your-bot-tokenDISCORD_ALLOWED_USERS=your-user-id# STT — local provider needs no key (pip install faster-whisper)# GROQ_API_KEY=your-key            # Alternative: cloud-based, fast, free tier# TTS — optional. Edge TTS and NeuTTS need no key.# ELEVENLABS_API_KEY=***      # Premium quality# VOICE_TOOLS_OPENAI_KEY=***  # OpenAI TTS / Whisper
+# ~/.hermes/.env# ربات Discord (از قبل برای متن پیکربندی شده)DISCORD_BOT_TOKEN=your-bot-tokenDISCORD_ALLOWED_USERS=your-user-id# STT — ارائه‌دهنده محلی نیازی به کلید ندارد (pip install faster-whisper)# GROQ_API_KEY=your-key            # جایگزین: مبتنی بر ابر، سریع، سطح رایگان# TTS — اختیاری. Edge TTS و NeuTTS نیازی به کلید ندارند.# ELEVENLABS_API_KEY=***      # کیفیت پریمیوم# VOICE_TOOLS_OPENAI_KEY=***  # OpenAI TTS / Whisper
 ```
 
-### Start the Gateway​
+### شروع گیت‌وی
 
 ```
-hermes gateway        # Start with existing configuration
+hermes gateway        # شروع با پیکربندی موجود
 ```
 
-The bot should come online in Discord within a few seconds.
+ربات باید ظرف چند ثانیه در Discord آنلاین شود.
 
-### Commands​
+### دستورات
 
-Use these in the Discord text channel where the bot is present:
+از اینها در کانال متنی Discord که ربات در آن حضور دارد استفاده کنید:
 
 ```
-/voice join      Bot joins your current voice channel/voice channel   Alias for /voice join/voice leave     Bot disconnects from voice channel/voice status    Show voice mode and connected channel
+/voice join      ربات به کانال صوتی فعلی شما می‌پیوندد/voice channel   نام مستعار برای /voice join/voice leave     ربات از کانال صوتی قطع می‌شود/voice status    حالت صوتی و کانال متصل را نشان دهید
 ```
 
-You must be in a voice channel before running/voice join. The bot joins the same VC you're in.
+باید قبل از اجرای /voice join در یک کانال صوتی باشید. ربات به همان VC که شما در آن هستید می‌پیوندد.
 
 `/voice join`
 
-### How It Works​
+### نحوه کار
 
-When the bot joins a voice channel, it:
+وقتی ربات به یک کانال صوتی می‌پیوندد:
 
-1. Listensto each user's audio stream independently
-2. Detects silence— 1.5s of silence after at least 0.5s of speech triggers processing
-3. Transcribesthe audio via Whisper STT (local, Groq, or OpenAI)
-4. Processesthrough the full agent pipeline (session, tools, memory)
-5. Speaksthe reply back in the voice channel via TTS
+1. به جریان صوتی هر کاربر به طور مستقل گوش می‌دهد
+2. سکوت را تشخیص می‌دهد — 1.5 ثانیه سکوت پس از حداقل 0.5 ثانیه گفتار پردازش را فعال می‌کند
+3. صدا را از طریق Whisper STT (محلی، Groq، یا OpenAI) رونویسی می‌کند
+4. از طریق خط لوله کامل عامل (جلسه، ابزارها، حافظه) پردازش می‌کند
+5. پاسخ را از طریق TTS در کانال صوتی بازگو می‌کند
 
-### Text Channel Integration​
+### ادغام کانال متنی
 
-When the bot is in a voice channel:
+وقتی ربات در یک کانال صوتی است:
 
-- Transcripts appear in the text channel:[Voice] @user: what you said
-- Agent responses are sent as text in the channel AND spoken in the VC
-- The text channel is the one where/voice joinwas issued
+- رونویسی‌ها در کانال متنی ظاهر می‌شوند: [Voice] @user: آنچه گفتید
+- پاسخ‌های عامل به صورت متن در کانال و در VC بازگو می‌شوند
+- کانال متنی همان است که /voice join در آن صادر شده
 
 `[Voice] @user: what you said`
 `/voice join`
 
-### Echo Prevention​
+### جلوگیری از اکو
 
-The bot automatically pauses its audio listener while playing TTS replies, preventing it from hearing and re-processing its own output.
+ربات به طور خودکار شنونده صوتی خود را در حین پخش پاسخ‌های TTS متوقف می‌کند و از شنیدن و پردازش مجدد خروجی خود جلوگیری می‌کند.
 
-### Access Control​
+### کنترل دسترسی
 
-Only users listed inDISCORD_ALLOWED_USERScan interact via voice. Other users' audio is silently ignored.
+فقط کاربران فهرست شده در DISCORD_ALLOWED_USERS می‌توانند از طریق صدا تعامل کنند. صدای سایر کاربران بی‌صدا نادیده گرفته می‌شود.
 
 `DISCORD_ALLOWED_USERS`
 
@@ -406,33 +396,33 @@ Only users listed inDISCORD_ALLOWED_USERScan interact via voice. Other users' au
 # ~/.hermes/.envDISCORD_ALLOWED_USERS=284102345871466496
 ```
 
-## Configuration Reference​
+## مرجع پیکربندی
 
-### config.yaml​
-
-```
-# Voice recording (CLI)voice:  record_key: "ctrl+b"            # Key to start/stop recording  max_recording_seconds: 120       # Maximum recording length  auto_tts: false                  # Auto-enable TTS when voice mode starts  beep_enabled: true               # Play record start/stop beeps  silence_threshold: 200           # RMS level (0-32767) below which counts as silence  silence_duration: 3.0            # Seconds of silence before auto-stop# Speech-to-Textstt:  enabled: true                     # set to false to skip auto-transcription —                                    # the gateway still caches the audio file and                                    # passes its path to the agent as part of the                                    # inbound message, useful for custom pipelines                                    # (diarization, alignment, archival, etc.)  provider: "local"                  # "local" (free) | "groq" | "openai" | "mistral" | "xai"  local:    model: "base"                    # tiny, base, small, medium, large-v3  # model: "whisper-1"              # Legacy: used when provider is not set# Text-to-Speechtts:  provider: "edge"                 # "edge" (free) | "elevenlabs" | "openai" | "neutts" | "minimax" | "mistral" | "gemini" | "xai" | "kittentts" | "piper"  edge:    voice: "en-US-AriaNeural"      # 322 voices, 74 languages  elevenlabs:    voice_id: "pNInz6obpgDQGcFmaJgB"    # Adam    model_id: "eleven_multilingual_v2"  openai:    model: "gpt-4o-mini-tts"    voice: "alloy"                 # alloy, echo, fable, onyx, nova, shimmer    base_url: "https://api.openai.com/v1"  # optional: override for self-hosted or OpenAI-compatible endpoints  neutts:    ref_audio: ''    ref_text: ''    model: neuphonic/neutts-air-q4-gguf    device: cpu
-```
-
-### Environment Variables​
+### config.yaml
 
 ```
-# Speech-to-Text providers (local needs no key)# pip install faster-whisper        # Free local STT — no API key neededGROQ_API_KEY=...                    # Groq Whisper (fast, free tier)VOICE_TOOLS_OPENAI_KEY=...         # OpenAI Whisper (paid)# STT advanced overrides (optional)STT_GROQ_MODEL=whisper-large-v3-turbo    # Override default Groq STT modelSTT_OPENAI_MODEL=whisper-1               # Override default OpenAI STT modelGROQ_BASE_URL=https://api.groq.com/openai/v1     # Custom Groq endpointSTT_OPENAI_BASE_URL=https://api.openai.com/v1    # Custom OpenAI STT endpoint# Text-to-Speech providers (Edge TTS and NeuTTS need no key)ELEVENLABS_API_KEY=***             # ElevenLabs (premium quality)# VOICE_TOOLS_OPENAI_KEY above also enables OpenAI TTS# Discord voice channelDISCORD_BOT_TOKEN=...DISCORD_ALLOWED_USERS=...
+# ضبط صدا (CLI)voice:  record_key: "ctrl+b"            # کلید شروع/پایان ضبط  max_recording_seconds: 120       # حداکثر طول ضبط  auto_tts: false                  # فعال کردن خودکار TTS وقتی حالت صوتی شروع می‌شود  beep_enabled: true               # پخش بیپ شروع/پایان ضبط  silence_threshold: 200           # سطح RMS (0-32767) که زیر آن سکوت محسوب می‌شود  silence_duration: 3.0            # ثانیه سکوت قبل از توقف خودکار# گفتار به متنstt:  enabled: true                     # روی false تنظیم کنید تا رونویسی خودکار رد شود —                                    # گیت‌وی همچنان فایل صوتی را کش می‌کند و                                    # مسیر آن را به عنوان بخشی از پیام ورودی                                    # به عامل ارسال می‌کند، مفید برای خطوط لوله سفارشی                                    # (diarization، alignment، بایگانی و غیره)  provider: "local"                  # "local" (رایگان) | "groq" | "openai" | "mistral" | "xai"  local:    model: "base"                    # tiny، base، small، medium، large-v3  # model: "whisper-1"              # قدیمی: وقتی provider تنظیم نشده استفاده می‌شود# متن به گفتارtts:  provider: "edge"                 # "edge" (رایگان) | "elevenlabs" | "openai" | "neutts" | "minimax" | "mistral" | "gemini" | "xai" | "kittentts" | "piper"  edge:    voice: "en-US-AriaNeural"      # 322 صدا، 74 زبان  elevenlabs:    voice_id: "pNInz6obpgDQGcFmaJgB"    # Adam    model_id: "eleven_multilingual_v2"  openai:    model: "gpt-4o-mini-tts"    voice: "alloy"                 # alloy، echo، fable، onyx، nova، shimmer    base_url: "https://api.openai.com/v1"  # اختیاری: بازنویسی برای endpoints میزبانی شده خود  neutts:    ref_audio: ''    ref_text: ''    model: neuphonic/neutts-air-q4-gguf    device: cpu
 ```
 
-### STT Provider Comparison​
+### متغیرهای محیطی
 
-| Provider | Model | Speed | Quality | Cost | API Key |
+```
+# ارائه‌دهندگان گفتار به متن (محلی نیازی به کلید ندارد)# pip install faster-whisper        # STT محلی رایگان — نیازی به کلید API نیستGROQ_API_KEY=...                    # Groq Whisper (سریع، سطح رایگان)VOICE_TOOLS_OPENAI_KEY=...         # OpenAI Whisper (پولی)# بازنویسی‌های پیشرفته STT (اختیاری)STT_GROQ_MODEL=whisper-large-v3-turbo    # بازنویسی مدل پیش‌فرض Groq STTSTT_OPENAI_MODEL=whisper-1               # بازنویسی مدل پیش‌فرض OpenAI STTGROQ_BASE_URL=https://api.groq.com/openai/v1     # Endpoint سفارشی GroqSTT_OPENAI_BASE_URL=https://api.openai.com/v1    # Endpoint سفارشی OpenAI STT# ارائه‌دهندگان متن به گفتار (Edge TTS و NeuTTS نیازی به کلید ندارند)ELEVENLABS_API_KEY=***             # ElevenLabs (کیفیت پریمیوم)# VOICE_TOOLS_OPENAI_KEY بالا همچنین OpenAI TTS را فعال می‌کند# کانال صوتی DiscordDISCORD_BOT_TOKEN=...DISCORD_ALLOWED_USERS=...
+```
+
+### مقایسه ارائه‌دهندگان STT
+
+| ارائه‌دهنده | مدل | سرعت | کیفیت | هزینه | کلید API |
 | --- | --- | --- | --- | --- | --- |
-| Local | base | Fast (depends on CPU/GPU) | Good | Free | No |
-| Local | small | Medium | Better | Free | No |
-| Local | large-v3 | Slow | Best | Free | No |
-| Groq | whisper-large-v3-turbo | Very fast (~0.5s) | Good | Free tier | Yes |
-| Groq | whisper-large-v3 | Fast (~1s) | Better | Free tier | Yes |
-| OpenAI | whisper-1 | Fast (~1s) | Good | Paid | Yes |
-| OpenAI | gpt-4o-transcribe | Medium (~2s) | Best | Paid | Yes |
-| Mistral | voxtral-mini-latest | Fast | Good | Paid | Yes |
-| xAI | grok-stt | Fast | Good | Paid | Yes |
+| محلی | base | سریع (بستگی به CPU/GPU دارد) | خوب | رایگان | خیر |
+| محلی | small | متوسط | بهتر | رایگان | خیر |
+| محلی | large-v3 | کند | بهترین | رایگان | خیر |
+| Groq | whisper-large-v3-turbo | بسیار سریع (~0.5s) | خوب | سطح رایگان | بله |
+| Groq | whisper-large-v3 | سریع (~1s) | بهتر | سطح رایگان | بله |
+| OpenAI | whisper-1 | سریع (~1s) | خوب | پولی | بله |
+| OpenAI | gpt-4o-transcribe | متوسط (~2s) | بهترین | پولی | بله |
+| Mistral | voxtral-mini-latest | سریع | خوب | پولی | بله |
+| xAI | grok-stt | سریع | خوب | پولی | بله |
 
 `base`
 `small`
@@ -444,79 +434,77 @@ Only users listed inDISCORD_ALLOWED_USERScan interact via voice. Other users' au
 `voxtral-mini-latest`
 `grok-stt`
 
-Provider priority (automatic fallback):local>groq>openai
+اولویت ارائه‌دهنده (بازگشت خودکار): local > groq > openai
 
-### TTS Provider Comparison​
+### مقایسه ارائه‌دهندگان TTS
 
-| Provider | Quality | Cost | Latency | Key Required |
+| ارائه‌دهنده | کیفیت | هزینه | تأخیر | نیاز به کلید |
 | --- | --- | --- | --- | --- |
-| Edge TTS | Good | Free | ~1s | No |
-| ElevenLabs | Excellent | Paid | ~2s | Yes |
-| OpenAI TTS | Good | Paid | ~1.5s | Yes |
-| NeuTTS | Good | Free | Depends on CPU/GPU | No |
+| Edge TTS | خوب | رایگان | ~1s | خیر |
+| ElevenLabs | عالی | پولی | ~2s | بله |
+| OpenAI TTS | خوب | پولی | ~1.5s | بله |
+| NeuTTS | خوب | رایگان | بستگی به CPU/GPU دارد | خیر |
 
-NeuTTS uses thetts.neuttsconfig block above.
+NeuTTS از بلوک پیکربندی tts.neutts بالا استفاده می‌کند.
 
 `tts.neutts`
 
-## Troubleshooting​
+## عیب‌یابی
 
-### "No audio device found" (CLI)​
+### "No audio device found" (CLI)
 
-PortAudio is not installed:
+PortAudio نصب نشده:
 
 ```
 brew install portaudio    # macOSsudo apt install portaudio19-dev  # Ubuntu
 ```
 
-If you are running Hermes inside Docker on a Linux desktop, the container also needs access to your host audio socket. See theDocker audio bridgenotes for a PulseAudio/PipeWire-compatible setup.
+اگر Hermes را در Docker روی دسکتاپ Linux اجرا می‌کنید، container نیز به سوکت صوتی میزبان شما نیاز دارد. یادداشت‌های [Docker audio bridge](/docs/user-guide/docker#optional-linux-desktop-audio-bridge) را برای تنظیم سازگار با PulseAudio/PipeWire ببینید.
 
-[Docker audio bridge](/docs/user-guide/docker#optional-linux-desktop-audio-bridge)
+### ربات در کانال‌های سرور Discord پاسخ نمی‌دهد
 
-### Bot doesn't respond in Discord server channels​
+ربات به طور پیش‌فرض در کانال‌های سرور به @mention نیاز دارد. مطمئن شوید:
 
-The bot requires an @mention by default in server channels. Make sure you:
-
-1. Type@and select thebot user(with the #discriminator), not therolewith the same name
-2. Or use DMs instead — no mention needed
-3. Or setDISCORD_REQUIRE_MENTION=falsein~/.hermes/.env
+1. @ تایپ کنید و کاربر bot (با #discriminator) را انتخاب کنید، نه نقشی با همان نام
+2. یا به جای آن از DM استفاده کنید — نیازی به اشاره نیست
+3. یا DISCORD_REQUIRE_MENTION=false را در ~/.hermes/.env تنظیم کنید
 
 `@`
 `DISCORD_REQUIRE_MENTION=false`
 `~/.hermes/.env`
 
-### Bot joins VC but doesn't hear me​
+### ربات به VC می‌پیوندد اما صدای من را نمی‌شنود
 
-- Check your Discord user ID is inDISCORD_ALLOWED_USERS
-- Make sure you're not muted in Discord
-- The bot needs a SPEAKING event from Discord before it can map your audio — start speaking within a few seconds of joining
+- بررسی کنید شناسه کاربر Discord شما در DISCORD_ALLOWED_USERS باشد
+- مطمئن شوید در Discord بی‌صدا نیستید
+- ربات قبل از نگاشت صدای شما به یک رویداد SPEAKING از Discord نیاز دارد — چند ثانیه پس از پیوستن شروع به صحبت کردن کنید
 
 `DISCORD_ALLOWED_USERS`
 
-### Bot hears me but doesn't respond​
+### ربات صدای من را می‌شنود اما پاسخ نمی‌دهد
 
-- Verify STT is available: installfaster-whisper(no key needed) or setGROQ_API_KEY/VOICE_TOOLS_OPENAI_KEY
-- Check the LLM model is configured and accessible
-- Review gateway logs:tail -f ~/.hermes/logs/gateway.log
+- تأیید کنید STT در دسترس است: faster-whisper را نصب کنید (نیازی به کلید نیست) یا GROQ_API_KEY/VOICE_TOOLS_OPENAI_KEY را تنظیم کنید
+- بررسی کنید مدل LLM پیکربندی شده و قابل دسترسی باشد
+- گزارش‌های گیت‌وی را بررسی کنید: tail -f ~/.hermes/logs/gateway.log
 
 `faster-whisper`
 `GROQ_API_KEY`
 `VOICE_TOOLS_OPENAI_KEY`
 `tail -f ~/.hermes/logs/gateway.log`
 
-### Bot responds in text but not in voice channel​
+### ربات در متن پاسخ می‌دهد اما در کانال صوتی نه
 
-- TTS provider may be failing — check API key and quota
-- Edge TTS (free, no key) is the default fallback
-- Check logs for TTS errors
+- ارائه‌دهنده TTS ممکن است خراب باشد — کلید API و سهمیه را بررسی کنید
+- Edge TTS (رایگان، بدون کلید) بازگشت پیش‌فرض است
+- گزارش‌ها را برای خطاهای TTS بررسی کنید
 
-### Whisper returns garbage text​
+### Whisper متن زباله برمی‌گرداند
 
-The hallucination filter catches most cases automatically. If you're still getting phantom transcripts:
+فیلتر توهم اکثر موارد را به طور خودکار می‌گیرد. اگر هنوز رونویسی‌های توهمی دریافت می‌کنید:
 
-- Use a quieter environment
-- Adjustsilence_thresholdin config (higher = less sensitive)
-- Try a different STT model
+- از محیط آرام‌تر استفاده کنید
+- silence_threshold در پیکربندی را تنظیم کنید (بالاتر = حساسیت کمتر)
+- یک مدل STT متفاوت امتحان کنید
 
 `silence_threshold`
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/voice-mode.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/voice-mode.md)

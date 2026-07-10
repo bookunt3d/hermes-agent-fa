@@ -1,245 +1,147 @@
 ---
 layout: docs
 title: "مسیر یادگیری"
-permalink: /getting-started/learning-path/
+permalink: /docs/getting-started/learning-path/
 ---
 
 - 
 - Getting Started
 - Learning Path
 
-# Learning Path
+# مسیر یادگیری
 
-Hermes Agent can do a lot — CLI assistant, Telegram/Discord bot, task automation, RL training, and more. This page helps you figure out where to start and what to read based on your experience level and what you're trying to accomplish.
+Hermes Agent کارهای زیادی می‌تواند انجام دهد — دستیار خط فرمان، ربات Telegram/Discord، اتوماسیون وظایف، آموزش RL و موارد دیگر. این صفحه به شما کمک می‌کند بر اساس سطح تجربه و آنچه می‌خواهید انجام دهید، بفهمید از کجا شروع کنید و چه چیزی بخوانید.
 
-If you haven't installed Hermes Agent yet, begin with theInstallation guideand then run through theQuickstart. Everything below assumes you have a working installation.
+اگر هنوز Hermes Agent را نصب نکرده‌اید، با [راهنمای نصب](/docs/getting-started/installation) شروع کنید و سپس [شروع سریع](/docs/getting-started/quickstart) را اجرا کنید. همه چیز در زیر فرض می‌کند نصب کاربردی دارید.
 
-[Installation guide](/docs/getting-started/installation)
-[Quickstart](/docs/getting-started/quickstart)
+کاربران جدید تقریباً همیشه `hermes setup --portal` را می‌خواهند — یک OAuth یک مدل به علاوه چهار ابزار Tool Gateway (جستجو/تصویر/TTS/مرورگر) را پوشش می‌دهد. [Nous Portal](/docs/integrations/nous-portal) را ببینید.
 
-First-time users almost always wanthermes setup --portal— one OAuth covers a model plus the four Tool Gateway tools (search/image/TTS/browser). SeeNous Portal.
+## چگونه از این صفحه استفاده کنیم
 
-`hermes setup --portal`
-[Nous Portal](/docs/integrations/nous-portal)
+- سطح خود را می‌دانید؟ به [جدول سطح تجربه](#by-experience-level) بروید و ترتیب خواندن برای سطح خود را دنبال کنید.
+- هدف مشخصی دارید؟ به [بر اساس مورد استفاده](#by-use-case) بروید و سناریوی متناظر را پیدا کنید.
+- فقط مرور می‌کنید؟ [جدول ویژگی‌های کلیدی](#key-features-at-a-glance) را برای نمای کلی سریع همه کارهایی که Hermes Agent می‌تواند انجام دهد ببینید.
 
-## How to Use This Page​
+## بر اساس سطح تجربه
 
-- Know your level?Jump to theexperience-level tableand follow the reading order for your tier.
-- Have a specific goal?Skip toBy Use Caseand find the scenario that matches.
-- Just browsing?Check theKey Featurestable for a quick overview of everything Hermes Agent can do.
-
-## By Experience Level​
-
-| Level | Goal | Recommended Reading | Time Estimate |
+| سطح | هدف | مطالعه توصیه‌شده | تخمین زمان |
 | --- | --- | --- | --- |
-| Beginner | Get up and running, have basic conversations, use built-in tools | Installation→Quickstart→CLI Usage→Configuration | ~1 hour |
-| Intermediate | Set up messaging bots, use advanced features like memory, cron jobs, and skills | Sessions→Messaging→Tools→Skills→Memory→Cron | ~2–3 hours |
-| Advanced | Build custom tools, create skills, train models with RL, contribute to the project | Architecture→Adding Tools→Creating Skills→Contributing | ~4–6 hours |
+| مبتدی | راه‌اندازی، مکالمات پایه، استفاده از ابزارهای داخلی | نصب → شروع سریع → استفاده از CLI → پیکربندی | ~۱ ساعت |
+| متوسط | راه‌اندازی ربات‌های پیام‌رسانی، استفاده از ویژگی‌های پیشرفته مانند حافظه، cron و skillها | Sessionها → پیام‌رسانی → ابزارها → Skillها → حافظه → Cron | ~۲-۳ ساعت |
+| پیشرفته | ساخت ابزارهای سفارشی، ایجاد skillها، آموزش مدل‌ها با RL، مشارکت در پروژه | معماری → اضافه کردن ابزارها → ایجاد skillها → مشارکت | ~۴-۶ ساعت |
 
-[Installation](/docs/getting-started/installation)
-[Quickstart](/docs/getting-started/quickstart)
-[CLI Usage](/docs/user-guide/cli)
-[Configuration](/docs/user-guide/configuration)
-[Sessions](/docs/user-guide/sessions)
-[Messaging](/docs/user-guide/messaging)
-[Tools](/docs/user-guide/features/tools)
-[Skills](/docs/user-guide/features/skills)
-[Memory](/docs/user-guide/features/memory)
-[Cron](/docs/user-guide/features/cron)
-[Architecture](/docs/developer-guide/architecture)
-[Adding Tools](/docs/developer-guide/adding-tools)
-[Creating Skills](/docs/developer-guide/creating-skills)
-[Contributing](/docs/developer-guide/contributing)
+## بر اساس مورد استفاده
 
-## By Use Case​
+سناریویی را انتخاب کنید که با آنچه می‌خواهید انجام دهید مطابقت دارد. هر کدام شما را به مستندات مرتبط به ترتیبی که باید بخوانید لینک می‌کند.
 
-Pick the scenario that matches what you want to do. Each one links you to the relevant docs in the order you should read them.
+### «یک دستیار کدنویسی CLI می‌خواهم»
 
-### "I want a CLI coding assistant"​
+از Hermes Agent به عنوان دستیار ترمینال تعاملی برای نوشتن، بررسی و اجرای کد استفاده کنید.
 
-Use Hermes Agent as an interactive terminal assistant for writing, reviewing, and running code.
+1. [نصب](/docs/getting-started/installation)
+2. [شروع سریع](/docs/getting-started/quickstart)
+3. [استفاده از CLI](/docs/user-guide/cli)
+4. [اجرای کد](/docs/user-guide/features/code-execution)
+5. [فایل‌های Context](/docs/user-guide/features/context-files)
+6. [نکات و ترفندها](/docs/guides/tips)
 
-1. Installation
-2. Quickstart
-3. CLI Usage
-4. Code Execution
-5. Context Files
-6. Tips & Tricks
+فایل‌ها را مستقیماً با فایل‌های context به مکالمه خود وارد کنید. Hermes Agent می‌تواند کد در پروژه‌های شما را بخواند، ویرایش و اجرا کند.
 
-[Installation](/docs/getting-started/installation)
-[Quickstart](/docs/getting-started/quickstart)
-[CLI Usage](/docs/user-guide/cli)
-[Code Execution](/docs/user-guide/features/code-execution)
-[Context Files](/docs/user-guide/features/context-files)
-[Tips & Tricks](/docs/guides/tips)
+### «یک ربات Telegram/Discord می‌خواهم»
 
-Pass files directly into your conversation with context files. Hermes Agent can read, edit, and run code in your projects.
+Hermes Agent را به عنوان ربات در پلتفرم پیام‌رسانی مورد علاقه خود مستقر کنید.
 
-### "I want a Telegram/Discord bot"​
+1. [نصب](/docs/getting-started/installation)
+2. [پیکربندی](/docs/user-guide/configuration)
+3. [نمای کلی پیام‌رسانی](/docs/user-guide/messaging)
+4. [راه‌اندازی Telegram](/docs/user-guide/messaging/telegram)
+5. [راه‌اندازی Discord](/docs/user-guide/messaging/discord)
+6. [حالت صوتی](/docs/user-guide/features/voice-mode)
+7. [استفاده از حالت صوتی با Hermes](/docs/guides/use-voice-mode-with-hermes)
+8. [امنیت](/docs/user-guide/security)
 
-Deploy Hermes Agent as a bot on your favorite messaging platform.
+برای مثال‌های کامل پروژه، [Daily Briefing Bot](/docs/guides/daily-briefing-bot) و [Team Telegram Assistant](/docs/guides/team-telegram-assistant) را ببینید.
 
-1. Installation
-2. Configuration
-3. Messaging Overview
-4. Telegram Setup
-5. Discord Setup
-6. Voice Mode
-7. Use Voice Mode with Hermes
-8. Security
+### «می‌خواهم وظایف را خودکار کنم']
 
-[Installation](/docs/getting-started/installation)
-[Configuration](/docs/user-guide/configuration)
-[Messaging Overview](/docs/user-guide/messaging)
-[Telegram Setup](/docs/user-guide/messaging/telegram)
-[Discord Setup](/docs/user-guide/messaging/discord)
-[Voice Mode](/docs/user-guide/features/voice-mode)
-[Use Voice Mode with Hermes](/docs/guides/use-voice-mode-with-hermes)
-[Security](/docs/user-guide/security)
+وظایف تکرارشونده را زمان‌بندی کنید، کارهای دسته‌ای اجرا کنید یا اقدامات agent را به هم زنجیر کنید.
 
-For full project examples, see:
+1. [شروع سریع](/docs/getting-started/quickstart)
+2. [زمان‌بندی Cron](/docs/user-guide/features/cron)
+3. [پردازش دسته‌ای](/docs/user-guide/features/batch-processing)
+4. [تفویض](/docs/user-guide/features/delegation)
+5. [ هوک‌ها](/docs/user-guide/features/hooks)
 
-- Daily Briefing Bot
-- Team Telegram Assistant
+Cron jobs به Hermes Agent اجازه می‌دهند وظایف را طبق زمان‌بندی اجرا کنند — خلاصه‌های روزانه، بررسی‌های دوره‌ای، گزارش‌های خودکار — بدون حضور شما.
 
-[Daily Briefing Bot](/docs/guides/daily-briefing-bot)
-[Team Telegram Assistant](/docs/guides/team-telegram-assistant)
+### «می‌خواهم ابزارهای/skillهای سفارشی بسازم»
 
-### "I want to automate tasks"​
+Hermes Agent را با ابزارها و بسته‌های skill قابل استفاده مجدد خودتان گسترش دهید.
 
-Schedule recurring tasks, run batch jobs, or chain agent actions together.
+1. [پلاگین‌ها](/docs/user-guide/features/plugins)
+2. [ساخت پلاگین Hermes](/docs/developer-guide/plugins)
+3. [نمای کلی ابزارها](/docs/user-guide/features/tools)
+4. [نمای کلی Skillها](/docs/user-guide/features/skills)
+5. [MCP (Model Context Protocol)](/docs/user-guide/features/mcp)
+6. [معماری](/docs/developer-guide/architecture)
+7. [اضافه کردن ابزارها](/docs/developer-guide/adding-tools)
+8. [ایجاد Skillها](/docs/developer-guide/creating-skills)
 
-1. Quickstart
-2. Cron Scheduling
-3. Batch Processing
-4. Delegation
-5. Hooks
+برای بیشتر ساخت ابزارهای سفارشی، با پلاگین‌ها شروع کنید. صفحه [اضافه کردن ابزارها](/docs/developer-guide/adding-tools) برای توسعه هسته داخلی Hermes است، نه مسیر معمول کاربر/ابزار سفارشی.
 
-[Quickstart](/docs/getting-started/quickstart)
-[Cron Scheduling](/docs/user-guide/features/cron)
-[Batch Processing](/docs/user-guide/features/batch-processing)
-[Delegation](/docs/user-guide/features/delegation)
-[Hooks](/docs/user-guide/features/hooks)
+### «می‌خواهم مدل‌ها را آموزش دهم»
 
-Cron jobs let Hermes Agent run tasks on a schedule — daily summaries, periodic checks, automated reports — without you being present.
+از یادگیری تقویتی برای تنظیم دقیق رفتار مدل با خط لوله آموزش Hermes Agent RL (قدرت‌گرفته از [Atropos](https://github.com/NousResearch/atropos)) استفاده کنید.
 
-### "I want to build custom tools/skills"​
+1. [شروع سریع](/docs/getting-started/quickstart)
+2. [پیکربندی](/docs/user-guide/configuration)
+3. [محیط‌های RL Atropos](https://github.com/NousResearch/atropos) (خارجی)
+4. [مسیریابی ارائه‌دهنده](/docs/user-guide/features/provider-routing)
+5. [معماری](/docs/developer-guide/architecture)
 
-Extend Hermes Agent with your own tools and reusable skill packages.
+آموزش RL بهترین نتیجه را زمانی می‌دهد که قبلاً مبانی نحوه مدیریت مکالمات و فراخوانی ابزارها توسط Hermes Agent را درک کرده باشید. اگر تازه‌کار هستید، ابتدا مسیر مبتدی را طی کنید.
 
-1. Plugins
-2. Build a Hermes Plugin
-3. Tools Overview
-4. Skills Overview
-5. MCP (Model Context Protocol)
-6. Architecture
-7. Adding Tools
-8. Creating Skills
+### «می‌خواهم آن را به عنوان کتابخانه Python استفاده کنم»
 
-[Plugins](/docs/user-guide/features/plugins)
-[Build a Hermes Plugin](/docs/developer-guide/plugins)
-[Tools Overview](/docs/user-guide/features/tools)
-[Skills Overview](/docs/user-guide/features/skills)
-[MCP (Model Context Protocol)](/docs/user-guide/features/mcp)
-[Architecture](/docs/developer-guide/architecture)
-[Adding Tools](/docs/developer-guide/adding-tools)
-[Creating Skills](/docs/developer-guide/creating-skills)
+Hermes Agent را به طور برنامه‌نویسی در برنامه‌های Python خود ادغام کنید.
 
-For most custom tool creation, start with plugins. TheAdding Toolspage is for built-in Hermes core development, not the usual user/custom-tool path.
+1. [نصب](/docs/getting-started/installation)
+2. [شروع سریع](/docs/getting-started/quickstart)
+3. [راهنمای کتابخانه Python](/docs/guides/python-library)
+4. [معماری](/docs/developer-guide/architecture)
+5. [ابزارها](/docs/user-guide/features/tools)
+6. [Sessionها](/docs/user-guide/sessions)
 
-[Adding Tools](/docs/developer-guide/adding-tools)
+## ویژگی‌های کلیدی در یک نگاه
 
-### "I want to train models"​
+مطمئن نیستید چه چیزی موجود است؟ این فهرست سریع ویژگی‌های اصلی است:
 
-Use reinforcement learning to fine-tune model behavior with Hermes Agent's RL training pipeline (powered byAtropos).
-
-[Atropos](https://github.com/NousResearch/atropos)
-1. Quickstart
-2. Configuration
-3. Atropos RL Environments(external)
-4. Provider Routing
-5. Architecture
-
-[Quickstart](/docs/getting-started/quickstart)
-[Configuration](/docs/user-guide/configuration)
-[Atropos RL Environments](https://github.com/NousResearch/atropos)
-[Provider Routing](/docs/user-guide/features/provider-routing)
-[Architecture](/docs/developer-guide/architecture)
-
-RL training works best when you already understand the basics of how Hermes Agent handles conversations and tool calls. Run through the Beginner path first if you're new.
-
-### "I want to use it as a Python library"​
-
-Integrate Hermes Agent into your own Python applications programmatically.
-
-1. Installation
-2. Quickstart
-3. Python Library Guide
-4. Architecture
-5. Tools
-6. Sessions
-
-[Installation](/docs/getting-started/installation)
-[Quickstart](/docs/getting-started/quickstart)
-[Python Library Guide](/docs/guides/python-library)
-[Architecture](/docs/developer-guide/architecture)
-[Tools](/docs/user-guide/features/tools)
-[Sessions](/docs/user-guide/sessions)
-
-## Key Features at a Glance​
-
-Not sure what's available? Here's a quick directory of major features:
-
-| Feature | What It Does | Link |
+| ویژگی | چه کاری انجام می‌دهد | لینک |
 | --- | --- | --- |
-| Tools | Built-in tools the agent can call (file I/O, search, shell, etc.) | Tools |
-| Skills | Installable plugin packages that add new capabilities | Skills |
-| Memory | Persistent memory across sessions | Memory |
-| Context Files | Feed files and directories into conversations | Context Files |
-| MCP | Connect to external tool servers via Model Context Protocol | MCP |
-| Cron | Schedule recurring agent tasks | Cron |
-| Delegation | Spawn sub-agents for parallel work | Delegation |
-| Code Execution | Run Python scripts that call Hermes tools programmatically | Code Execution |
-| Browser | Web browsing and scraping | Browser |
-| Hooks | Event-driven callbacks and middleware | Hooks |
-| Batch Processing | Process multiple inputs in bulk | Batch Processing |
-| Provider Routing | Route requests across multiple LLM providers | Provider Routing |
+| ابزارها | ابزارهای داخلی که agent می‌تواند فراخوانی کند (ورودی/خروجی فایل، جستجو، shell و غیره) | [ابزارها](/docs/user-guide/features/tools) |
+| Skillها | بسته‌های پلاگین قابل نصب که قابلیت‌های جدید اضافه می‌کنند | [Skillها](/docs/user-guide/features/skills) |
+| حافظه | حافظه پایدار در سراسر sessionها | [حافظه](/docs/user-guide/features/memory) |
+| فایل‌های Context | وارد کردن فایل‌ها و دایرکتوری‌ها به مکالمات | [فایل‌های Context](/docs/user-guide/features/context-files) |
+| MCP | اتصال به سرورهای ابزار خارجی از طریق Model Context Protocol | [MCP](/docs/user-guide/features/mcp) |
+| Cron | زمان‌بندی وظایف تکرارشونده agent | [Cron](/docs/user-guide/features/cron) |
+| تفویض | ایجاد sub-agentها برای کار موازی | [تفویض](/docs/user-guide/features/delegation) |
+| اجرای کد | اجرای اسکریپت‌های Python که ابزارهای Hermes را به طور برنامه‌نویسی فراخوانی می‌کنند | [اجرای کد](/docs/user-guide/features/code-execution) |
+| مرورگر | جستجو و خزش وب | [مرورگر](/docs/user-guide/features/browser) |
+| هوک‌ها | کالبک‌های رویدادمحور و مiddleware | [هوک‌ها](/docs/user-guide/features/hooks) |
+| پردازش دسته‌ای | پردازش ورودی‌های متعدد به صورت دسته‌ای | [پردازش دسته‌ای](/docs/user-guide/features/batch-processing) |
+| مسیریابی ارائه‌دهنده | مسیریابی درخواست‌ها در ارائه‌دهندگان LLM متعدد | [مسیریابی ارائه‌دهنده](/docs/user-guide/features/provider-routing) |
 
-[Tools](/docs/user-guide/features/tools)
-[Skills](/docs/user-guide/features/skills)
-[Memory](/docs/user-guide/features/memory)
-[Context Files](/docs/user-guide/features/context-files)
-[MCP](/docs/user-guide/features/mcp)
-[Cron](/docs/user-guide/features/cron)
-[Delegation](/docs/user-guide/features/delegation)
-[Code Execution](/docs/user-guide/features/code-execution)
-[Browser](/docs/user-guide/features/browser)
-[Hooks](/docs/user-guide/features/hooks)
-[Batch Processing](/docs/user-guide/features/batch-processing)
-[Provider Routing](/docs/user-guide/features/provider-routing)
+## قدم بعدی چیست
 
-## What to Read Next​
+بر اساس جایی که الان هستید:
 
-Based on where you are right now:
+- تازه نصب کرده‌اید؟ → به [شروع سریع](/docs/getting-started/quickstart) بروید تا اولین مکالمه خود را اجرا کنید.
+- شروع سریع را تمام کرده‌اید؟ → [استفاده از CLI](/docs/user-guide/cli) و [پیکربندی](/docs/user-guide/configuration) را بخوانید تا تنظیمات خود را سفارشی کنید.
+- با مبانی راحت هستید؟ → [ابزارها](/docs/user-guide/features/tools)، [Skillها](/docs/user-guide/features/skills) و [حافظه](/docs/user-guide/features/memory) را کاوش کنید تا قدرت کامل agent را باز کنید.
+- برای تیم راه‌اندازی می‌کنید؟ → [امنیت](/docs/user-guide/security) و [Sessionها](/docs/user-guide/sessions) را بخوانید تا کنترل دسترسی و مدیریت مکالمه را درک کنید.
+- آماده ساخت هستید؟ → به [راهنمای توسعه‌دهنده](/docs/developer-guide/architecture) بپرید تا ساختار داخلی را درک کنید و مشارکت را شروع کنید.
+- مثال‌های عملی می‌خواهید؟ → بخش [راهنماها](/docs/guides/tips) را برای پروژه‌های واقعی و نکات ببینید.
 
-- Just finished installing?→ Head to theQuickstartto run your first conversation.
-- Completed the Quickstart?→ ReadCLI UsageandConfigurationto customize your setup.
-- Comfortable with the basics?→ ExploreTools,Skills, andMemoryto unlock the full power of the agent.
-- Setting up for a team?→ ReadSecurityandSessionsto understand access control and conversation management.
-- Ready to build?→ Jump into theDeveloper Guideto understand the internals and start contributing.
-- Want practical examples?→ Check out theGuidessection for real-world projects and tips.
-
-[Quickstart](/docs/getting-started/quickstart)
-[CLI Usage](/docs/user-guide/cli)
-[Configuration](/docs/user-guide/configuration)
-[Tools](/docs/user-guide/features/tools)
-[Skills](/docs/user-guide/features/skills)
-[Memory](/docs/user-guide/features/memory)
-[Security](/docs/user-guide/security)
-[Sessions](/docs/user-guide/sessions)
-[Developer Guide](/docs/developer-guide/architecture)
-[Guides](/docs/guides/tips)
-
-You don't need to read everything. Pick the path that matches your goal, follow the links in order, and you'll be productive quickly. You can always come back to this page to find your next step.
+نیازی نیست همه چیز را بخوانید. مسیری را که با هدف شما مطابقت دارد انتخاب کنید، لینک‌ها را به ترتیب دنبال کنید و به سرعت بهره‌ور خواهید شد. همیشه می‌توانید به این صفحه برگردید تا قدم بعدی خود را پیدا کنید.
 
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/getting-started/learning-path.md)

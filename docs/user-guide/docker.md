@@ -5,994 +5,799 @@ permalink: /user-guide/docker/
 ---
 
 - 
-- Using Hermes
+- استفاده از Hermes
 - Docker
 
 # Hermes Agent — Docker
 
-There are two distinct ways Docker intersects with Hermes Agent:
+دو روش متمایز وجود دارد که Docker با Hermes Agent تلاقی می‌کند:
 
-1. Running Hermes IN Docker— the agent itself runs inside a container (this page's primary focus)
-2. Docker as a terminal backend— the agent runs on your host but executes every command inside a single, persistent Docker sandbox container that survives across tool calls,/new, and subagents for the life of the Hermes process (seeConfiguration → Docker Backend)
+1. اجرای Hermes در Docker — خود عامل در داخل یک container اجرا می‌شود (تمرکز اصلی این صفحه)
+2. Docker به عنوان backend ترمینال — عامل روی میزبان شما اجرا می‌شود اما هر دستور را در داخل یک Docker sandbox container مستقل و پایدار که در طول زندگی فرآیند Hermes در برابر فراخوانی‌های ابزار، `/new` و زیرعاملان پایدار می‌ماند اجرا می‌کند (پیکربندی → Docker Backend را ببینید)
 
-`/new`
-[Configuration → Docker Backend](/docs/user-guide/configuration#docker-backend)
+[پیکربندی → Docker Backend](/docs/user-guide/configuration#docker-backend)
 
-This page covers option 1. The container stores all user data (config, API keys, sessions, skills, memories) in a single directory mounted from the host at/opt/data. The image itself is stateless and can be upgraded by pulling a new version without losing any configuration.
+این صفحه گزینه 1 را پوشش می‌دهد. Container تمام داده‌های کاربر (پیکربندی، کلیدهای API، نشست‌ها، مهارت‌ها، حافظه‌ها) را در یک پوشه واحد از میزبان در `/opt/data` نصب شده ذخیره می‌کند. خود image بی‌状态 است و با کشیدن نسخه جدید قابل ارتقا است بدون از دست دادن هیچ پیکربندی.
 
 `/opt/data`
 
-## Quick start​
+## شروع سریع
 
-If this is your first time running Hermes Agent, create a data directory on the host and start the container interactively to run the setup wizard:
+اگر اولین باری است که Hermes Agent اجرا می‌کنید، یک پوشه داده در میزبان ایجاد کنید و container را به صورت تعاملی شروع کنید تا wizard راه‌اندازی را اجرا کنید:
 
-Some VPS providers (Hetzner Cloud, and several others) offer a browser-based
-console for managing hosts. These consoles transmit special characters
-incorrectly —:may arrive as;,@may be mis-rendered, and non-English
-keyboard layouts fare worse — which silently corruptsdocker runarguments
-like-v ~/.hermes:/opt/data,-e KEY=value, and pasted API keys / tokens.
+برخی ارائه‌دهندگان VPS (Hetzner Cloud و چندین مورد دیگر) یک کنسول مبتنی بر مرورگر برای مدیریت میزبان‌ها ارائه می‌دهند. این کنسول‌ها کاراکترهای خاص را به درستی ارسال نمی‌کنند — `:` ممکن است به صورت `;` برسد، `@` ممکن است اشتباه رندر شود، و چیدمان‌های صفحه‌کلید غیرانگلیسی بدتر عمل می‌کنند — که آرگومان‌های `docker run` مانند `-v ~/.hermes:/opt/data`، `-e KEY=value` و کلیدهای API/نشانه‌های چسبانده شده را به طور خاموش تخریب می‌کند.
 
-`:`
-`;`
-`@`
-`docker run`
-`-v ~/.hermes:/opt/data`
-`-e KEY=value`
-
-Connect over SSH instead(ssh root@<host>) for copy-paste-safe command
-entry. If you must use the browser console, type the commands manually
-instead of pasting, and double-check every:,@,=, and/in the
-result before hitting Enter.
+از SSH استفاده کنید (`ssh root@<host>`) برای ورود امن کپی-چسباندن. اگر مجبورید از کنسول مرورگر استفاده کنید، دستورات را به جای چسباندن دستی تایپ کنید و هر `:`، `@`، `=` و `/` در نتیجه را قبل از فشردن Enter دوباره بررسی کنید.
 
 `ssh root@<host>`
-`:`
-`@`
-`=`
-`/`
 
 ```
-mkdir -p ~/.hermesdocker run -it --rm \  -v ~/.hermes:/opt/data \  nousresearch/hermes-agent setup
+mkdir -p ~/.hermes
+docker run -it --rm \
+  -v ~/.hermes:/opt/data \
+  nousresearch/hermes-agent setup
 ```
 
-This drops you into the setup wizard, which will prompt you for your API keys and write them to~/.hermes/.env. You only need to do this once. It is highly recommended to set up a chat system for the gateway to work with at this point.
+شما را در wizard راه‌اندازی قرار می‌دهد، که کلیدهای API شما را درخواست می‌دهد و آن‌ها را در `~/.hermes/.env` می‌نویسد. فقط یک بار نیاز دارید این کار را انجام دهید. به شدت توصیه می‌شود در این مرحله یک سیستم چت برای کار gateway تنظیم کنید.
 
-`~/.hermes/.env`
-
-Inside the container, runhermes setup --portalonce — the refresh token persists in the mounted~/.hermesvolume. SeeNous Portal.
+در داخل container، `hermes setup --portal` را یک بار اجرا کنید — نشانه refresh در volume نصب شده `~/.hermes` باقی می‌ماند. Nous Portal را ببینید.
 
 `hermes setup --portal`
 `~/.hermes`
 [Nous Portal](/docs/integrations/nous-portal)
 
-## Running in gateway mode​
+## اجرا در حالت gateway
 
-Once configured, run the container in the background as a persistent gateway (Telegram, Discord, Slack, WhatsApp, etc.):
-
-```
-docker run -d \  --name hermes \  --restart unless-stopped \  -v ~/.hermes:/opt/data \  -p 8642:8642 \  nousresearch/hermes-agent gateway run
-```
-
-Port 8642 exposes the gateway'sOpenAI-compatible API serverand health endpoint. It's optional if you only use chat platforms (Telegram, Discord, etc.), but required if you want the dashboard or external tools to reach the gateway.
-
-[OpenAI-compatible API server](/docs/user-guide/features/api-server)
-
-Inside the official Docker image,gateway runisautomatically supervised by s6-overlay: if the gateway process crashes it's restarted within a couple of seconds without losing the container, and the dashboard (whenHERMES_DASHBOARD=1is set) is supervised alongside it. Thegateway runCMD process itself is asleep infinityheartbeat that keeps the container alive while s6 manages the actual gateway process — sodocker stopstill shuts everything down cleanly, butdocker logsshows the supervised gateway's output.
-
-`gateway run`
-`HERMES_DASHBOARD=1`
-`gateway run`
-`sleep infinity`
-`docker stop`
-`docker logs`
-
-You'll see a one-line breadcrumb indocker logsconfirming the upgrade. To opt out — and get the historical "gateway is the container's main process, container exit = gateway exit" semantics — pass--no-superviseor setHERMES_GATEWAY_NO_SUPERVISE=1. The opt-out is useful for CI smoke tests that want the container to exit with the gateway's status code; for production deployments the supervised default is strictly better.
-
-`docker logs`
-`--no-supervise`
-`HERMES_GATEWAY_NO_SUPERVISE=1`
-
-This behavior applies to the s6-based image only. Earlier (tini-based) images still rungateway runas the foreground main process.
-
-`gateway run`
-
-See theWhere the logs gosection below for the full routing map (per-profile gateways, dashboard, boot reconciler, container-widedocker logs).
-
-`docker logs`
-
-Thetool_loop_guardrails.hard_stop_enabledsetting defaults tofalse, which is reasonable for interactive CLI and TUI sessions where a person can see repeated tool-call warnings. In unattended gateway or server deployments, warnings alone may not stop an agent that gets stuck in a repeated tool-call loop. Operators who want circuit-breaker behavior should explicitly enable hard stops in the profile'sconfig.yaml:
-
-`tool_loop_guardrails.hard_stop_enabled`
-`false`
-`config.yaml`
+پس از پیکربندی، container را به عنوان یک gateway پایدار (Telegram، Discord، Slack، WhatsApp و غیره) در پس‌زمینه اجرا کنید:
 
 ```
-tool_loop_guardrails:  hard_stop_enabled: true  hard_stop_after:    exact_failure: 5    idempotent_no_progress: 5
+docker run -d \
+  --name hermes \
+  --restart unless-stopped \
+  -v ~/.hermes:/opt/data \
+  -p 8642:8642 \
+  nousresearch/hermes-agent gateway run
 ```
 
-Note: the API server is gated onAPI_SERVER_ENABLED=true. To expose it beyond127.0.0.1inside the container, also setAPI_SERVER_HOST=0.0.0.0and anAPI_SERVER_KEY(minimum 8 characters — generate one withopenssl rand -hex 32). Example:
+پورت 8642 API server سازگار با OpenAI و endpoint سلامت را در معرض دید قرار می‌دهد. اگر فقط از پلتفرم‌های چت (Telegram، Discord و غیره) استفاده می‌کنید اختیاری است، اما اگر می‌خواهید داشبورد یا ابزارهای خارجی به gateway دسترسی داشته باشند ضروری است.
 
-`API_SERVER_ENABLED=true`
-`127.0.0.1`
-`API_SERVER_HOST=0.0.0.0`
-`API_SERVER_KEY`
-`openssl rand -hex 32`
+[API server سازگار با OpenAI](/docs/user-guide/features/api-server)
 
-```
-docker run -d \  --name hermes \  --restart unless-stopped \  -v ~/.hermes:/opt/data \  -p 8642:8642 \  -e API_SERVER_ENABLED=true \  -e API_SERVER_HOST=0.0.0.0 \  -e API_SERVER_KEY="$(openssl rand -hex 32)" \  -e API_SERVER_CORS_ORIGINS='*' \  nousresearch/hermes-agent gateway run
-```
+در داخل image رسمی Docker، `gateway run` توسط s6-overlay به طور خودکار نظارت می‌شود: اگر فرآیند gateway خراب شود در عرض چند ثانیه بدون از دست دادن container بازیابی می‌شود و داشبورد (وقتی `HERMES_DASHBOARD=1` تنظیم شده) در کنار آن نظارت می‌شود. فرآیند CMD خود `gateway run` یک `sleep infinity` heartbeat است که container را زنده نگه می‌دارد در حالی که s6 فرآیند gateway واقعی را مدیریت می‌کند — بنابراین `docker stop` همچنان همه چیز را تمیز متوقف می‌کند، اما `docker logs` خروجی gateway نظارت شده را نشان می‌دهد.
 
-Opening any port on an internet facing machine is a security risk. You should not do it unless you understand the risks.
+یک breadcrumb یک‌خطی در `docker logs` مشاهده خواهید کرد که ارتقا را تأیید می‌کند. برای انصراف — و به دست آوردن معنای تاریخی "gateway فرآیند اصلی container است، خروج container = خروج gateway" — `--no-supervise` را ارسال کنید یا `HERMES_GATEWAY_NO_SUPERVISE=1` را تنظیم کنید. انصراف برای تست‌های smoke CI مفید است که می‌خواهند container با کد وضعیت gateway خارج شود؛ برای استقرارهای تولیدی پیش‌فرض نظارت شده به طور قاطع بهتر است.
 
-## Running the dashboard​
+این رفتار فقط برای image مبتنی بر s6 اعمال می‌شود. تصاویر قدیمی‌تر (مبتنی بر tini) هنوز `gateway run` را به عنوان فرآیند اصلی foreground اجرا می‌کنند.
 
-The built-in web dashboard runs as a supervised s6-rc service alongside the gateway in the same container. SetHERMES_DASHBOARD=1to bring it up:
+بخش "لاگ‌ها کجا می‌روند" در زیر را برای نقشه مسیریابی کامل (gateway‌ها به ازای هر پروفایل، داشبورد، آشتی‌دهنده boot، `docker logs` سراسر container) ببینید.
 
-`HERMES_DASHBOARD=1`
+تنظیم `tool_loop_guardrails.hard_stop_enabled` به طور پیش‌فرض `false` است، که برای نشست‌های CLI و TUI تعاملی منطقی است جایی که انسان می‌تواند هشدارهای فراخوانی مکرر ابزار را ببیند. در استقرارهای gateway یا سرور بدون نظارت، فقط هشدارها ممکن است عاملی را که در حلقه فراخوانی مکرر ابزار گیر کرده متوقف نکنند. اپراتورهایی که رفتار قطع مدار می‌خواهند باید به طور صریح توقف‌های سخت را در `config.yaml` پروفایل فعال کنید:
 
 ```
-docker run -d \  --name hermes \  --restart unless-stopped \  -v ~/.hermes:/opt/data \  -p 8642:8642 \  -p 9119:9119 \  -e HERMES_DASHBOARD=1 \  nousresearch/hermes-agent gateway run
+tool_loop_guardrails:
+  hard_stop_enabled: true
+  hard_stop_after:
+    exact_failure: 5
+    idempotent_no_progress: 5
 ```
 
-The dashboard is supervised by s6 — if it crashes,s6-superviserestarts it automatically after a short backoff. Dashboard stdout/stderr is forwarded todocker logs <container>(no prefix; the gateway's own output now lives in a per-profile s6-log file — seeWhere the logs gobelow — so the two streams don't clash).
+توجه: API server با `API_SERVER_ENABLED=true` مسدود شده. برای قرار دادن آن فراتر از `127.0.0.1` در داخل container، همچنین `API_SERVER_HOST=0.0.0.0` و یک `API_SERVER_KEY` (حداقل 8 کاراکتر — یکی با `openssl rand -hex 32` تولید کنید) تنظیم کنید. مثال:
 
-`s6-supervise`
-`docker logs <container>`
+```
+docker run -d \
+  --name hermes \
+  --restart unless-stopped \
+  -v ~/.hermes:/opt/data \
+  -p 8642:8642 \
+  -e API_SERVER_ENABLED=true \
+  -e API_SERVER_HOST=0.0.0.0 \
+  -e API_SERVER_KEY="$(openssl rand -hex 32)" \
+  -e API_SERVER_CORS_ORIGINS='*' \
+  nousresearch/hermes-agent gateway run
+```
 
-| Environment variable | Description | Default |
+باز کردن هر پورتی روی یک ماشین متصل به اینترنت یک ریسک امنیتی است. نباید این کار را انجام دهید مگر اینکه ریسک‌ها را درک کنید.
+
+## اجرای داشبورد
+
+داشبورد وب داخلی به عنوان یک سرویس s6-rc نظارت شده در کنار gateway در همان container اجرا می‌شود. `HERMES_DASHBOARD=1` را تنظیم کنید تا آن را بالا بیاورید:
+
+```
+docker run -d \
+  --name hermes \
+  --restart unless-stopped \
+  -v ~/.hermes:/opt/data \
+  -p 8642:8642 \
+  -p 9119:9119 \
+  -e HERMES_DASHBOARD=1 \
+  nousresearch/hermes-agent gateway run
+```
+
+داشبورد توسط s6 نظارت می‌شود — اگر خراب شود، `s6-supervise` آن را پس از یک backoff کوتاه به طور خودکار بازیابی می‌کند. stdout/stderr داشبورد به `docker logs <container>` (بدون پیشوند؛ خروجی خود gateway اکنون در یک فایل s6-log به ازای هر پروفایل زندگی می‌کند — بخش "لاگ‌ها کجا می‌روند" در زیر را ببینید — بنابراین دو جریان تداخل ندارند) ارسال می‌شود.
+
+| متغیر محیطی | توضیح | پیش‌فرض |
 | --- | --- | --- |
-| HERMES_DASHBOARD | Set to1(ortrue/yes) to enable the supervised dashboard service | (unset — service is registered but stays down) |
-| HERMES_DASHBOARD_HOST | Bind address for the dashboard HTTP server | 0.0.0.0 |
-| HERMES_DASHBOARD_PORT | Port for the dashboard HTTP server | 9119 |
-| HERMES_DASHBOARD_INSECURE | Deprecated / no-op.Formerly bypassed the auth gate; as of the June 2026 hardening it no longer disables authentication. A non-loopback bind always requires an auth provider | (ignored — configure a provider instead) |
+| HERMES_DASHBOARD | روی `1` (یا `true`/`yes`) تنظیم کنید تا سرویس داشبورد نظارت شده فعال شود | (تنظیم نشده — سرویس ثبت شده اما پایین باقی می‌ماند) |
+| HERMES_DASHBOARD_HOST | آدرس اتصال سرور HTTP داشبورد | 0.0.0.0 |
+| HERMES_DASHBOARD_PORT | پورت سرور HTTP داشبورد | 9119 |
+| HERMES_DASHBOARD_INSECURE | منسوخ / بدون عمل. قبلاً دروازه احراز هویت را دور می‌زد؛ از زمان تقویت ژوئن 2026 دیگر احراز هویت را غیرفعال نمی‌کند. اتصال غیر-loopback همیشه به یک ارائه‌دهنده احراز هویت نیاز دارد | (نادیده گرفته شده — به جای آن یک ارائه‌دهنده پیکربندی کنید) |
 
-`HERMES_DASHBOARD`
-`1`
-`true`
-`yes`
-`HERMES_DASHBOARD_HOST`
-`0.0.0.0`
-`HERMES_DASHBOARD_PORT`
-`9119`
-`HERMES_DASHBOARD_INSECURE`
+داشبورد در داخل container به طور پیش‌فرض `0.0.0.0` را متصل می‌کند — بدون آن، پورت منتشر شده `-p 9119:9119` از میزبان قابل دسترس نخواهد بود. برای محدود کردن اتصال به loopback container (برای تنظیمات sidecar / reverse-proxy)، `HERMES_DASHBOARD_HOST=127.0.0.1` را تنظیم کنید.
 
-The dashboard inside the container defaults to binding0.0.0.0— without it, the published-p 9119:9119port would not be reachable from the host. To restrict the bind to container loopback (for sidecar / reverse-proxy setups), setHERMES_DASHBOARD_HOST=127.0.0.1.
+دروازه احراز هویت داشبورد وقتی هر دو مورد زیر درست باشد به طور خودکار فعال می‌شود:
 
-`0.0.0.0`
-`-p 9119:9119`
-`HERMES_DASHBOARD_HOST=127.0.0.1`
+1. هاست اتصال غیر-loopback است (مثلاً پیش‌فرض `0.0.0.0` در داخل container)، و
+2. یک پلاگین `DashboardAuthProvider` ثبت شده است.
 
-The dashboard's auth gate engages automatically when both of the following are true:
+سه روش bundled برای برآورده کردن شرط دوم وجود دارد:
 
-1. The bind host is non-loopback (e.g. the default0.0.0.0inside the container),and
-2. ADashboardAuthProviderplugin is registered.
+- نام کاربری/رمز عبور — ساده‌ترین برای container میزبانی شده / روی سرور / homelab در یک شبکه مورد اعتماد یا پشت VPN: `HERMES_DASHBOARD_BASIC_AUTH_USERNAME` + `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD` (و `HERMES_DASHBOARD_BASIC_AUTH_SECRET` برای نشست‌های پایدار پس از راه‌اندازی مجدد) را تنظیم کنید. مناسب برای در معرض دید مستقیم اینترنت عمومی نیست.
+- OAuth (Nous Portal) — برای استقرارهای میزبانی شده/عمومی: ارائه‌دهنده `dashboard_auth/nous` هر وقت `HERMES_DASHBOARD_OAUTH_CLIENT_ID` تنظیم شده باشد فعال می‌شود.
+- OIDC میزبانی شده خودی — برای احراز هویت در برابر ارائه‌دهنده هویت خودتان از طریق OpenID Connect استاندارد: ارائه‌دهنده `dashboard_auth/self_hosted` وقتی `HERMES_DASHBOARD_OIDC_ISSUER` + `HERMES_DASHBOARD_OIDC_CLIENT_ID` تنظیم شده باشند فعال می‌شود.
 
-`0.0.0.0`
-`DashboardAuthProvider`
+صرف نظر از اینکه کدام را انتخاب کنید، دروازه تماس‌گیرندگان را قبل از اینکه به هر مسیر محافظت شده‌ای دسترسی پیدا کنند به یک صفحه ورود هدایت می‌کند. هر سه ارائه‌دهنده را در رابط وب داشبورد → احراز هویت ببینید.
 
-There are three bundled ways to satisfy the second condition:
+[رابط وب داشبورد → احراز هویت](/docs/user-guide/features/web-dashboard#authentication-gated-mode)
 
-- Username/password— the simplest for a self-hosted / on-prem / homelab container on a trusted network or behind a VPN: setHERMES_DASHBOARD_BASIC_AUTH_USERNAME+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD(andHERMES_DASHBOARD_BASIC_AUTH_SECRETfor restart-stable sessions). Not suitable for direct public-internet exposure.
-- OAuth (Nous Portal)— for hosted/public deploys: thedashboard_auth/nousprovider activates wheneverHERMES_DASHBOARD_OAUTH_CLIENT_IDis set.
-- Self-hosted OIDC— to authenticate against your own identity provider via standard OpenID Connect: thedashboard_auth/self_hostedprovider activates whenHERMES_DASHBOARD_OIDC_ISSUER+HERMES_DASHBOARD_OIDC_CLIENT_IDare set.
-
-`HERMES_DASHBOARD_BASIC_AUTH_USERNAME`
-`HERMES_DASHBOARD_BASIC_AUTH_PASSWORD`
-`HERMES_DASHBOARD_BASIC_AUTH_SECRET`
-`dashboard_auth/nous`
-`HERMES_DASHBOARD_OAUTH_CLIENT_ID`
-`dashboard_auth/self_hosted`
-`HERMES_DASHBOARD_OIDC_ISSUER`
-`HERMES_DASHBOARD_OIDC_CLIENT_ID`
-
-Whichever you choose, the gate redirects callers to a login page before they can reach any protected route. SeeWeb Dashboard → Authenticationfor all three providers.
-
-[Web Dashboard → Authentication](/docs/user-guide/features/web-dashboard#authentication-gated-mode)
-
-If no provider is registered and the bind is non-loopback, the dashboardfails closed at startupwith a specific error pointing at the missing env var. There is no longer an escape hatch that serves the dashboard unauthenticated on a public bind:HERMES_DASHBOARD_INSECURE=1is now a deprecated no-op (it logs a warning and is ignored). Configure a provider, or bindHERMES_DASHBOARD_HOST=127.0.0.1and reach the dashboard over an SSH tunnel / Tailscale instead.
+اگر ارائه‌دهنده‌ای ثبت نشده باشد و اتصال غیر-loopback باشد، داشبورد در شروع با یک خطای خاص که به متغیر محیطی گمشده اشاره می‌کند **شکست خورده بسته** می‌شود. دیگر راه فراری وجود ندارد که داشبورد را بدون احراز هویت روی یک اتصال عمومی سرویس دهد: `HERMES_DASHBOARD_INSECURE=1` اکنون یک no-op منسوخ است (یک هشدار لاگ می‌کند و نادیده گرفته می‌شود). یک ارائه‌دهنده پیکربندی کنید، یا `HERMES_DASHBOARD_HOST=127.0.0.1` را متصل کنید و از طریق SSH tunnel / Tailscale به داشبورد دسترسی پیدا کنید.
 
 `HERMES_DASHBOARD_INSECURE=1`
 `HERMES_DASHBOARD_HOST=127.0.0.1`
 `--insecure`
 
-An unauthenticated public dashboard was the entry point for the June 2026 MCP-config persistence campaign: internet scanners reached exposed dashboards (and OpenAI API servers) and drove the agent into planting an SSH-key backdoor. The auth gate is now mandatory on every non-loopback bind. For a trusted-LAN / homelab box, the bundled username/password provider (HERMES_DASHBOARD_BASIC_AUTH_USERNAME+_PASSWORD) is the zero-infra way to satisfy it.
+یک داشبورد عمومی بدون احراز هویت نقطه ورود کمپین ماندگاری پیکربندی MCP ژوئن 2026 بود: اسکنرهای اینترنت به داشبوردهای (و API serverهای OpenAI) در معرض دید رسیدند و عامل را به کاشتن یک backdoor کلید SSH سوق دادند. دروازه احراز هویت اکنون روی هر اتصال غیر-loopback اجباری است. برای جعبه LAN مورد اعتماد / homelab، ارائه‌دهنده bundled نام کاربری/رمز عبور (`HERMES_DASHBOARD_BASIC_AUTH_USERNAME` + `_PASSWORD`) راه zero-infra برای برآورده کردن آن است.
 
-`HERMES_DASHBOARD_BASIC_AUTH_USERNAME`
-`_PASSWORD`
+اجرای داشبورد به عنوان یک container جداگانه **پشتیبانی می‌شود** وقتی آن container فضای نام PID و شبکه میزبان را به اشتراک بگذارد (مثلاً `network_mode: host`، همانطور که فایل `docker-compose.yml` خود مخزن انجام می‌دهد — سرویس `dashboard` آن را ببینید). تشخیص سلامت gateway آن نیاز به فضای نام PID مشترک با فرآیند gateway دارد، بنابراین محدودیت فقط برای داشبوردهای اجرا شده در container‌های شبکه bridge جداگانه بدون فضای نام PID مشترک اعمال می‌شود.
 
-Running the dashboard as a separate containerissupported when that container shares the host PID and network namespace (e.g.network_mode: host, as the repo's owndocker-compose.ymldoes — see itsdashboardservice). Its gateway-liveness detection requires a shared PID namespace with the gateway process, so the limitation only applies to dashboards run in isolated bridge-network containers without a shared PID namespace.
+## اجرا به صورت تعاملی (چت CLI)
 
-`network_mode: host`
-`docker-compose.yml`
-`dashboard`
-
-## Running interactively (CLI chat)​
-
-To open an interactive chat session against a running data directory:
+برای باز کردن یک نشست چت تعاملی در برابر یک پوشه داده در حال اجرا:
 
 ```
-docker run -it --rm \  -v ~/.hermes:/opt/data \  nousresearch/hermes-agent
+docker run -it --rm \
+  -v ~/.hermes:/opt/data \
+  nousresearch/hermes-agent
 ```
 
-Or if you have already opened a terminal in your running container (via Docker Desktop for instance), just run:
+یا اگر قبلاً یک ترمینال در container در حال اجرای خود باز کرده‌اید (مثلاً از طریق Docker Desktop)، کافی است اجرا کنید:
 
 ```
 /opt/hermes/.venv/bin/hermes
 ```
 
-## Persistent volumes​
+## volume‌های پایدار
 
-The/opt/datavolume is the single source of truth for all Hermes state. It maps to your host's~/.hermes/directory and contains:
+volume `/opt/data` تنها منبع حقیقت برای تمام وضعیت Hermes است. به پوشه `~/.hermes/` میزبان شما نگاشت می‌شود و شامل:
 
-`/opt/data`
-`~/.hermes/`
-
-| Path | Contents |
+| مسیر | محتوا |
 | --- | --- |
-| .env | API keys and secrets |
-| config.yaml | All Hermes configuration |
-| SOUL.md | Agent personality/identity |
-| sessions/ | Conversation history |
-| memories/ | Persistent memory store |
-| skills/ | Installed skills |
-| home/ | Per-profile HOME for Hermes tool subprocesses (git,ssh,gh,npm, and skill CLIs) |
-| cron/ | Scheduled job definitions |
-| hooks/ | Event hooks |
-| logs/ | Runtime logs |
-| skins/ | Custom CLI skins |
+| .env | کلیدهای API و رمزها |
+| config.yaml | تمام پیکربندی Hermes |
+| SOUL.md | شخصیت/هویت عامل |
+| sessions/ | تاریخچه مکالمه |
+| memories/ | فروشگاه حافظه پایدار |
+| skills/ | مهارت‌های نصب شده |
+| home/ | HOME به ازای هر پروفایل برای subprocess‌های ابزار Hermes (git، ssh، gh، npm و CLI‌های مهارت) |
+| cron/ | تعریف‌های کار زمان‌بندی شده |
+| hooks/ | هوک‌های رویداد |
+| logs/ | لاگ‌های runtime |
+| skins/ | اسکین‌های سفارشی CLI |
 
-`.env`
-`config.yaml`
-`SOUL.md`
-`sessions/`
-`memories/`
-`skills/`
-`home/`
-`git`
-`ssh`
-`gh`
-`npm`
-`cron/`
-`hooks/`
-`logs/`
-`skins/`
+### درخت نصب تغییرناپذیر
 
-### Immutable install tree​
+در image‌های Docker میزبانی شده و منتشر شده، `/opt/hermes` درخت اپلیکیشن نصب شده است. مالک root است و برای کاربر runtime `hermes` فقط خواندنی است، بنابراین نوبت‌های عامل، نشست‌های gateway، اعمال داشبورد و دستورات عادی `docker exec hermes hermes ...` نمی‌توانند سورس اصلی، `.venv` bundled، `node_modules` یا بسته TUI را در جا ویرایش کنند.
 
-In hosted and published Docker images,/opt/hermesis the installed application tree. It is root-owned and read-only to the runtimehermesuser, so agent turns, gateway sessions, dashboard actions, and normaldocker exec hermes hermes ...commands cannot edit the core source, bundled.venv,node_modules, or TUI bundle in place.
+تمام وضعیت متغیر Hermes زیر `/opt/data` تعلق دارد: پیکربندی، `.env`، پروفایل‌ها، مهارت‌ها، حافظه‌ها، نشست‌ها، لاگ‌ها، آپلودهای داشبورد، پلاگین‌ها و سایر فایل‌های مدیریت شده توسط کاربر. Image همچنین نوشتن runtime `.pyc` و نصب lazy وابستگی‌های Hermes در `/opt/hermes` را غیرفعال می‌کند؛ وابستگی‌های پلتفرم اختیاری که توسط image منتشر شده نیاز دارند باید در image پخته شوند یا از طریق یک ساخت image جدید نصب شوند.
 
-`/opt/hermes`
-`hermes`
-`docker exec hermes hermes ...`
-`.venv`
-`node_modules`
+در image‌های میزبانی شده/منتشر شده، بهبود خود عامل به مهارت‌ها، حافظه، پلاگین‌ها و پیکربندی زیر `/opt/data` محدود می‌شود. سورس اصلی نصب شده زیر `/opt/hermes` تغییرناپذیر است؛ تغییرات اصلی از طریق PR به مخزن ایجاد شده و با به‌روزرسانی image ارسال می‌شوند، نه با ویرایش زنده نصب در حال اجرا.
 
-All mutable Hermes state belongs under/opt/data: config,.env, profiles, skills, memories, sessions, logs, dashboard uploads, plugins, and other user-managed files. The image also disables runtime.pycwrites and Hermes lazy dependency installs into/opt/hermes; optional platform dependencies needed by the published image should be baked into the image or installed through a new image build.
+اگر اپراتور نیاز به تعمیر یا بازرسی فایل‌های خارج از `/opt/data` دارد، عمداً از یک shell root استفاده کنید. shim `hermes` معمولاً `docker exec hermes hermes ...` را به کاربر runtime برمی‌گرداند؛ `HERMES_DOCKER_EXEC_AS_ROOT=1` را برای یک فراخوانی root تکی وقتی به طور صریح به معنای root نیاز دارید تنظیم کنید.
 
-`/opt/data`
-`.env`
-`.pyc`
-`/opt/hermes`
+CLI‌های مهارت که credentialها را زیر `~` ذخیره می‌کنند باید در برابر HOME subprocess مقداردهی اولیه شوند، نه فقط ریشه volume داده. به عنوان مثال، مهارت `xurl` وضعیت OAuth را در `~/.xurl` ذخهره می‌کند؛ در لایه‌بندی Docker رسمی، فراخوانی‌های ابزار Hermes آن را به عنوان `/opt/data/home/.xurl` می‌خوانند، بنابراین احراز هویت دستی xurl را با `HOME=/opt/data/home` اجرا کنید و با `HOME=/opt/data/home xurl auth status` تأیید کنید.
 
-On hosted/published images, agent self-improvement is scoped to skills, memory, plugins, and config under/opt/data. The installed core source under/opt/hermesis immutable; core changes are made via PRs to the repo and shipped by updating the image, not by live-editing the running install.
+هرگز دو container `gateway` Hermes را به طور همزمان علیه همان پوشه داده اجرا نکنید — فایل‌های نشست و فروشگاه‌های حافظه برای دسترسی نوشتن همزمان طراحی نشده‌اند.
 
-`/opt/data`
-`/opt/hermes`
+## پشتیبانی چند پروفایلی
 
-If an operator needs to repair or inspect files outside/opt/data, use a root shell intentionally. Thehermesshim normally dropsdocker exec hermes hermes ...back to the runtime user; setHERMES_DOCKER_EXEC_AS_ROOT=1for a one-off root invocation when you explicitly need root semantics.
+Hermes از **چندین پروفایل** پشتیبانی می‌کند — پوشه‌های جداگانه `~/.hermes/` که به شما اجازه می‌دهند عاملان مستقل (SOUL، مهارت‌ها، حافظه، نشست‌ها، credentialهای متفاوت) از یک نصب واحد اجرا کنید. در داخل image رسمی Docker، درخت نظارت s6 هر پروفایل را به عنوان یک سرویس نظارت شده درجه یک رفتار می‌کند، بنابراین استقرار توصیه شده **یک container میزبان تمام پروفایل‌ها** است.
 
-`/opt/data`
-`hermes`
-`docker exec hermes hermes ...`
-`HERMES_DOCKER_EXEC_AS_ROOT=1`
+[چندین پروفایل](/docs/reference/profile-commands)
 
-Skill CLIs that store credentials under~must be initialized against the subprocess HOME, not just the data-volume root. For example, thexurl skillstores OAuth state in~/.xurl; in the official Docker layout, Hermes tool calls read that as/opt/data/home/.xurl, so run manual xurl auth withHOME=/opt/data/homeand verify withHOME=/opt/data/home xurl auth status.
+هر پروفایل که با `hermes profile create <name>` ایجاد می‌شود دریافت می‌کند:
 
-`~`
-[xurl skill](/docs/user-guide/skills/bundled/social-media/social-media-xurl)
-`~/.xurl`
-`/opt/data/home/.xurl`
-`HOME=/opt/data/home`
-`HOME=/opt/data/home xurl auth status`
+- یک شکاف سرویس s6 اختصاصی در `/run/service/gateway-<name>/`، به طور پویا توسط runtime ثبت شده — بدون نیاز به بازساخت container.
+- بازیابی خودکار هنگام خرابی، با backoff مدیریت شده توسط `s6-supervise`.
+- لاگ‌های چرخشی به ازای هر پروفایل در `${HERMES_HOME}/logs/gateways/<name>/current` (10 آرشیو × 1 MB هر کدام).
+- ماندگاری وضعیت در راه‌اندازی مجدد container: آشتی‌دهنده boot فایل `gateway_state.json` را از هر پوشه پروفایل می‌خواند و فقط برای پروفایل‌هایی که آخرین وضعیت ثبت شده `running` بود شکاف را دوباره بالا می‌آورد. فقط یک gateway که به طور صریح متوقف کرده‌اید (`hermes gateway stop`) در راه‌اندازی مجدد پایین باقی می‌ماند — راه‌اندازی مجدد container، ارتقای image یا خروج غیرمنتظره وضعیت ثبت شده را `running` باقی می‌گذارد، بنابراین gateway در راه‌اندازی بعدی به طور خودکار شروع می‌شود.
 
-Never run two Hermesgatewaycontainers against the same data directory simultaneously — session files and memory stores are not designed for concurrent write access.
-
-## Multi-profile support​
-
-Hermes supportsmultiple profiles— separate~/.hermes/subdirectories that let you run independent agents (different SOUL, skills, memory, sessions, credentials) from a single installation.Inside the official Docker image, the s6 supervision tree treats each profile as a first-class supervised service, so the recommended deployment isone container hosting all profiles.
-
-[multiple profiles](/docs/reference/profile-commands)
-`~/.hermes/`
-
-Each profile created withhermes profile create <name>gets:
-
-`hermes profile create <name>`
-- A dedicated s6 service slot at/run/service/gateway-<name>/, registered dynamically by the runtime — no container rebuild required.
-- Auto-restart on crash, backoff-managed bys6-supervise.
-- Per-profile rotated logs at${HERMES_HOME}/logs/gateways/<name>/current(10 archives × 1 MB each).
-- State persistence across container restarts: the boot-time reconciler readsgateway_state.jsonfrom each profile directory and brings the slot back up only for profiles whose last recorded state wasrunning. Only a gateway you explicitly stopped (hermes gateway stop) stays down across a restart — a container restart, image upgrade, or unexpected exit leaves the recorded state asrunning, so the gateway auto-starts on the next boot.
-
-`/run/service/gateway-<name>/`
-`s6-supervise`
-`${HERMES_HOME}/logs/gateways/<name>/current`
-`gateway_state.json`
-`running`
-`hermes gateway stop`
-`running`
-
-The lifecycle commands you'd run on the host work the same way from inside the container:
+دستورات چرخه حیاتی که در میزبان اجرا می‌کنید از داخل container به همان شکل کار می‌کنند:
 
 ```
-# Create a profile — registers the gateway-<name> s6 slot.docker exec hermes hermes profile create coder# Start / stop / restart — dispatches s6-svc; the gateway lifecycle survives docker restart.docker exec hermes hermes -p coder gateway startdocker exec hermes hermes -p coder gateway stopdocker exec hermes hermes -p coder gateway restart# Status — reports `Manager: s6 (container supervisor)` inside the container.docker exec hermes hermes -p coder gateway status# Remove a profile — tears down the s6 slot too.docker exec hermes hermes profile delete coder
+# ایجاد یک پروفایل — شکاف s6 gateway-<name> را ثبت می‌کند.
+docker exec hermes hermes profile create coder
+# شروع / توقف / بازیابی — s6-svc را ارسال می‌کند؛ چرخه حیات gateway در docker restart پایدار است.
+docker exec hermes hermes -p coder gateway start
+docker exec hermes hermes -p coder gateway stop
+docker exec hermes hermes -p coder gateway restart
+# وضعیت — `Manager: s6 (container supervisor)` را در داخل container گزارش می‌دهد.
+docker exec hermes hermes -p coder gateway status
+# حذف یک پروفایل — شکاف s6 را نیز فرو می‌ریزد.
+docker exec hermes hermes profile delete coder
 ```
 
-Under the hood,hermes gateway start/stop/restartinside the container is intercepted and routed tos6-svcagainst the right service directory; you don't need to learn the s6 commands directly. For raw supervisor state, use/command/s6-svstat /run/service/gateway-<name>(note/command/is on PATH only for processes spawned by the supervision tree — when calling fromdocker exec, pass the absolute path).
+در زیر، `hermes gateway start/stop/restart` در داخل container رهگیری شده و به `s6-svc` علیه دایرکتوری سرویس صحیح مسیریابی می‌شود؛ نیازی به یادگیری مستقیم دستورات s6 ندارید. برای وضعیت خام ناظر، از `/command/s6-svstat /run/service/gateway-<name>` استفاده کنید (توجه `/command/` فقط در PATH برای فرآیندهای ایجاد شده توسط درخت نظارت است — هنگام فراخوانی از `docker exec`، مسیر مطلق را ارسال کنید).
 
-`hermes gateway start/stop/restart`
-`s6-svc`
-`/command/s6-svstat /run/service/gateway-<name>`
-`/command/`
-`docker exec`
+### دسترسی به بیش از یک پروفایل از خارج container
 
-### Reaching more than one profile from outside the container​
+دو سطح متفاوت از خارج به gateway یک پروفایل دسترسی دارند و رفتار متفاوتی دارند — آن‌ها را اشتباه نگیرید:
 
-Two different surfaces reach a profile's gateway from outside, and they behave differently — don't conflate them:
+**Hermes Desktop (و رابط وب داشبورد).** اتصال "Remote Gateway" اپلیکیشن Desktop با backend `hermes dashboard` (پورت پیش‌فرض 9119، فعال شده با `HERMES_DASHBOARD=1`) ارتباط برقرار می‌کند — **نه** API server سازگار با OpenAI. یک backend داشبورد **هر** پروفایل co-located را سرویس می‌دهد: تعویض‌کننده پروفایل اپلیکیشن پروفایل هدف را با هر درخواست ارسال می‌کند و backend `HERMES_HOME` آن پروفایل را روی دیسک باز می‌کند. بنابراین **نیازی به پورت دوم** — یا اتصال دوم — به ازای هر پروفایل برای Desktop ندارید؛ یک اتصال `:9119` همه را از طریق تعویض‌کننده پوشش می‌دهد.
 
-Hermes Desktop (and the web dashboard).The Desktop app'sRemote Gatewayconnection talks to ahermes dashboardbackend (defaultport 9119, enabled byHERMES_DASHBOARD=1) —notthe OpenAI API server. One dashboard backend serveseveryco-located profile: the app's profile switcher sends the target profile with each request and the backend opens that profile'sHERMES_HOMEon disk. So you donotneed a second port — or a second connection — per profile for Desktop; one:9119connection covers them all through the switcher.
-
-`hermes dashboard`
-`HERMES_DASHBOARD=1`
-`HERMES_HOME`
-`:9119`
-
-OpenAI-compatible API clients (Open WebUI, LobeChat,/v1/...).These talk to each profile'sAPI server, which bindsport 8642 for every profile(resolved fromAPI_SERVER_PORT/platforms.api_server.extra.port— there is no auto-allocation and noconfig.yaml/gateway.portkey). If you want a client to reach aspecificsecond profile, give that profile a distinctAPI_SERVER_PORTinits own.env, otherwise its gateway tries to bind 8642 too and conflicts with the default profile:
-
-`/v1/...`
-`API_SERVER_PORT`
-`platforms.api_server.extra.port`
-`config.yaml`
-`gateway.port`
-`API_SERVER_PORT`
-`.env`
+**کلاینت‌های API سازگار با OpenAI (Open WebUI، LobeChat، `/v1/...`).** این‌ها با API server هر پروفایل ارتباط برقرار می‌کنند، که **پورت 8642 را برای هر پروفایل متصل می‌کند** (از `API_SERVER_PORT` / `platforms.api_server.extra.port` حل می‌شود — هیچ تخصیص خودکار و کلید `gateway.port` در `config.yaml` وجود ندارد). اگر می‌خواهید یک کلاینت به پروفایل دوم خاصی دسترسی داشته باشد، به آن پروفایل یک `API_SERVER_PORT` متمایز در `.env` خودش بدهید، در غیر این صورت gateway آن سعی می‌کند 8642 را نیز متصل کند و با پروفایل پیش‌فرض تداخل می‌کند:
 
 ```
-# Create the profile (registers its gateway-<name> s6 slot)docker exec hermes hermes profile create work# Point its API server at a free port (write to the profile's own .env)cat >> /opt/data/profiles/work/.env <<'EOF'API_SERVER_ENABLED=trueAPI_SERVER_PORT=8643EOFdocker exec hermes hermes -p work gateway restart
+# ایجاد پروفایل (شکاف s6 gateway-<name> آن را ثبت می‌کند)
+docker exec hermes hermes profile create work
+# اتصال API server آن به یک پورت آزاد (در .env خود پروفایل بنویسید)
+cat >> /opt/data/profiles/work/.env <<'EOF'
+API_SERVER_ENABLED=true
+API_SERVER_PORT=8643
+EOF
+docker exec hermes hermes -p work gateway restart
 ```
 
-KeepAPI_SERVER_PORTin each profile'sown.env, never in the container-wideenvironment:block — a global value would force every profile onto the same port and they would collide. With bridge networking, publish the extra port indocker-compose.yml(- "8643:8643"); withnetwork_mode: hostit is already reachable on the host. The default profile's 8642 connection is untouched.
+`API_SERVER_PORT` را در `.env` خود هر پروفایل نگه دارید، **هرگز** در بلوک `environment:` سراسر container — یک مقدار سراسری هر پروفایل را مجبور به استفاده از همان پورت می‌کند و با هم تداخل می‌کنند. با شبکه‌بندی bridge، پورت اضافی را در `docker-compose.yml` (`- "8643:8643"`) منتشر کنید؛ با `network_mode: host` از قبل در میزبان قابل دسترس است. اتصال 8642 پروفایل پیش‌فرض دست نخورده باقی می‌ماند.
 
-`API_SERVER_PORT`
-`.env`
-`environment:`
-`docker-compose.yml`
-`- "8643:8643"`
-`network_mode: host`
+### چرا یک container با پروفایل‌های متعدد، نه container‌های متعدد
 
-### Why one container with many profiles, not many containers​
+قبل از مهاجرت s6، "یک container به ازای هر پروفایل" الگوی توصیه شده بود زیرا ناظری در داخل container برای مدیریت چندین gateway وجود نداشت. با s6 به عنوان PID 1، دیگر لازم نیست و لایه‌بندی container واحد در تقریباً هر بعد ساده‌تر است:
 
-Before the s6 migration, "one container per profile" was the recommended pattern because there was no in-container supervisor to manage multiple gateways. With s6 as PID 1, that's no longer necessary, and the single-container layout is simpler in almost every dimension:
-
-|  | One container, many profiles | One container per profile |
+|  | یک container، پروفایل‌های متعدد | یک container به ازای هر پروفایل |
 | --- | --- | --- |
-| Disk overhead | One image, one bundled venv, one Playwright cache | N images / N caches |
-| Memory overhead | Shared Python interpreter cache, shared node_modules | Duplicated per container |
-| Profile creation | docker exec ... hermes profile create <name>(seconds) | Newdocker runinvocation + port allocation + bind-mount config |
-| Per-profile crash recovery | s6-superviseauto-restart | Docker's--restart unless-stopped(slower, kills sibling work) |
-| Logs | Per-profile rotated file vias6-log, plus container-boot audit log | docker logs <name>per container — no built-in rotation |
-| Backup | One~/.hermesdirectory | N directories to coordinate |
+| هزینه دیسک | یک image، یک venv bundled، یک کش Playwright | N image / N کش |
+| هزینه حافظه | کش مفسر پایتون مشترک، `node_modules` مشترک | تکرار شده به ازای هر container |
+| ایجاد پروفایل | `docker exec ... hermes profile create <name>` (ثانیه‌ها) | فراخوانی جدید `docker run` + تخصیص پورت + bind-mount پیکربندی |
+| بازیابی خرابی به ازای هر پروفایل | بازیابی خودکار `s6-supervise` | `--restart unless-stopped` Docker (کندتر، کار خواهر و برادر را می‌کشد) |
+| لاگ‌ها | فایل چرخشی به ازای هر پروفایل از طریق `s6-log`، به اضافه لاگ حسابرسی boot container | `docker logs <name>` به ازای هر container — بدون چرخش داخلی |
+| پشتیبانی | یک پوشه `~/.hermes` | N پوشه برای هماهنگی |
 
-`docker exec ... hermes profile create <name>`
-`docker run`
-`s6-supervise`
-`--restart unless-stopped`
-`s6-log`
-`docker logs <name>`
-`~/.hermes`
+پروفایل پیش‌فرض (`default`) همیشه در اولین راه‌اندازی ثبت می‌شود، بنابراین یک container تازه با یک gateway نظارت شده از جعبه خارج می‌شود. پروفایل‌های اضافی اضافه‌های خالص runtime هستند.
 
-The default profile (default) is always registered on first boot, so a fresh container ships with one supervised gateway out of the box. Additional profiles are pure runtime adds.
+### زمانی که واقعاً یک container جداگانه می‌خواهید
 
-`default`
+پروفایل در container پیش‌فرض است. فقط وقتی دلیل خاصی دارید یک container جداگانه به ازای هر پروفایل اجرا کنید:
 
-### When you DO want a separate container​
+- جداسازی منابع به ازای هر بار کاری — مثلاً یک نشست ابزار مرورگر فرار در پروفایل A نباید بتواند پروفایل B را OOM کند. Container‌ها `--memory`/`--cpus` به ازای هر پروفایل به شما می‌دهند.
+- تثبیت image مستقل — تگ‌های image upstream مختلف به ازای هر بار کاری.
+- تقسیم شبکه — شبکه‌های Docker متمایز به ازای هر پروفایل (مثلاً یکی رو به مشتری، یکی داخلی).
+- انطباق / شعاع انفجار — credentialهای متمایز هرگز درخت فرآیند سطح OS را به اشتراک نمی‌گذارند.
 
-Profile-in-container is the default. Run a separate container per profile only when you have a specific reason:
-
-- Resource isolation per workload— e.g. a runaway browser-tool session in profile A shouldn't be able to OOM profile B. Containers give you--memory/--cpusper profile.
-- Independent image pinning— different upstream image tags per workload.
-- Network segmentation— distinct Docker networks per profile (e.g. one customer-facing, one internal).
-- Compliance / blast radius— distinct credentials never share an OS-level process tree.
-
-`--memory`
-`--cpus`
-
-In those cases, declare one service per profile with distinctcontainer_name,volumes, andports:
-
-`container_name`
-`volumes`
-`ports`
+در آن موارد، یک سرویس به ازای هر پروفایل با `container_name`، `volumes` و `ports` متمایز اعلام کنید:
 
 ```
-services:  hermes-work:    image: nousresearch/hermes-agent:latest    container_name: hermes-work    restart: unless-stopped    command: gateway run    ports:      - "8642:8642"    volumes:      - ~/.hermes-work:/opt/data  hermes-personal:    image: nousresearch/hermes-agent:latest    container_name: hermes-personal    restart: unless-stopped    command: gateway run    ports:      - "8643:8642"    volumes:      - ~/.hermes-personal:/opt/data
+services:
+  hermes-work:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-work
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"
+    volumes:
+      - ~/.hermes-work:/opt/data
+  hermes-personal:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes-personal
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8643:8642"
+    volumes:
+      - ~/.hermes-personal:/opt/data
 ```
 
-The warning fromPersistent volumesstill applies: never point two containers at the same~/.hermesdirectory simultaneously. The s6 supervisor inside each container manages its own profile set; cross-container sharing of a data volume corrupts session files and memory stores.
+هشدار از volume‌های پایدار همچنان اعمال می‌شود: هرگز دو container را به طور همزمان به همان پوشه `~/.hermes` اشاره ندهید. ناظر s6 داخل هر container مجموعه پروفایل خود را مدیریت می‌کند؛ به اشتراک گذاشتن volume داده بین container‌ها فایل‌های نشست و فروشگاه‌های حافظه را تخریب می‌کند.
 
-`~/.hermes`
+## لاگ‌ها کجا می‌روند
 
-## Where the logs go​
+container s6 چهار سطح لاگ متمایز دارد و "چرا gateway من در `docker logs` چیزی نشان نمی‌دهد" یک شگفتی رایج است. راهنمای سریع:
 
-The s6 container has four distinct log surfaces, and "why isn't my gateway showing anything indocker logs" is a common surprise. Cheatsheet:
-
-`docker logs`
-
-| Source | Where it lands | How to read it |
+| منبع | کجا فرود می‌آید | چگونه بخوانیم |
 | --- | --- | --- |
-| Per-profile gateway(hermes gateway runand per-profile gateways under s6) | Tee'd to two places:docker logs <container>(real time, no extra prefix)and${HERMES_HOME}/logs/gateways/<profile>/current(rotated, ISO-8601 timestamped, 10 archives × 1 MB each) | docker logs -f hermesortail -F ~/.hermes/logs/gateways/default/currenton the host |
-| Dashboard(whenHERMES_DASHBOARD=1) | docker logs <container>(no prefix) | docker logs -f hermes— interleaved with gateway lines |
-| Boot reconciler(records which profile gateways were restored on each container start) | ${HERMES_HOME}/logs/container-boot.log(append-only audit log) | tail -F ~/.hermes/logs/container-boot.log |
-| Generic Hermes logs(agent.log,errors.log) | ${HERMES_HOME}/logs/(profile-aware) | docker exec hermes hermes logs --follow [--level WARNING] [--session <id>] |
+| Gateway به ازای هر پروفایل (`hermes gateway run` و gateway‌ها به ازای هر پروفایل تحت s6) | در دو مکان Tee'd: `docker logs <container>` (زمان واقعی، بدون پیشوند اضافی) و `${HERMES_HOME}/logs/gateways/<profile>/current` (چرخشی، با مهر زمانی ISO-8601، 10 آرشیو × 1 MB هر کدام) | `docker logs -f hermes` یا `tail -F ~/.hermes/logs/gateways/default/current` در میزبان |
+| داشبورد (وقتی `HERMES_DASHBOARD=1`) | `docker logs <container>` (بدون پیشوند) | `docker logs -f hermes` — در هم تنیده با خطوط gateway |
+| آشتی‌دهنده boot (ثبت می‌کند کدام gateway‌های پروفایل در هر شروع container بازیابی شدند) | `${HERMES_HOME}/logs/container-boot.log` (لاگ حسابرسی فقط-اضافه) | `tail -F ~/.hermes/logs/container-boot.log` |
+| لاگ‌های عمومی Hermes (`agent.log`، `errors.log`) | `${HERMES_HOME}/logs/` (آگاه به پروفایل) | `docker exec hermes hermes logs --follow [--level WARNING] [--session <id>]` |
 
-`hermes gateway run`
-`docker logs <container>`
-`${HERMES_HOME}/logs/gateways/<profile>/current`
-`docker logs -f hermes`
-`tail -F ~/.hermes/logs/gateways/default/current`
-`HERMES_DASHBOARD=1`
-`docker logs <container>`
-`docker logs -f hermes`
-`${HERMES_HOME}/logs/container-boot.log`
-`tail -F ~/.hermes/logs/container-boot.log`
-`agent.log`
-`errors.log`
-`${HERMES_HOME}/logs/`
-`docker exec hermes hermes logs --follow [--level WARNING] [--session <id>]`
+دو نتیجه عملی ارزش دانستن:
 
-Two practical consequences worth knowing:
+- کپی فایل در `logs/gateways/<profile>/current` چیزی است که راه‌اندازی مجدد container را تحمل می‌کند. `docker logs` فقط خروجی عمر container فعلی را حفظ می‌کند (و با `docker rm` پاک می‌شود)؛ فایل‌های چرخشی روی volume bind-mount شده باقی می‌مانند.
+- شکل خط حسابرسی آشتی‌دهنده boot `<iso-timestamp> profile=<name> prior_state=<state> action=<registered|started>` است، بنابراین یک `grep profile=coder ~/.hermes/logs/container-boot.log` سریع نشان می‌دهد یک پروفایل خاص آخرین بار کی بازیابی شد و آیا s6 آن را به طور خودکار شروع کرد.
 
-- The file copy atlogs/gateways/<profile>/currentis what survives container restarts.docker logsonly retains output from the current container's lifetime (and is wiped ondocker rm); the rotated files persist on the bind-mounted volume.
-- The boot reconciler's audit line shape is<iso-timestamp> profile=<name> prior_state=<state> action=<registered|started>, so a quickgrep profile=coder ~/.hermes/logs/container-boot.logreveals when a given profile was last restored and whether s6 auto-started it.
+## ارسال متغیرهای محیطی
 
-`logs/gateways/<profile>/current`
-`docker logs`
-`docker rm`
-`<iso-timestamp> profile=<name> prior_state=<state> action=<registered|started>`
-`grep profile=coder ~/.hermes/logs/container-boot.log`
-
-## Environment variable forwarding​
-
-API keys are read from/opt/data/.envinside the container. You can also pass environment variables directly:
-
-`/opt/data/.env`
+کلیدهای API از `/opt/data/.env` در داخل container خوانده می‌شوند. همچنین می‌توانید متغیرهای محیطی را مستقیماً ارسال کنید:
 
 ```
-docker run -it --rm \  -v ~/.hermes:/opt/data \  -e ANTHROPIC_API_KEY="sk-ant-..." \  -e OPENAI_API_KEY="sk-..." \  nousresearch/hermes-agent
+docker run -it --rm \
+  -v ~/.hermes:/opt/data \
+  -e ANTHROPIC_API_KEY="sk-ant-..." \
+  -e OPENAI_API_KEY="sk-..." \
+  nousresearch/hermes-agent
 ```
 
-Direct-eflags override values from.env. This is useful for CI/CD or secrets-manager integrations where you don't want keys on disk.
+پرچم‌های `-e` مستقیم مقادیر `.env` را override می‌کنند. این برای یکپارچه‌سازی‌های CI/CD یا secrets-manager مفید است جایی که نمی‌خواهید کلیدها روی دیسک باشند.
 
-`-e`
-`.env`
+این صفحه اجرای خود Hermes در داخل Docker را پوشش می‌دهد. اگر می‌خواهید Hermes فراخوانی‌های `terminal`/`execute_code` عامل را در داخل یک Docker sandbox container (یک container بلندمدت مشترک بین فرآیندهای Hermes — issue #20561 را ببینید) اجرا کند، آن یک بلوک پیکربندی جداگانه است — `terminal.backend: docker` به اضافه `terminal.docker_image`، `terminal.docker_volumes`، `terminal.docker_forward_env`، `terminal.docker_env`، `terminal.docker_run_as_host_user`، `terminal.docker_extra_args`، `terminal.docker_persist_across_processes` و `terminal.docker_orphan_reaper`. مجموعه کامل شامل قوانین چرخه حیات container را در پیکربندی → Docker Backend ببینید.
 
-This page covers running Hermes itself inside Docker. If you want Hermes to execute the agent'sterminal/execute_codecalls inside a Docker sandbox container (one long-lived container shared across Hermes processes — see issue #20561), that's a separate config block —terminal.backend: dockerplusterminal.docker_image,terminal.docker_volumes,terminal.docker_forward_env,terminal.docker_env,terminal.docker_run_as_host_user,terminal.docker_extra_args,terminal.docker_persist_across_processes, andterminal.docker_orphan_reaper. SeeConfiguration → Docker Backendfor the full set including container-lifecycle rules.
+## مثال Docker Compose
 
-`terminal`
-`execute_code`
-`terminal.backend: docker`
-`terminal.docker_image`
-`terminal.docker_volumes`
-`terminal.docker_forward_env`
-`terminal.docker_env`
-`terminal.docker_run_as_host_user`
-`terminal.docker_extra_args`
-`terminal.docker_persist_across_processes`
-`terminal.docker_orphan_reaper`
-[Configuration → Docker Backend](/docs/user-guide/configuration#docker-backend)
-
-## Docker Compose example​
-
-For persistent deployment with both the gateway and dashboard, adocker-compose.yamlis convenient:
-
-`docker-compose.yaml`
+برای استقرار پایدار با هر دو gateway و داشبورد، `docker-compose.yaml` راحت است:
 
 ```
-services:  hermes:    image: nousresearch/hermes-agent:latest    container_name: hermes    restart: unless-stopped    command: gateway run    ports:      - "8642:8642"   # gateway API      - "9119:9119"   # dashboard (only reached when HERMES_DASHBOARD=1)    volumes:      - ~/.hermes:/opt/data    environment:      - HERMES_DASHBOARD=1      # Uncomment to forward specific env vars instead of using .env file:      # - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}      # - OPENAI_API_KEY=${OPENAI_API_KEY}      # - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}    deploy:      resources:        limits:          memory: 4G          cpus: "2.0"
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"   # gateway API
+      - "9119:9119"   # داشبورد (فقط وقتی HERMES_DASHBOARD=1 قابل دسترس است)
+    volumes:
+      - ~/.hermes:/opt/data
+    environment:
+      - HERMES_DASHBOARD=1
+      # برای ارسال متغیرهای محیطی خاص به جای استفاده از فایل .env غیرفعال کنید:
+      # - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      # - OPENAI_API_KEY=${OPENAI_API_KEY}
+      # - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"
 ```
 
-Start withdocker compose up -dand view logs withdocker compose logs -f. The supervised gateway's stdout is also tee'd to${HERMES_HOME}/logs/gateways/<profile>/currenton the volume — seeWhere the logs gofor the full routing map.
+با `docker compose up -d` شروع کنید و لاگ‌ها را با `docker compose logs -f` مشاهده کنید. stdout gateway نظارت شده همچنین به `${HERMES_HOME}/logs/gateways/<profile>/current` در volume tee'd می‌شود — نقشه مسیریابی کامل را در "لاگ‌ها کجا می‌روند" ببینید.
 
-`docker compose up -d`
-`docker compose logs -f`
-`${HERMES_HOME}/logs/gateways/<profile>/current`
+## اختیاری: bridge صوتی دسکتاپ Linux
 
-## Optional: Linux desktop audio bridge​
+حالت صدا در Docker به دو چیز مجزا نیاز دارد تا کار کند: Hermes باید اجازه کاوش دستگاه‌های صوتی در داخل container را داشته باشد و container باید بتواند به سرور صوتی میزبان شما دسترسی داشته باشد. راه‌اندازی زیر لوله‌کشی صوتی میزبان را برای دسکتاپ‌های Linux که یک سوکت سازگار با PulseAudio را افشا می‌کنند، شامل بسیاری از تنظیمات PipeWire، پوشش می‌دهد.
 
-Voice mode in Docker needs two separate things to work: Hermes must be allowed to probe audio devices inside the container, and the container must be able to reach your host audio server. The setup below covers the host audio plumbing for Linux desktops that expose a PulseAudio-compatible socket, including many PipeWire setups.
+این یک راه‌حل دسکتاپ Linux است، نه یک ویژگی عمومی Docker Desktop. مفید است وقتی از قبل صوت میزبان کار می‌کند و حالت صدای CLI را در داخل container Hermes می‌خواهید. اگر Hermes همچنان `Running inside Docker container -- no audio devices` گزارش می‌کند، از یک ساخت که پشتیبانی کاوش صوتی Docker برای `PULSE_SERVER`/`PIPEWIRE_REMOTE` را شامل می‌شود استفاده کنید.
 
-This is a Linux desktop workaround, not a general Docker Desktop feature. It is useful when you already have host audio working and want CLI voice mode inside the Hermes container. If Hermes still reportsRunning inside Docker container -- no audio devices, use a build that includes Docker audio probing support forPULSE_SERVER/PIPEWIRE_REMOTE.
-
-`Running inside Docker container -- no audio devices`
-`PULSE_SERVER`
-`PIPEWIRE_REMOTE`
-
-First, create an ALSA config next to your Compose file:
+ابتدا یک پیکربندی ALSA در کنار فایل Compose خود ایجاد کنید:
 
 ```
-pcm.!default {    type pulse    hint {        show on        description "Default ALSA Output (PulseAudio)"    }}pcm.pulse {    type pulse}ctl.!default {    type pulse}
+pcm.!default {
+    type pulse
+    hint {
+        show on
+        description "Default ALSA Output (PulseAudio)"
+    }
+}
+pcm.pulse {
+    type pulse
+}
+ctl.!default {
+    type pulse
+}
 ```
 
-Then build a small derived image with the ALSA PulseAudio plugin installed:
+سپد یک image کوچک مشتق شده با پلاگین ALSA PulseAudio نصب شده بسازید:
 
 ```
-FROM nousresearch/hermes-agent:latestUSER rootRUN apt-get update \    && apt-get install -y --no-install-recommends libasound2-plugins \    && rm -rf /var/lib/apt/lists/*
+FROM nousresearch/hermes-agent:latest
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libasound2-plugins \
+    && rm -rf /var/lib/apt/lists/*
 ```
 
-Use that image in Compose and pass through the host user's PulseAudio socket and cookie:
+از آن image در Compose استفاده کنید و سوکت PulseAudio و cookie کاربر میزبان را عبور دهید:
 
 ```
-services:  hermes:    build:      context: .      dockerfile: Dockerfile.audio    image: hermes-agent-audio    container_name: hermes    restart: unless-stopped    command: gateway run    volumes:      - ~/.hermes:/opt/data      - /run/user/${HERMES_UID}/pulse:/run/user/${HERMES_UID}/pulse      - ~/.config/pulse/cookie:/tmp/pulse-cookie:ro      - ./asound.conf:/etc/asound.conf:ro    environment:      - HERMES_UID=${HERMES_UID}      - HERMES_GID=${HERMES_GID}      - XDG_RUNTIME_DIR=/run/user/${HERMES_UID}      - PULSE_SERVER=unix:/run/user/${HERMES_UID}/pulse/native      - PULSE_COOKIE=/tmp/pulse-cookie
+services:
+  hermes:
+    build:
+      context: .
+      dockerfile: Dockerfile.audio
+    image: hermes-agent-audio
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    volumes:
+      - ~/.hermes:/opt/data
+      - /run/user/${HERMES_UID}/pulse:/run/user/${HERMES_UID}/pulse
+      - ~/.config/pulse/cookie:/tmp/pulse-cookie:ro
+      - ./asound.conf:/etc/asound.conf:ro
+    environment:
+      - HERMES_UID=${HERMES_UID}
+      - HERMES_GID=${HERMES_GID}
+      - XDG_RUNTIME_DIR=/run/user/${HERMES_UID}
+      - PULSE_SERVER=unix:/run/user/${HERMES_UID}/pulse/native
+      - PULSE_COOKIE=/tmp/pulse-cookie
 ```
 
-Start it with your host UID/GID so the container process can access the per-user audio socket:
+آن را با UID/GID میزبان خود شروع کنید تا فرآیند container بتواند به سوکت صوتی به ازای هر کاربر دسترسی داشته باشد:
 
 ```
-export HERMES_UID="$(id -u)"export HERMES_GID="$(id -g)"docker compose up -d --build
+export HERMES_UID="$(id -u)"
+export HERMES_GID="$(id -g)"
+docker compose up -d --build
 ```
 
-To verify what PortAudio sees inside the container:
+برای تأیید آنچه PortAudio در داخل container می‌بیند:
 
 ```
 docker exec hermes /opt/hermes/.venv/bin/python -c "import sounddevice as sd; print(sd.query_devices())"
 ```
 
-## Resource limits​
+## محدودیت‌های منابع
 
-The Hermes container needs moderate resources. Recommended minimums:
+container Hermes به منابع متوسط نیاز دارد. حداقل‌های توصیه شده:
 
-| Resource | Minimum | Recommended |
+| منبع | حداقل | توصیه شده |
 | --- | --- | --- |
-| Memory | 1 GB | 2–4 GB |
-| CPU | 1 core | 2 cores |
-| Disk (data volume) | 500 MB | 2+ GB (grows with sessions/skills) |
+| حافظه | 1 GB | 2–4 GB |
+| CPU | 1 هسته | 2 هسته |
+| دیسک (volume داده) | 500 MB | 2+ GB (با نشست‌ها/مهارت‌ها رشد می‌کند) |
 
-Browser automation (Playwright/Chromium) is the most memory-hungry feature. If you don't need browser tools, 1 GB is sufficient. With browser tools active, allocate at least 2 GB.
+اتوماسیون مرورگر (Playwright/Chromium) حریص‌ترین ویژگی حافظه است. اگر به ابزارهای مرورگر نیاز ندارید، 1 GB کافی است. با ابزارهای مرورگر فعال، حداقل 2 GB اختصاص دهید.
 
-Set limits in Docker:
+محدودیت‌ها را در Docker تنظیم کنید:
 
 ```
-docker run -d \  --name hermes \  --restart unless-stopped \  --memory=4g --cpus=2 \  -v ~/.hermes:/opt/data \  nousresearch/hermes-agent gateway run
+docker run -d \
+  --name hermes \
+  --restart unless-stopped \
+  --memory=4g --cpus=2 \
+  -v ~/.hermes:/opt/data \
+  nousresearch/hermes-agent gateway run
 ```
 
-## What the Dockerfile does​
+## کاری که Dockerfile انجام می‌دهد
 
-The official image is based ondebian:13.4and includes:
+image رسمی بر `debian:13.4` استوار است و شامل:
 
-`debian:13.4`
-- Python 3.13 with dependencies synced from the lockfile viauv sync --frozen --no-install-projectfor the baked extras (all,messaging, Anthropic/Bedrock/Azure identity, Hindsight, Matrix), followed by a no-dependency editable install of Hermes itself.
-- Node.js 22 + npm (for browser automation, WhatsApp bridge, TUI/Desktop bundles, and workspace build tooling)
-- Playwright with Chromium (npx playwright install --with-deps chromium --only-shell)
-- ripgrep, ffmpeg, git, andxz-utilsas system utilities
-- docker-cli— so agents running inside the container can drive the host's Docker daemon (bind-mount/var/run/docker.sockto opt in) fordocker build,docker run, container inspection, etc.
-- openssh-client— enables theSSH terminal backendfrom inside the container. The SSH backend shells out to the systemsshbinary; without this, it failed silently in containerized installs.
-- The WhatsApp bridge (scripts/whatsapp-bridge/)
-- s6-overlayv3as PID 1 (replaces the oldertini) — supervises the dashboard and per-profile gateways with auto-restart on crash, reaps zombie subprocesses, and forwards signals.
+- Python 3.13 با وابستگی‌های هماهنگ شده از فایل قفل از طریق `uv sync --frozen --no-install-project` برای extras پخته شده (all، messaging، Anthropic/Bedrock/Azure identity، Hindsight، Matrix)، به دنبال یک نصب editable بدون وابستگی از خود Hermes.
+- Node.js 22 + npm (برای اتوماسیون مرورگر، bridge WhatsApp، بسته‌های TUI/Desktop و ابزارهای ساخت workspace)
+- Playwright با Chromium (`npx playwright install --with-deps chromium --only-shell`)
+- ripgrep، ffmpeg، git و `xz-utils` به عنوان ابزارهای سیستمی
+- `docker-cli` — تا عاملان در حال اجرا در container بتوانند daemon Docker میزبان را هدایت کنند (bind-mount `/var/run/docker.sock` برای فعال‌سازی) برای `docker build`، `docker run`، بازرسی container و غیره.
+- `openssh-client` — امکان backend ترمینال SSH از داخل container را فراهم می‌کند. Backend SSH از باینری `ssh` سیستمی shell out می‌کند؛ بدون این، به طور خاموش در نصب‌های containerized شکست می‌خورد.
+- Bridge WhatsApp (`scripts/whatsapp-bridge/`)
+- `s6-overlay` v3 به عنوان PID 1 (jda تر `tini` قدیمی‌تر را جایگزین می‌کند) — داشبورد و gateway‌ها به ازای هر پروفایل را با بازیابی خودکار هنگام خرابی نظارت می‌کند، فرآیندهای فرعی zombie را جمع می‌کند و سیگنال‌ها را ارسال می‌کند.
 
-`uv sync --frozen --no-install-project`
-`all`
-`messaging`
-`npx playwright install --with-deps chromium --only-shell`
-`xz-utils`
-`docker-cli`
-`/var/run/docker.sock`
-`docker build`
-`docker run`
-`openssh-client`
-[SSH terminal backend](/docs/user-guide/configuration#ssh-backend)
-`ssh`
-`scripts/whatsapp-bridge/`
-[s6-overlay](https://github.com/just-containers/s6-overlay)
-`s6-overlay`
-`tini`
+image `/opt/hermes` را به عنوان یک درخت نصب تغییرناپذیر در runtime رفتار می‌کند. extras پایتونی اختیاری، workspace‌های Node و دارایی‌های TUI که باید در Docker در دسترس باشند باید در حین ساخت image پخته شوند؛ نصب‌های lazy runtime غیرفعال شده‌اند تا gateway‌های نظارت شده و دستورات `docker exec hermes …` سعی نکنند artifacts وابسته را به درخت سورس فقط-خواندنی برگردانند.
 
-The image treats/opt/hermesas an immutable install tree at runtime. Optional Python extras, Node workspaces, and TUI assets that must be available inside Docker need to be baked during the image build; runtime lazy installs are disabled so supervised gateways anddocker exec hermes …commands do not try to write dependency artifacts back into the read-only source tree.
+ENTRYPOINT container `/init` s6-overlay است. در راه‌اندازی:
 
-`/opt/hermes`
-`docker exec hermes …`
+1. `/etc/cont-init.d/01-hermes-setup` (= `docker/stage2-hook.sh`) را به عنوان root اجرا می‌کند: بازنویسی UID/GID اختیاری، تعمیر مالکیت volume، بذر `env`/`config.yaml`/`SOUL.md` در اولین راه‌اندازی، اجرای مهاجرت‌های config-schema غیرتعاملی مگر اینکه `HERMES_SKIP_CONFIG_MIGRATION=1` باشد، هماهنگ‌سازی مهارت‌های bundled.
+2. `/etc/cont-init.d/02-reconcile-profiles` (= `hermes_cli.container_boot`) را اجرا می‌کند: `$HERMES_HOME/profiles/<name>/` را پیمایش می‌کند، شکاف سرویس s6 gateway به ازای هر پروفایل را در `/run/service/gateway-<profile>/` دوباره ایجاد می‌کند و فقط آن‌هایی را که آخرین وضعیت ثبت شده `running` بود خودکار شروع می‌کند (نظارت gateway به ازای هر پروفایل را ببینید).
+3. سرویس‌های s6-rc ایستای `main-hermes` و `dashboard` را شروع می‌کند.
+4. CMD container را به عنوان برنامه اصلی (`/opt/hermes/docker/main-wrapper.sh`) اجرا می‌کند، که آرگومان‌هایی که کاربر به `docker run` ارسال کرده را مسیریابی می‌کند: بدون آرگومان → `hermes` (پیش‌فرض) / اولین آرگومان یک اجرایی در PATH است (مثلاً `sleep`، `bash`) → مستقیماً اجرا کنید / هر چیز دیگری → `hermes <args>` (رد شدن زیردستور)
+Container هنگامی که این برنامه اصلی خارج می‌شود، خارج می‌شود، با کد خروج آن.
 
-The container'sENTRYPOINTis s6-overlay's/init. On boot it:
+ورودی container اکنون `/init` (s6-overlay) است، نه `/usr/bin/tini`. هر پنج الگوی فراخوانی `docker run` مستند شده (بدون آرگومان، `chat -q "…"`) رفتاری دقیقاً مانند image مبتنی بر tini دارند. اگر wrapper پایین‌تری دارید که به رفتار سیگنال خاص tini یا فراخوانی سخت‌کد شده `/usr/bin/tini --` وابسته بود، به تگ image قبلی ثابت کنید.
 
-`ENTRYPOINT`
-`/init`
-1. Runs/etc/cont-init.d/01-hermes-setup(=docker/stage2-hook.sh) as root: optional UID/GID remap, fixes volume ownership, seeds.env/config.yaml/SOUL.mdon first boot, runs non-interactive config-schema migrations unlessHERMES_SKIP_CONFIG_MIGRATION=1, syncs bundled skills.
-2. Runs/etc/cont-init.d/02-reconcile-profiles(=hermes_cli.container_boot): walks$HERMES_HOME/profiles/<name>/, recreates the per-profile gateway s6 service slot under/run/service/gateway-<profile>/, and auto-starts only those whose last recorded state wasrunning(seePer-profile gateway supervision).
-3. Starts the staticmain-hermesanddashboards6-rc services.
-4. Exec's the container's CMD as the main program (/opt/hermes/docker/main-wrapper.sh), which routes the arguments the user passed todocker run:no args →hermes(the default)first arg is an executable on PATH (e.g.sleep,bash) → exec it directlyanything else →hermes <args>(subcommand passthrough)
-The container exits when this main program exits, with its exit code.
+ورودی image را override نکنید مگر اینکه `/init` (یا معادل آن، shim قدیمی `docker/entrypoint.sh` که به hook stage2 ارسال می‌کند) را در زنجیره فرمان نگه دارید. `/init` s6-overlay به عنوان root اجرا می‌شود تا بتواند volume را در اولین راه‌اندازی chown کند، سپد از طریق `s6-setuidgid` برای هر سرویس نظارت شده **و** برای برنامه اصلی به کاربر `hermes` رها می‌کند. اجرای `hermes gateway run` به عنوان root در image رسمی به طور پیش‌فرض رد می‌شود زیرا می‌تواند فایل‌های مالک root در `/opt/data` ایجاد کند و راه‌اندازی‌های بعدی داشبورد یا gateway را خراب کند. فقط وقتی عمداً آن ریسک را می‌پذیرید `HERMES_ALLOW_ROOT_GATEWAY=1` را تنظیم کنید.
 
-`/etc/cont-init.d/01-hermes-setup`
-`docker/stage2-hook.sh`
-`.env`
-`config.yaml`
-`SOUL.md`
-`HERMES_SKIP_CONFIG_MIGRATION=1`
-`/etc/cont-init.d/02-reconcile-profiles`
-`hermes_cli.container_boot`
-`$HERMES_HOME/profiles/<name>/`
-`/run/service/gateway-<profile>/`
-`running`
-`main-hermes`
-`dashboard`
-`/opt/hermes/docker/main-wrapper.sh`
-`docker run`
-- no args →hermes(the default)
-- first arg is an executable on PATH (e.g.sleep,bash) → exec it directly
-- anything else →hermes <args>(subcommand passthrough)
-The container exits when this main program exits, with its exit code.
+### `docker exec` به طور خودکار به کاربر `hermes` رها می‌کند
 
-`hermes`
-`sleep`
-`bash`
-`hermes <args>`
+`docker exec hermes <cmd>` به طور پیش‌فرض به عنوان root در داخل container اجرا می‌شود، اما image یک shim سبک در `/opt/hermes/bin/hermes` (اولین در PATH) دارد که فراخوان‌های root را تشخیص می‌دهد و به طور شفاف از طریق `s6-setuidgid hermes` دوباره اجرا می‌کند. بنابراین `docker exec hermes login`، `docker exec hermes profile create …`، `docker exec hermes setup` و غیره همگی فایل‌هایی مالک UID 10000 می‌نویسند — یعنی توسط gateway نظارت شده خواندنی — بدون نیاز به پرچم `--user` اضافی. فراخوان‌های غیر-root (خود فرآیندهای نظارت شده، `docker exec --user hermes`، زیرعاملان kanban در داخل container) به یک میان‌بُر برخورد می‌کنند که باینری venv را مستقیماً اجرا می‌کند، بنابراین overhead در مسیرهای داغ وجود ندارد.
 
-The container ENTRYPOINT is now/init(s6-overlay), not/usr/bin/tini. All five documenteddocker runinvocation patterns (no args,chat -q "…",sleep infinity,bash,--tui) behave identically to the tini-based image. If you have a downstream wrapper that depended on tini-specific signal behavior or hard-coded/usr/bin/tini --invocation, pin to the previous image tag.
-
-`/init`
-`/usr/bin/tini`
-`docker run`
-`chat -q "…"`
-`sleep infinity`
-`bash`
-`--tui`
-`/usr/bin/tini --`
-
-Do not override the image entrypoint unless you keep/init(or, equivalently, the legacydocker/entrypoint.shshim that forwards to the stage2 hook) in the command chain. s6-overlay's/initruns as root so it can chown the volume on first boot, then drops to thehermesuser vias6-setuidgidfor every supervised service AND for the main program. Startinghermes gateway runas root inside the official image is refused by default because it can leave root-owned files in/opt/dataand break later dashboard or gateway starts. SetHERMES_ALLOW_ROOT_GATEWAY=1only when you intentionally accept that risk.
-
-`/init`
-`docker/entrypoint.sh`
-`/init`
-`hermes`
-`s6-setuidgid`
-`hermes gateway run`
-`/opt/data`
-`HERMES_ALLOW_ROOT_GATEWAY=1`
-
-### docker execautomatically drops to thehermesuser​
-
-`docker exec`
-`hermes`
-
-docker exec hermes <cmd>defaults to running as root inside the container, but the image ships a thin shim at/opt/hermes/bin/hermes(earliest on PATH) that detects root callers and transparently re-execs throughs6-setuidgid hermes. Sodocker exec hermes login,docker exec hermes profile create …,docker exec hermes setup, etc. all write files owned by UID 10000 — i.e. readable by the supervised gateway — with no extra--userflag needed. Non-root callers (the supervised processes themselves,docker exec --user hermes, kanban subagents inside the container) hit a short-circuit that exec's the venv binary directly, so there's no overhead on the hot paths.
-
-`docker exec hermes <cmd>`
-`/opt/hermes/bin/hermes`
-`s6-setuidgid hermes`
-`docker exec hermes login`
-`docker exec hermes profile create …`
-`docker exec hermes setup`
-`--user`
-`docker exec --user hermes`
-
-If you specifically need adocker execthat retains root semantics (diagnostic sessions, inspecting root-only state, files outside/opt/datathat root happens to own), opt out per invocation:
-
-`docker exec`
-`/opt/data`
+اگر به طور خاص به یک `docker exec` نیاز دارید که معنای root را حفظ کند (نشست‌های تشخیصی، بازرسی وضعیت فقط root، فایل‌های خارج از `/opt/data` که صاحب‌شان root است)، در هر فراخوانی خارج شوید:
 
 ```
 docker exec -e HERMES_DOCKER_EXEC_AS_ROOT=1 hermes <cmd>
 ```
 
-The shim accepts1/true/yes(case-insensitive). Anything else — including typos like=0— falls through to the drop, so silent opt-outs aren't possible. Ifs6-setuidgidisn't available (custom builds that stripped s6-overlay), the shim refuses to run as root and exits 126 instead, surfacing the broken privilege model loudly rather than regressing to the historical footgun wheredocker exec hermes loginwould writeauth.jsonasroot:rootand break the supervised gateway's auth on every chat platform message.
+shim `1`/`true`/`yes` (حساس به حروف نیست) را می‌پذیرد. هر چیز دیگری — شامل اشتباهات تایپی مانند `=0` — به رها کردن عبور می‌کند، بنابراین انصراف‌های خاموش ممکن نیستند. اگر `s6-setuidgid` موجود نباشد (ساختهای سفارشی که s6-overlay را حذف کرده‌اند)، shim اجرای به عنوان root را رد می‌کند و 127 خارج می‌شود، مدل امتیاز شکسته را با صدای بلند سطح می‌کند به جای بازگشت به مشکل تاریخی جایی که `docker exec hermes login` `auth.json` را به عنوان `root:root` می‌نویسند و احراز هویت gateway نظارت شده را در هر پیام پلتفرم پیام‌رسانی خراب می‌کند.
 
-`1`
-`true`
-`yes`
-`=0`
-`s6-setuidgid`
-`docker exec hermes login`
-`auth.json`
-`root:root`
+### نظارت gateway به ازای هر پروفایل
 
-### Per-profile gateway supervision​
+هر پروفایل که با `hermes profile create <name>` ایجاد می‌شود به طور خودکار یک سرویس gateway نظارت شده s6 در `/run/service/gateway-<name>/` دریافت می‌کند، با بازیابی خودکار پایدار وضعیت در راه‌اندازی مجدد container. گردش کار کاربرمحور و دستورات چرخه حیات در بخش "پشتیبانی چند پروفایلی" در زیر را ببینید.
 
-Each profile created withhermes profile create <name>automatically gets an s6-supervised gateway service registered at/run/service/gateway-<name>/, with state-persistent auto-restart across container restarts. SeeMulti-profile supportabove for the user-facing workflow and the lifecycle commands.
+مزایای نظارت نسبت به image قبل s6:
 
-`hermes profile create <name>`
-`/run/service/gateway-<name>/`
+- خرابی‌های gateway توسط `s6-supervise` پس از ~1s backoff بازیابی خودکار می‌شوند.
+- داشبورد، وقتی با `HERMES_DASHBOARD=1` فعال شده، در همان درخت نظارت نظارت می‌شود و همان رفتار بازیابی خودکار را دریافت می‌کند.
+- `docker restart`، ارتقاهای image (`docker compose up -d --force-recreate`) و خروج‌های غیرمنتظره gateway‌های در حال اجرا را حفظ می‌کنند: آشتی‌دهنده cont-init فایل `$HERMES_HOME/profiles/<name>/gateway_state.json` را می‌خواند و اگر آخرین وضعیت ثبت شده `running` بود شکاف را دوباره بالا می‌آورد. فقط یک `hermes gateway stop` صریح `stopped` ثبت می‌کند و gateway را در راه‌اندازی مجدد پایین نگه می‌دارد؛ SIGTERM ارسال شده توسط container/s6 در راه‌اندازی مجدد یا ارتقا به عنوان "هنوز در حال اجرا" رفتار می‌شود و به طور خودکار شروع می‌شود.
+- لاگ‌های gateway به ازای هر پروفایل در `${HERMES_HOME}/logs/gateways/<profile>/current` (توسط `s6-log` چرخشی) باقی می‌مانند و اعمال آشتی‌دهنده در هر راه‌اندازی به `${HERMES_HOME}/logs/container-boot.log` اضافه می‌شوند. نقشه مسیریابی کامل را در "لاگ‌ها کجا می‌روند" ببینید.
 
-Supervision benefits over the pre-s6 image:
+`hermes status` در داخل container `Manager: s6 (container supervisor)` را گزارش می‌کند. از `/command/s6-svstat /run/service/gateway-<name>` برای نمای خام ناظر استفاده کنید (توجه `/command/` فقط در PATH برای فرآیندهای درخت نظارت است؛ هنگام فراخوانی از `docker exec` مسیر مطلق را ارسال کنید).
 
-- Gateway crashes are auto-restarted bys6-superviseafter a ~1s backoff.
-- Dashboard, when enabled withHERMES_DASHBOARD=1, is supervised on the same supervision tree and gets the same auto-restart treatment.
-- docker restart, image upgrades (docker compose up -d --force-recreate), and unexpected exits preserve running gateways: the cont-init reconciler reads$HERMES_HOME/profiles/<name>/gateway_state.jsonand brings the slot back up if the last recorded state wasrunning. Only an explicithermes gateway stoprecordsstoppedand keeps the gateway down across the restart; the container/s6 SIGTERM sent on a restart or upgrade is treated as "still running" and auto-starts.
-- Per-profile gateway logs persist under$HERMES_HOME/logs/gateways/<profile>/current(rotated bys6-log), and the reconciler's actions are appended to$HERMES_HOME/logs/container-boot.logper boot. SeeWhere the logs gofor the full routing map.
+## ارتقا
 
-`s6-supervise`
-`HERMES_DASHBOARD=1`
-`docker restart`
-`docker compose up -d --force-recreate`
-`$HERMES_HOME/profiles/<name>/gateway_state.json`
-`running`
-`hermes gateway stop`
-`stopped`
-`$HERMES_HOME/logs/gateways/<profile>/current`
-`s6-log`
-`$HERMES_HOME/logs/container-boot.log`
-
-hermes statusinside the container reportsManager: s6 (container supervisor). Use/command/s6-svstat /run/service/gateway-<name>for the raw supervisor view (note/command/is on PATH for supervision-tree processes only; pass the absolute path when calling fromdocker exec).
-
-`hermes status`
-`Manager: s6 (container supervisor)`
-`/command/s6-svstat /run/service/gateway-<name>`
-`/command/`
-`docker exec`
-
-## Upgrading​
-
-Pull the latest image and recreate the container. Your data directory is
-preserved, and the container runs non-interactive config-schema migrations
-against the mounted$HERMES_HOME/config.yamlbefore starting the gateway.
-When a migration is needed, Hermes writes timestamped backups next toconfig.yamland.envfirst.
-
-`$HERMES_HOME/config.yaml`
-`config.yaml`
-`.env`
+آخرین image را بکشید و container را دوباره ایجاد کنید. پوشه داده شما حفظ می‌شود و container مهاجرت‌های config-schema غیرتعاملی را علیه `$HERMES_HOME/config.yaml` نصب شده قبل از شروع gateway اجرا می‌کند.
+هنگامی که مهاجرت لازم است، Hermes ابتدا snapshot‌های با مهر زمانی در کنار `config.yaml` و `.env` می‌نویسد.
 
 ```
-docker pull nousresearch/hermes-agent:latestdocker rm -f hermesdocker run -d \  --name hermes \  --restart unless-stopped \  -v ~/.hermes:/opt/data \  nousresearch/hermes-agent gateway run
+docker pull nousresearch/hermes-agent:latest
+docker rm -f hermes
+docker run -d \
+  --name hermes \
+  --restart unless-stopped \
+  -v ~/.hermes:/opt/data \
+  nousresearch/hermes-agent gateway run
 ```
 
-Or with Docker Compose:
+یا با Docker Compose:
 
 ```
-docker compose pulldocker compose up -d
+docker compose pull
+docker compose up -d
 ```
 
-SetHERMES_SKIP_CONFIG_MIGRATION=1only if you need to inspect or migrate the
-persisted config manually before letting the new image rewrite it.
+فقط اگر نیاز به بازرسی یا مهاجرت دستی پیکربندی ذخیره شده قبل از بازنویسی image جدید دارید `HERMES_SKIP_CONFIG_MIGRATION=1` را تنظیم کنید.
 
-`HERMES_SKIP_CONFIG_MIGRATION=1`
+## مهارت‌ها و فایل‌های credential
 
-## Skills and credential files​
+وقتی از Docker به عنوان محیط اجرا استفاده می‌کنید (نه روش‌های بالا، بلکه وقتی عامل دستورات را در داخل یک Docker sandbox اجرا می‌کند — پیکربندی → Docker Backend را ببینید)، Hermes یک container بلندمدت واحد را برای تمام فراخوانی‌های ابزار دوباره استفاده می‌کند و پوشه مهارت‌ها (`~/.hermes/skills/`) و هر فایل credentialی که توسط مهارت‌ها اعلام شده را به طور خودکار به عنوان volume فقط-خواندنی به آن container bind-mount می‌کند. اسکریپت‌ها، قالب‌ها و مراجع مهارت در داخل sandbox بدون پیکربندی دستی در دسترس هستند و از آنجا که container در طول زندگی فرآیند Hermes پایدار می‌ماند، هر وابستگی که نصب می‌کنید یا فایلی که می‌نویسید برای فراخوانی ابزار بعدی باقی می‌ماند.
 
-When using Docker as the execution environment (not the methods above, but when the agent runs commands inside a Docker sandbox — seeConfiguration → Docker Backend), Hermes reuses a single long-lived container for all tool calls and automatically bind-mounts the skills directory (~/.hermes/skills/) and any credential files declared by skills into that container as read-only volumes. Skill scripts, templates, and references are available inside the sandbox without manual configuration, and because the container persists for the life of the Hermes process, any dependencies you install or files you write stay around for the next tool call.
+همان هماهنگ‌سازی برای backend‌های SSH و Modal اتفاق می‌افتد — مهارت‌ها و فایل‌های credential قبل از هر دستور از طریق rsync یا API نصب Modal آپلود می‌شوند.
 
-[Configuration → Docker Backend](/docs/user-guide/configuration#docker-backend)
-`~/.hermes/skills/`
+## نصب ابزارهای بیشتر در container
 
-The same syncing happens for SSH and Modal backends — skills and credential files are uploaded via rsync or the Modal mount API before each command.
+image رسمی با مجموعه مراقبت شده‌ای از ابزارها ارسال می‌شود (کاری که Dockerfile انجام می‌دهد را ببینید)، اما هر ابزاری که عامل ممکن است بخواهد از قبل نصب نشده است. پنج رویکرد توصیه شده وجود دارد، به ترتیب تلاش و دوام رو به افزایش.
 
-## Installing more tools in the container​
-
-The official image ships with a curated set of utilities (seeWhat the Dockerfile does), but not every tool an agent might want is preinstalled. There are five recommended approaches, in increasing order of effort and durability.
-
-### npm or Python tools — usenpxoruvx​
+### ابزارهای npm یا Python — از `npx` یا `uvx` استفاده کنید
 
 `npx`
 `uvx`
 
-For any tool published to npm or PyPI, instruct Hermes to run it vianpx(npm) oruvx(Python) and to remember that command in its persistent memory. If the tool needs a config file or credentials, instruct it to drop those under/opt/data(e.g./opt/data/<tool>/config.yaml).
+برای هر ابزاری که در npm یا PyPI منتشر شده، به Hermes بگویید از طریق `npx` (npm) یا `uvx` (Python) آن را اجرا کند و آن دستور را در حافظه پایدار خود به خاطر بسپارد. اگر ابزار به فایل پیکربندی یا credential نیاز دارد، به آن بگویید آن‌ها را زیر `/opt/data` (مثلاً `/opt/data/<tool>/config.yaml`) قرار دهد.
 
-`npx`
-`uvx`
-`/opt/data`
-`/opt/data/<tool>/config.yaml`
+وابستگی‌ها در صورت نیاز واکشی شده و برای عمر container کش می‌شوند. پیکربندی نوشته شده زیر `/opt/data` راه‌اندازی مجدد container را تحمل می‌کند زیرا در دایرکتوری bind-mount شده میزبان زندگی می‌کند. خود کش بسته پس از `docker rm` بازساخته می‌شود، اما `npx` و `uvx` دوباره واکشی شفاف می‌کنند دفعه بعدی که ابزار اجرا می‌شود.
 
-Dependencies are fetched on demand and cached for the life of the container. Configuration written under/opt/datasurvives container restarts because it lives on the bind-mounted host directory. The package cache itself is rebuilt after adocker rm, butnpxanduvxre-fetch transparently the next time the tool runs.
+### سایر ابزارها (بسته‌های apt، باینری‌ها) — نصب و به خاطر سپردن
 
-`/opt/data`
-`docker rm`
-`npx`
-`uvx`
+برای هر چیزی خارج از npm یا PyPI — بسته‌های `apt`، باینری‌های از پیش ساخته شده، runtime‌های زبان که از قبل در image نیستند — به Hermes بگویید چگونه آن را نصب کند (مثلاً `apt-get update && apt-get install -y <package>`) و به آن بگویید دستور نصب را به خاطر بسپارد. ابزار برای بقیه عمر container باقی می‌ماند و Hermes دستور نصب را پس از راه‌اندازی مجدد container هنگامی که بعداً به ابزار نیاز دارد دوباره اجرا می‌کند.
 
-### Other tools (apt packages, binaries) — install and remember​
+این برای ابزارهایی که سریع نصب می‌شوند و گاهی استفاده می‌شوند مناسب است. برای ابزارهایی که مداوم استفاده می‌شوند، رویکرد بعدی را ترجیح دهید.
 
-For anything outside npm or PyPI —aptpackages, prebuilt binaries, language runtimes not already in the image — instruct Hermes how to install it (e.g.apt-get update && apt-get install -y <package>) and tell it to remember the install command. The tool persists for the rest of the container's lifetime, and Hermes will re-run the install command after a container restart when it next needs the tool.
+### نصب‌های پایدار — ساخت یک image مشتق شده
 
-`apt`
-`apt-get update && apt-get install -y <package>`
-
-This is a good fit for tools that are quick to install and used occasionally. For tools used constantly, prefer the next approach.
-
-### Durable installs — build a derived image​
-
-When a tool must be available immediately on every container start with no re-install delay, build a new image that inherits fromnousresearch/hermes-agentand installs the tool in a layer:
-
-`nousresearch/hermes-agent`
+وقتی یک ابزار باید فوراً در هر شروع container بدون تأخیر نصب مجدد در دسترس باشد، یک image جدید بسازید که از `nousresearch/hermes-agent` ارث‌بری می‌کند و ابزار را در یک لایه نصب می‌کند:
 
 ```
-FROM nousresearch/hermes-agent:latestUSER rootRUN apt-get update \    && apt-get install -y --no-install-recommends <your-package> \    && rm -rf /var/lib/apt/lists/*USER hermes
+FROM nousresearch/hermes-agent:latest
+USER root
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends <your-package> \
+    && rm -rf /var/lib/apt/lists/*
+USER hermes
 ```
 
-Build it and use it in place of the official image:
+آن را بسازید و به جای image رسمی استفاده کنید:
 
 ```
-docker build -t my-hermes:latest .docker run -d \  --name hermes \  --restart unless-stopped \  -v ~/.hermes:/opt/data \  -p 8642:8642 \  my-hermes:latest gateway run
+docker build -t my-hermes:latest .
+docker run -d \
+  --name hermes \
+  --restart unless-stopped \
+  -v ~/.hermes:/opt/data \
+  -p 8642:8642 \
+  my-hermes:latest gateway run
 ```
 
-The entrypoint script and/opt/datasemantics are inherited unchanged, so the rest of this page still applies. Remember to rebuild the image when pulling a newer upstreamnousresearch/hermes-agent.
+ورودی و معنای `/opt/data` ارث‌بری شده بدون تغییر باقی می‌مانند، بنابراین بقیه این صفحه همچنان اعمال می‌شود. هنگام کشیدن `nousresearch/hermes-agent` جدیدتر upstream فراموش نکنید image را بازسازی کنید.
 
-`/opt/data`
-`nousresearch/hermes-agent`
+### ابزارهای پیچیده یا stack‌های multi-service — اجرای یک container sidecar
 
-### Complex tools or multi-service stacks — run a sidecar container​
-
-For tools that bring their own service (a database, a web server, a queue, a headless browser farm) or that are too heavy to live inside the Hermes container, run them as a separate container on a shared Docker network. Hermes reaches the sidecar by container name, the same way it reaches a local inference server (seeConnecting to local inference servers).
+برای ابزارهایی که سرویس خودشان را می‌آورند (یک پایگاه داده، یک سرور وب، یک صف، یک مزرعه مرورگر بدون رابط) یا آنقدر سنگین هستند که در داخل container Hermes زندگی کنند، آن‌ها را به عنوان یک container جداگانه در یک شبکه Docker مشترک اجرا کنید. Hermes به sidecar از طریق نام container دسترسی پیدا می‌کند، به همان شکلی که به یک سرور استنتاج محلی دسترسی پیدا می‌کند (اتصال به سرورهای استنتاج محلی را ببینید).
 
 ```
-services:  hermes:    image: nousresearch/hermes-agent:latest    container_name: hermes    restart: unless-stopped    command: gateway run    ports:      - "8642:8642"    volumes:      - ~/.hermes:/opt/data    networks:      - hermes-net  my-tool:    image: example/my-tool:latest    container_name: my-tool    restart: unless-stopped    networks:      - hermes-netnetworks:  hermes-net:    driver: bridge
+services:
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"
+    volumes:
+      - ~/.hermes:/opt/data
+    networks:
+      - hermes-net
+  my-tool:
+    image: example/my-tool:latest
+    container_name: my-tool
+    restart: unless-stopped
+    networks:
+      - hermes-net
+networks:
+  hermes-net:
+    driver: bridge
 ```
 
-From inside the Hermes container, the sidecar is reachable athttp://my-tool:<port>(or whatever protocol it serves). This pattern keeps each service's lifecycle, resource limits, and upgrade cadence independent, and avoids bloating the Hermes image with dependencies that are only needed by one tool.
+از داخل container Hermes، sidecar در `http://my-tool:<port>` (یا هر پروتکلی که سرویس می‌دهد) قابل دسترس است. این الگو چرخه حیات، محدودیت‌های منابع و تقویم ارتقای هر سرویس را مستقل نگه می‌دارد و از حجیم کردن image Hermes با وابستگی‌هایی که فقط توسط یک ابزار نیاز دارند جلوگیری می‌کند.
 
-`http://my-tool:<port>`
+### ابزارهای مفید به طور گسترده — ایجاد issue یا pull request
 
-### Broadly useful tools — open an issue or pull request​
+اگر یک ابزار احتمالاً برای اکثر کاربران Hermes Agent مفید باشد، مشارکت آن را در upstream به جای نگهداری در یک image مشتق شده خصوصی در نظر بگیرید. یک issue یا pull request در [مخزن hermes-agent](https://github.com/NousResearch/hermes-agent) ایجاد کنید که ابزار و مورد استفاده آن را توصیف کند. ابزارهایی که در image رسمی بسته‌بندی می‌شوند از هر کاربر بهره می‌برند و از هزینه نگهداری یک fork پایین‌تر جلوگیری می‌کنند.
 
-If a tool is likely to be useful to most Hermes Agent users, consider contributing it upstream rather than carrying it in a private derived image. Open an issue or pull request on thehermes-agent repositorydescribing the tool and its use case. Tools that get bundled into the official image benefit every user and avoid the maintenance overhead of a downstream fork.
+## اتصال به سرورهای استنتاج محلی (vLLM، Ollama و غیره)
 
-[hermes-agent repository](https://github.com/NousResearch/hermes-agent)
+هنگام اجرای Hermes در Docker و سرور استنتاج شما (vLLM، Ollama، text-generation-inference و غیره) نیز روی میزبان یا در یک container دیگر اجرا می‌شود، شبکه‌بندی به توجه اضافی نیاز دارد.
 
-## Connecting to local inference servers (vLLM, Ollama, etc.)​
+### Docker Compose (توصیه شده)
 
-When running Hermes in Docker and your inference server (vLLM, Ollama, text-generation-inference, etc.) is also running on the host or in another container, networking requires extra attention.
-
-### Docker Compose (recommended)​
-
-Put both services on the same Docker network. This is the most reliable approach:
+هر دو سرویس را در یک شبکه Docker قرار دهید. این قابل اعتمادترین رویکرد است:
 
 ```
-services:  vllm:    image: vllm/vllm-openai:latest    container_name: vllm    command: >      --model Qwen/Qwen2.5-7B-Instruct      --served-model-name my-model      --host 0.0.0.0      --port 8000    ports:      - "8000:8000"    networks:      - hermes-net    deploy:      resources:        reservations:          devices:            - capabilities: [gpu]  hermes:    image: nousresearch/hermes-agent:latest    container_name: hermes    restart: unless-stopped    command: gateway run    ports:      - "8642:8642"    volumes:      - ~/.hermes:/opt/data    networks:      - hermes-netnetworks:  hermes-net:    driver: bridge
+services:
+  vllm:
+    image: vllm/vllm-openai:latest
+    container_name: vllm
+    command: >
+      --model Qwen/Qwen2.5-7B-Instruct
+      --served-model-name my-model
+      --host 0.0.0.0
+      --port 8000
+    ports:
+      - "8000:8000"
+    networks:
+      - hermes-net
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    ports:
+      - "8642:8642"
+    volumes:
+      - ~/.hermes:/opt/data
+    networks:
+      - hermes-net
+networks:
+  hermes-net:
+    driver: bridge
 ```
 
-Then in your~/.hermes/config.yaml, use thecontainer nameas the hostname:
-
-`~/.hermes/config.yaml`
+سپد در `~/.hermes/config.yaml` خود، **نام container** را به عنوان hostname استفاده کنید:
 
 ```
-model:  provider: custom  model: my-model  base_url: http://vllm:8000/v1  api_key: "none"
+model:
+  provider: custom
+  model: my-model
+  base_url: http://vllm:8000/v1
+  api_key: "none"
 ```
 
-- Use thecontainer name(vllm) as the hostname — notlocalhostor127.0.0.1, which refer to the Hermes container itself.
-- Themodelvalue must match the--served-model-nameyou passed to vLLM.
-- Setapi_keyto any non-empty string (vLLM requires the header but doesn't validate it by default).
-- Donotinclude a trailing slash inbase_url.
+- از **نام container** (`vllm`) به عنوان hostname استفاده کنید — نه `localhost` یا `127.0.0.1` که به خود container Hermes اشاره می‌کنند.
+- مقدار `model` باید با `--served-model-name` که به vLLM ارسال کرده‌اید مطابقت داشته باشد.
+- `api_key` را روی هر رشته غیرخالی تنظیم کنید (vLLM به هدر نیاز دارد اما به طور پیش‌فرض تأیید نمی‌کند).
+- **شکسته** trailing slash در `base_url` قرار **ندهید**.
 
-`vllm`
-`localhost`
-`127.0.0.1`
-`model`
-`--served-model-name`
-`api_key`
-`base_url`
+### Docker run مستقل (بدون Compose)
 
-### Standalone Docker run (no Compose)​
-
-If your inference server runs directly on the host (not in Docker), usehost.docker.internalon macOS/Windows, or--network hoston Linux:
-
-`host.docker.internal`
-`--network host`
+اگر سرور استنتاج شما مستقیماً روی میزبان اجرا می‌شود (نه در Docker)، در macOS/Windows از `host.docker.internal` یا در Linux از `--network host` استفاده کنید:
 
 macOS / Windows:
 
 ```
-docker run -d \  --name hermes \  -v ~/.hermes:/opt/data \  -p 8642:8642 \  nousresearch/hermes-agent gateway run
+docker run -d \
+  --name hermes \
+  -v ~/.hermes:/opt/data \
+  -p 8642:8642 \
+  nousresearch/hermes-agent gateway run
 ```
 
 ```
-# config.yamlmodel:  provider: custom  model: my-model  base_url: http://host.docker.internal:8000/v1  api_key: "none"
+# config.yaml
+model:
+  provider: custom
+  model: my-model
+  base_url: http://host.docker.internal:8000/v1
+  api_key: "none"
 ```
 
-Linux (host networking):
+Linux (شبکه‌بندی میزبان):
 
 ```
-docker run -d \  --name hermes \  --network host \  -v ~/.hermes:/opt/data \  nousresearch/hermes-agent gateway run
+docker run -d \
+  --name hermes \
+  --network host \
+  -v ~/.hermes:/opt/data \
+  nousresearch/hermes-agent gateway run
 ```
 
 ```
-# config.yamlmodel:  provider: custom  model: my-model  base_url: http://127.0.0.1:8000/v1  api_key: "none"
+# config.yaml
+model:
+  provider: custom
+  model: my-model
+  base_url: http://127.0.0.1:8000/v1
+  api_key: "none"
 ```
 
-`--network host`
-`-p`
+### تأیید اتصال
 
-### Verifying connectivity​
-
-From inside the Hermes container, confirm the inference server is reachable:
+از داخل container Hermes، تأیید کنید سرور استنتاج قابل دسترس است:
 
 ```
 docker exec hermes curl -s http://vllm:8000/v1/models
 ```
 
-You should see a JSON response listing your served model. If this fails, check:
+باید یک پاسخ JSON شامل مدل سرویس داده شده خود ببینید. اگر این شکست خورد، بررسی کنید:
 
-1. Both containers are on the same Docker network (docker network inspect hermes-net)
-2. The inference server is listening on0.0.0.0, not127.0.0.1
-3. The port number matches
+1. هر دو container در همان شبکه Docker هستند (`docker network inspect hermes-net`)
+2. سرور استنتاج روی `0.0.0.0` گوش می‌دهد، نه `127.0.0.1`
+3. شماره پورت مطابقت دارد
 
-`docker network inspect hermes-net`
-`0.0.0.0`
-`127.0.0.1`
+### Ollama
 
-### Ollama​
-
-Ollama works the same way. If Ollama runs on the host, usehost.docker.internal:11434(macOS/Windows) or127.0.0.1:11434(Linux with--network host). If Ollama runs in its own container on the same Docker network:
-
-`host.docker.internal:11434`
-`127.0.0.1:11434`
-`--network host`
+Ollama به همان شکل کار می‌کند. اگر Ollama روی میزبان اجرا می‌شود، از `host.docker.internal:11434` (macOS/Windows) یا `127.0.0.1:11434` (Linux با `--network host`) استفاده کنید. اگر Ollama در container خودش روی همان شبکه Docker اجرا می‌شود:
 
 ```
-model:  provider: custom  model: llama3  base_url: http://ollama:11434/v1  api_key: "none"
+model:
+  provider: custom
+  model: llama3
+  base_url: http://ollama:11434/v1
+  api_key: "none"
 ```
 
-## Troubleshooting​
+## عیب‌یابی
 
-### Container exits immediately​
+### Container فوراً خارج می‌شود
 
-Check logs:docker logs hermes. Common causes:
+لاگ‌ها را بررسی کنید: `docker logs hermes`. علل رایج:
 
-`docker logs hermes`
-- Missing or invalid.envfile — run interactively first to complete setup
-- Port conflicts if running with exposed ports
+- فایل `.env` گمشده یا نامعتبر — ابتدا به صورت تعاملی اجرا کنید تا راه‌اندازی را تکمیل کنید
+- تداخل پورت‌ها اگر با پورت‌های در معرض دید اجرا می‌کنید
 
-`.env`
+### خطاهای "Permission denied"
 
-### "Permission denied" errors​
-
-The container's stage2 hook drops privileges to the non-roothermesuser (UID 10000) vias6-setuidgidinside each supervised service. If your host~/.hermes/is owned by a different UID, setHERMES_UID/HERMES_GID— or theirPUID/PGIDaliases, for parity with LinuxServer.io and NAS images — to match your host user, or ensure the data directory is writable:
-
-`hermes`
-`s6-setuidgid`
-`~/.hermes/`
-`HERMES_UID`
-`HERMES_GID`
-`PUID`
-`PGID`
+hook stage2 container امتیازات را به کاربر غیر-root `hermes` (UID 10000) از طریق `s6-setuidgid` در داخل هر سرویس نظارت شده رها می‌کند. اگر `~/.hermes/` میزبان شما مالک UID متفاوتی است، `HERMES_UID`/`HERMES_GID` — یا псевдонیم‌های `PUID`/`PGID` برای تطابق با LinuxServer.io و image‌های NAS — را تنظیم کنید تا با کاربر میزبان شما مطابقت داشته باشد، یا مطمئن شوید پوشه داده قابل نوشتن است:
 
 ```
 chmod -R 755 ~/.hermes
 ```
 
-On a NAS (UGOS, Synology, unRAID) the data directory is typically abind mountowned by a host UID the container cannotchown. SetPUID/PGID(orHERMES_UID/HERMES_GID) to that host user so the runtime runs as the owner of the mount rather than UID 10000:
-
-`chown`
-`PUID`
-`PGID`
-`HERMES_UID`
-`HERMES_GID`
+در یک NAS (UGOS، Synology، unRAID) پوشه داده معمولاً یک bind mount مالک یک UID میزبان است که container نمی‌تواند `chown` کند. `PUID`/`PGID` (یا `HERMES_UID`/`HERMES_GID`) را روی آن کاربر میزبان تنظیم کنید تا runtime به جای UID 10000 به عنوان مالک نصب اجرا شود:
 
 ```
-docker run -d \  --name hermes \  -e PUID=1000 -e PGID=10 \  -v /volume1/docker/hermes:/opt/data \  nousresearch/hermes-agent gateway run
+docker run -d \
+  --name hermes \
+  -e PUID=1000 -e PGID=10 \
+  -v /volume1/docker/hermes:/opt/data \
+  nousresearch/hermes-agent gateway run
 ```
 
-docker exec hermes <cmd>automatically drops to UID 10000 too — seedocker execautomatically drops to thehermesuserfor details and the per-invocation opt-out.
+### ابزارهای مرورگر کار نمی‌کنند
 
-`docker exec hermes <cmd>`
-`docker exec`
-`hermes`
-
-### Browser tools not working​
-
-Playwright needs shared memory. Add--shm-size=1gto your Docker run command:
-
-`--shm-size=1g`
+Playwright به حافظه مشترک نیاز دارد. `--shm-size=1g` را به دستور Docker run خود اضافه کنید:
 
 ```
-docker run -d \  --name hermes \  --shm-size=1g \  -v ~/.hermes:/opt/data \  nousresearch/hermes-agent gateway run
+docker run -d \
+  --name hermes \
+  --shm-size=1g \
+  -v ~/.hermes:/opt/data \
+  nousresearch/hermes-agent gateway run
 ```
 
-### Gateway not reconnecting after network issues​
+### Gateway پس از مشکلات شبکه مجدداً متصل نمی‌شود
 
-The--restart unless-stoppedflag handles most transient failures. If the gateway is stuck, restart the container:
-
-`--restart unless-stopped`
+پرچم `--restart unless-stopped` اکثر شکست‌های موقت را مدیریت می‌کند. اگر gateway گیر کرده، container را بازیابی کنید:
 
 ```
 docker restart hermes
 ```
 
-### Checking container health​
+### بررسی سلامت container
 
 ```
-docker logs --tail 50 hermes          # Recent logsdocker run -it --rm nousresearch/hermes-agent:latest version     # Verify versiondocker stats hermes                    # Resource usage
+docker logs --tail 50 hermes          # لاگ‌های اخیر
+docker run -it --rm nousresearch/hermes-agent:latest version     # تأیید نسخه
+docker stats hermes                    # استفاده منابع
 ```
 
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/docker.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/docker.md)

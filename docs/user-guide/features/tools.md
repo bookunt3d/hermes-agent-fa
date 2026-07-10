@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "ابزارها"
-permalink: /user-guide/features/tools/
+permalink: /docs/user-guide/features/tools/
 ---
 
 - 
@@ -9,32 +9,32 @@ permalink: /user-guide/features/tools/
 - Core
 - Tools & Toolsets
 
-# Tools & Toolsets
+# ابزارها و مجموعه ابزارها
 
-Tools are functions that extend the agent's capabilities. They're organized into logicaltoolsetsthat can be enabled or disabled per platform.
+ابزارها توابعی هستند که قابلیت‌های agent را گسترش می‌دهند. آنها در مجموعه ابزارهای منطقی سازماندهی شده‌اند که می‌توانند برای هر پلتفرم فعال یا غیرفعال شوند.
 
-## Available Tools​
+## ابزارهای موجود
 
-Hermes ships with a broad built-in tool registry covering web search, browser automation, terminal execution, file editing, memory, delegation, scheduled tasks, Home Assistant, and more.
+Hermes با یک ثبت‌نام گسترده ابزار داخلی ارائه می‌شود که جستجوی وب، اتوماسیون مرورگر، اجرای ترمینال، ویرایش فایل، حافظه، واگذاری، وظایف زمان‌بندی‌شده، Home Assistant و موارد دیگر را پوشش می‌دهد.
 
-Honcho cross-session memoryis available as a memory provider plugin (plugins/memory/honcho/), not as a built-in toolset. SeePluginsfor installation.
+حافظه cross-session Honcho به عنوان یک افزونه ارائه‌دهنده حافظه (`plugins/memory/honcho/`) در دسترس است، نه به عنوان یک مجموعه ابزار داخلی. برای نصب به افزونه‌ها مراجعه کنید.
 
 `plugins/memory/honcho/`
-[Plugins](/docs/user-guide/features/plugins)
+[افزونه‌ها](/docs/user-guide/features/plugins)
 
-High-level categories:
+دسته‌بندی‌های کلی:
 
-| Category | Examples | Description |
+| دسته‌بندی | مثال‌ها | توضیحات |
 | --- | --- | --- |
-| Web | web_search,web_extract | Search the web and extract page content. |
-| X Search | x_search | Search X (Twitter) posts and threads via xAI's built-inx_searchResponses tool — gated on xAI credentials (SuperGrok OAuth orXAI_API_KEY); off by default, opt in viahermes tools→ 🐦 X (Twitter) Search. |
-| Terminal & Files | terminal,process,read_file,patch | Execute commands and manipulate files. |
-| Browser | browser_navigate,browser_snapshot,browser_vision | Interactive browser automation with text and vision support. |
-| Media | vision_analyze,image_generate,text_to_speech | Multimodal analysis and generation. |
-| Agent orchestration | todo,clarify,execute_code,delegate_task | Planning, clarification, code execution, and subagent delegation. |
-| Memory & recall | memory,session_search | Persistent memory and session search. |
-| Automation | cronjob | Scheduled tasks with create/list/update/pause/resume/run/remove actions. Outbound delivery is handled by cron's own delivery, thehermes sendCLI, and the gateway notifier — not by an agent-callable tool. |
-| Integrations | ha_*, MCP server tools | Home Assistant, MCP, and other integrations. |
+| وب | `web_search`، `web_extract` | جستجو در وب و استخراج محتوای صفحه. |
+| جستجوی X | `x_search` | جستجوی پست‌ها و تردهای X (Twitter) از طرقی ابزار داخلی `x_search` Responses xAI — وابسته به اعتبارنامه‌های xAI (SuperGrok OAuth یا `XAI_API_KEY`); به طور پیش‌فرض خاموش، از طریق `hermes tools` → 🐦 X (Twitter) Search فعال کنید. |
+| ترمینال و فایل‌ها | `terminal`، `process`، `read_file`، `patch` | اجرای دستورات و مدیریت فایل‌ها. |
+| مرورگر | `browser_navigate`، `browser_snapshot`، `browser_vision` | اتوماسیون تعاملی مرورگر با پشتیبانی متنی و بصری. |
+| رسانه | `vision_analyze`، `image_generate`، `text_to_speech` | تولید و تحلیل چندوجهی. |
+| ارکستراسیون agent | `todo`، `clarify`، `execute_code`، `delegate_task` | برنامه‌ریزی، شفاف‌سازی، اجرای کد و واگذاری subagent. |
+| حافظه و بازیابی | `memory`، `session_search` | حافظه ماندگار و جستجوی نشست. |
+| اتوماسیون | `cronjob` | وظایف زمان‌بندی‌شده با اقدامات create/list/update/pause/resume/run/remove. ارسال خروجی توسط سیستم تحویل خود cron، CLI `hermes send` و اعلان‌رسان gateway انجام می‌شود — نه توسط یک ابزار قابل فراخوانی agent. |
+| ادغام‌ها | `ha_*`، ابزارهای سرور MCP | Home Assistant، MCP و سایر ادغام‌ها. |
 
 `web_search`
 `web_extract`
@@ -62,25 +62,25 @@ High-level categories:
 `hermes send`
 `ha_*`
 
-For the authoritative code-derived registry, seeBuilt-in Tools ReferenceandToolsets Reference.
+برای ثبت‌نام معتبر مشتق از کد، به مرجع ابزارهای داخلی و مرجع مجموعه ابزارها مراجعه کنید.
 
-[Built-in Tools Reference](/docs/reference/tools-reference)
-[Toolsets Reference](/docs/reference/toolsets-reference)
+[مرجع ابزارهای داخلی](/docs/reference/tools-reference)
+[مرجع مجموعه ابزارها](/docs/reference/toolsets-reference)
 
-PaidNous Portalsubscribers can use web search, image generation, TTS, and browser automation through theTool Gateway— no separate API keys needed. Runhermes modelto enable it, or configure individual tools withhermes tools.
+مشترکان Nous Portal پولی می‌توانند از جستجوی وب، تولید تصویر، TTS و اتوماسیون مرورگر از طریق دروازه ابزار استفاده کنند — بدون نیاز به کلیدهای API جداگانه. `hermes model` را اجرا کنید تا آن را فعال کنید، یا ابزارهای جداگانه را با `hermes tools` پیکربندی کنید.
 
 [Nous Portal](https://portal.nousresearch.com)
-[Tool Gateway](/docs/user-guide/features/tool-gateway)
+[دروازه ابزار](/docs/user-guide/features/tool-gateway)
 `hermes model`
 `hermes tools`
 
-## Using Toolsets​
+## استفاده از مجموعه ابزارها
 
 ```
-# Use specific toolsetshermes chat --toolsets "web,terminal"# See all available toolshermes tools# Configure tools per platform (interactive)hermes tools
+# استفاده از مجموعه ابزارهای خاصhermes chat --toolsets "web,terminal"# مشاهده تمام ابزارهای موجودhermes tools# پیکربندی ابزارها به ازای هر پلتفرم (تعاملی)hermes tools
 ```
 
-Common toolsets includeweb,search,terminal,file,browser,vision,image_gen,skills,tts,todo,memory,session_search,cronjob,code_execution,delegation,clarify,homeassistant,messaging,spotify,discord,discord_admin,debugging, andsafe.
+مجموعه ابزارهای رایج شامل `web`، `search`، `terminal`، `file`، `browser`، `vision`، `image_gen`، `skills`، `tts`، `todo`، `memory`، `session_search`، `cronjob`، `code_execution`، `delegation`، `clarify`، `homeassistant`، `messaging`، `spotify`، `discord`، `discord_admin`، `debugging` و `safe` است.
 
 `web`
 `search`
@@ -106,25 +106,25 @@ Common toolsets includeweb,search,terminal,file,browser,vision,image_gen,skills,
 `debugging`
 `safe`
 
-SeeToolsets Referencefor the full set, including platform presets such ashermes-cli,hermes-telegram, and dynamic MCP toolsets likemcp-<server>.
+برای مجموعه کامل، به مرجع مجموعه ابزارها مراجعه کنید، از جمله پیش‌فرض‌های پلتفرم مانند `hermes-cli`، `hermes-telegram` و مجموعه ابزارهای MCP پویا مانند `mcp-<server>`.
 
-[Toolsets Reference](/docs/reference/toolsets-reference)
+[مرجع مجموعه ابزارها](/docs/reference/toolsets-reference)
 `hermes-cli`
 `hermes-telegram`
 `mcp-<server>`
 
-## Terminal Backends​
+## پشتیبان‌های ترمینال
 
-The terminal tool can execute commands in different environments:
+ابزار ترمینال می‌تواند دستورات را در محیط‌های مختلف اجرا کند:
 
-| Backend | Description | Use Case |
+| پشتیبان | توضیحات | مورد استفاده |
 | --- | --- | --- |
-| local | Run on your machine (default) | Development, trusted tasks |
-| docker | Isolated containers | Security, reproducibility |
-| ssh | Remote server | Sandboxing, keep agent away from its own code |
-| singularity | HPC containers | Cluster computing, rootless |
-| modal | Cloud execution | Serverless, scale |
-| daytona | Cloud sandbox workspace | Persistent remote dev environments |
+| local | اجرا روی ماشین شما (پیش‌فرض) | توسعه، وظایف معتبر |
+| docker | کانتینرهای ایزوله | امنیت، قابلیت بازتولید |
+| ssh | سرور راه دور | sandboxing، دور نگه داشتن agent از کد خودش |
+| singularity | کانتینرهای HPC | محاسبات خوشه‌ای، بدون root |
+| modal | اجرای ابری | بدون سرور، مقیاس‌پذیری |
+| daytona | فضای کاری sandbox ابری | محیط‌های توسعه راه دور ماندگار |
 
 `local`
 `docker`
@@ -133,19 +133,19 @@ The terminal tool can execute commands in different environments:
 `modal`
 `daytona`
 
-### Configuration​
+### پیکربندی
 
 ```
-# In ~/.hermes/config.yamlterminal:  backend: local    # or: docker, ssh, singularity, modal, daytona  cwd: "."          # Working directory  timeout: 180      # Command timeout in seconds
+# در ~/.hermes/config.yamlterminal:  backend: local    # یا: docker, ssh, singularity, modal, daytona  cwd: "."          # دایرکتوری کاری  timeout: 180      # مهلت زمانی دستور بر حسب ثانیه
 ```
 
-### Docker Backend​
+### پشتیبان Docker
 
 ```
 terminal:  backend: docker  docker_image: python:3.11-slim
 ```
 
-One persistent container, shared across the whole process.Hermes starts a single long-lived container on first use (docker run -d ... sleep 2h) and routes every terminal, file, andexecute_codecall throughdocker execinto that same container. Working-directory changes, installed packages, environment tweaks, and files written to/workspaceall carry over from one tool call to the next, across/new,/reset, anddelegate_tasksubagents, for the lifetime of the Hermes process. The container is stopped and removed on shutdown.
+یک کانتینر ماندگار، به اشتراک گذاشته‌شده در سراسر فرآیند. Hermes یک کانتینر طولانی‌مدت در اولین استفاده راه‌اندازی می‌کند (`docker run -d ... sleep 2h`) و هر فراخوانی terminal، فایل و `execute_code` را از طریق `docker exec` به همان کانتینر مسیریابی می‌کند. تغییرات دایرکتوری کاری، پکیج‌های نصب‌شده، تنظیمات محیطی و فایل‌های نوشته‌شده در `/workspace` از یک فراخوانی ابزار به بعدی حمل می‌شوند، در سراسر subagentهای `/new`، `/reset` و `delegate_task`، در طول عمر فرآیند Hermes. کانتینر در هنگام خاموشی متوقف و حذف می‌شود.
 
 `docker run -d ... sleep 2h`
 `execute_code`
@@ -155,88 +155,88 @@ One persistent container, shared across the whole process.Hermes starts a single
 `/reset`
 `delegate_task`
 
-This means the Docker backend behaves like a persistent sandbox VM, not a fresh container per command. If youpip install fooonce, it's there for the rest of the session. If youcd /workspace/project, subsequentlscalls see that directory. SeeConfiguration → Docker Backendfor the full lifecycle details and thecontainer_persistentflag that controls whether/workspaceand/rootsurvive across Hermes restarts.
+این به این معنی است که پشتیبان Docker مانند یک VM sandbox ماندگار رفتار می‌کند، نه یک کانتینر تازه به ازای هر دستور. اگر یک بار `pip install foo` کنید، تا پایان نشست آنجا خواهد بود. اگر `cd /workspace/project` کنید، فراخوانی‌های `ls` بعدی آن دایرکتوری را می‌بینند. برای جزئیات کامل چرخه حیات و پرچم `container_persistent` که کنترل می‌کند آیا `/workspace` و `/root` از بازراه‌اندازی Hermes عبور می‌کنند یا نه، به پیکربندی → پشتیبان Docker مراجعه کنید.
 
 `pip install foo`
 `cd /workspace/project`
 `ls`
-[Configuration → Docker Backend](/docs/user-guide/configuration#docker-backend)
+[پیکربندی → پشتیبان Docker](/docs/user-guide/configuration#docker-backend)
 `container_persistent`
 `/workspace`
 `/root`
 
-### SSH Backend​
+### پشتیبان SSH
 
-Recommended for security — agent can't modify its own code:
+برای امنیت توصیه شده — agent نمی‌تواند کد خود را تغییر دهد:
 
 ```
 terminal:  backend: ssh
 ```
 
 ```
-# Set credentials in ~/.hermes/.envTERMINAL_SSH_HOST=my-server.example.comTERMINAL_SSH_USER=myuserTERMINAL_SSH_KEY=~/.ssh/id_rsa
+# تنظیم اعتبارنامه‌ها در ~/.hermes/.envTERMINAL_SSH_HOST=my-server.example.comTERMINAL_SSH_USER=myuserTERMINAL_SSH_KEY=~/.ssh/id_rsa
 ```
 
-### Singularity/Apptainer​
+### Singularity/Apptainer
 
 ```
-# Pre-build SIF for parallel workersapptainer build ~/python.sif docker://python:3.11-slim# Configurehermes config set terminal.backend singularityhermes config set terminal.singularity_image ~/python.sif
+# ساخت از پیش SIF برای کارگران موازیapptainer build ~/python.sif docker://python:3.11-slim# پیکربندیhermes config set terminal.backend singularityhermes config set terminal.singularity_image ~/python.sif
 ```
 
-### Modal (Serverless Cloud)​
+### Modal (سرور بدون سرور ابری)
 
 ```
 uv pip install modalmodal setuphermes config set terminal.backend modal
 ```
 
-### Container Resources​
+### منابع کانتینر
 
-Configure CPU, memory, disk, and persistence for all container backends:
+پیکربندی CPU، حافظه، دیسک و ماندگاری برای تمام پشتیبان‌های کانتینر:
 
 ```
-terminal:  backend: docker  # or singularity, modal, daytona  container_cpu: 1              # CPU cores (default: 1)  container_memory: 5120        # Memory in MB (default: 5GB)  container_disk: 51200         # Disk in MB (default: 50GB)  container_persistent: true    # Persist filesystem across sessions (default: true)
+terminal:  backend: docker  # یا singularity, modal, daytona  container_cpu: 1              # هسته‌های CPU (پیش‌فرض: 1)  container_memory: 5120        # حافظه به مگابایت (پیش‌فرض: 5GB)  container_disk: 51200         # دیسک به مگابایت (پیش‌فرض: 50GB)  container_persistent: true    # ماندگاری فایل‌سیستم در نشست‌ها (پیش‌فرض: true)
 ```
 
-Whencontainer_persistent: true, installed packages, files, and config survive across sessions.
+هنگامی که `container_persistent: true` باشد، پکیج‌های نصب‌شده، فایل‌ها و پیکربندی در نشست‌ها باقی می‌مانند.
 
 `container_persistent: true`
 
-### Container Security​
+### امنیت کانتینر
 
-All container backends run with security hardening:
+تمام پشتیبان‌های کانتینر با تقویت امنیتی اجرا می‌شوند:
 
-- Read-only root filesystem (Docker)
-- All Linux capabilities dropped
-- No privilege escalation
-- PID limits (256 processes)
-- Full namespace isolation
-- Persistent workspace via volumes, not writable root layer
+- فایل‌سیستم ریشه فقط خواندنی (Docker)
+- تمام قابلیت‌های Linux حذف شده
+- بدون ارتقای امتیاز
+- محدودیت‌های PID (۲۵۶ پروسه)
+- ایزولاسیون کامل فضای نام
+- فضای کاری ماندگار از طریق volumeها، نه لایه ریشه نوشتنی
 
-Docker can optionally receive an explicit env allowlist viaterminal.docker_forward_env, but forwarded variables are visible to commands inside the container and should be treated as exposed to that session.
+Docker به صورت اختیاری می‌تواند یک لیست مجاز صریح env از طریق `terminal.docker_forward_env` دریافت کند، اما متغیرهای forwarded برای دستورات داخل کانتینر قابل مشاهده هستند و باید به عنوان در معرض دید آن نشست در نظر گرفته شوند.
 
 `terminal.docker_forward_env`
 
-## Background Process Management​
+## مدیریت پروسه‌های پس‌زمینه
 
-Start background processes and manage them:
+راه‌اندازی و مدیریت پروسه‌های پس‌زمینه:
 
 ```
-terminal(command="pytest -v tests/", background=true)# Returns: {"session_id": "proc_abc123", "pid": 12345}# Then manage with the process tool:process(action="list")       # Show all running processesprocess(action="poll", session_id="proc_abc123")   # Check statusprocess(action="wait", session_id="proc_abc123")   # Block until doneprocess(action="log", session_id="proc_abc123")    # Full outputprocess(action="kill", session_id="proc_abc123")   # Terminateprocess(action="write", session_id="proc_abc123", data="y")  # Send input
+terminal(command="pytest -v tests/", background=true)# برمی‌گرداند: {"session_id": "proc_abc123", "pid": 12345}# سپس با ابزار process مدیریت کنید:process(action="list")       # نمایش تمام پروسه‌های در حال اجرaprocess(action="poll", session_id="proc_abc123")   # بررسی وضعیتprocess(action="wait", session_id="proc_abc123")   # انتظار تا اتمامprocess(action="log", session_id="proc_abc123")    # خروجی کاملprocess(action="kill", session_id="proc_abc123")   # خاتمهprocess(action="write", session_id="proc_abc123", data="y")  # ارسال ورودی
 ```
 
-PTY mode (pty=true) enables interactive CLI tools like Codex and Claude Code.
+حالت PTY (`pty=true`) ابزارهای CLI تعاملی مانند Codex و Claude Code را فعال می‌کند.
 
 `pty=true`
 
-## Sudo Support​
+## پشتیبانی Sudo
 
-If a command needs sudo, you'll be prompted for your password (cached for the session). Or setSUDO_PASSWORDin~/.hermes/.env.
-
-`SUDO_PASSWORD`
-`~/.hermes/.env`
-
-On messaging platforms, if sudo fails, the output includes a tip to addSUDO_PASSWORDto~/.hermes/.env.
+اگر یک دستور به sudo نیاز داشته باشد، از شما برای رمز عبور درخواست می‌شود (برای نشست کش شده). یا `SUDO_PASSWORD` را در `~/.hermes/.env` تنظیم کنید.
 
 `SUDO_PASSWORD`
 `~/.hermes/.env`
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/tools.md)
+
+در پلتفرم‌های پیام‌رسانی، اگر sudo ناموفق باشد، خروجی شامل یک نکته برای اضافه کردن `SUDO_PASSWORD` به `~/.hermes/.env` است.
+
+`SUDO_PASSWORD`
+`~/.hermes/.env`
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/tools.md)

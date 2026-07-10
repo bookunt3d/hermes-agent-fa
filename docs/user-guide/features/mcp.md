@@ -1,131 +1,127 @@
 ---
 layout: docs
 title: "MCP"
-permalink: /user-guide/features/mcp/
+permalink: /docs/user-guide/features/mcp/
 ---
 
 - 
-- Integrations
-- MCP (Model Context Protocol)
+- یکپارچه‌سازی‌ها
+- MCP (پروتکل زمینه مدل)
 
-# MCP (Model Context Protocol)
+# MCP (پروتکل زمینه مدل)
 
-MCP lets Hermes Agent connect to external tool servers so the agent can use tools that live outside Hermes itself — GitHub, databases, file systems, browser stacks, internal APIs, and more.
+MCP به Hermes Agent اجازه می‌دهد به سرورهای ابزار خارجی متصل شود تا agent بتواند از ابزارهایی استفاده کند که خارج از خود Hermes زندگی می‌کنند — GitHub، پایگاه‌های داده، سیستم‌های فایل، پشته‌های مرورگر، APIهای داخلی و موارد دیگر.
 
-If you have ever wanted Hermes to use a tool that already exists somewhere else, MCP is usually the cleanest way to do it.
+اگر تا به حال خواسته‌اید Hermes از ابزاری استفاده کند که در جای دیگری از قبل وجود دارد، MCP معمولاً تمیزترین راه برای انجام این کار است.
 
-## What MCP gives you​
+## چه چیزی MCP به شما می‌دهد
 
-- Access to external tool ecosystems without writing a native Hermes tool first
-- Local stdio servers and remote HTTP MCP servers in the same config
-- Automatic tool discovery and registration at startup
-- Utility wrappers for MCP resources and prompts when supported by the server
-- Per-server filtering so you can expose only the MCP tools you actually want Hermes to see
+- دسترسی به اکوسیستم‌های ابزار خارجی بدون نیاز به نوشتن یک ابزار بومی Hermes ابتدا
+- سرورهای stdio محلی و سرورهای MCP HTTP از راه دور در یک پیکربندی
+- کشف و ثبت خودکار ابزار در راه‌اندازی
+- بسته‌های کمکی برای منابع و پرامپت‌های MCP وقتی توسط سرور پشتیبانی می‌شود
+- فیلتر کردن به ازای هر سرور تا فقط ابزارهای MCP را که واقعاً می‌خواهید Hermes ببیند نمایش دهید
 
-## Quick start​
+## شروع سریع
 
-1. MCP support ships with the standard install — no extra step needed.
-2. Add an MCP server to~/.hermes/config.yaml:
+1. پشتیبانی MCP با نصب استاندارد عرضه می‌شود — هیچ مرحله اضافی لازم نیست.
+2. یک سرور MCP به `~/.hermes/config.yaml` اضافه کنید:
 
-MCP support ships with the standard install — no extra step needed.
+پشتیبانی MCP با نصب استاندارد عرضه می‌شود — هیچ مرحله اضافی لازم نیست.
 
-Add an MCP server to~/.hermes/config.yaml:
+یک سرور MCP به `~/.hermes/config.yaml` اضافه کنید:
 
 `~/.hermes/config.yaml`
 
 ```
-mcp_servers:  filesystem:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/projects"]
+mcp_servers:
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/projects"]
 ```
 
-1. Start Hermes:
+3. Hermes را شروع کنید:
 
 ```
 hermes chat
 ```
 
-1. Ask Hermes to use the MCP-backed capability.
+4. از Hermes بخواهید از قابلیت پشتیبانی شده توسط MCP استفاده کند.
 
-For example:
-
-```
-List the files in /home/user/projects and summarize the repo structure.
-```
-
-Hermes will discover the MCP server's tools and use them like any other tool.
-
-## Catalog: one-click install for Nous-approved MCPs​
-
-Hermes ships a curated catalog of MCP servers that Nous staff has reviewed
-and merged. They're disabled by default — install only what you actually
-want.
+به عنوان مثال:
 
 ```
-hermes mcp                # interactive picker (default)hermes mcp catalog        # plain-text list, scriptablehermes mcp install n8n    # install a catalog entry by name
+فایل‌های /home/user/projects را فهرست کنید و ساختار مخزن را خلاصه کنید.
 ```
 
-The picker shows each entry with its current status:
+Hermes ابزارهای سرور MCP را کشف کرده و مانند هر ابزار دیگری از آنها استفاده می‌کند.
+
+## کاتالوگ: نصب با یک کلیک برای MCP‌های تأیید شده توسط Nous
+
+Hermes یک کاتالوگ گزینش شده از سرورهای MCP را عرضه می‌کند که توسط کارکنان Nous بررسی و ادغام شده‌اند. آنها به طور پیش‌فرض غیرفعال هستند — فقط آنچه واقعاً می‌خواهید نصب کنید.
 
 ```
-n8n          available              Manage and inspect n8n workflows from Hermeslinear       enabled                Linear issue/project management (remote OAuth)github       installed (disabled)   GitHub repo + PR tools
+hermes mcp                # انتخابگر تعاملی (پیش‌فرض)
+hermes mcp catalog        # لیست متن ساده، قابل اسکریپت‌نویسی
+hermes mcp install n8n    # نصب یک ورودی کاتالوگ با نام
 ```
 
-HitEnteron a row to install (and walk through any required credentials),
-enable, disable, or uninstall. Catalog entries are stored underoptional-mcps/in the hermes-agent repo — presence in that directory means
-Nous approval. There is no community submission tier; entries are added by
-merging a PR.
+انتخابگر هر ورودی را با وضعیت فعلی آن نشان می‌دهد:
+
+```
+n8n          available              مدیریت و بازرسی workflow‌های n8n از Hermes
+linear       enabled                مدیریت issue/پروژه Linear (OAuth از راه دور)
+github       installed (disabled)   ابزارهای repo + PR GitHub
+```
+
+بر روی `Enter` در یک ردیف فشار دهید تا نصب شود (و هر گونه اعتبارنامه لازم را طی کنید)، فعال، غیرفعال یا حذف شود. ورودی‌های کاتالوگ تحت `optional-mcps/` در مخزن hermes-agent ذخیره می‌شوند — حضور در آن دایرکتوری به این معنی است که تأیید شده توسط Nous است. هیچ سطح ارسال جامعه‌ای وجود ندارد؛ ورودی‌ها با ادغام یک PR اضافه می‌شوند.
 
 `Enter`
 `optional-mcps/`
 
-Catalog entries can require:
+ورودی‌های کاتالوگ می‌توانند نیاز داشته باشند:
 
-- API key— Hermes prompts at install time and writes the value to~/.hermes/.env. Non-secret values (base URLs) go to the same file.
-- OAuth(remote MCP) — written asauth: oauthin your config; the MCP
-client opens a browser on first connection.
-- OAuth(third-party provider like Google/GitHub) — Hermes points you athermes auth <provider>if you haven't authenticated already.
+- کلید API — Hermes در زمان نصب پرامپت می‌دهد و مقدار را در `~/.hermes/.env` می‌نویسد. مقادیر غیر رمز (base URLs) به همان فایل می‌روند.
+- OAuth (سرور از راه دور) — به صورت `auth: oauth` در پیکربندی شما نوشته می‌شود؛ کلاینت MCP در اولین اتصال مرورگر را باز می‌کند.
+- OAuth (ارائه‌دهنده شخص ثالث مانند Google/GitHub) — Hermes شما را به `hermes auth <provider>` هدایت می‌کند اگر هنوز احراز هویت نکرده‌اید.
 
 `~/.hermes/.env`
 `auth: oauth`
 `hermes auth <provider>`
 
-### Tool selection at install time​
+### انتخاب ابزار در زمان نصب
 
-After credentials are configured, Hermes probes the MCP server to list every
-tool it exposes and presents a checklist:
+پس از پیکربندی اعتبارنامه‌ها، Hermes سرور MCP را برای فهرست کردن هر ابزاری که در معرض دید قرار می‌دهد آزمایش کرده و یک لیست بررسی ارائه می‌دهد:
 
 ```
-Select tools for 'linear' (SPACE toggle, ENTER confirm)  [x] find_issues       Find issues matching a query  [x] get_issue         Get a single issue  [x] create_issue      Create a new issue  [ ] delete_workspace  Delete a Linear workspace  ...
+انتخاب ابزارها برای 'linear' (SPACE برای تغییر، ENTER برای تأیید)
+  [x] find_issues       یافتن issueهای مطابق با یک پرس‌وجو
+  [x] get_issue         دریافت یک issue واحد
+  [x] create_issue      ایجاد یک issue جدید
+  [ ] delete_workspace  حذف یک فضای کاری Linear
+  ...
 ```
 
-The pre-checked rows come from:
+ردیف‌های از پیش انتخاب شده از منابع زیر می‌آیند:
 
-1. Your prior selectionif you've installed this entry before (reinstalls
-preserve what you had — the manifest's defaults don't override it)
-2. The manifest'stools.default_enabledif the entry declares one (some
-catalog entries pre-prune mutating or rarely-useful tools)
-3. Everythingif neither applies
+1. انتخاب قبلی شما — اگر قبلاً این ورودی را نصب کرده‌اید (نصب مجدد آنچه را داشتید حفظ می‌کند — پیش‌فرض‌های مانیفست آن را بازنویسی نمی‌کنند)
+2. `tools.default_enabled` مانیفست اگر ورودی یکی اعلام کند (برخی ورودی‌های کاتالوگ ابزارهای جهشی یا به ندرت مفید را از پیش حذف می‌کنند)
+3. همه — اگر هیچ‌کدام اعمال نشود
 
 `tools.default_enabled`
 
-Submit the checklist with ENTER. Only the checked tools end up inmcp_servers.<name>.tools.include. If you select everything, no filter is
-written (cleanest config shape, identical behavior).
+لیست بررسی را با ENTER ارسال کنید. فقط ابزارهای بررسی شده در `mcp_servers.<name>.tools.include` قرار می‌گیرند. اگر همه چیز را انتخاب کنید، هیچ فیلتری نوشته نمی‌شود (شکل پیکربندی تمیزترین، رفتار یکسان).
 
 `mcp_servers.<name>.tools.include`
 
-If the probe fails(server unreachable, OAuth not yet completed,
-backing service not running), the install still succeeds: the manifest'stools.default_enabledis applied directly (if declared), or no filter is
-written (if not). Re-runhermes mcp configure <name>once the server is
-reachable to refine.
+اگر آزمایش ناموفق باشد (سرور در دسترس نیست، OAuth هنوز تکمیل نشده، سرویس پشتیبان در حال اجرا نیست)، نصب همچنان موفق است: `tools.default_enabled` مانیفست مستقیماً اعمال می‌شود (اگر اعلام شده)، یا هیچ فیلتری نوشته نمی‌شود (اگر نشده). پس از در دسترس شدن سرور، `hermes mcp configure <name>` را مجدداً اجرا کنید تا بهبود یابد.
 
 `tools.default_enabled`
 `hermes mcp configure <name>`
 
-### Trust model​
+### مدل اعتماد
 
-Installing a catalog entry runs whatever the manifest specifies —git clone,
-the entry'sbootstrapcommands (pip install,npm install, etc.), and
-ultimately the MCP server's own code. Manifests are gated by PR review into
-the hermes-agent repo, so Nous has reviewed each entry before it shipped —but you should still read the manifest before installing, especially thesource:field's repository, theinstall.bootstrap:commands, and anytransport.command:invocation.
+نصب یک ورودی کاتالوگ هر آنچه مانیفست مشخص می‌کند را اجرا می‌کند — `git clone`، دستورات `bootstrap` ورودی (`pip install`، `npm install` و غیره)، و در نهایت کد خود سرور MCP. مانیفست‌ها از طریق بررسی PR در مخزن hermes-agent فیلتر می‌شوند، بنابراین Nous هر ورودی را قبل از عرضه بررسی کرده است — اما هنوز باید قبل از نصب، مانیفست را بخوانید، به ویژه فیلد `source:` مخزن، دستورات `install.bootstrap:` و هر فراخوانی `transport.command:`.
 
 `git clone`
 `bootstrap`
@@ -135,39 +131,27 @@ the hermes-agent repo, so Nous has reviewed each entry before it shipped —but 
 `install.bootstrap:`
 `transport.command:`
 
-Manifests live atoptional-mcps/<name>/manifest.yamlon GitHub. The picker also prints the manifest'ssource:URL at install
-time so you can quickly verify the upstream repo. The web dashboard's MCP
-page surfaces the same detail per catalog entry — transport, auth type, the
-endpoint URL (HTTP) or command + args (stdio), the git install source/ref and
-bootstrap commands, and setup notes — with thesource:rendered as a
-clickable link, so you can inspect exactly what an entry connects to or runs
-before clicking Install.
+مانیفست‌ها در `optional-mcps/<name>/manifest.yaml` روی GitHub زندگی می‌کنند. انتخابگر همچنین URL `source:` مانیفست را در زمان نصب چاپ می‌کند تا بتوانید به سرعت مخزن upstream را تأیید کنید. صفحه MCP داشبورد وب همان جزئیات را برای هر ورودی کاتالوگ نشان می‌دهد — حمل‌ونقل، نوع احراز هویت، URL نقطه پایانی (HTTP) یا دستور + آرگومان‌ها (stdio)، منبع/مرجع نصب git و دستورات bootstrap، و یادداشت‌های تنظیم — با `source:` به عنوان یک لینک کلیک‌پذیر رندر شده، تا بتوانید دقیقاً بررسی کنید یک ورودی به چه چیزی متصل می‌شود یا چه چیزی را قبل از کلیک روی Install اجرا می‌کند.
 
 [optional-mcps/<name>/manifest.yaml](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps)
 `optional-mcps/<name>/manifest.yaml`
 `source:`
 `source:`
 
-### Manifest version compatibility​
+### سازگاری نسخه مانیفست
 
-Manifests pin amanifest_version. The catalog is forward-compatible: if a
-PR adds an entry with a newermanifest_versionthan your installed Hermes
-understands, the picker will surface a warning (⚠ '<name>' requires a newer Hermes) for that entry instead of silently hiding it. Runhermes updateto install the latest Hermes when you see that.
+مانیفست‌ها یک `manifest_version` ثابت دارند. کاتالوگ رو به جلو سازگار است: اگر یک PR ورودی با `manifest_version` جدیدتر از آنچه Hermes نصب شده شما می‌فهمد اضافه کند، انتخابگر یک هشدار (`⚠ '<name>' requires a newer Hermes`) برای آن ورودی نشان می‌دهد به جای اینکه آن را به طور خاموش پنهان کند. وقتی این را دیدید `hermes update` را اجرا کنید تا آخرین Hermes را نصب کنید.
 
 `manifest_version`
 `manifest_version`
 `⚠ '<name>' requires a newer Hermes`
 `hermes update`
 
-### Runtime${ENV_VAR}substitution​
+### جایگزینی Runtime `${ENV_VAR}`
 
 `${ENV_VAR}`
 
-Inside an entry'stransport.command,transport.args,transport.url,
-andheaders,${VAR}placeholders are resolved at server-connect time
-from environment variables (which include everything in~/.hermes/.env).
-This is useful when a catalog entry wants to reference a value the user
-configured elsewhere — e.g.${HOME}/fooor${MY_PROVIDER_TOKEN}.
+در `transport.command`، `transport.args`، `transport.url` و `headers` یک ورودی، placeholdرهای `${VAR}` در زمان اتصال به سرور از متغیرهای محیطی (که شامل همه چیز در `~/.hermes/.env` است) حل می‌شوند. این زمانی مفید است که یک ورودی کاتالوگ بخواهد به مقداری که کاربر در جای دیگری پیکربندی کرده ارجاع دهد — مثلاً `${HOME}/foo` یا `${MY_PROVIDER_TOKEN}`.
 
 `transport.command`
 `transport.args`
@@ -178,98 +162,105 @@ configured elsewhere — e.g.${HOME}/fooor${MY_PROVIDER_TOKEN}.
 `${HOME}/foo`
 `${MY_PROVIDER_TOKEN}`
 
-Note this is distinct from${INSTALL_DIR}in catalog manifests, which is
-substituted at install-time with the path the catalog cloned the entry's
-repo into.
+توجه داشته باشید این با `${INSTALL_DIR}` در مانیفست‌های کاتالوگ متفاوت است که در زمان نصب با مسیری که کاتالوگ مخزن ورودی را در آن کلون کرده جایگزین می‌شود.
 
 `${INSTALL_DIR}`
 
-### Updating tool selection later​
+### به‌روزرسانی انتخاب ابزار بعداً
 
 ```
 hermes mcp configure linear
 ```
 
-Reopens the same checklist with your current selection pre-checked. Use this
-when you want more tools enabled, or when the server has added new tools that
-you want to opt into.
+همان لیست بررسی را با انتخاب فعلی شما از پیش بررسی شده بازگشایی می‌کند. وقتی ابزارهای بیشتری می‌خواهید فعال شوند یا وقتی سرور ابزارهای جدیدی اضافه کرده که می‌خواهید در آنها شرکت کنید، از این استفاده کنید.
 
-### Updating the catalog manifest​
+### به‌روزرسانی مانیفست کاتالوگ
 
-MCPs are never auto-updated. Re-runhermes mcp install <name>to refresh
-after a Hermes update if a manifest version changed.
+MCP‌ها هرگز به طور خودکار به‌روزرسانی نمی‌شوند. پس از به‌روزرسانی Hermes اگر نسخه مانیفست تغییر کرده باشد، `hermes mcp install <name>` را مجدداً اجرا کنید تا تازه شود.
 
 `hermes mcp install <name>`
 
-To add an MCP to the catalog, open a PR againstoptional-mcps/.
+برای افزودن یک MCP به کاتالوگ، یک PR علیه `optional-mcps/` باز کنید.
 
 [optional-mcps/](https://github.com/NousResearch/hermes-agent/tree/main/optional-mcps)
 `optional-mcps/`
 
-## Two kinds of MCP servers​
+## دو نوع سرور MCP
 
-### Stdio servers​
+### سرورهای stdio
 
-Stdio servers run as local subprocesses and talk over stdin/stdout.
+سرورهای stdio به عنوان زیرفرآیندهای محلی اجرا شده و از طریق stdin/stdout صحبت می‌کنند.
 
 ```
-mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"
+mcp_servers:
+  github:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "***"
 ```
 
-Use stdio servers when:
+از سرورهای stdio استفاده کنید وقتی:
 
-- the server is installed locally
-- you want low-latency access to local resources
-- you are following MCP server docs that showcommand,args, andenv
+- سرور به صورت محلی نصب شده
+- به دسترسی کم‌تأخیر به منابع محلی نیاز دارید
+- از مستندات سرور MCP پیروی می‌کنید که `command`، `args` و `env` را نشان می‌دهد
 
 `command`
 `args`
 `env`
 
-### HTTP servers​
+### سرورهای HTTP
 
-HTTP MCP servers are remote endpoints Hermes connects to directly.
+سرورهای MCP HTTP نقاط پایانی از راه دوری هستند که Hermes مستقیماً به آنها متصل می‌شود.
 
 ```
-mcp_servers:  remote_api:    url: "https://mcp.example.com/mcp"    headers:      Authorization: "Bearer ***"
+mcp_servers:
+  remote_api:
+    url: "https://mcp.example.com/mcp"
+    headers:
+      Authorization: "Bearer ***"
 ```
 
-Use HTTP servers when:
+از سرورهای HTTP استفاده کنید وقتی:
 
-- the MCP server is hosted elsewhere
-- your organization exposes internal MCP endpoints
-- you do not want Hermes spawning a local subprocess for that integration
+- سرور MCP در جای دیگری میزبانی می‌شود
+- سازمان شما نقاط پایانی MCP داخلی در معرض دید قرار می‌دهد
+- نمی‌خواهید Hermes یک زیرفرآیند محلی برای آن یکپارچه‌سازی ایجاد کند
 
-### OAuth-authenticated HTTP servers​
+### سرورهای HTTP احراز هویت شده با OAuth
 
-Most hosted MCP servers (Linear, Sentry, Atlassian, Asana, Figma, Stripe, …) require OAuth 2.1 instead of a static bearer token. Setauth: oauthand Hermes handles discovery, dynamic client registration, PKCE, token exchange, refresh, and step-up auth via the MCP Python SDK.
+اکثر سرورهای MCP میزبانی شده (Linear، Sentry، Atlassian، Asana، Figma، Stripe، …) به جای یک توکن bearer ثابت به OAuth 2.1 نیاز دارند. `auth: oauth` را تنظیم کنید و Hermes کشف، ثبت نام پویای کلاینت، PKCE، مبادله توکن، تازه‌سازی و احراز هویت step-up را از طریق SDK پایتون MCP مدیریت می‌کند.
 
 `auth: oauth`
 
 ```
-mcp_servers:  linear:    url: "https://mcp.linear.app/mcp"    auth: oauth
+mcp_servers:
+  linear:
+    url: "https://mcp.linear.app/mcp"
+    auth: oauth
 ```
 
-On first connect, Hermes prints an authorize URL, opens your browser when possible, and waits for the OAuth callback on a local loopback port. Tokens are cached at~/.hermes/mcp-tokens/<server>.jsonwith 0o600 perms; subsequent runs reuse them silently until refresh fails.
+در اولین اتصال، Hermes یک URL مجوز چاپ می‌کند، در صورت امکان مرورگر شما را باز می‌کند و منتظر callback OAuth روی یک پورت loopback محلی می‌ماند. توکن‌ها در `~/.hermes/mcp-tokens/<server>.json` با مجوزهای `0o600` کش می‌شوند؛ اجراهای بعدی آنها را به طور خاموش مجدداً استفاده می‌کنند تا زمانی که تازه‌سازی ناموفق باشد.
 
 `~/.hermes/mcp-tokens/<server>.json`
 
-Remote / headless hosts.When Hermes runs on a different machine than your browser, the loopback callback can't reach your laptop. Two ways to complete the flow:
+**میزبان‌های از راه دور / headless.** وقتی Hermes روی ماشینی متفاوت از مرورگر شما اجرا می‌شود، callback loopback نمی‌تواند به لپ‌تاپ شما برسد. دو راه برای تکمیل جریان:
 
-- Paste-back (no setup):on an interactive terminal Hermes prints "Or paste the redirect URL here…" alongside the authorize URL. Open the URL in your browser, approve, copy the full URL the browser ends up on (the redirect will show a connection error — that's expected), paste it at the prompt. Bare?code=…&state=…query strings work too.
-- SSH port forward:ssh -N -L <port>:127.0.0.1:<port> user@hostin a separate terminal, then let the redirect flow normally.
+- **چسباندن مجدد (بدون تنظیم):** در یک ترمینال تعاملی Hermes URL مجوز را همراه با URL "Or paste the redirect URL here…" چاپ می‌کند. URL را در مرورگر خود باز کنید، تأیید کنید، URL کاملی که مرورگر در نهایت نشان می‌دهد را کپی کنید (redirect خطای اتصال نشان خواهد داد — این طبیعی است)، آن را در پرامپت بچسبانید. رشته‌های query `?code=…&state=…` خام هم کار می‌کنند.
+- **forwarding پورت SSH:** `ssh -N -L <port>:127.0.0.1:<port> user@host` در یک ترمینال جداگانه، سپس اجازه دهید redirect به طور معمول اتفاق بیفتد.
 
 `?code=…&state=…`
 `ssh -N -L <port>:127.0.0.1:<port> user@host`
 
-SeeOAuth over SSH / Remote Hostsfor the full walkthrough, including DCR-less servers (e.g. Slack), pre-registeredclient_id/client_secret, scope customization, and re-auth viahermes mcp login <server>.
+برای راهنمای کامل از جمله سرورهای بدون DCR (مثلاً Slack)، `client_id/client_secret` از پیش ثبت شده، سفارشی‌سازی scope و احراز هویت مجدد از طریق `hermes mcp login <server>` به [OAuth از طریق SSH / میزبان‌های از راه دور](/docs/guides/oauth-over-ssh#mcp-servers) مراجعه کنید.
 
-[OAuth over SSH / Remote Hosts](/docs/guides/oauth-over-ssh#mcp-servers)
+[OAuth از طریق SSH / میزبان‌های از راه دور](/docs/guides/oauth-over-ssh#mcp-servers)
 `client_id`
 `client_secret`
 `hermes mcp login <server>`
 
-Pitfall — providers that don't support automatic registration (Google Drive, Atlassian).Some servers reject the dynamic client registration step (RFC 7591) that bareauth: oauthrelies on — Google's official Drive server (https://drivemcp.googleapis.com/mcp/v1) returns a400 Bad Request, so no OAuth client is created and no token is acquired. The symptom is subtle: these servers also servetools/listwithoutauth, sohermes mcp logincan list the tools and look like it worked, but every real tool call later times out.hermes mcp loginnow detects this (it checks that a token actually landed on disk) and tells you to supply your own OAuth client. Create one in the provider's console and add it to config:
+**تله — ارائه‌دهندگانی که از ثبت نام خودکار پشتیبانی نمی‌کنند (Google Drive، Atlassian).** برخی سرورها مرحله ثبت نام پویای کلاینت (RFC 7591) را که `auth: oauth` خام به آن وابسته است رد می‌کنند — سرور رسمی Google Drive (`https://drivemcp.googleapis.com/mcp/v1`) خطای `400 Bad Request` برمی‌گرداند، بنابراین کلاینت OAuth ایجاد نمی‌شود و توکنی دریافت نمی‌شود. نشانه ظریف است: این سرورها همچنین `tools/list` را بدون `auth` سرویس می‌دهند بنابراین `hermes mcp login` می‌تواند ابزارها را فهرست کند و به نظر کار می‌رسد، اما هر فراخوان ابزار واقعی بعداً تایم‌اوت می‌دهد. `hermes mcp login` حالا این را تشخیص می‌دهد (بررسی می‌کند آیا واقعاً توکنی روی دیسک نشسته) و به شما می‌گوید OAuth client خود را تهیه کنید. یکی در کنسول ارائه‌دهنده ایجاد کنید و به پیکربندی اضافه کنید:
 
 `auth: oauth`
 `https://drivemcp.googleapis.com/mcp/v1`
@@ -279,83 +270,99 @@ Pitfall — providers that don't support automatic registration (Google Drive, A
 `hermes mcp login`
 
 ```
-mcp_servers:  googledrive:    url: "https://drivemcp.googleapis.com/mcp/v1"    auth: oauth    oauth:      client_id: "<your-oauth-client-id>"      client_secret: "<your-oauth-client-secret>"
+mcp_servers:
+  googledrive:
+    url: "https://drivemcp.googleapis.com/mcp/v1"
+    auth: oauth
+    oauth:
+      client_id: "<your-oauth-client-id>"
+      client_secret: "<your-oauth-client-secret>"
 ```
 
-Then runhermes mcp login googledrive— with the pre-registered client, Hermes skips registration and runs the normal browser authorization flow.
+سپس `hermes mcp login googledrive` را اجرا کنید — با کلاینت از پیش ثبت شده، Hermes ثبت نام را رد می‌کند و جریان مجوز مرورگر معمولی را اجرا می‌کند.
 
 `hermes mcp login googledrive`
 
-Pitfall — config auto-reload race.When you edit~/.hermes/config.yamlfrom inside a running Hermes session, the CLI auto-reloads MCP connections with a 30s timeout. That's not enough for an interactive OAuth flow. Add the entry, then runhermes mcp login <server>from a fresh terminal — it waits the full 5 minutes for you to complete auth.
+**تله — ریس بارگذاری خودکار پیکربندی.** وقتی `~/.hermes/config.yaml` را از داخل یک جلسه Hermes در حال اجرا ویرایش می‌کنید، CLI اتصالات MCP را با تایم‌اوت ۳۰ ثانیه بارگذاری مجدد خودکار می‌کند. این برای یک جریان OAuth تعاملی کافی نیست. ورودی را اضافه کنید، سپس `hermes mcp login <server>` را از یک ترمینال تازه اجرا کنید — این کل ۵ دقیقه منتظر می‌ماند تا احراز هویت را تکمیل کنید.
 
 `~/.hermes/config.yaml`
 `hermes mcp login <server>`
 
-## mTLS / client certificates​
+## mTLS / گواهی‌های کلاینت
 
-Remote HTTP MCP servers that require mutual TLS (client-certificate authentication) are supported viaclient_cert/client_key. Hermes passes the resolved certificate to the underlying HTTP client for the TLS handshake.
+سرورهای MCP HTTP از راه دور که به TLS متقابل (احراز هویت گواهی کلاینت) نیاز دارند از طریق `client_cert`/`client_key` پشتیبانی می‌شوند. Hermes گواهی حل شده را به کلاینت HTTP زیربنایی برای دستکشی TLS ارسال می‌کند.
 
 `client_cert`
 `client_key`
 
-client_certaccepts three shapes:
+`client_cert` سه شکل می‌پذیرد:
 
 `client_cert`
-- A single combined PEM path— one file holding both the certificate and the private key:
+
+- **یک مسیر PEM ترکیبی واحد** — یک فایل حاوی هر دو گواهی و کلید خصوصی:
 
 ```
-mcp_servers:  internal_api:    url: "https://mcp.internal.example.com/mcp"    client_cert: "~/.certs/mcp-client.pem"
+mcp_servers:
+  internal_api:
+    url: "https://mcp.internal.example.com/mcp"
+    client_cert: "~/.certs/mcp-client.pem"
 ```
 
-- A[cert, key]2-tuple— certificate and key in separate files (equivalent to settingclient_cert+client_key):
+- **یک تاپل `[cert, key]`** — گواهی و کلید در فایل‌های جداگانه (معادل تنظیم `client_cert` + `client_key`):
 
 `[cert, key]`
 `client_cert`
 `client_key`
 
 ```
-mcp_servers:  internal_api:    url: "https://mcp.internal.example.com/mcp"    client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key"]
+mcp_servers:
+  internal_api:
+    url: "https://mcp.internal.example.com/mcp"
+    client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key"]
 ```
 
-- A[cert, key, password]3-tuple— when the private key is encrypted, the third element is the key passphrase:
+- **یک تاپل `[cert, key, password]`** — وقتی کلید خصوصی رمزگذاری شده، عنصر سوم رمز عبور کلید است:
 
 `[cert, key, password]`
 
 ```
-mcp_servers:  internal_api:    url: "https://mcp.internal.example.com/mcp"    client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key", "${MCP_KEY_PASSWORD}"]
+mcp_servers:
+  internal_api:
+    url: "https://mcp.internal.example.com/mcp"
+    client_cert: ["~/.certs/mcp-client.crt", "~/.certs/mcp-client.key", "${MCP_KEY_PASSWORD}"]
 ```
 
-You can also keep the cert and key fully separate viaclient_cert(combined PEM) plus an explicitclient_key. Paths support~expansion; a missing file raises a clear, server-scoped error rather than an opaque TLS handshake failure.
+همچنین می‌توانید گواهی و کلید را کاملاً جداگانه نگه دارید از طریق `client_cert` (PEM ترکیبی) به علاوه `client_key` صریح. مسیرها از گسترش `~` پشتیبانی می‌کنند؛ فایل گمشده خطای واضح و محدود به سرور ایجاد می‌کند به جای یک خطا دستکشی TLS نامفهوم.
 
 `client_cert`
 `client_key`
 `~`
 
-## Basic configuration reference​
+## مرجع پیکربندی پایه
 
-Hermes reads MCP config from~/.hermes/config.yamlundermcp_servers.
+Hermes پیکربندی MCP را از `~/.hermes/config.yaml` تحت `mcp_servers` می‌خواند.
 
 `~/.hermes/config.yaml`
 `mcp_servers`
 
-### Common keys​
+### کلیدهای رایج
 
-| Key | Type | Meaning |
+| کلید | نوع | معنی |
 | --- | --- | --- |
-| command | string | Executable for a stdio MCP server |
-| args | list | Arguments for the stdio server |
-| env | mapping | Environment variables passed to the stdio server |
-| url | string | HTTP MCP endpoint |
-| headers | mapping | HTTP headers for remote servers |
-| client_cert | string | list | Client certificate for mTLS — a combined PEM path, or[cert, key]/[cert, key, password] |
-| client_key | string | Client private-key PEM path (when separate fromclient_cert) |
-| timeout | number | Tool call timeout |
-| connect_timeout | number | Initial connection timeout (also bounds the MCPinitializehandshake) |
-| idle_timeout_seconds | number | Recycle a stdio server after this many seconds without a tool call (0= never, default). The server restarts transparently on the next tool call. |
-| max_lifetime_seconds | number | Recycle a stdio server after this total age (0= never, default). Restarts transparently on next use. |
-| enabled | bool | Iffalse, Hermes skips the server entirely |
-| supports_parallel_tool_calls | bool | Iftrue, tools from this server may run concurrently |
-| tools | mapping | Per-server tool filtering and utility policy |
+| `command` | رشته | اجرایی برای سرور MCP stdio |
+| `args` | لیست | آرگومان‌ها برای سرور stdio |
+| `env** | نگاشت | متغیرهای محیطی ارسال شده به سرور stdio |
+| `url` | رشته | نقطه پایانی HTTP MCP |
+| `headers` | نگاشت | هدرهای HTTP برای سرورهای از راه دور |
+| `client_cert` | رشته / لیست | گواهی کلاینت برای mTLS — مسیر PEM ترکیبی، یا `[cert, key]` / `[cert, key, password]` |
+| `client_key` | رشته | مسیر PEM کلید خصوصی کلاینت (وقتی از `client_cert` جداگانه) |
+| `timeout` | عدد | تایم‌اوت فراخوانی ابزار |
+| `connect_timeout` | عدد | تایم‌اوت اتصال اولیه (همچنین دستکشی handshke `initialize` MCP را محدود می‌کند) |
+| `idle_timeout_seconds` | عدد | بازیافت سرور stdio پس از این تعداد ثانیه بدون فراخوانی ابزار (0= هرگز، پیش‌فرض). سرور به طور شفاف در فراخوانی ابزار بعدی راه‌اندازی مجدد می‌شود. |
+| `max_lifetime_seconds` | عدد | بازیافت سرور stdio پس از این عمر کل (0= هرگز، پیش‌فرض). در استفاده بعدی به طور شفاف راه‌اندازی مجدد می‌شود. |
+| `enabled` | بولین | اگر `false`، Hermes سرور را کاملاً رد می‌کند |
+| `supports_parallel_tool_calls` | بولین | اگر `true`، ابزارهای این سرور می‌توانند همزمان اجرا شوند |
+| `tools` | نگاشت | فیلتر کردن ابزار و سیاست کمکی به ازای هر سرور |
 
 `command`
 `args`
@@ -380,78 +387,90 @@ Hermes reads MCP config from~/.hermes/config.yamlundermcp_servers.
 `true`
 `tools`
 
-### Minimal stdio example​
+### مثال stdio حداقلی
 
 ```
-mcp_servers:  filesystem:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
+mcp_servers:
+  filesystem:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/tmp"]
 ```
 
-### Recycling memory-heavy stdio servers​
+### بازیافت سرورهای stdio سنگین حافظه
 
-Browser-based MCP servers (e.g.@playwright/mcp) keep a full Chromium
-resident after their first tool call — hundreds of MB that never get
-released. Opt in to automatic recycling and the server is torn down after
-the idle/lifetime limit, then restarted transparently the next time one of
-its tools is called (its tools stay registered the whole time):
+سرورهای MCP مبتنی بر مرورگر (مثلاً `@playwright/mcp`) پس از اولین فراخوانی ابزار خود یک Chromium کامل را نگه می‌دارند — صدها مگابایت که هرگز آزاد نمی‌شوند. به بازیافت خودکار بپیوندید و سرور پس از محدودیت idle/lifetime برداشته شده و سپس در دفعه بعدی که یکی از ابزارهایش فراخوانی شود به طور شفاف راه‌اندازی مجدد می‌شود (ابزارهایش در تمام مدت ثبت مانده):
 
 `@playwright/mcp`
 
 ```
-mcp_servers:  playwright:    command: "npx"    args: ["-y", "@playwright/mcp@latest", "--headless"]    idle_timeout_seconds: 900     # recycle after 15 min without a tool call    max_lifetime_seconds: 86400   # and at least once a day regardless
+mcp_servers:
+  playwright:
+    command: "npx"
+    args: ["-y", "@playwright/mcp@latest", "--headless"]
+    idle_timeout_seconds: 900     # بازیافت پس از ۱۵ دقیقه بدون فراخوانی ابزار
+    max_lifetime_seconds: 86400   # و حداقل یک بار در روز صرف نظر از شرایط
 ```
 
-### Minimal HTTP example​
+### مثال HTTP حداقلی
 
 ```
-mcp_servers:  company_api:    url: "https://mcp.internal.example.com"    headers:      Authorization: "Bearer ***"
+mcp_servers:
+  company_api:
+    url: "https://mcp.internal.example.com"
+    headers:
+      Authorization: "Bearer ***"
 ```
 
-## Built-in presets​
+## پیش‌فرض‌های داخلی
 
-For well-known MCP servers,hermes mcp addaccepts a--presetflag that fills in the transport details so you don't have to look up the command and args. The preset only supplies defaults — anything else (env vars, headers, filtering) you pass on the same command line still wins.
+برای سرورهای MCP شناخته شده، `hermes mcp add` یک پرچم `--preset` می‌پذیرد که جزئیات حمل‌ونقل را پر می‌کند تا مجبور نباشید دستور و آرگومان‌ها را جستجو کنید. پیش‌فرض فقط پیش‌فرض‌ها را تأمین می‌کند — هر چیز دیگری (متغیرهای محیطی، هدرها، فیلتر کردن) که در همان خط فرمان ارسال می‌کنید همچنان اولویت دارد.
 
 `hermes mcp add`
 `--preset`
 
-| Preset | What it wires up |
+| پیش‌فرض | چه چیزی را متصل می‌کند |
 | --- | --- |
-| codex | The Codex CLI's MCP server (codex mcp-serverover stdio). Requires thecodexCLI on PATH. |
+| `codex` | سرور MCP Codex CLI (`codex mcp-server` از طریق stdio). به CLI `codex` در PATH نیاز دارد. |
 
 `codex`
 `codex mcp-server`
 `codex`
 
 ```
-# Add Codex CLI as an MCP server in one linehermes mcp add codex --preset codex
+# افزودن Codex CLI به عنوان سرور MCP در یک خط
+hermes mcp add codex --preset codex
 ```
 
-That writes the equivalent of:
+این معادل زیر را می‌نویسد:
 
 ```
-mcp_servers:  codex:    command: "codex"    args: ["mcp-server"]
+mcp_servers:
+  codex:
+    command: "codex"
+    args: ["mcp-server"]
 ```
 
-You can pick any local name (hermes mcp add my-codex --preset codexis fine); the preset only provides thecommand/argsdefaults.
+می‌توانید هر نام محلی انتخاب کنید (`hermes mcp add my-codex --preset codex` درست است)؛ پیش‌فرض فقط پیش‌فرض‌های `command`/`args` را تأمین می‌کند.
 
 `hermes mcp add my-codex --preset codex`
 `command`
 `args`
 
-## How Hermes registers MCP tools​
+## چگونه Hermes ابزارهای MCP را ثبت می‌کند
 
-Hermes prefixes MCP tools so they do not collide with built-in names:
+Hermes پیشوندهای ابزارهای MCP را اضافه می‌کند تا با نام‌های داخلی تداخل نداشته باشند:
 
 ```
 mcp_<server_name>_<tool_name>
 ```
 
-Examples:
+مثال‌ها:
 
-| Server | MCP tool | Registered name |
+| سرور | ابزار MCP | نام ثبت شده |
 | --- | --- | --- |
-| filesystem | read_file | mcp_filesystem_read_file |
-| github | create-issue | mcp_github_create_issue |
-| my-api | query.data | mcp_my_api_query_data |
+| `filesystem` | `read_file` | `mcp_filesystem_read_file` |
+| `github` | `create-issue` | `mcp_github_create_issue` |
+| `my-api` | `query.data` | `mcp_my_api_query_data` |
 
 `filesystem`
 `read_file`
@@ -463,93 +482,58 @@ Examples:
 `query.data`
 `mcp_my_api_query_data`
 
-In practice, you usually do not need to call the prefixed name manually — Hermes sees the tool and chooses it during normal reasoning.
+در عمل، معمولاً نیازی به فراخوانی دستی نام پیشوندی ندارید — Hermes ابزار را می‌بیند و در استدلال عادی آن را انتخاب می‌کند.
 
-## MCP utility tools​
+## ابزارهای کمکی MCP
 
-When supported, Hermes also registers utility tools around MCP resources and prompts:
+وقتی پشتیبانی شود، Hermes همچنین ابزارهای کمکی اطراف منابع و پرامپت‌های MCP ثبت می‌کند:
 
-- list_resources
-- read_resource
-- list_prompts
-- get_prompt
+- `list_resources`
+- `read_resource`
+- `list_prompts`
+- `get_prompt`
 
 `list_resources`
 `read_resource`
 `list_prompts`
 `get_prompt`
 
-These are registered per server with the same prefix pattern, for example:
+اینها با همان الگوی پیشوند برای هر سرور ثبت می‌شوند، به عنوان مثال:
 
-- mcp_github_list_resources
-- mcp_github_get_prompt
+- `mcp_github_list_resources`
+- `mcp_github_get_prompt`
 
 `mcp_github_list_resources`
 `mcp_github_get_prompt`
 
-### Important​
+### مهم
 
-These utility tools are now capability-aware:
+این ابزارهای کمکی اکنون دارای آگاهی قابلیت هستند:
 
-- Hermes only registers resource utilities if the MCP session actually supports resource operations
-- Hermes only registers prompt utilities if the MCP session actually supports prompt operations
+- Hermes فقط ابزارهای کمکی منبع را ثبت می‌کند اگر جلسه MCP واقعاً از عملیات منبع پشتیبانی کند
+- Hermes فقط ابزارهای کمکی پرامپت را ثبت می‌کند اگر جلسه MCP واقعاً از عملیات پرامپت پشتیبانی کند
 
-So a server that exposes callable tools but no resources/prompts will not get those extra wrappers.
+بنابراین سروری که ابزارهای فراخواندنی اما بدون منبع/پرامپت ارائه می‌دهد آن بسته‌های کمکی اضافی را دریافت نخواهد کرد.
 
-## Per-server filtering​
+## فیلتر کردن به ازای هر سرور
 
-You can control which tools each MCP server contributes to Hermes, allowing fine-grained management of your tool namespace.
+### فیلتر کردن ابزارهای کمکی نیز
 
-### Disable a server entirely​
-
-```
-mcp_servers:  legacy:    url: "https://mcp.legacy.internal"    enabled: false
-```
-
-Ifenabled: false, Hermes skips the server completely and does not even attempt a connection.
-
-`enabled: false`
-
-### Whitelist server tools​
+همچنین می‌توانید بسته‌های کمکی اضافه شده توسط Hermes را جداگانه غیرفعال کنید:
 
 ```
-mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"    tools:      include: [create_issue, list_issues]
+mcp_servers:
+  docs:
+    url: "https://mcp.docs.example.com"
+    tools:
+      prompts: false
+      resources: false
 ```
 
-Only those MCP server tools are registered.
+یعنی:
 
-### Blacklist server tools​
-
-```
-mcp_servers:  stripe:    url: "https://mcp.stripe.com"    tools:      exclude: [delete_customer]
-```
-
-All server tools are registered except the excluded ones.
-
-### Precedence rule​
-
-If both are present:
-
-```
-tools:  include: [create_issue]  exclude: [create_issue, delete_issue]
-```
-
-includewins.
-
-`include`
-
-### Filter utility tools too​
-
-You can also separately disable Hermes-added utility wrappers:
-
-```
-mcp_servers:  docs:    url: "https://mcp.docs.example.com"    tools:      prompts: false      resources: false
-```
-
-That means:
-
-- tools.resources: falsedisableslist_resourcesandread_resource
-- tools.prompts: falsedisableslist_promptsandget_prompt
+- `tools.resources: false` غیرفعال می‌کند `list_resources` و `read_resource`
+- `tools.prompts: false` غیرفعال می‌کند `list_prompts` و `get_prompt`
 
 `tools.resources: false`
 `list_resources`
@@ -558,236 +542,307 @@ That means:
 `list_prompts`
 `get_prompt`
 
-### Full example​
+### مثال کامل
 
 ```
-mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"    tools:      include: [create_issue, list_issues, search_code]      prompts: false  stripe:    url: "https://mcp.stripe.com"    headers:      Authorization: "Bearer ***"    tools:      exclude: [delete_customer]      resources: false  legacy:    url: "https://mcp.legacy.internal"    enabled: false
+mcp_servers:
+  github:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "***"
+    tools:
+      include: [create_issue, list_issues, search_code]
+      prompts: false
+  stripe:
+    url: "https://mcp.stripe.com"
+    headers:
+      Authorization: "Bearer ***"
+    tools:
+      exclude: [delete_customer]
+      resources: false
+  legacy:
+    url: "https://mcp.legacy.internal"
+    enabled: false
 ```
 
-## What happens if everything is filtered out?​
+## چه اتفاقی می‌افتد اگر همه چیز فیلتر شود؟
 
-If your config filters out all callable tools and disables or omits all supported utilities, Hermes does not create an empty runtime MCP toolset for that server.
+اگر پیکربندی شما همه ابزارهای فراخواندنی را فیلتر کند و همه ابزارهای کمکی پشتیبانی شده را غیرفعال یا حذف کند، Hermes یک مجموعه ابزار runtime MCP خالی برای آن سرور ایجاد نمی‌کند.
 
-That keeps the tool list clean.
+این فهرست ابزار را تمیز نگه می‌دارد.
 
-## Runtime behavior​
+## رفتار Runtime
 
-### Discovery time​
+### زمان کشف
 
-Hermes discovers MCP servers at startup and registers their tools into the normal tool registry.
+Hermes سرورهای MCP را در هنگام راه‌اندازی کشف می‌کند و ابزارهای آنها را در ثبت ابزار عادی ثبت می‌کند.
 
-### Dynamic Tool Discovery​
+### کشف پویای ابزار
 
-MCP servers can notify Hermes when their available tools change at runtime by sending anotifications/tools/list_changednotification. When Hermes receives this notification, it automatically re-fetches the server's tool list and updates the registry — no manual/reload-mcprequired.
+سرورهای MCP می‌توانند Hermes را زمانی که ابزارهای موجود آنها در runtime تغییر می‌کند با ارسال یک اعلان `notifications/tools/list_changed` مطلع کنند. وقتی Hermes این اعلان را دریافت می‌کند، به طور خودکار لیست ابزار سرور را مجدداً واکشی می‌کند و ثبت را به‌روز می‌کند — نیازی به `/reload-mcp` دستی نیست.
 
 `notifications/tools/list_changed`
 `/reload-mcp`
 
-This is useful for MCP servers whose capabilities change dynamically (e.g. a server that adds tools when a new database schema is loaded, or removes tools when a service goes offline).
+این برای سرورهای MCP مفید است که قابلیت‌هایشان به صورت پویا تغییر می‌کند (مثلاً سروری که ابزارها را وقتی یک طرحواره پایگاه داده جدید بارگذاری می‌شود اضافه می‌کند، یا ابزارها را وقتی یک سرویس آفلاین می‌شود حذف می‌کند).
 
-The refresh is lock-protected so rapid-fire notifications from the same server don't cause overlapping refreshes. Prompt and resource change notifications (prompts/list_changed,resources/list_changed) are received but not yet acted on.
+بازیابی با قفل محافظت می‌شود بنابراین اعلان‌های پشت سر هم از یک سرور باعث بازیابی‌های همپوشان نمی‌شوند. اعلان‌های تغییر پرامپت و منبع (`prompts/list_changed`، `resources/list_changed`) دریافت می‌شوند اما هنوز عمل نمی‌شوند.
 
 `prompts/list_changed`
 `resources/list_changed`
 
-### Reloading​
+### بازبارگذاری
 
-If you change MCP config, use:
+اگر پیکربندی MCP را تغییر دهید، از این استفاده کنید:
 
 ```
 /reload-mcp
 ```
 
-This reloads MCP servers from config and refreshes the available tool list. For runtime tool changes pushed by the server itself, seeDynamic Tool Discoveryabove.
+این سرورهای MCP را از پیکربندی بازبارگذاری می‌کند و لیست ابزارهای موجود را تازه می‌کند. برای تغییرات ابزار runtime که توسط خود سرور ارسال می‌شوند، به کشف پویای ابزار بالا مراجعه کنید.
 
-### Toolsets​
+### مجموعه ابزارها
 
-Each configured MCP server also creates a runtime toolset when it contributes at least one registered tool:
+هر سرور MCP پیکربندی شده همچنین یک مجموعه ابزار runtime ایجاد می‌کند وقتی حداقل یک ابزار ثبت شده اضافه می‌کند:
 
 ```
 mcp-<server>
 ```
 
-That makes MCP servers easier to reason about at the toolset level.
+این سرورهای MCP را در سطح مجموعه ابزار آسان‌تر می‌کند.
 
-## Security model​
+## مدل امنیتی
 
-### Stdio env filtering​
+### فیلتر کردن محیط stdio
 
-For stdio servers, Hermes does not blindly pass your full shell environment.
+برای سرورهای stdio، Hermes محیط کامل پوسته شما را کورانه عبور نمی‌دهد.
 
-Only explicitly configuredenvplus a safe baseline are passed through. This reduces accidental secret leakage.
+فقط `env` صریحاً پیکربندی شده به علاوه یک پایه ایمن عبور داده می‌شود. این نشت تصادفی رمزها را کاهش می‌دهد.
 
 `env`
 
-### Config-level exposure control​
+### کنترل قرار گرفتن در معرض سطح پیکربندی
 
-The new filtering support is also a security control:
+پشتیبانی فیلتر جدید همچنین یک کنترل امنیتی است:
 
-- disable dangerous tools you do not want the model to see
-- expose only a minimal whitelist for a sensitive server
-- disable resource/prompt wrappers when you do not want that surface exposed
+- ابزارهای خطرناکی را که نمی‌خواهید مدل ببیند غیرفعال کنید
+- فقط یک لیست سفید حداقلی برای یک سرور حساس نمایش دهید
+- بسته‌های کمکی منبع/پرامپت را وقتی نمی‌خواهید آن سطح نمایش داده شود غیرفعال کنید
 
-## Example use cases​
+## مثال‌های استفاده
 
-### GitHub server with a minimal issue-management surface​
+### سرور GitHub با سطح حداقلی مدیریت Issue
 
 ```
-mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"    tools:      include: [list_issues, create_issue, update_issue]      prompts: false      resources: false
+mcp_servers:
+  github:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "***"
+    tools:
+      include: [list_issues, create_issue, update_issue]
+      prompts: false
+      resources: false
 ```
 
-Use it like:
+مانند این استفاده کنید:
 
 ```
 Show me open issues labeled bug, then draft a new issue for the flaky MCP reconnection behavior.
 ```
 
-### Stripe server with dangerous actions removed​
+### سرور Stripe با حذف اقدامات خطرناک
 
 ```
-mcp_servers:  stripe:    url: "https://mcp.stripe.com"    headers:      Authorization: "Bearer ***"    tools:      exclude: [delete_customer, refund_payment]
+mcp_servers:
+  stripe:
+    url: "https://mcp.stripe.com"
+    headers:
+      Authorization: "Bearer ***"
+    tools:
+      exclude: [delete_customer, refund_payment]
 ```
 
-Use it like:
+مانند این استفاده کنید:
 
 ```
 Look up the last 10 failed payments and summarize common failure reasons.
 ```
 
-### Filesystem server for a single project root​
+### سرور فایل سیستم برای یک ریشه پروژه واحد
 
 ```
-mcp_servers:  project_fs:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/my-project"]
+mcp_servers:
+  project_fs:
+    command: "npx"
+    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/my-project"]
 ```
 
-Use it like:
+مانند این استفاده کنید:
 
 ```
 Inspect the project root and explain the directory layout.
 ```
 
-## Troubleshooting​
+## عیب‌یابی
 
-### MCP server not connecting​
+### سرور MCP متصل نمی‌شود
 
-Check:
+بررسی کنید:
 
 ```
-# Verify MCP deps are installed (already included in standard install)cd ~/.hermes/hermes-agent && uv pip install -e ".[mcp]"node --versionnpx --version
+# تأیید وابستگی‌های MCP نصب شده‌اند (از قبل در نصب استاندارد گنجانده شده)
+cd ~/.hermes/hermes-agent && uv pip install -e ".[mcp]"
+node --version
+npx --version
 ```
 
-Then verify your config and restart Hermes.
+سپس پیکربندی خود را بررسی کنید و Hermes را مجدداً راه‌اندازی کنید.
 
-### Tools not appearing​
+### ابزارها ظاهر نمی‌شوند
 
-Possible causes:
+علل احتمالی:
 
-- the server failed to connect
-- discovery failed
-- your filter config excluded the tools
-- the utility capability does not exist on that server
-- the server is disabled withenabled: false
+- سرور نتوانست متصل شود
+- کشف ناموفق بود
+- پیکربندی فیلتر شما ابزارها را حذف کرد
+- قابلیت کمکی در آن سرور وجود ندارد
+- سرور با `enabled: false` غیرفعال است
 
 `enabled: false`
 
-If you are intentionally filtering, this is expected.
+اگر عمداً فیلتر می‌کنید، این عادی است.
 
-### Why didn't resource or prompt utilities appear?​
+### چرا ابزارهای کمکی منبع یا پرامپت ظاهر نشدند؟
 
-Because Hermes now only registers those wrappers when both are true:
+زیرا Hermes اکنون فقط آن بسته‌های کمکی را ثبت می‌کند وقتی هر دو شرط برقرار باشد:
 
-1. your config allows them
-2. the server session actually supports the capability
+1. پیکربندی شما آنها را مجاز می‌داند
+2. جلسه سرور واقعاً از قابلیت پشتیبانی می‌کند
 
-This is intentional and keeps the tool list honest.
+این عمدی است و فهرست ابزار را صادقانه نگه می‌دارد.
 
-## Parallel Tool Calls​
+## فراخوان‌های موازی ابزار
 
-By default, MCP tools run sequentially — one at a time. If your MCP server exposes tools that are safe to run concurrently (e.g. read-only queries, independent API calls), you can opt-in to parallel execution:
+به طور پیش‌فرض، ابزارهای MCP به صورت متوالی اجرا می‌شوند — یکی در یک زمان. اگر سرور MCP شما ابزارهایی ارائه می‌دهد که اجرای همزمان آنها بی‌خطر است (مثلاً پرس‌وجوهای فقط خواندنی، فراخوان‌های API مستقل)، می‌توانید اجرای موازی را فعال کنید:
 
 ```
-mcp_servers:  docs:    command: "docs-server"    supports_parallel_tool_calls: true
+mcp_servers:
+  docs:
+    command: "docs-server"
+    supports_parallel_tool_calls: true
 ```
 
-Whensupports_parallel_tool_callsistrue, Hermes may execute multiple tools from that server at the same time within a single tool-call batch, just like it does for built-in read-only tools (web_search, read_file, etc.).
+وقتی `supports_parallel_tool_calls` `true` باشد، Hermes ممکن است چندین ابزار از آن سرور را در یک دسته فراخوان ابزار واحد همزمان اجرا کند، دقیقاً مانند ابزارهای فقط خواندنی داخلی (`web_search`، `read_file` و غیره).
 
 `supports_parallel_tool_calls`
 `true`
 
-Only enable parallel calls for MCP servers whose tools are safe to run at the same time. If tools read and write shared state, files, databases, or external resources, review the read/write race conditions before enabling this setting.
+فقط فراخوان‌های موازی را برای سرورهایی فعال کنید که اجرای همزمان ابزارهایشان بی‌خطر است. اگر ابزارها حالت مشترک، فایل‌ها، پایگاه‌های داده یا منابع خارجی را می‌خوانند و می‌نویسند، قبل از فعال کردن این تنظیم شرایط مسابقه خواندن/نوشتن را بررسی کنید.
 
-## MCP Sampling Support​
+## پشتیبانی MCP Sampling
 
-MCP servers can request LLM inference from Hermes via thesampling/createMessageprotocol. This allows an MCP server to ask Hermes to generate text on its behalf — useful for servers that need LLM capabilities but don't have their own model access.
+سرورهای MCP می‌توانند از Hermes از طریق پروتکل `sampling/createMessage` استنتاج LLM درخواست کنند. این به یک سرور MCP اجازه می‌دهد از Hermes بخواهد متنی را از طرف آن تولید کند — مفید برای سرورهایی که به قابلیت‌های LLM نیاز دارند اما به مدل خودشان دسترسی ندارند.
 
 `sampling/createMessage`
 
-Sampling isenabled by defaultfor all MCP servers (when the MCP SDK supports it). Configure it per-server under thesamplingkey:
+Sampling به طور پیش‌فرض برای همه سرورهای MCP فعال است (وقتی SDK MCP از آن پشتیبانی می‌کند). آن را برای هر سرور در کلید `sampling` پیکربندی کنید:
 
 `sampling`
 
 ```
-mcp_servers:  my_server:    command: "my-mcp-server"    sampling:      enabled: true            # Enable sampling (default: true)      model: "openai/gpt-4o"  # Override model for sampling requests (optional)      max_tokens_cap: 4096     # Max tokens per sampling response (default: 4096)      timeout: 30              # Timeout in seconds per request (default: 30)      max_rpm: 10              # Rate limit: max requests per minute (default: 10)      max_tool_rounds: 5       # Max tool-use rounds in sampling loops (default: 5)      allowed_models: []       # Allowlist of model names the server may request (empty = any)      log_level: "info"        # Audit log level: debug, info, or warning (default: info)
+mcp_servers:
+  my_server:
+    command: "my-mcp-server"
+    sampling:
+      enabled: true            # فعال کردن sampling (پیش‌فرض: true)
+      model: "openai/gpt-4o"  # بازنویسی مدل برای درخواست‌های sampling (اختیاری)
+      max_tokens_cap: 4096     # حداکثر توکن‌ها برای هر پاسخ sampling (پیش‌فرض: 4096)
+      timeout: 30              # تایم‌اوت به ثانیه برای هر درخواست (پیش‌فرض: 30)
+      max_rpm: 10              # محدودیت سرعت: حداکثر درخواست‌ها در دقیقه (پیش‌فرض: 10)
+      max_tool_rounds: 5       # حداکثر دورهای استفاده از ابزار در حلقه‌های sampling (پیش‌فرض: 5)
+      allowed_models: []       # لیست سفید نام‌های مدلی که سرور می‌تواند درخواست کند (خالی = هر کدام)
+      log_level: "info"        # سطح گزارش حسابرسی: debug، info، یا warning (پیش‌فرض: info)
 ```
 
-The sampling handler includes a sliding-window rate limiter, per-request timeouts, and tool-loop depth limits to prevent runaway usage. Metrics (request count, errors, tokens used) are tracked per server instance.
+هندلر sampling شامل یک محدودگر سرعت پنجره لغزان، تایم‌اوت‌های هر درخواست و محدودیت‌های عمق حلقه ابزار برای جلوگیری از استفاده بی‌رویه است. معیارها (تعداد درخواست‌ها، خطاها، توکن‌های استفاده شده) برای هر نمونه سرور ردیابی می‌شوند.
 
-To disable sampling for a specific server:
+برای غیرفعال کردن sampling برای یک سرور خاص:
 
 ```
-mcp_servers:  untrusted_server:    url: "https://mcp.example.com"    sampling:      enabled: false
+mcp_servers:
+  untrusted_server:
+    url: "https://mcp.example.com"
+    sampling:
+      enabled: false
 ```
 
-## Running Hermes as an MCP server​
+## اجرای Hermes به عنوان یک سرور MCP
 
-In addition to connectingtoMCP servers, Hermes can alsobean MCP server. This lets other MCP-capable agents (Claude Code, Cursor, Codex, or any MCP client) use Hermes's messaging capabilities — list conversations, read message history, and send messages across all your connected platforms.
+علاوه بر اتصال به سرورهای MCP، Hermes همچنین می‌تواند یک سرور MCP باشد. این به سایر عوامل سازگار با MCP (Claude Code، Cursor، Codex، یا هر کلاینت MCP) اجازه می‌دهد از قابلیت‌های پیام‌رسانی Hermes استفاده کنند — لیست مکالمات، خواندن تاریخچه پیام‌ها، و ارسال پیام در تمام پلتفرم‌های متصل شما.
 
-### When to use this​
+### چه زمانی از این استفاده کنید
 
-- You want Claude Code, Cursor, or another coding agent to send and read Telegram/Discord/Slack messages through Hermes
-- You want a single MCP server that bridges to all of Hermes's connected messaging platforms at once
-- You already have a running Hermes gateway with connected platforms
+- می‌خواهید Claude Code، Cursor، یا یک کدگذار دیگر پیام‌های Telegram/Discord/Slack را از طریق Hermes ارسال و بخواند
+- می‌خواهید یک سرور MCP واحد که به همه پلتفرم‌های متصل پیام‌رسانی Hermes به یکباره پل بزند
+- قبلاً یک گیت‌وی Hermes در حال اجرا با پلتفرم‌های متصل شده دارید
 
-### Quick start​
+### شروع سریع
 
 ```
 hermes mcp serve
 ```
 
-This starts a stdio MCP server. The MCP client (not you) manages the process lifecycle.
+این یک سرور MCP stdio راه‌اندازی می‌کند. کلاینت MCP (نه شما) چرخه حیات فرآیند را مدیریت می‌کند.
 
-### MCP client configuration​
+### پیکربندی کلاینت MCP
 
-Add Hermes to your MCP client config. For example, in Claude Code's~/.claude/claude_desktop_config.json:
+Hermes را به پیکربندی کلاینت MCP خود اضافه کنید. به عنوان مثال، در `~/.claude/claude_desktop_config.json` Claude Code:
 
 `~/.claude/claude_desktop_config.json`
 
 ```
-{  "mcpServers": {    "hermes": {      "command": "hermes",      "args": ["mcp", "serve"]    }  }}
+{
+  "mcpServers": {
+    "hermes": {
+      "command": "hermes",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
 ```
 
-Or if you installed Hermes in a specific location:
+یا اگر Hermes را در یک مکان خاص نصب کرده باشید:
 
 ```
-{  "mcpServers": {    "hermes": {      "command": "/home/user/.hermes/hermes-agent/venv/bin/hermes",      "args": ["mcp", "serve"]    }  }}
+{
+  "mcpServers": {
+    "hermes": {
+      "command": "/home/user/.hermes/hermes-agent/venv/bin/hermes",
+      "args": ["mcp", "serve"]
+    }
+  }
+}
 ```
 
-### Available tools​
+### ابزارهای موجود
 
-The MCP server exposes 10 tools, matching OpenClaw's channel bridge surface plus a Hermes-specific channel browser:
+سرور MCP ۱۰ ابزار ارائه می‌دهد، سطح ادغام کانال OpenClaw به علاوه یک مرورگر کانال خاص Hermes:
 
-| Tool | Description |
+| ابزار | توضیح |
 | --- | --- |
-| conversations_list | List active messaging conversations. Filter by platform or search by name. |
-| conversation_get | Get detailed info about one conversation by session key. |
-| messages_read | Read recent message history for a conversation. |
-| attachments_fetch | Extract non-text attachments (images, media) from a specific message. |
-| events_poll | Poll for new conversation events since a cursor position. |
-| events_wait | Long-poll / block until the next event arrives (near-real-time). |
-| messages_send | Send a message through a platform (e.g.telegram:123456,discord:#general). |
-| channels_list | List available messaging targets across all platforms. |
-| permissions_list_open | List pending approval requests observed during this bridge session. |
-| permissions_respond | Allow or deny a pending approval request. |
+| `conversations_list` | لیست مکالمات پیام‌رسانی فعال. فیلتر بر اساس پلتفرم یا جستجو بر اساس نام. |
+| `conversation_get` | دریافت اطلاعات دقیق درباره یک مکالمه با کلید جلسه. |
+| `messages_read` | خواندن تاریخچه پیام‌های اخیر یک مکالمه. |
+| `attachments_fetch` | استخراج پیوست‌های غیرمتنی (تصاویر، رسانه) از یک پیام خاص. |
+| `events_poll` | بررسی رویدادهای مکالمه جدید از یک نقطه مکان‌نما. |
+| `events_wait` | پولینگ بلند / بلاک کردن تا رویداد بعدی برسد (تقریباً بی‌درنگ). |
+| `messages_send` | ارسال پیام از طریق یک پلتفرم (مثلاً `telegram:123456`، `discord:#general`). |
+| `channels_list` | لیست اهداف پیام‌رسانی موجود در تمام پلتفرم‌ها. |
+| `permissions_list_open` | لیست درخواست‌های تأیید در انتظار مشاهده شده در این جلسه پل. |
+| `permissions_respond` | تأیید یا رد یک درخواست تأیید در انتظار. |
 
 `conversations_list`
 `conversation_get`
@@ -802,46 +857,50 @@ The MCP server exposes 10 tools, matching OpenClaw's channel bridge surface plus
 `permissions_list_open`
 `permissions_respond`
 
-### Event system​
+### سیستم رویداد
 
-The MCP server includes a live event bridge that polls Hermes's session database for new messages. This gives MCP clients near-real-time awareness of incoming conversations:
+سرور MCP شامل یک پل رویداد زنده است که پایگاه داده جلسه Hermes را برای پیام‌های جدید بررسی می‌کند. این آگاهی تقریباً بی‌درنگ کلاینت‌های MCP از مکالمات ورودی را فراهم می‌کند:
 
 ```
-# Poll for new events (non-blocking)events_poll(after_cursor=0)# Wait for next event (blocks up to timeout)events_wait(after_cursor=42, timeout_ms=30000)
+# بررسی رویدادهای جدید (غیرbloک)
+events_poll(after_cursor=0)
+# انتظار برای رویداد بعدی (bloک تا تایم‌اوت)
+events_wait(after_cursor=42, timeout_ms=30000)
 ```
 
-Event types:message,approval_requested,approval_resolved
+انواع رویداد: `message`، `approval_requested`، `approval_resolved`
 
 `message`
 `approval_requested`
 `approval_resolved`
 
-The event queue is in-memory and starts when the bridge connects. Older messages are available throughmessages_read.
+صف رویداد در حافظه است و وقتی پل متصل می‌شود شروع می‌شود. پیام‌های قدیمی‌تر از طریق `messages_read` در دسترس هستند.
 
 `messages_read`
 
-### Options​
+### گزینه‌ها
 
 ```
-hermes mcp serve              # Normal modehermes mcp serve --verbose    # Debug logging on stderr
+hermes mcp serve              # حالت عادی
+hermes mcp serve --verbose    # گزارش اشکال‌زایی در stderr
 ```
 
-### How it works​
+### چگونه کار می‌کند
 
-The MCP server reads conversation data directly from Hermes's session store (~/.hermes/sessions/sessions.jsonand the SQLite database). A background thread polls the database for new messages and maintains an in-memory event queue. For sending messages, it uses the same internal send engine (tools/send_message_tool.py) that powers cron delivery and thehermes sendCLI.
+سرور MCP داده‌های مکالمه را مستقیماً از فروشگاه جلسه Hermes (`~/.hermes/sessions/sessions.json` و پایگاه داده SQLite) می‌خواند. یک رشته پس‌زمینه پایگاه داده را برای پیام‌های جدید بررسی می‌کند و یک صف رویداد در حافظه حفظ می‌کند. برای ارسال پیام‌ها، از همان موتور ارسال داخلی (`tools/send_message_tool.py`) استفاده می‌کند که تحویل cron و `hermes send` CLI را تقویت می‌کند.
 
 `~/.hermes/sessions/sessions.json`
 `tools/send_message_tool.py`
 `hermes send`
 
-The gateway does NOT need to be running for read operations (listing conversations, reading history, polling events). It DOES need to be running for send operations, since the platform adapters need active connections.
+گیت‌وی نیازی نیست برای عملیات خواندن (لیست مکالمات، خواندن تاریخچه، بررسی رویدادها) اجرا شود. باید برای عملیات ارسال اجرا شود، زیرا سازگارنده‌های پلتفرم به اتصالات فعال نیاز دارند.
 
-### Current limits​
+### محدودیت‌های فعلی
 
-- The embeddedhermes mcp serveexposes astdio-onlyMCP server today. If you need an HTTP MCP server, run a separate adapter — or, much more commonly, use the MCPclientside of Hermes, which already speaks both stdio and HTTP (url+headersinmcp_servers.yaml/config.yaml; seeHTTP serversabove).
-- Event polling at ~200ms intervals via mtime-optimized DB polling (skips work when files are unchanged)
-- Noclaude/channelpush notification protocol yet
-- Text-only sends (no media/attachment sending throughmessages_send)
+- نمونه تعبیه شده `hermes mcp serve` امروز یک سرور MCP فقط stdio ارائه می‌دهد. اگر به یک سرور HTTP MCP نیاز دارید، یک سازگارنده جداگانه اجرا کنید — یا، بسیار رایج‌تر، از سمت کلاینت Hermes استفاده کنید که از قبل هم stdio و هم HTTP را صحبت می‌کند (`url` + `headers` در `mcp_servers.yaml`/`config.yaml`؛ به سرورهای HTTP بالا مراجعه کنید).
+- بررسی رویداد با فواصل ~200ms از طریق بررسی پایگاه داده بهینه شده با mtime (وقتی فایل‌ها تغییر نکرده کار را رد می‌کند)
+- هنوز هیچ پروتکل اعلان push `claude/channel` وجود ندارد
+- ارسال‌های فقط متن (بدون ارسال رسانه/پیوست از طریق `messages_send`)
 
 `hermes mcp serve`
 `url`
@@ -851,15 +910,15 @@ The gateway does NOT need to be running for read operations (listing conversatio
 `claude/channel`
 `messages_send`
 
-## Related docs​
+## مستندات مرتبط
 
-- Use MCP with Hermes
-- CLI Commands
-- Slash Commands
-- FAQ
+- استفاده از MCP با Hermes
+- دستورات CLI
+- دستورات اسلش
+- سؤالات متداول
 
-[Use MCP with Hermes](/docs/guides/use-mcp-with-hermes)
-[CLI Commands](/docs/reference/cli-commands)
-[Slash Commands](/docs/reference/slash-commands)
-[FAQ](/docs/reference/faq)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/mcp.md)
+[استفاده از MCP با Hermes](/docs/guides/use-mcp-with-hermes)
+[دستورات CLI](/docs/reference/cli-commands)
+[دستورات اسلش](/docs/reference/slash-commands)
+[سؤالات متداول](/docs/reference/faq)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/mcp.md)

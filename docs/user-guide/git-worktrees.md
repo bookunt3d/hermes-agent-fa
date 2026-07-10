@@ -1,205 +1,220 @@
 ---
 layout: docs
 title: "Git Worktrees"
-permalink: /user-guide/git-worktrees/
+permalink: /docs/user-guide/git-worktrees/
 ---
 
 - 
-- Using Hermes
+- استفاده از Hermes
 - Git Worktrees
 
 # Git Worktrees
 
-Hermes Agent is often used on large, long‑lived repositories. When you want to:
+Hermes Agent اغلب روی مخزن‌های بزرگ و طولانی‌مدت استفاده می‌شود. وقتی می‌خواهید:
 
-- Runmultiple agents in parallelon the same project, or
-- Keep experimental refactors isolated from your main branch,
+- **عوامل متعدد را به صورت موازی** روی یک پروژه اجرا کنید، یا
+- **بازآرایی‌های آزمایشی** را از شاخه اصلی خود جدا نگه دارید،
 
-Gitworktreesare the safest way to give each agent its own checkout without duplicating the entire repository.
+Git worktrees **امن‌ترین راه** برای دادن یک checkout جداگانه به هر عامل بدون تکرار کل مخزن هستند.
 
-This page shows how to combine worktrees with Hermes so each session has a clean, isolated working directory.
+این صفحه نشان می‌دهد چگونه worktrees را با Hermes ترکیب کنید تا هر جلسه دایرکتوری کاری تمیز و ایزوله داشته باشد.
 
-## Why Use Worktrees with Hermes?​
+## چرا از Worktrees با Hermes استفاده کنیم؟
 
-Hermes treats thecurrent working directoryas the project root:
+Hermes **دایرکتوری کاری فعلی** را به عنوان ریشه پروژه در نظر می‌گیرد:
 
-- CLI: the directory where you runhermesorhermes chat
-- Messaging gateways: the directory set byterminal.cwdin~/.hermes/config.yaml
+- **CLI**: دایرکتوری که `hermes` یا `hermes chat` را در آن اجرا می‌کنید
+- **Gateway‌های پیام‌رسانی**: دایرکتوری تنظیم‌شده توسط `terminal.cwd` در `~/.hermes/config.yaml`
 
 `hermes`
 `hermes chat`
 `terminal.cwd`
 `~/.hermes/config.yaml`
 
-If you run multiple agents in thesame checkout, their changes can interfere with each other:
+اگر چندین عامل را در **همان checkout** اجرا کنید، تغییرات آن‌ها می‌تواند با هم تداخل داشته باشد:
 
-- One agent may delete or rewrite files the other is using.
-- It becomes harder to understand which changes belong to which experiment.
+- یک عامل ممکن است فایل‌هایی را که عامل دیگر استفاده می‌کند حذف یا بازنویسی کند.
+- درک اینکه کدام تغییرات مربوط به کدام آزمایش است دشوارتر می‌شود.
 
-With worktrees, each agent gets:
+با worktrees، هر عامل دریافت می‌کند:
 
-- Itsown branch and working directory
-- Itsown Checkpoint Manager historyfor/rollback
+- **شاخه و دایرکتوری کاری خود**
+- **تاریخچه Checkpoint Manager خود** برای `/rollback`
 
 `/rollback`
 
-See also:Checkpoints and /rollback.
+همچنین ببینید: [نقاط بازیابی و /rollback](/docs/user-guide/checkpoints-and-rollback).
 
-[Checkpoints and /rollback](/docs/user-guide/checkpoints-and-rollback)
+## شروع سریع: ایجاد یک Worktree
 
-## Quick Start: Creating a Worktree​
-
-From your main repository (containing.git/), create a new worktree for a feature branch:
+از مخزن اصلی خود (حاوی `.git/`)، یک worktree جدید برای شاخه feature ایجاد کنید:
 
 `.git/`
 
 ```
-# From the main repo rootcd /path/to/your/repo# Create a new branch and worktree in ../repo-featuregit worktree add ../repo-feature feature/hermes-experiment
+# From the main repo root
+cd /path/to/your/repo
+
+# Create a new branch and worktree in ../repo-feature
+git worktree add ../repo-feature feature/hermes-experiment
 ```
 
-This creates:
+این موارد زیر را ایجاد می‌کند:
 
-- A new directory:../repo-feature
-- A new branch:feature/hermes-experimentchecked out in that directory
+- یک دایرکتوری جدید: `../repo-feature`
+- یک شاخه جدید: `feature/hermes-experiment` که در آن دایرکتوری checkout شده
 
 `../repo-feature`
 `feature/hermes-experiment`
 
-Now you cancdinto the new worktree and run Hermes there:
+حالا می‌توانید `cd` به worktree جدید کنید و Hermes را در آن اجرا کنید:
 
 `cd`
 
 ```
-cd ../repo-feature# Start Hermes in the worktreehermes
+cd ../repo-feature
+# Start Hermes in the worktree
+hermes
 ```
 
-Hermes will:
+Hermes:
 
-- See../repo-featureas the project root.
-- Use that directory for context files, code edits, and tools.
-- Use aseparate checkpoint historyfor/rollbackscoped to this worktree.
+- `../repo-feature` را به عنوان ریشه پروژه می‌بیند.
+- از آن دایرکتوری برای فایل‌های زمینه، ویرایش‌های کد و ابزارها استفاده می‌کند.
+- از یک **تاریخچه checkpoint جداگانه** برای `/rollback` محدود به این worktree استفاده می‌کند.
 
 `../repo-feature`
 `/rollback`
 
-## Running Multiple Agents in Parallel​
+## اجرای عوامل متعدد به صورت موازی
 
-You can create multiple worktrees, each with its own branch:
-
-```
-cd /path/to/your/repogit worktree add ../repo-experiment-a feature/hermes-agit worktree add ../repo-experiment-b feature/hermes-b
-```
-
-In separate terminals:
+می‌توانید چندین worktree ایجاد کنید، هر کدام با شاخه خود:
 
 ```
-# Terminal 1cd ../repo-experiment-ahermes# Terminal 2cd ../repo-experiment-bhermes
+cd /path/to/your/repo
+git worktree add ../repo-experiment-a feature/hermes-a
+git worktree add ../repo-experiment-b feature/hermes-b
 ```
 
-Each Hermes process:
+در ترمینال‌های جداگانه:
 
-- Works on its own branch (feature/hermes-avsfeature/hermes-b).
-- Writes checkpoints under a different shadow repo hash (derived from the worktree path).
-- Can use/rollbackindependently without affecting the other.
+```
+# Terminal 1
+cd ../repo-experiment-a
+hermes
+
+# Terminal 2
+cd ../repo-experiment-b
+hermes
+```
+
+هر فرایند Hermes:
+
+- روی شاخه خود کار می‌کند (`feature/hermes-a` در مقابل `feature/hermes-b`).
+- checkpoints را تحت یک هش مخزن سایه‌ای متفاوت (مشتق از مسیر worktree) می‌نویسد.
+- می‌تواند به طور مستقل از `/rollback` استفاده کند بدون تأثیر روی دیگری.
 
 `feature/hermes-a`
 `feature/hermes-b`
 `/rollback`
 
-This is especially useful when:
+این به ویژه مفید است وقتی:
 
-- Running batch refactors.
-- Trying different approaches to the same task.
-- Pairing CLI + gateway sessions against the same upstream repo.
+- بازآرایی‌های دسته‌ای اجرا می‌کنید.
+- رویکردهای مختلفی برای همان کار امتحان می‌کنید.
+- نشست‌های CLI + gateway را علیه همان مخزن upstream جفت می‌کنید.
 
-## Cleaning Up Worktrees Safely​
+## پاک‌سازی ایمن Worktrees
 
-When you are done with an experiment:
+وقتی آزمایشی تمام شد:
 
-1. Decide whether to keep or discard the work.
-2. If you want to keep it:Merge the branch into your main branch as usual.
-3. Remove the worktree:
+1. تصمیم بگیرید کار را نگه دارید یا دور بریزید.
+2. اگر می‌خواهید نگه دارید: شاخه را مانند همیشه به شاخه اصلی خود ادغام کنید.
+3. worktree را حذف کنید:
 
-- Merge the branch into your main branch as usual.
+- شاخه را مانند همیشه به شاخه اصلی خود ادغام کنید.
 
 ```
-cd /path/to/your/repo# Remove the worktree directory and its referencegit worktree remove ../repo-feature
+cd /path/to/your/repo
+# Remove the worktree directory and its reference
+git worktree remove ../repo-feature
 ```
 
-Notes:
+نکات:
 
-- git worktree removewill refuse to remove a worktree with uncommitted changes unless you force it.
-- Removing a worktree doesnotautomatically delete the branch; you can delete or keep the branch using normalgit branchcommands.
-- Hermes checkpoint data under~/.hermes/checkpoints/is not automatically pruned when you remove a worktree, but it is usually very small.
+- `git worktree remove` از حذف worktree با تغییرات commit نشده امتناع می‌کند مگر اینکه آن را مجبور کنید.
+- حذف worktree **به طور خودکار شاخه را حذف نمی‌کند**؛ می‌توانید شاخه را با دستورات عادی `git branch` حذف یا نگه دارید.
+- داده‌های checkpoint Hermes در `~/.hermes/checkpoints/` هنگام حذف worktree به طور خودکار پاک نمی‌شوند، اما معمولاً بسیار کوچک هستند.
 
 `git worktree remove`
 `git branch`
 `~/.hermes/checkpoints/`
 
-## Best Practices​
+## بهترین شیوه‌ها
 
-- One worktree per Hermes experimentCreate a dedicated branch/worktree for each substantial change.This keeps diffs focused and PRs small and reviewable.
-- Name branches after the experimente.g.feature/hermes-checkpoints-docs,feature/hermes-refactor-tests.
-- Commit frequentlyUse git commits for high‑level milestones.Usecheckpoints and /rollbackas a safety net for tool‑driven edits in between.
-- Avoid running Hermes from the bare repo root when using worktreesPrefer the worktree directories instead, so each agent has a clear scope.
+- **یک worktree برای هر آزمایش Hermes** — برای هر تغییر قابل توجه یک شاخه/worktree اختصاصی ایجاد کنید. این diff‌ها را متمرکز و PR‌ها را کوچک و قابل بررسی نگه می‌دارد.
+- **شاخه‌ها را بر اساس آزمایش نام‌گذاری کنید** — مثلاً `feature/hermes-checkpoints-docs`، `feature/hermes-refactor-tests`.
+- **مکرراً commit کنید** — از git commits برای نقاط عطف سطح بالا استفاده کنید. از checkpoints و `/rollback` به عنوان شبکه ایمنی برای ویرایش‌های ابزارمحور در بین آن‌ها استفاده کنید.
+- **از اجرای Hermes از ریشه مخزن خام هنگام استفاده از worktrees اجتناب کنید** — به جای آن دایرکتوری‌های worktree را ترجیح دهید تا هر عامل دامنه مشخصی داشته باشد.
 
-- Create a dedicated branch/worktree for each substantial change.
-- This keeps diffs focused and PRs small and reviewable.
+- برای هر تغییر قابل توجه یک شاخه/worktree اختصاصی ایجاد کنید.
+- این diff‌ها را متمرکز و PR‌ها را کوچک و قابل بررسی نگه می‌دارد.
 
-- e.g.feature/hermes-checkpoints-docs,feature/hermes-refactor-tests.
+- مثلاً `feature/hermes-checkpoints-docs`، `feature/hermes-refactor-tests`.
 
 `feature/hermes-checkpoints-docs`
 `feature/hermes-refactor-tests`
-- Use git commits for high‑level milestones.
-- Usecheckpoints and /rollbackas a safety net for tool‑driven edits in between.
+- از git commits برای نقاط عطف سطح بالا استفاده کنید.
+- از checkpoints و `/rollback` به عنوان شبکه ایمنی برای ویرایش‌های ابزارمحور در بین آن‌ها استفاده کنید.
 
-[checkpoints and /rollback](/docs/user-guide/checkpoints-and-rollback)
-- Prefer the worktree directories instead, so each agent has a clear scope.
+[checkpoints و /rollback](/docs/user-guide/checkpoints-and-rollback)
+- دایرکتوری‌های worktree را ترجیح دهید تا هر عامل دامنه مشخصی داشته باشد.
 
-## Usinghermes -w(Automatic Worktree Mode)​
+## استفاده از `hermes -w` (حالت Worktree خودکار)
 
 `hermes -w`
 
-Hermes has a built‑in-wflag thatautomatically creates a disposable git worktreewith its own branch. You don't need to set up worktrees manually — justcdinto your repo and run:
+Hermes یک پرچم داخلی `-w` دارد که **به طور خودکار یک git worktree یکبار مصرف** با شاخه خود ایجاد می‌کند. نیازی به راه‌اندازی دستی worktrees نیست — فقط `cd` به مخزن خود کنید و اجرا کنید:
 
 `-w`
 `cd`
 
 ```
-cd /path/to/your/repohermes -w
+cd /path/to/your/repo
+hermes -w
 ```
 
-Hermes will:
+Hermes:
 
-- Create a temporary worktree under.worktrees/inside your repo.
-- Check out an isolated branch (e.g.hermes/hermes-<hash>).
-- Run the full CLI session inside that worktree.
+- یک worktree موقت در `.worktrees/` داخل مخزن شما ایجاد می‌کند.
+- یک شاخه ایزوله (مثلاً `hermes/hermes-<hash>`) را checkout می‌کند.
+- کل نشست CLI را در آن worktree اجرا می‌کند.
 
 `.worktrees/`
 `hermes/hermes-<hash>`
 
-This is the easiest way to get worktree isolation. You can also combine it with a single query:
+این آسان‌ترین راه برای دریافت ایزوله worktree است. همچنین می‌توانید آن را با یک پرسش واحد ترکیب کنید:
 
 ```
 hermes -w -z "Fix issue #123"
 ```
 
-For parallel agents, open multiple terminals and runhermes -win each — every invocation gets its own worktree and branch automatically.
+برای عوامل موازی، چندین ترمینال باز کنید و `hermes -w` را در هر کدام اجرا کنید — هر فراخوانی به طور خودکار worktree و شاخه خود را دریافت می‌کند.
 
 `hermes -w`
 
-## Putting It All Together​
+## ترکیب همه چیز
 
-- Usegit worktreesto give each Hermes session its own clean checkout.
-- Usebranchesto capture the high‑level history of your experiments.
-- Usecheckpoints +/rollbackto recover from mistakes inside each worktree.
+- از `git worktrees` استفاده کنید تا به هر جلسه Hermes checkout تمیز جداگانه بدهید.
+- از `branch`‌ها استفاده کنید تا تاریخچه سطح بالای آزمایش‌های خود را ثبت کنید.
+- از checkpoints + `/rollback` استفاده کنید تا از اشتباهات داخل هر worktree بازیابی کنید.
 
 `/rollback`
 
-This combination gives you:
+این ترکیب به شما می‌دهد:
 
-- Strong guarantees that different agents and experiments do not step on each other.
-- Fast iteration cycles with easy recovery from bad edits.
-- Clean, reviewable pull requests.
+- تضمین‌های قوی که عوامل و آزمایش‌های مختلف روی هم قدم نگذارند.
+- چرخه‌های تکرار سریع با بازیابی آسان از ویرایش‌های بد.
+- Pull request‌های تمیز و قابل بررسی.
 
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/git-worktrees.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/git-worktrees.md)

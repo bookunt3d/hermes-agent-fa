@@ -5,448 +5,314 @@ permalink: /user-guide/tui/
 ---
 
 - 
-- Using Hermes
+- استفاده از Hermes
 - TUI
 
 # TUI
 
-The TUI is the modern front-end for Hermes — a terminal UI backed by the same Python runtime as theClassic CLI. Same agent, same sessions, same slash commands; a cleaner, more responsive surface for interacting with them.
+TUI رابط مدرن Hermes است — یک رابط متنی مبتنی بر همان Runtime پایتونی که CLI کلاسیک از آن استفاده می‌کند. همان عامل، همان نشست‌ها، همان دستورات اسلش؛ رابطی تمیزتر و پاسخگوتر برای تعامل با آن‌ها.
 
-[Classic CLI](/docs/user-guide/cli)
+[CLI کلاسیک](/docs/user-guide/cli)
 
-It's the recommended way to run Hermes interactively.
+روش پیشنهادی برای اجرای تعاملی Hermes است.
 
-## Launch​
-
-```
-# Launch the TUIhermes --tui# Resume the latest TUI session (falls back to the latest classic session)hermes --tui -chermes --tui --continue# Resume a specific session by ID or titlehermes --tui -r 20260409_000000_aa11bbhermes --tui --resume "my t0p session"# Run source directly — skips the prebuild step (for TUI contributors)hermes --tui --dev
-```
-
-You can also enable it via env var:
+## راه‌اندازی
 
 ```
-export HERMES_TUI=1hermes          # now uses the TUIhermes chat     # same
+# راه‌اندازی TUI
+hermes --tui
+# ادامه آخرین نشست TUI (به آخرین نشست کلاسیک بازمی‌گردد)
+hermes --tui -c
+hermes --tui --continue
+# ادامه یک نشست خاص بر اساس ID یا عنوان
+hermes --tui -r 20260409_000000_aa11bb
+hermes --tui --resume "my t0p session"
+# اجرای مستقیم از سورس — مرحله پیش‌ساخت را رد می‌کند (برای مشارکت‌کنندگان TUI)
+hermes --tui --dev
 ```
 
-Or make it the persistent default in~/.hermes/config.yaml:
-
-`~/.hermes/config.yaml`
+همچنین می‌توانید آن را از طریق متغیر محیطی فعال کنید:
 
 ```
-display:  interface: tui   # "cli" (default) or "tui"
+export HERMES_TUI=1
+hermes          # حالا از TUI استفاده می‌کند
+hermes chat     # یکسان
 ```
 
-Withdisplay.interface: tui, a barehermes(andhermes chat) launches the TUI. Explicit flags always win — runhermes --clito drop back to the classic REPL for a single invocation, orhermes --tui/HERMES_TUI=1to force the TUI when the config default iscli.
+یا آن را به عنوان پیش‌فرض پایدار در `~/.hermes/config.yaml` تنظیم کنید:
 
-`display.interface: tui`
-`hermes`
-`hermes chat`
-`hermes --cli`
-`hermes --tui`
-`HERMES_TUI=1`
-`cli`
+```
+display:
+  interface: tui   # "cli" (پیش‌فرض) یا "tui"
+```
 
-The classic CLI remains the shipped default. Anything documented inCLI Interface— slash commands, quick commands, skill preloading, personalities, multi-line input, interrupts — works in the TUI identically.
+با `display.interface: tui`، یک `hermes` ساده (و `hermes chat`) TUI را راه‌اندازی می‌کند. پرچم‌های صریح همیشه اولویت دارند — `hermes --cli` را برای بازگشت به REPL کلاسیک در یک فراخوانی اجرا کنید، یا `hermes --tui` / `HERMES_TUI=1` برای اجبار TUI وقتی پیش‌فرض تنظیمات `cli` است.
 
-[CLI Interface](/docs/user-guide/cli)
+CLI کلاسیک همچنان پیش‌فرض ارسال شده است. هر چیزی که در رابط CLI مستند شده — دستورات اسلش، دستورات سریع، پیش‌بارگذاری مهارت‌ها، شخصیت‌ها، ورودی چندخطی، وقفه‌ها — به یک شکل در TUI کار می‌کند.
 
-## Why the TUI​
+[رابط CLI](/docs/user-guide/cli)
 
-- Instant first frame— the banner paints before the app finishes loading, so the terminal never feels frozen while Hermes is starting.
-- Non-blocking input— type and queue messages before the session is ready. Your first prompt sends the moment the agent comes online.
-- Rich overlays— model picker, session picker, approval and clarification prompts all render as modal panels rather than inline flows.
-- Live session panel— tools and skills fill in progressively as they initialize.
-- Mouse-friendly selection— drag to highlight with a uniform background instead of SGR inverse. Copy with your terminal's normal copy gesture.
-- Alternate-screen rendering— differential updates mean no flicker when streaming, no scrollback clutter after you quit.
-- Composer affordances— inline paste-collapse for long snippets,Cmd+V/Ctrl+Vtext paste with clipboard-image fallback, bracketed-paste safety, and image/file-path attachment normalization.
+## چرا TUI
 
-`Cmd+V`
-`Ctrl+V`
+- فریم اول فوری — بنر قبل از تکمیل بارگذاری برنامه رسم می‌شود، بنابراین ترمینال هرگز در حین راه‌اندازی Hermes یخ نمی‌زند.
+- ورودی غیرمسدود — پیام‌ها را تایپ و در صف قرار دهید قبل از آماده شدن نشست. اولین درخواست شما در لحظه آنلاین شدن عامل ارسال می‌شود.
+- پوشش‌های غنی — انتخابگر مدل، انتخابگر نشست، درخواست‌های تأیید و شفاف‌سازی همگی به جای جریان‌های درون‌خطی به صورت پنل‌های مودال رندر می‌شوند.
+- پنل نشست زنده — ابزارها و مهارت‌ها به تدریج در حین مقداردهی اولیه پر می‌شوند.
+- انتخاب دوستدار ماوس — با کشیدن متن را با پس‌زمینه انتخاب یکنواخت برجسته کنید به جای SGR معکوس. با حرکت کپی معمولی ترمینال خود کپی کنید.
+- رندر صفحه متناوب — به‌روزرسانی‌های تفاضلی به این معنی هستند که هنگام پخش هیچ سوسویی وجود ندارد و پس از خروج آشفتگی scrollback وجود ندارد.
+- امکانات آهنگساز — جمع‌بندی inline paste برای قطعات بلند، متن‌چسبان `Cmd+V`/`Ctrl+V` با fallback تصویر کلیپ‌بورد، ایمنی bracketed-paste، و عادی‌سازی پیوست تصویر/مسیر فایل.
 
-Sameskinsandpersonalitiesapply. Switch mid-session with/skin ares,/personality pirate, and the UI repaints live. SeeSkins & Themesfor the full list of customizable keys and which ones apply to classic vs TUI — the TUI honors the banner palette, UI colors, prompt glyph/color, session display, completion menu, selection bg,tool_prefix, andhelp_header.
+`skins` و `personalities` یکسانی اعمال می‌شوند. در حین نشست با `/skin ares`، `/personality pirate` تعویض کنید و رابط کاربری فوراً بازرندر می‌شود. لیست کامل کلیدهای قابل تنظیم و اینکه کدام‌ها برای کلاسیک در مقابل TUI اعمال می‌شوند را در Skins & Themes ببینید — TUI پالت بنر، رنگ‌های رابط کاربری، گلیف/رنگ درخواست، نمایش نشست، منوی تکمیل خودکار، پس‌زمینه انتخاب، `tool_prefix` و `help_header` را رعایت می‌کند.
 
 [skins](/docs/user-guide/features/skins)
 [personalities](/docs/user-guide/features/personality)
-`/skin ares`
-`/personality pirate`
 [Skins & Themes](/docs/user-guide/features/skins)
-`tool_prefix`
-`help_header`
 
-### Collapsible banner sections​
+### بخش‌های قابل جمع‌بندی بنر
 
-The TUI startup banner groups runtime info into four collapsible sections, each rendered with a▸/▾chevron next to the section title:
+بنر راه‌اندازی TUI اطلاعات Runtime را در چهار بخش قابل جمع‌بندی گروه‌بندی می‌کند، هر کدام با یک `▸`/`▾` در کنار عنوان بخش رندر می‌شوند:
 
-`▸`
-`▾`
-
-| Section | Default state |
+| بخش | حالت پیش‌فرض |
 | --- | --- |
-| Tools | Open |
-| Skills | Collapsed |
-| System Prompt | Collapsed |
-| MCP Servers | Collapsed |
+| ابزارها | باز |
+| مهارت‌ها | جمع‌شده |
+| درخواست سیستم | جمع‌شده |
+| سرورهای MCP | جمع‌شده |
 
-Click anywhere on a section header (or its chevron) to toggle it. The Tools list opens by default because it's the most-checked section at session start; Skills, System Prompt, and MCP Servers collapse by default so the banner stays compact even when you've installed dozens of skills or wired up many MCP servers. State is local to the banner instance, so the next launch resets to the defaults.
+روی هر نقطه‌ای از عنوان بخش (یا `▸`/`▾` آن) کلیک کنید تا آن را تغییر دهید. لیست ابزارها به طور پیش‌فرض باز است زیرا بخشی است که بیشترین بررسی را در شروع نشست دارد؛ مهارت‌ها، درخواست سیستم و سرورهای MCP به طور پیش‌فرض جمع می‌شوند تا بنر حتی وقتی ده‌ها مهارت نصب کرده‌اید یا سرورهای MCP زیادی متصل کرده‌اید فشرده بماند. حالت مربوط به نمونه بنر محلی است، بنابراین راه‌اندازی بعدی به پیش‌فرض‌ها بازمی‌گردد.
 
-## Requirements​
+## پیش‌نیازها
 
-- Node.js≥ 20 — the TUI runs as a subprocess launched from the Python CLI.hermes doctorverifies this.
-- TTY— like the classic CLI, piping stdin or running in non-interactive environments falls back to single-query mode.
+- Node.js ≥ 20 — TUI به عنوان یک فرآیند فرعی از CLI پایتونی اجرا می‌شود. `hermes doctor` این را تأیید می‌کند.
+- TTY — مانند CLI کلاسیک، لوله‌کشی stdin یا اجرا در محیط‌های غیرتعاملی به حالت query تکی بازمی‌گردد.
 
 `hermes doctor`
 
-On first launch Hermes installs the TUI's Node dependencies intoui-tui/node_modules(one-time, a few seconds). Subsequent launches are fast. If you pull a new Hermes version, the TUI bundle is rebuilt automatically when sources are newer than the dist.
+در اولین راه‌اندازی Hermes وابستگی‌های Node TUI را در `ui-tui/node_modules` نصب می‌کند (یک‌باره، چند ثانیه). راه‌اندازی‌های بعدی سریع هستند. اگر نسخه جدید Hermes را بکشید، بسته TUI هنگامی که سورس‌ها جدیدتر از dist هستند به طور خودکار بازساخته می‌شود.
 
 `ui-tui/node_modules`
 
-### External prebuild​
+### پیش‌ساخت خارجی
 
-Distributions that ship a prebuilt bundle (Nix, system packages) can point Hermes at it:
+توزیع‌هایی که بسته پیش‌ساخت شده ارائه می‌دهند (Nix، بسته‌های سیستم) می‌توانند Hermes را به آن اشاره دهند:
 
 ```
-export HERMES_TUI_DIR=/path/to/prebuilt/ui-tuihermes --tui
+export HERMES_TUI_DIR=/path/to/prebuilt/ui-tui
+hermes --tui
 ```
 
-The directory must containdist/entry.js.
+پوشه باید `dist/entry.js` را شامل شود.
 
-`dist/entry.js`
+## میانبرهای صفحه‌کلید
 
-## Keybindings​
+میانبرهای صفحه‌کلید دقیقاً با CLI کلاسیک مطابقت دارند. تنها تفاوت‌های رفتاری:
 
-Keybindings match theClassic CLIexactly. The only behavioral differences:
+- کشیدن ماوس متن را با پس‌زمینه انتخاب یکنواخت برجسته می‌کند.
+- `Cmd+V`/`Ctrl+V` ابتدا چسباندن متن معمولی را امتحان می‌کند، سپس به OSC52/خواندن کلیپ‌بورد بومی بازمی‌گردد، و در نهایت پیوست تصویر وقتی کلیپ‌بورد یا پیکربندی چسبانده شده به یک تصویر حل می‌شود.
+- `/terminal-setup` اتصالات ترمینال محلی VS Code / Cursor / Windsurf را برای تطابق بهتر `Cmd+Enter` و undo/redo در macOS نصب می‌کند.
+- تکمیل خودکار اسلش به عنوان یک پنل شناور با توضیحات باز می‌شود، نه یک لیست کشویی درون‌خطی.
+- `Ctrl+X` سوئیچگر نشست زنده را باز می‌کند. وقتی یک پیام در صف برجسته شده (ارسال شده در حالی که عامل هنوز در حال اجرا بود)، همچنان آن پیام صف‌شده را حذف می‌کند. `Esc` ویرایش را لغو کرده و بدون حذف از حالت برجسته خارج می‌کند.
+- `Ctrl+G`/`Ctrl+X Ctrl+E` — بافر ورودی فعلی را در `$EDITOR` برای ترکیب چندخطی/درخواست طولانی باز کنید؛ ذخیره و خروج محتوا را به عنوان درخواست بازمی‌گرداند.
 
-[Classic CLI](/docs/user-guide/cli#keybindings)
-- Mouse draghighlights text with a uniform selection background.
-- Cmd+V/Ctrl+Vfirst tries normal text paste, then falls back to OSC52/native clipboard reads, and finally image attach when the clipboard or pasted payload resolves to an image.
-- /terminal-setupinstalls local VS Code / Cursor / Windsurf terminal bindings for betterCmd+Enterand undo/redo parity on macOS.
-- Slash autocompletionopens as a floating panel with descriptions, not an inline dropdown.
-- Ctrl+Xopens the live session switcher. When a queued message is highlighted (sent while the agent was still running), it still deletes that queued message instead.Esccancels editing and unhighlights without deleting.
-- Ctrl+G/Ctrl+X Ctrl+E— open the current input buffer in$EDITORfor multi-line / long-prompt composition; save-and-exit sends the contents back as the prompt.
-
-`Cmd+V`
-`Ctrl+V`
 `/terminal-setup`
-`Cmd+Enter`
-`Ctrl+X`
-`Esc`
-`Ctrl+G`
-`Ctrl+X Ctrl+E`
-`$EDITOR`
 
-## Slash commands​
+## دستورات اسلش
 
-All slash commands work unchanged. A few are TUI-owned — they produce richer output or render as overlays rather than inline panels:
+همه دستورات اسلش بدون تغییر کار می‌کنند. چند مورد متعلق به TUI هستند — خروجی غنی‌تری تولید می‌کنند یا به جای پنل‌های درون‌خطی به صورت پوشش رندر می‌شوند:
 
-| Command | TUI behavior |
+| دستور | رفتار TUI |
 | --- | --- |
-| /help | Overlay with categorized commands, arrow-key navigable |
-| /sessions(alias/switch) | Live session switcher — list open TUI sessions, switch between them, close them, or start another one |
-| /model | Modal model picker grouped by provider, with cost hints |
-| /skin | Live preview — theme change applies as you browse |
-| /details | Toggle verbose tool-call details (global or per-section) |
-| /usage | Rich token / cost / context panel |
-| /agents(alias/tasks) | Observability overlay — live subagent tree with kill/pause controls, per-branch cost / token / file rollups, turn-by-turn history |
-| /reload | Re-reads~/.hermes/.envinto the running TUI process so newly added API keys take effect without a restart |
-| /mouse [on|off|toggle|wheel|buttons|all] | Pick a mouse tracking preset at runtime (also persists todisplay.mouse_trackinginconfig.yaml).wheel(1000+1006) keeps scroll-wheel scrolling without the hover events that make tmux spam "No image in clipboard" over the prompt row;buttonsadds drag-to-select;allis the default with hover-driven UI. |
+| /help | پوشش با دستورات دسته‌بندی شده، قابل پیمایش با کلیدهای جهت‌نما |
+| /sessions (یا /switch) | سوئیچگر نشست زنده — لیست نشست‌های باز TUI، تعویض بین آن‌ها، بستن آن‌ها، یا شروع یکی دیگر |
+| /model | انتخابگر مدل مودال گروه‌بندی شده بر اساس ارائه‌دهنده، با نکات هزینه |
+| /skin | پیش‌نمایش زنده — تغییر موضوع در حین مرور اعمال می‌شود |
+| /details | تغییر جزئیات verbose فراخوانی ابزار (سراسری یا به ازای هر بخش) |
+| /usage | پنل غنی توکن / هزینه / زمینه |
+| /agents (یا /tasks) | پوشش قابلیت مشاهده — درخت subagent زنده با کنترل‌های kill/pause، خلاصه هزینه / توکن / فایل به ازای هر شاخه، تاریخچه نوبت به نوبت |
+| /reload | `~/.hermes/.env` را دوباره در فرآیند TUI در حال اجرا می‌خواند تا کلیدهای API جدید اضافه شده بدون راه‌اندازی مجدد اعمال شوند |
+| /mouse [on\|off\|toggle\|wheel\|buttons\|all] | یک پیش‌تنظیم ردیابی ماوس را در زمان اجرا انتخاب کنید (همچنین در `display.mouse_tracking` `config.yaml` ذخیره می‌شود). `wheel` (1000+1006) اسکرول چرخ اسکرول را بدون رویدادهای hover که باعث می‌شود tmux "No image in clipboard" را روی ردیف درخواست اسپم کند، حفظ می‌کند؛ `buttons` کشیدن برای انتخاب را اضافه می‌کند؛ `all` پیش‌فرض با رابط کاربری مبتنی بر hover است. |
 
-`/help`
-`/sessions`
-`/switch`
-`/model`
-`/skin`
-`/details`
-`/usage`
-`/agents`
-`/tasks`
-`/reload`
-`~/.hermes/.env`
-`/mouse [on|off|toggle|wheel|buttons|all]`
-`display.mouse_tracking`
-`config.yaml`
-`wheel`
-`buttons`
-`all`
+هر دستور اسلش دیگری (شامل مهارت‌های نصب شده، دستورات سریع و تغییردهنده‌های شخصیت) دقیقاً مانند CLI کلاسیک کار می‌کند. مرجع دستورات اسلش را ببینید.
 
-Every other slash command (including installed skills, quick commands, and personality toggles) works identically to the classic CLI. SeeSlash Commands Reference.
+[مرجع دستورات اسلش](/docs/reference/slash-commands)
 
-[Slash Commands Reference](/docs/reference/slash-commands)
+## سوئیچگر نشست زنده
 
-## Live session switcher​
+از سوئیچگر نشست زنده استفاده کنید وقتی می‌خواهید یک ترمینال به عنوان ارسال‌کننده برای چندین نشست TUI عمل کند. فقط نشست‌هایی را فهرست می‌کند که در حال حاضر در این فرآیند TUI زنده هستند؛ نشست‌های بسته شده رونوشت‌های ذخیره شده باقی می‌مانند و همچنان قابل بازگشایی با `/resume` یا `hermes --tui --resume <id-or-title>` هستند.
 
-Use the live session switcher when you want one terminal to act as a dispatcher for several TUI sessions. It lists only sessions that are currently live in this TUI process; closed sessions remain saved transcripts and can still be reopened with/resumeorhermes --tui --resume <id-or-title>.
+آن را با هر یک از این روش‌ها باز کنید:
 
-`/resume`
-`hermes --tui --resume <id-or-title>`
+- `Ctrl+X` از TUI.
+- `/sessions` یا `/switch`.
+- `/sessions new` برای ایجاد فوری یک نشست زنده جدید.
+- روی شمارش `N live sessions` در خط وضعیت کلیک کنید.
 
-Open it with any of these:
+داخل سوئیچگر:
 
-- Ctrl+Xfrom the TUI.
-- /sessionsor/switch.
-- /sessions newto create a fresh live session immediately.
-- Click theN live sessionscount in the status line.
+- `↑`/`↓` انتخاب را جابجا می‌کند؛ کلیک ماوس نیز ردیف‌ها را انتخاب می‌کند.
+- `Enter` به نشست زنده انتخاب شده تعویض می‌کند.
+- `Ctrl+D` نشست زنده انتخاب شده را می‌بندد.
+- `Ctrl+N` یک نشست زنده خالی شروع می‌کند.
+- `Ctrl+R` لیست نشست‌های زنده را تازه‌سازی می‌کند.
+- `Esc` سوئیچگر را می‌بندد.
+- `+new` را انتخاب کنید، یک درخواست تایپ کنید و `Enter` را فشار دهید تا یک نشست زنده جدید ارسال شود. ابتدا `Tab` را فشار دهید اگر می‌خواهید فقط برای آن نشست جدید مدلی انتخاب کنید.
 
-`Ctrl+X`
-`/sessions`
-`/switch`
-`/sessions new`
-`N live sessions`
+## رندر ریاضی LaTeX
 
-Inside the switcher:
+پایپلاین markdown TUI ریاضیات LaTeX را به صورت inline رندر می‌کند: `$E = mc^2$` و `$$\frac{a}{b}$$` به جای منبع TeX خام به صورت ریاضیات قالب‌بندی شده Unicode رندر می‌شوند. برای ریاضیات inline و block کار می‌کند؛ نحو پشتیبانی نشده به نمایش TeX تحت کد wrap شده بازمی‌گردد تا قابل کپی باشد.
 
-- ↑/↓move the selection; mouse clicks select rows too.
-- Enterswitches to the selected live session.
-- Ctrl+Dcloses the selected live session.
-- Ctrl+Nstarts a blank live session.
-- Ctrl+Rrefreshes the live-session list.
-- Esccloses the switcher.
-- Select+new, type a prompt, and pressEnterto dispatch a new live session. PressTabfirst if you want to choose a model just for that new session.
+این همیشه فعال است — چیزی برای پیکربندی وجود ندارد. CLI کلاسیک TeX خام را حفظ می‌کند.
 
-`↑`
-`↓`
-`Enter`
-`Ctrl+D`
-`Ctrl+N`
-`Ctrl+R`
-`Esc`
-`+new`
-`Enter`
-`Tab`
+## تشخیص ترمینال روشن
 
-## LaTeX math rendering​
+TUI به طور خودکار ترمینال‌های روشن را تشخیص می‌دهد و مطابقاً به موضوع روشن تعویض می‌کند. تشخیص در سه لایه کار می‌کند:
 
-The TUI's markdown pipeline renders LaTeX math inline:$E = mc^2$and$$\frac{a}{b}$$render as Unicode-formatted math instead of the raw TeX source. Works for inline and block math; unsupported syntax falls back to showing the literal TeX wrapped in a code span so it remains copyable.
+1. متغیر محیطی `HERMES_TUI_THEME` — بالاترین اولویت. مقادیر: `light`، `dark`، یا یک هگز پس‌زمینه ۶ کاراکتری خام (مثلاً `ffffff`، `1a1a2e`).
+2. متغیر محیطی `COLORFGBG` — نکته کلاسیک "رنگ پس‌زمینه من چیست؟" که توسط ترمینال‌های مشتق از xterm استفاده می‌شود.
+3. کاوش پس‌زمینه ترمینال از طریق OSC 11 — روی ترمینال‌های مدرن (Ghostty، Warp، iTerm2، WezTerm، Kitty) کار می‌کند که `COLORFGBG` را تنظیم نمی‌کنند.
 
-`$E = mc^2$`
-`$$\frac{a}{b}$$`
-
-This is always-on — nothing to configure. Classic CLI keeps the raw TeX.
-
-## Light-terminal detection​
-
-The TUI auto-detects light terminals and swaps to the light theme accordingly. Detection works in three layers:
-
-1. HERMES_TUI_THEMEenv var — highest priority. Values:light,dark, or a raw 6-char background hex (e.g.ffffff,1a1a2e).
-2. COLORFGBGenv var — the classic "what's my background color?" hint used by xterm-derived terminals.
-3. Terminal background probe via OSC 11 — works on modern terminals (Ghostty, Warp, iTerm2, WezTerm, Kitty) that don't setCOLORFGBG.
-
-`HERMES_TUI_THEME`
-`light`
-`dark`
-`ffffff`
-`1a1a2e`
-`COLORFGBG`
-`COLORFGBG`
-
-If you want the light theme permanently regardless of terminal:
+اگر می‌خواهید موضوع روشن را صرف نظر از ترمینال به طور دائم داشته باشید:
 
 ```
 export HERMES_TUI_THEME=light
 ```
 
-## Busy indicator styles​
+## استایل‌های نشانگر اشغال
 
-The status-bar busy indicator is pluggable — the default rotates Hermes' kawaii face palette every 2.5 seconds during agent work. Pick a different style via config or the/indicatorslash command:
-
-`/indicator`
+نشانگر اشغال خط وضعیت قابل اتصال است — پیش‌فرض پالت چهره کاوایی Hermes را هر ۲.۵ ثانیه در حین کار عامل می‌چرخاند. استایل متفاوتی را از طریق تنظیمات یا دستور `/indicator` انتخاب کنید:
 
 ```
-display:  tui_status_indicator: kaomoji   # kaomoji | emoji | unicode | ascii
+display:
+  tui_status_indicator: kaomoji   # kaomoji | emoji | unicode | ascii
 ```
 
-Or in-session:/indicator emoji(etc.). Styles ship with matched glyph widths so the rest of the status bar doesn't jitter on rotation.
+یا در حین نشست: `/indicator emoji` و غیره. استایل‌ها با عرض گلیف‌های مطابق ارائه می‌شوند تا بقیه خط وضعیت هنگام چرخش تکان نخورد.
 
-`/indicator emoji`
+## بازیابی خودکار
 
-## Auto-resume​
-
-By default,hermes --tuistarts a fresh session each launch. To re-attach to the most recent TUI session automatically (useful when your terminal or SSH connection drops unexpectedly), opt in:
-
-`hermes --tui`
+به طور پیش‌فرض، `hermes --tui` در هر راه‌اندازی یک نشست جدید شروع می‌کند. برای اتصال مجدد خودکار به آخرین نشست TUI (مفید وقتی ترمینال یا اتصال SSH شما به طور غیرمنتظره قطع می‌شود)، فعال کنید:
 
 ```
-export HERMES_TUI_RESUME=1          # most-recent TUI session# or:export HERMES_TUI_RESUME=<session-id>   # specific session
+export HERMES_TUI_RESUME=1          # آخرین نشست TUI
+# یا:
+export HERMES_TUI_RESUME=<session-id>   # نشست خاص
 ```
 
-Unset the variable or pass--resume <id>explicitly to override on a per-launch basis.
+متغیر را unset کنید یا به صورت صریح `--resume <id>` را برای override در هر راه‌اندازی ارسال کنید.
 
-`--resume <id>`
+## خط وضعیت
 
-## Status line​
+خط وضعیت TUI وضعیت عامل را به صورت بلادرنگ ردیابی می‌کند:
 
-The TUI's status line tracks agent state in real time:
-
-| Status | Meaning |
+| وضعیت | معنی |
 | --- | --- |
-| starting agent… | Session ID is live; tools and skills still coming online. You can type — messages queue and send when ready. |
-| ready | Agent is idle, accepting input. |
-| thinking…/running… | Agent is reasoning or running a tool. |
-| interrupted | Current turn was cancelled; press Enter to send again. |
-| forging session…/resuming… | Initial connect or--resumehandshake. |
+| starting agent… | شناسه نشست زنده است؛ ابزارها و مهارت‌ها هنوز آنلاین می‌شوند. می‌توانید تایپ کنید — پیام‌ها در صف قرار می‌گیرند و هنگام آماده شدن ارسال می‌شوند. |
+| ready | عامل بیکار است، ورودی می‌پذیرد. |
+| thinking…/running… | عامل در حال استدلال یا اجرای یک ابزار است. |
+| interrupted | نوبت فعلی لغو شد؛ دوباره Enter را فشار دهید تا ارسال شود. |
+| forging session…/resuming… | اتصال اولیه یا handshake `--resume`. |
 
-`starting agent…`
-`ready`
-`thinking…`
-`running…`
-`interrupted`
-`forging session…`
-`resuming…`
-`--resume`
-
-The per-skin status-bar colors and thresholds are shared with the classic CLI — seeSkinsfor customization.
+رنگ‌ها و آستانه‌های خط وضعیت به ازای هر skin با CLI کلاسیک مشترک هستند — سفارشی‌سازی را در Skins ببینید.
 
 [Skins](/docs/user-guide/features/skins)
 
-The status line also shows:
+خط وضعیت همچنین نمایش می‌دهد:
 
-- Working directory with git branch—~/projects/hermes-agent (docs/two-week-gap-sweep). The branch suffix updates when yougit checkoutin a side terminal (mtime-cached) so the TUI reflects your actual active branch, not whatever it was at launch.
-- Per-prompt elapsed time—⏱ 12s/3m 45swhile the turn is running (live), frozen to⏲ 32s / 3m 45safter the turn completes. First number is time since last user message; second is total session duration. Resets on every new prompt.
-- 🗜️ N— number of times the running session has been auto-compressed. Appears once the first compression fires.
-- ▶ N— number of/backgroundtasks currently running in this session. Appears whenever at least one task is in flight.
-- ⚠ YOLO— visible warning whenever YOLO mode is on (hermes --yolo,/yolo, orHERMES_YOLO_MODE=1). The same badge also appears in the startup banner so you cannot launch an auto-approving session without noticing.
+- دایرکتوری کاری با شاخه git — `~/projects/hermes-agent (docs/two-week-gap-sweep)`. پسوند شاخه هنگامی که `git checkout` را در ترمینال جانبی اجرا می‌کنید (mtime-cached) به‌روز می‌شود تا TUI شاخه فعال واقعی شما را منعکس کند نه هر چیزی که در راه‌اندازی بود.
+- زمان سپری شده به ازای هر درخواست — `⏱ 12s/3m 45s` در حین اجرای نوبت (زنده)، پس از تکمیل نوبت به `⏲ 32s / 3m 45s` منجمد می‌شود. عدد اول زمان از آخرین پیام کاربر است؛ عدد دوم مدت کل نشست است. در هر درخواست جدید بازنشانی می‌شود.
+- `🗜️ N` — تعداد دفعاتی که نشست در حال اجرای خودکار فشرده شده است. پس از اولین فشرده‌سازی ظاهر می‌شود.
+- `▶ N` — تعداد وظایف `/background` در حال اجرای فعلی در این نشست. هنگامی که حداقل یک وظیفه در حال اجرا است ظاهر می‌شود.
+- `⚠ YOLO` — هشدار قابل مشاهده هنگامی که حالت YOLO فعال است (`hermes --yolo`، `/yolo` یا `HERMES_YOLO_MODE=1`). همان نشان نیز در بنر راه‌اندازی ظاهر می‌شود تا نتوانید یک نشست خودکار تأیید را بدون توجه راه‌اندازی کنید.
 
-`~/projects/hermes-agent (docs/two-week-gap-sweep)`
-`git checkout`
-`⏱ 12s/3m 45s`
-`⏲ 32s / 3m 45s`
-`🗜️ N`
-`▶ N`
-`/background`
-`⚠ YOLO`
-`hermes --yolo`
-`/yolo`
-`HERMES_YOLO_MODE=1`
+## پیکربندی
 
-## Configuration​
+TUI تمام پیکربندی استاندارد Hermes را رعایت می‌کند: `~/.hermes/config.yaml`، پروفایل‌ها، شخصیت‌ها، اسکین‌ها، دستورات سریع، مجموعه اعتبارنامه‌ها، ارائه‌دهندگان حافظه، فعال‌سازی ابزار/مهارت. هیچ فایل پیکربندی مخصوص TUI وجود ندارد.
 
-The TUI respects all standard Hermes config:~/.hermes/config.yaml, profiles, personalities, skins, quick commands, credential pools, memory providers, tool/skill enablement. No TUI-specific config file exists.
-
-`~/.hermes/config.yaml`
-
-A handful of keys tune the TUI surface specifically:
+تعدادی کلید سطح TUI را به طور خاص تنظیم می‌کنند:
 
 ```
-display:  skin: default              # any built-in or custom skin  personality: helpful  details_mode: collapsed    # hidden | collapsed | expanded — global accordion default  sections:                  # optional: per-section overrides (any subset)    thinking: expanded       # always open    tools: expanded          # always open    activity: collapsed      # opt back IN to the activity panel (hidden by default)  mouse_tracking: all        # off | wheel | buttons | all (or true/false for back-compat).                             #   wheel   — 1000+1006 (scroll + click; no drag, no hover —                             #             recommended inside tmux to silence the prompt-row                             #             "No image in clipboard" spam from hover events)                             #   buttons — adds 1002 for terminal-side drag selection                             #   all     — adds 1003 for hover (scrollbar paginate-on-hover,                             #             link mouseenter, etc.)
+display:
+  skin: default              # هر اسکین داخلی یا سفارشی
+  personality: helpful
+  details_mode: collapsed    # hidden | collapsed | expanded — پیش‌فرض آکاردئون سراسری
+  sections:                  # اختیاری: override به ازای هر بخش (هر زیرمجموعه)
+    thinking: expanded       # همیشه باز
+    tools: expanded          # همیشه باز
+    activity: collapsed      # مجدداً به پنل activity برگردید (پیش‌فرض: پنهان)
+  mouse_tracking: all        # off | wheel | buttons | all (یا true/false برای سازگاری معکوس).
+                             #   wheel   — 1000+1006 (اسکرول + کلیک؛ بدون کشیدن، بدون hover —
+                             #             توصیه شده در داخل tmux برای ساکت کردن اسپم
+                             #             "No image in clipboard" ردیف درخواست از رویدادهای hover)
+                             #   buttons — 1002 برای انتخاب کشیدن سمت ترمینال اضافه می‌کند
+                             #   all     — 1003 برای hover اضافه می‌کند (صفحه‌بندی اسکرول‌بار
+                             #             با hover، link mouseenter و غیره)
 ```
 
-Runtime toggles:
+تغییرات زمان اجرا:
 
-- /details [hidden|collapsed|expanded|cycle]— set the global mode
-- /details <section> [hidden|collapsed|expanded|reset]— override one section
-(sections:thinking,tools,subagents,activity)
+- `/details [hidden|collapsed|expanded|cycle]` — حالت سراسری را تنظیم کنید
+- `/details <section> [hidden|collapsed|expanded|reset]` — یک بخش را override کنید
+  (بخش‌ها: `thinking`، `tools`، `subagents`، `activity`)
 
-`/details [hidden|collapsed|expanded|cycle]`
-`/details <section> [hidden|collapsed|expanded|reset]`
-`thinking`
-`tools`
-`subagents`
-`activity`
+پیش‌فرض نمایان بودن
 
-Default visibility
+TUI با پیش‌فرض‌های نظری به ازای هر بخش ارائه می‌شود که نوبت را به جای دیواری از نشانگرها به عنوان رونوشت زنده پخش می‌کند:
 
-The TUI ships with opinionated per-section defaults that stream the turn as
-a live transcript instead of a wall of chevrons:
+- `thinking` — باز. استدلال به صورت inline هنگامی که مدل آن را تولید می‌کند پخش می‌شود.
+- `tools` — باز. فراخوانی‌های ابزار و نتایج آن‌ها باز رندر می‌شوند.
+- `subagents` — به `details_mode` سراسری عبور می‌کند (پیش‌فرض: جمع‌شده زیر `▸` — تا زمانی که واگذاری واقعی رخ دهد ساکت می‌ماند).
+- `activity` — پنهان. فراداده محیطی (نکات gateway، nudge‌های تطابق ترمینال، اعلان‌های پس‌زمینه) برای اکثر استفاده‌های روزانه نویز است. خرابی‌های ابزار همچنان به صورت inline در ردیف ابزار خراب رندر می‌شوند؛ خطا/هشدارهای محیطی از طریق یک اعلان شناور وقتی همه پنل‌ها پنهان هستند نمایان می‌شوند.
 
-- thinking—expanded. Reasoning streams inline as the model emits it.
-- tools—expanded. Tool calls and their results render open.
-- subagents— falls through to the globaldetails_mode(collapsed under
-chevron by default — stays quiet until a delegation actually happens).
-- activity—hidden. Ambient meta (gateway hints, terminal-parity
-nudges, background notifications) is noise for most day-to-day use. Tool
-failures still render inline on the failing tool row; ambient
-errors/warnings surface via a floating-alert backstop when every panel
-is hidden.
+override به ازای هر بخش بر هر دو پیش‌فرض بخش و `details_mode` سراسری اولویت دارد. برای بازسازی لایه‌بندی:
 
-`thinking`
-`tools`
-`subagents`
-`details_mode`
-`activity`
+- `display.sections.thinking: collapsed` — thinking را زیر `▸` برگردانید
+- `display.sections.tools: collapsed` — فراخوانی‌های ابزار را زیر `▸` برگردانید
+- `display.sections.activity: collapsed` — پنل activity را مجدداً فعال کنید
+- `/details <section> <mode>` در زمان اجرا
 
-Per-section overrides take precedence over both the section default and the
-globaldetails_mode. To reshape the layout:
+هر چیزی که به صورت صریح در `display.sections` تنظیم شود بر پیش‌فرض‌ها اولویت دارد، بنابراین تنظیمات موجود بدون تغییر کار می‌کنند.
 
-`details_mode`
-- display.sections.thinking: collapsed— put thinking back under a chevron
-- display.sections.tools: collapsed— put tool calls back under a chevron
-- display.sections.activity: collapsed— opt the activity panel back in
-- /details <section> <mode>at runtime
+## نشست‌ها
 
-`display.sections.thinking: collapsed`
-`display.sections.tools: collapsed`
-`display.sections.activity: collapsed`
-`/details <section> <mode>`
-
-Anything set explicitly indisplay.sectionswins over the defaults, so
-existing configs keep working unchanged.
-
-`display.sections`
-
-## Sessions​
-
-Sessions are shared between the TUI and the classic CLI — both write to the same~/.hermes/state.db. You can start a session in one, resume in the other. The session picker surfaces sessions from both sources, with a source tag.
+نشست‌ها بین TUI و CLI کلاسیک مشترک هستند — هر دو در `~/.hermes/state.db` می‌نویسند. می‌توانید یک نشست را در یکی شروع کنید و در دیگری ادامه دهید. انتخابگر نشست نشست‌ها را از هر دو منبع با یک برچسب منبع نمایش می‌دهد.
 
 `~/.hermes/state.db`
 
-SeeSessionsfor lifecycle, search, compression, and export.
+چرخه حیات، جستجو، فشرده‌سازی و خروجی را در Sessions ببینید.
 
 [Sessions](/docs/user-guide/sessions)
 
-## How the TUI talks to its gateway​
+## نحوه ارتباط TUI با gateway
 
-By default the TUI spawns its own in-process gateway, so each TUI instance is self-contained — there's nothing to configure.
+به طور پیش‌فرض TUI gateway درون‌پروسه خود را ایجاد می‌کند، بنابراین هر نمونه TUI مستقل است — چیزی برای پیکربندی وجود ندارد.
 
-You may see aHERMES_TUI_GATEWAY_URLenv var referenced in the codebase or logs. This is aninternal wiring detail of the web dashboard, not a user-facing remote-attach knob. When you open the dashboard's "Chat" tab (hermes dashboard→/chat), the dashboard's web server spawns an embedded TUI child process and injectsHERMES_TUI_GATEWAY_URLso that child attaches to the dashboard's own in-processtui_gatewayover a loopback WebSocket (/api/ws). The/api/wsendpoint exists only inside the dashboard server (hermes_cli/web_server.py) and is bound to that process's lifetime and auth.
+ممکن است متغیر محیطی `HERMES_TUI_GATEWAY_URL` را در پایگاه کد یا لاگ‌ها ببینید. این یک جزئیات سیم‌کشی داخلی رابط وب داشبورد است، نه یک دکمه اتصال از راه دور کاربرمحور. وقتی تب "Chat" داشبورد (`hermes dashboard` → `/chat`) را باز می‌کنید، سرور وب داشبورد یک فرآیند فرعی TUI تعبیه شده ایجاد می‌کند و `HERMES_TUI_GATEWAY_URL` را تزریق می‌کند تا آن فرآیند فرعی به `tui_gateway` درون‌پروسه خود داشبورد از طریق یک WebSocket حلقه‌ای (`/api/ws`) متصل شود. نقطه پایانی `/api/ws` فقط داخل سرور داشبورد (`hermes_cli/web_server.py`) وجود دارد و به طول عمر و احراز هویت آن فرآیند محدود شده است.
 
-`HERMES_TUI_GATEWAY_URL`
-`hermes dashboard`
-`/chat`
-`HERMES_TUI_GATEWAY_URL`
-`tui_gateway`
-`/api/ws`
-`/api/ws`
-`hermes_cli/web_server.py`
+هیچ حالت عمومی "اشاره هر TUI به هر پورت standalone gateway" وجود ندارد. به طور خاص، سرور سازگار با OpenAI (`hermes gateway` / پلتفرم `api_server`) `/api/ws` را سرویس نمی‌دهد — این سطح backend مدل (`/v1/chat/completions`، `/v1/models` و غیره) است و عمداً کانال کنترل JSON-RPC TUI را افشا نمی‌کند. تنظیم `HERMES_TUI_GATEWAY_URL` به آن پورت 404 خواهد داد.
 
-There is no general "point any TUI at any standalone gateway port" mode. In particular, the OpenAI-compatible API server (hermes gateway/ theapi_serverplatform) doesnotserve/api/ws— it's the model-backend surface (/v1/chat/completions,/v1/models, …) and deliberately does not expose the TUI's JSON-RPC control channel. SettingHERMES_TUI_GATEWAY_URLto that port will 404.
-
-`hermes gateway`
-`api_server`
-`/api/ws`
-`/v1/chat/completions`
-`/v1/models`
-`HERMES_TUI_GATEWAY_URL`
-
-If you want multiple surfaces to share one set of sessions, use the shared~/.hermes/state.db(seeSessions) or the web dashboard's embedded chat (seeWeb Dashboard) — not a hand-set gateway URL.
+اگر می‌خواهید چندین سطح یک مجموعه نشست را به اشتراک بگذارند، از `~/.hermes/state.db` مشترک ( Sessions را ببینید) یا چت تعبیه شده رابط وب داشبورد (Web Dashboard را ببینید) استفاده کنید — نه یک URL gateway دستی تنظیم شده.
 
 `~/.hermes/state.db`
 [Sessions](/docs/user-guide/sessions)
 [Web Dashboard](/docs/user-guide/features/web-dashboard#chat)
 
-## Reverting to the classic CLI​
+## بازگشت به CLI کلاسیک
 
-Launchinghermes(without--tui) stays on the classic CLI by default. To make a machine prefer the TUI, setdisplay.interface: tuiin~/.hermes/config.yaml(persistent) orHERMES_TUI=1in your shell profile (per-shell). To go back, setinterface: cli/ unset the env var, or passhermes --clifor a one-off.
+راه‌اندازی `hermes` (بدون `--tui`) به طور پیش‌فرض در CLI کلاسیک باقی می‌ماند. برای ترجیح TUI در یک ماشین، `display.interface: tui` را در `~/.hermes/config.yaml` (پایدار) یا `HERMES_TUI=1` در پروفایل shell خود (به ازای هر shell) تنظیم کنید. برای بازگشت، `interface: cli` را تنظیم کنید / متغیر محیطی را unset کنید، یا `hermes --cli` را برای یک بار ارسال کنید.
 
-`hermes`
-`--tui`
-`display.interface: tui`
-`~/.hermes/config.yaml`
-`HERMES_TUI=1`
-`interface: cli`
-`hermes --cli`
+اگر TUI موفق به راه‌اندازی نشود (بدون Node، بسته گمشده، مشکل TTY)، Hermes یک تشخیص چاپ می‌کند و بازمی‌گردد — به جای اینکه شما را گیر بیندازد.
 
-If the TUI fails to launch (no Node, missing bundle, TTY issue), Hermes prints a diagnostic and falls back — rather than leaving you stuck.
+## همچنین ببینید
 
-## See also​
+- رابط CLI — مرجع کامل دستورات اسلش و میانبرهای صفحه‌کلید (مشترک)
+- Sessions — بازیابی، شاخه و تاریخچه
+- Skins & Themes — موضوع بنر، خط وضعیت و پوشش‌ها
+- Voice Mode — در هر دو رابط کار می‌کند
+- Configuration — تمام کلیدهای پیکربندی
 
-- CLI Interface— full slash command and keybinding reference (shared)
-- Sessions— resume, branch, and history
-- Skins & Themes— theme the banner, status bar, and overlays
-- Voice Mode— works in both interfaces
-- Configuration— all config keys
-
-[CLI Interface](/docs/user-guide/cli)
+[رابط CLI](/docs/user-guide/cli)
 [Sessions](/docs/user-guide/sessions)
 [Skins & Themes](/docs/user-guide/features/skins)
 [Voice Mode](/docs/user-guide/features/voice-mode)
 [Configuration](/docs/user-guide/configuration)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/tui.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/tui.md)

@@ -1,304 +1,222 @@
 ---
 layout: docs
 title: "به‌روزرسانی و حذف"
-permalink: /getting-started/updating/
+permalink: /docs/getting-started/updating/
 ---
 
 - 
 - Getting Started
 - Updating & Uninstalling
 
-# Updating & Uninstalling
+# به‌روزرسانی و حذف
 
-## Updating​
+## به‌روزرسانی
 
-Update to the latest version with a single command:
+با یک دستور به آخرین نسخه به‌روزرسانی کنید:
 
 ```
 hermes update
 ```
 
-This pulls the latest code frommain, updates dependencies, and prompts you to configure any new options that were added since your last update.
+این دستور آخرین کد را از main دریافت می‌کند، وابستگی‌ها را به‌روز می‌کند و از شما می‌خواهد گزینه‌های پیکربندی جدیدی که از آخرین به‌روزرسانی شما اضافه شده‌اند را پیکربندی کنید.
 
-`main`
+`hermes update` به طور خودکار گزینه‌های پیکربندی جدید را تشخیص می‌دهد و از شما می‌خواهد آن‌ها را اضافه کنید. اگر آن پرامپت را رد کردید، می‌توانید به صورت دستی `hermes config check` را اجرا کنید تا گزینه‌های موجود را ببینید، سپس `hermes config migrate` را اجرا کنید تا به صورت تعاملی آن‌ها را اضافه کنید.
 
-hermes updateautomatically detects new configuration options and prompts you to add them. If you skipped that prompt, you can manually runhermes config checkto see missing options, thenhermes config migrateto interactively add them.
+### چه اتفاقی در طول به‌روزرسانی می‌افتد
 
-`hermes update`
-`hermes config check`
-`hermes config migrate`
+وقتی `hermes update` را اجرا می‌کنید، مراحل زیر رخ می‌دهند:
 
-### What happens during an update​
+1. اسکنپوت اطلاعات جفت‌شده — یک اسکنپوت سبک قبل از به‌روزرسانی ذخیره می‌شود (شامل `~/.hermes/pairing/`، قوانین نظرات Feishu و سایر فایل‌های وضعیتی که در حین اجرا تغییر می‌کنند). از طریق جریان بازیابی اسکنپوت که در بخش اسکنپوتها و بازگشت توضیح داده شده، یا با استخراج آخرین zip اسکنپوت سریع که Hermes در کنار دایرکتوری `~/.hermes/` شما نوشته است، قابل بازیابی است.
+2. Git pull — آخرین کد را از شاخه main دریافت می‌کند و زیرمجموعه‌ها را به‌روز می‌کند
+3. اعتبارسنجی نحو بعد از pull و بازگشت خودکار — بعد از pull، Hermes هشت فایل حیاتی را که هر فراخوانی `hermes` در شروع بارگذاری می‌کند کامپایل می‌کند. اگر هر کدام نتواند تجزیه شود (مثلاً یک نشانگر ادغام تعارضی یتیم، یا فایل تصادفاً بریده‌شده)، Hermes `git reset --hard <pre-pull-sha>` را اجرا می‌کند تا نصب را به حالت قبل برگرداند و shell شما قابل بوت باقی بماند. بعد از رفع مشکل از سمت upstream دوباره `hermes update` را اجرا کنید.
+4. نصب وابستگی‌ها — `uv pip install -e ".[all]` را اجرا می‌کند تا وابستگی‌های جدید یا تغییر یافته را دریافت کند
+5. مهاجرت پیکربندی — گزینه‌های پیکربندی جدیدی که از نسخه شما اضافه شده‌اند را تشخیص می‌دهد و از شما می‌خواهد آن‌ها را تنظیم کنید
+6. بازراه‌اندازی خودکار gateway — gatewayهای در حال اجرا بعد از تکمیل به‌روزرسانی تازه‌سازی می‌شوند تا کد جدید فوراً اعمال شود. gatewayهای مدیریت‌شده توسط سرویس (systemd در Linux، launchd در macOS) از طریق مدیر سرویس بازراه‌اندازی می‌شوند. gatewayهای دستی زمانی که Hermes بتواند PID در حال اجرا را به یک پروفایل نگاشت کند، به طور خودکار دوباره راه‌اندازی می‌شوند.
 
-When you runhermes update, the following steps occur:
+### به‌روزرسانی با شاخه‌ای غیر از پیش‌فرض: --branch
 
-`hermes update`
-1. Pairing-data snapshot— a lightweight pre-update state snapshot is saved (covers~/.hermes/pairing/, Feishu comment rules, and other state files that get modified at runtime). Recoverable via the snapshot restore flow described underSnapshots and rollback, or by extracting the most recent quick-snapshot zip Hermes wrote next to your~/.hermes/directory.
-2. Git pull— pulls the latest code from themainbranch and updates submodules
-3. Post-pull syntax validation + auto-rollback— after the pull, Hermes compiles the eight critical files everyhermesinvocation imports at startup. If any fails to parse (e.g. an orphan merge-conflict marker, an accidentally truncated file), Hermes runsgit reset --hard <pre-pull-sha>to roll the install back so your shell stays bootable. Re-runhermes updateonce the upstream fix lands.
-4. Dependency install— runsuv pip install -e ".[all]"to pick up new or changed dependencies
-5. Config migration— detects new config options added since your version and prompts you to set them
-6. Gateway auto-restart— running gateways are refreshed after the update completes so the new code takes effect immediately. Service-managed gateways (systemd on Linux, launchd on macOS) are restarted through the service manager. Manual gateways are relaunched automatically when Hermes can map the running PID back to a profile.
-
-`~/.hermes/pairing/`
-[Snapshots and rollback](/docs/user-guide/checkpoints-and-rollback)
-`~/.hermes/`
-`main`
-`hermes`
-`git reset --hard <pre-pull-sha>`
-`hermes update`
-`uv pip install -e ".[all]"`
-
-### Updating against a non-default branch:--branch​
-
-`--branch`
-
-By defaulthermes updatetracksorigin/main. Pass--branch <name>to update against a different branch — useful for QA channels, feature branches, or release-candidate testing:
-
-`hermes update`
-`origin/main`
-`--branch <name>`
+به طور پیش‌فرض `hermes update` از `origin/main` پیروی می‌کند. `--branch <name>` را برای به‌روزرسانی با یک شاخه متفاوت پاس دهید — مفید برای کانال‌های QA، شاخه‌های ویژگی یا تست نامزد انتشار:
 
 ```
-hermes update --branch release-candidatehermes update --check --branch experimental   # preview behindness only
+hermes update --branch release-candidate
+hermes update --check --branch experimental   # فقط پیش‌نمایش عقب‌ماندگی
 ```
 
-If your local checkout is on a different branch, Hermes auto-stashes any uncommitted work, switches HEAD to the target branch, and then pulls. Branches that don't exist locally are auto-tracked fromorigin/<name>(git checkout -B <name> origin/<name>). Branches that don't exist anywhere fail cleanly — your stashed changes are restored before exit so you're never stranded in a weird state. Themain-only fork-upstream sync logic is automatically skipped on non-mainbranches.
+### تغییرات محلی در به‌روزرسانی‌های غیر تعاملی
 
-`origin/<name>`
-`git checkout -B <name> origin/<name>`
-`main`
-`main`
+وقتی `hermes update` را در یک ترمینال اجرا می‌کنید، Hermes هرگونه تغییرات کدsource تأیید نشده را stash می‌کند، pull می‌کند، سپس می‌پرسد آیا می‌خواهید آن‌ها را بازیابی کنید — دقیقاً مانند همیشه. برای به‌روزرسانی‌های تعاملی هیچ چیزی تغییر نمی‌کند.
 
-### Local changes on non-interactive updates​
+وقتی به‌روزرسانی بدون تerminal اجرا می‌شود — از دکمه «به‌روزرسانی» دسکتاپ/چت اپلیکیشن یا به‌روزرسانی فعال‌شده توسط gateway — هیچ پرامپتی برای پاسخ دادن وجود ندارد. تنظیم `updates.non_interactive_local_changes` تصمیم می‌گیرد با تغییرات stash شده شما چه اتفاقی بیفتد:
 
-When you runhermes updatein a terminal, Hermes stashes any uncommitted source-tree changes, pulls, thenaskswhether to restore them — exactly as it always has. Nothing changes for interactive updates.
-
-`hermes update`
-
-When the update runswithout a terminal— from the desktop/chat app's "Update" button or a gateway-triggered update — there's no prompt to answer. Theupdates.non_interactive_local_changessetting decides what happens to your stashed changes:
-
-`updates.non_interactive_local_changes`
-
-```
-# ~/.hermes/config.yamlupdates:  non_interactive_local_changes: stash   # default: keep + auto-restore  # non_interactive_local_changes: discard  # throw local source edits away
+```yaml
+# ~/.hermes/config.yaml
+updates:
+  non_interactive_local_changes: stash   # پیش‌فرض: نگه‌داشتن + بازیابی خودکار
+  # non_interactive_local_changes: discard  # دور انداختن ویرایش‌های محلی کدsource
 ```
 
-- stash(default) — auto-stash, pull, then auto-restore your changes on top of the updated code. Nothing is lost; if a restore hits conflicts they're preserved in a git stash for manual recovery.
-- discard— auto-stash and drop the stash after the pull, so the update always lands on a clean tree. Use this only on machines where you never intend to keep local edits to the Hermes source. It stash-drops (notgit reset --hard+git clean -fd), so ignored paths likenode_modules,venv, and build outputs are never touched.
+- `stash` (پیش‌فرض) — stash خودکار، pull، سپس بازیابی خودکار تغییرات شما روی کد به‌روزرسانی‌شده. هیچ چیزی از دست نمی‌رود؛ اگر بازیابی با تعارض مواجه شود، آن‌ها در git stash برای بازیابی دستی حفظ می‌شوند.
+- `discard` — stash خودکار و حذف stash بعد از pull، بنابراین به‌روزرسانی همیشه روی یک درخت تمیز فرود می‌آید. فقط در ماشین‌هایی استفاده کنید که هرگز قصد حفظ ویرایش‌های محلی Hermes source را ندارید.
 
-`stash`
-`discard`
-`git reset --hard`
-`git clean -fd`
-`node_modules`
-`venv`
+در اپلیکیشن دسکتاپ، این در Settings → Advanced → In-App Update Local Changes است.
 
-In the desktop app this isSettings → Advanced → In-App Update Local Changes.
+### فقط پیش‌نمایش: hermes update --check
 
-### Preview-only:hermes update --check​
+آیا می‌خواهید قبل از pull بدانید آیا به‌روزرسانی‌ای موجود است؟ `hermes update --check` را اجرا کنید — آخرین commitها را دریافت و با `origin/main` مقایسه می‌کند. هیچ فایلی تغییر نمی‌کند و gateway بازراه‌اندازی نمی‌شود.
 
-`hermes update --check`
+### نسخه پشتیبان کامل قبل از به‌روزرسانی: --backup
 
-Want to know if an update is available before pulling? Runhermes update --check— it fetches and compares commits againstorigin/main. No files are modified, no gateway is restarted. Useful in scripts and cron jobs that gate on "is there an update".
-
-`hermes update --check`
-`origin/main`
-
-### Full pre-update backup:--backup​
-
-`--backup`
-
-For high-value profiles (production gateways, shared team installs) you can opt into a full pre-pull backup ofHERMES_HOME(config, auth, sessions, skills, pairing):
-
-`HERMES_HOME`
+برای پروفایل‌های با ارزش بالا (gatewayهای تولیدی، نصب‌های اشتراکی تیم) می‌توانید از نسخه پشتیبان کامل قبل از pull از `HERMES_HOME` (پیکربندی، احراز هویت، sessionها، skillها، جفت‌شده) استفاده کنید:
 
 ```
 hermes update --backup
 ```
 
-Or make it the default for every run:
+یا آن را به عنوان پیش‌فرض برای هر اجرا تنظیم کنید:
 
-```
-# ~/.hermes/config.yamlupdates:  pre_update_backup: true
-```
-
---backupwas the always-on behavior in earlier builds, but it was adding minutes to every update on large homes, so it's now opt-in. The lightweight pairing-data snapshot above still runs unconditionally.
-
-`--backup`
-
-### Windows: anotherhermes.exeis running​
-
-`hermes.exe`
-
-On Windows,hermes updatewill refuse to run if it detects anotherhermes.exeprocess holding the venv's entry-point executable open — most commonly the Hermes Desktop app's spawned backend, an openhermesREPL in another terminal, or a running gateway:
-
-`hermes update`
-`hermes.exe`
-`hermes`
-
-```
-$ hermes update✗ Another hermes.exe is running:    PID 12345  hermes.exe  Updating now would fail to overwrite ...\venv\Scripts\hermes.exe because  Windows blocks REPLACE on a running executable.  Close Hermes Desktop, exit any open `hermes` REPLs, and  stop the gateway (`hermes gateway stop`) before retrying.  Override with `hermes update --force` if you've already  confirmed those processes will not write to the venv.
+```yaml
+# ~/.hermes/config.yaml
+updates:
+  pre_update_backup: true
 ```
 
-Close the listed processes and re-run. If you're sure the concurrent process won't interfere (rare — usually only useful when an antivirus shim is mis-attributed), pass--forceto skip the check. In that case the updater will still retry the.exerename with exponential backoff and, on stubborn locks, schedule the replacement for next reboot viaMoveFileEx(MOVEFILE_DELAY_UNTIL_REBOOT)so the update can complete.
+`--backup` رفتار همیشه‌فعال در نسخه‌های قبلی بود، اما باعث اضافه شدن دقایقی به هر به‌روزرسانی در خانه‌های بزرگ می‌شد، بنابراین اکنون اختیاری است. اسکنپوت سبک اطلاعات جفت‌شده بالا همچنان بدون قید و شرط اجرا می‌شود.
 
-`--force`
-`.exe`
-`MoveFileEx(MOVEFILE_DELAY_UNTIL_REBOOT)`
+### ویندوز: یک hermes.exe دیگر در حال اجراست
 
-A second, separate guard refuses to touch the venv while any process is running from its Python interpreter (the Desktop app's backend, a gateway, a Python REPL). Those processes keep native extension files (.pyd) locked, and a dependency sync that dies partway on an access-denied error strands the install between versions. This guard isnotbypassed by--force; if you're certain the detected holders are false positives, use the explicithermes update --force-venv.
+در ویندوز، `hermes update` از اجرا خودداری می‌کند اگر تشخیص دهد یک پروسه `hermes.exe` دیگر فایل اجرایی entry-point venv را باز نگه داشته است — بیشترین احتمال بک‌اند اسپاون‌شده توسط اپلیکیشن Hermes Desktop، یک REPL `hermes` باز در ترمینال دیگر، یا یک gateway در حال اجرا:
 
-`.pyd`
-`--force`
-`hermes update --force-venv`
-
-Expected output looks like:
-
+```console
+$ hermes update
+✗ Another hermes.exe is running:
+    PID 12345  hermes.exe
+  Updating now would fail to overwrite ...\venv\Scripts\hermes.exe because
+  Windows blocks REPLACE on a running executable.
+  Close Hermes Desktop, exit any open `hermes` REPLs, and
+  stop the gateway (`hermes gateway stop`) before retrying.
+  Override with `hermes update --force` if you've already
+  confirmed those processes will not write to the venv.
 ```
-$ hermes updateUpdating Hermes Agent...📥 Pulling latest code...Already up to date.  (or: Updating abc1234..def5678)📦 Updating dependencies...✅ Dependencies updated🔍 Checking for new config options...✅ Config is up to date  (or: Found 2 new options — running migration...)🔄 Restarting gateways...✅ Gateway restarted✅ Hermes Agent updated successfully!
-```
 
-### Recommended Post-Update Validation​
+پروسه‌های لیست‌شده را ببندید و دوباره اجرا کنید. اگر مطمئن هستید پروسه همزمان تداخل نمی‌کند، `--force` را برای رد کردن بررسی پاس دهید.
 
-hermes updatehandles the main update path, but a quick validation confirms everything landed cleanly:
+### اعتبارسنجی توصیه‌شده بعد از به‌روزرسانی
 
-`hermes update`
-1. git status --short— if the tree is unexpectedly dirty, inspect before continuing
-2. hermes doctor— checks config, dependencies, and service health
-3. hermes --version— confirm the version bumped as expected
-4. If you use the gateway:hermes gateway status
-5. Ifdoctorreports npm audit issues: runnpm audit fixin the flagged directory
+`hermes update` مسیر به‌روزرسانی اصلی را مدیریت می‌کند، اما یک اعتبارسنجی سریع تأیید می‌کند همه چیز به خوبی فرود آمده:
 
-`git status --short`
-`hermes doctor`
-`hermes --version`
-`hermes gateway status`
-`doctor`
-`npm audit fix`
+1. `git status --short` — اگر درخت به طور غیرمنتظره کثیف است، قبل از ادامه بررسی کنید
+2. `hermes doctor` — پیکربندی، وابستگی‌ها و سلامت سرویس را بررسی می‌کند
+3. `hermes --version` — تأیید کنید نسخه مطابق انتظار افزایش یافته
+4. اگر از gateway استفاده می‌کنید: `hermes gateway status`
+5. اگر doctor مشکلات npm audit را گزارش می‌کند: `npm audit fix` را در دایرکتوری مشخص‌شده اجرا کنید
 
-Ifgit status --shortshows unexpected changes afterhermes update, stop and inspect them before continuing. This usually means local modifications were reapplied on top of the updated code, or a dependency step refreshed lockfiles.
+### اگر تerminal شما در حین به‌روزرسانی قطع شود
 
-`git status --short`
-`hermes update`
+`hermes update` در برابر از دست دادن تصادفی تerminal از خود محافظت می‌کند:
 
-### If your terminal disconnects mid-update​
+- به‌روزرسانی از SIGHUP چشم‌پوشی می‌کند، بنابراین بستن نشست SSH یا پنجره terminal دیگر آن را در حین نصب نمی‌کشد. فرآیندهای فرزند pip و git این محافظت را به ارث می‌برند، بنابراین محیط Python نمی‌تواند نیمه‌نصب باقی بماند.
+- همه خروجی در حین اجرا در `~/.hermes/logs/update.log` آینه می‌شود. اگر terminal شما ناپدید شد، دوباره وصل شوید و لاگ را بررسی کنید تا ببینید آیا به‌روزرسانی تمام شده و آیا بازراه‌اندازی gateway موفق بوده:
 
-hermes updateprotects itself against accidental terminal loss:
-
-`hermes update`
-- The update ignoresSIGHUP, so closing your SSH session or terminal window no longer kills it mid-install.pipandgitchild processes inherit this protection, so the Python environment cannot be left half-installed by a dropped connection.
-- All output is mirrored to~/.hermes/logs/update.logwhile the update runs. If your terminal disappears, reconnect and inspect the log to see whether the update finished and whether the gateway restart succeeded:
-
-`SIGHUP`
-`pip`
-`git`
-`~/.hermes/logs/update.log`
-
-```
+```bash
 tail -f ~/.hermes/logs/update.log
 ```
 
-- Ctrl-C(SIGINT) and system shutdown (SIGTERM) are still honored — those are deliberate cancellations, not accidents.
+دیگر نیازی به بستن `hermes update` در screen یا tmux برای زنده ماندن قطع terminal نیست.
 
-`Ctrl-C`
+### بررسی نسخه فعلی
 
-You no longer need to wraphermes updateinscreenortmuxto survive a terminal drop.
-
-`hermes update`
-`screen`
-`tmux`
-
-### Checking your current version​
-
-```
+```bash
 hermes version
 ```
 
-Compare against the latest release at theGitHub releases page.
+با آخرین نسخه در [GitHub releases page](https://github.com/NousResearch/hermes-agent/releases) مقایسه کنید.
 
-[GitHub releases page](https://github.com/NousResearch/hermes-agent/releases)
+### به‌روزرسانی از پلتفرم‌های پیام‌رسانی
 
-### Updating from Messaging Platforms​
-
-You can also update directly from Telegram, Discord, Slack, WhatsApp, or Teams by sending:
+همچنین می‌توانید مستقیماً از Telegram، Discord، Slack، WhatsApp یا Teams با ارسال زیر به‌روزرسانی کنید:
 
 ```
 /update
 ```
 
-This pulls the latest code, updates dependencies, and restarts running gateways. The bot will briefly go offline during the restart (typically 5–15 seconds) and then resume.
+این دستور آخرین کد را دریافت می‌کند، وابستگی‌ها را به‌روز می‌کند و gatewayهای در حال اجرا را بازراه‌اندازی می‌کند. ربات در حین بازراه‌اندازی به طور خلاصه آفلاین می‌شود (معمولاً ۵ تا ۱۵ ثانیه) و سپس از سر گرفته می‌شود.
 
-### Manual Update​
+### به‌روزرسانی دستی
 
-If you installed manually (not via the quick installer):
+اگر به صورت دستی نصب کرده‌اید (نه از طریق نصب‌کننده سریع):
 
-```
-cd /path/to/hermes-agent# Activate the venv you created during install (outside the source tree)export VIRTUAL_ENV="$HOME/.hermes/venvs/hermes-dev"export PATH="$VIRTUAL_ENV/bin:$PATH"# Pull latest codegit pull origin main# Reinstall (picks up new dependencies)uv pip install -e ".[all]"# Check for new config optionshermes config checkhermes config migrate   # Interactively add any missing options
-```
-
-### Rollback instructions​
-
-If an update introduces a problem, you can roll back to a previous version:
-
-```
-cd /path/to/hermes-agent# List recent versionsgit log --oneline -10# Roll back to a specific commitgit checkout <commit-hash>uv pip install -e ".[all]"# Restart the gateway if runninghermes gateway restart
-```
-
-To roll back to a specific release tag (substitute your previous tag — e.g. a recent release likev2026.5.16, or any earlier tag fromgit tag --sort=-version:refname):
-
-`v2026.5.16`
-`git tag --sort=-version:refname`
-
-```
-git checkout vX.Y.Zuv pip install -e ".[all]"
+```bash
+cd /path/to/hermes-agent
+# فعال‌سازی venv که در حین نصب ایجاد کردید (خارج از درخت کدsource)
+export VIRTUAL_ENV="$HOME/.hermes/venvs/hermes-dev"
+export PATH="$VIRTUAL_ENV/bin:$PATH"
+# دریافت آخرین کد
+git pull origin main
+# نصب مجدد (دریافت وابستگی‌های جدید)
+uv pip install -e ".[all]"
+# بررسی گزینه‌های پیکربندی جدید
+hermes config check
+hermes config migrate   # اضافه کردن تعاملی گزینه‌های موجود
 ```
 
-Rolling back may cause config incompatibilities if new options were added. Runhermes config checkafter rolling back and remove any unrecognized options fromconfig.yamlif you encounter errors.
+### دستورالعمل‌های بازگشت
 
-`hermes config check`
-`config.yaml`
+اگر یک به‌روزرسانی مشکلی ایجاد کرد، می‌توانید به نسخه قبلی بازگردید:
 
-### Note for Nix users​
-
-Nix is no longer an explicitly supported install path (best-effort only) — seeNix Setup. If you installed via Nix flake, updates are managed through the Nix package manager:
-
-[Nix Setup](/docs/getting-started/nix-setup)
-
+```bash
+cd /path/to/hermes-agent
+# لیست نسخ‌های اخیر
+git log --oneline -10
+# بازگشت به یک commit مشخص
+git checkout <commit-hash>
+uv pip install -e ".[all]"
+# بازراه‌اندازی gateway اگر در حال اجراست
+hermes gateway restart
 ```
-# Update the flake inputnix flake update hermes-agent# Or rebuild with the latestnix profile upgrade hermes-agent
+
+بازگشت ممکن است اگر گزینه‌های جدیدی اضافه شده باشند، ناسازگاری پیکربندی ایجاد کند. بعد از بازگشت `hermes config check` را اجرا کنید و هر گزینه غیرقابل تشخیصی را از `config.yaml` حذف کنید.
+
+### یادداشت برای کاربران Nix
+
+Nix دیگر یک مسیر نصب پشتیبانی‌شده به طور رسمی نیست (فقط بهترین تلاش) — [Nix Setup](/docs/getting-started/nix-setup) را ببینید. اگر از طریق Nix flake نصب کرده‌اید، به‌روزرسانی‌ها از طریق مدیر بسته Nix مدیریت می‌شوند:
+
+```bash
+# به‌روزرسانی ورودی flake
+nix flake update hermes-agent
+# یا بازسازی با آخرین نسخه
+nix profile upgrade hermes-agent
 ```
 
-Nix installations are immutable — rollback is handled by Nix's generation system:
+نصب‌های Nix تغییرناپذیر هستند — بازگشت توسط سیستم نسل Nix مدیریت می‌شود:
 
-```
+```bash
 nix profile rollback
 ```
 
-SeeNix Setupfor more details.
+جزئیات بیشتر در [Nix Setup](/docs/getting-started/nix-setup).
 
-[Nix Setup](/docs/getting-started/nix-setup)
+## حذف
 
-## Uninstalling​
-
-```
+```bash
 hermes uninstall
 ```
 
-The uninstaller gives you the option to keep your configuration files (~/.hermes/) for a future reinstall.
+حذف‌کننده به شما گزینه نگه‌داشتن فایل‌های پیکربندی (`~/.hermes/`) برای نصب مجدد آینده را می‌دهد.
 
-`~/.hermes/`
+### حذف دستی
 
-### Manual Uninstall​
-
+```bash
+rm -f ~/.local/bin/hermes
+rm -rf /path/to/hermes-agent
+rm -rf ~/.hermes            # اختیاری — اگر قصد نصب مجدد دارید نگه‌دارید
 ```
-rm -f ~/.local/bin/hermesrm -rf /path/to/hermes-agentrm -rf ~/.hermes            # Optional — keep if you plan to reinstall
-```
 
-If you installed the gateway as a system service, stop and disable it first:
+اگر gateway را به عنوان سرویس سیستمی نصب کرده‌اید، ابتدا آن را متوقف و غیرفعال کنید:
 
-```
-hermes gateway stop# Linux: systemctl --user disable hermes-gateway# macOS: launchctl remove ai.hermes.gateway
+```bash
+hermes gateway stop
+# Linux: systemctl --user disable hermes-gateway
+# macOS: launchctl remove ai.hermes.gateway
 ```
 
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/getting-started/updating.md)

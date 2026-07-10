@@ -1,22 +1,22 @@
 ---
 layout: docs
 title: "نقاط بازیابی"
-permalink: /user-guide/checkpoints-and-rollback/
+permalink: /docs/user-guide/checkpoints-and-rollback/
 ---
 
 - 
-- Using Hermes
-- Checkpoints & Rollback
+- استفاده از Hermes
+- Checkpoints و Rollback
 
-# Checkpoints and/rollback
-
-`/rollback`
-
-Hermes Agent can automatically snapshot your project beforedestructive operationsand restore it with a single command. Checkpoints areopt-inas of v2 — most users never use/rollback, and the shadow-store storage is non-trivial over time, so the default is off.
+# Checkpoints و `/rollback`
 
 `/rollback`
 
-Enable checkpoints per-session with--checkpoints:
+Hermes Agent می‌تواند به طور خودکار قبل از **عملیات مخرب** از پروژه شما اسکنپشت بگیرد و آن را با یک دستور واحد بازیابی کند. checkpoints از v2 به صورت **اختیاری** هستند — بیشتر کاربران هرگز از `/rollback` استفاده نمی‌کنند و ذخیره‌سازی shadow-store در طول زمان غیرعادی است، بنابراین پیش‌فرض خاموش است.
+
+`/rollback`
+
+checkpoints را در هر جلسه با `--checkpoints` فعال کنید:
 
 `--checkpoints`
 
@@ -24,25 +24,26 @@ Enable checkpoints per-session with--checkpoints:
 hermes chat --checkpoints
 ```
 
-Or enable globally in~/.hermes/config.yaml:
+یا به طور کلی در `~/.hermes/config.yaml` فعال کنید:
 
 `~/.hermes/config.yaml`
 
 ```
-checkpoints:  enabled: true
+checkpoints:
+  enabled: true
 ```
 
-This safety net is powered by an internalCheckpoint Managerthat keeps a single shared shadow git repository under~/.hermes/checkpoints/store/— your real project.gitis never touched. Every project the agent works in shares the same store, so git's content-addressable object DB deduplicates across projects and across turns.
+این شبکه ایمنی توسط یک **Checkpoint Manager** داخلی پشتیبانی می‌شود که یک مخزن git سایه‌ای مشترک را در `~/.hermes/checkpoints/store/` نگه می‌دارد — `.git` واقعی پروژه شما هرگز لمس نمی‌شود. هر پروژه‌ای که عامل در آن کار می‌کند همان فروشگاه را به اشتراک می‌گذارد، بنابراین DB اشیاء content-addressable git در پروژه‌ها و نوبت‌ها dedup می‌کند.
 
 `~/.hermes/checkpoints/store/`
 `.git`
 
-## What Triggers a Checkpoint​
+## چه چیزی یک Checkpoint را فعال می‌کند
 
-Checkpoints are taken automatically before:
+checkpoints قبل از موارد زیر به طور خودکار گرفته می‌شوند:
 
-- File tools—write_fileandpatch
-- Destructive terminal commands—rm,rmdir,cp,install,mv,sed -i,truncate,dd,shred, output redirects (>), andgit reset/clean/checkout
+- **ابزارهای فایل** — `write_file` و `patch`
+- **دستورات مخرب terminal** — `rm`، `rmdir`، `cp`، `install`، `mv`، `sed -i`، `truncate`، `dd`، `shred`، ریدایرکت‌های خروجی (`>`)، و `git reset`/`clean`/`checkout`
 
 `write_file`
 `patch`
@@ -60,34 +61,34 @@ Checkpoints are taken automatically before:
 `clean`
 `checkout`
 
-The agent createsat most one checkpoint per directory per turn, so long-running sessions don't spam snapshots.
+عامل **حداکثر یک checkpoint به ازای هر دایرکتوری در هر نوبت** ایجاد می‌کند، بنابراین نشست‌های طولانی‌مدت اسکنپشت‌ها را اسپم نمی‌کنند.
 
-## Quick Reference​
+## مرجع سریع
 
-In-session slash commands:
+دستورات اسلش درون نشست:
 
-| Command | Description |
+| دستور | توضیح |
 | --- | --- |
-| /rollback | List all checkpoints with change stats |
-| /rollback <N> | Restore to checkpoint N (also undoes last chat turn) |
-| /rollback diff <N> | Preview diff between checkpoint N and current state |
-| /rollback <N> <file> | Restore a single file from checkpoint N |
+| `/rollback` | فهرست کردن همه checkpoints با آمار تغییرات |
+| `/rollback <N>` | بازیابی به checkpoint N (همچنین آخرین نوبت چت را undo می‌کند) |
+| `/rollback diff <N>` | پیش‌نمایش diff بین checkpoint N و وضعیت فعلی |
+| `/rollback <N> <file>` | بازیابی یک فایل منفرد از checkpoint N |
 
 `/rollback`
 `/rollback <N>`
 `/rollback diff <N>`
 `/rollback <N> <file>`
 
-CLI for inspecting and managing the store outside a session:
+CLI برای بررسی و مدیریت فروشگاه خارج از نشست:
 
-| Command | Description |
+| دستور | توضیح |
 | --- | --- |
-| hermes checkpoints | Show total size, project count, per-project breakdown |
-| hermes checkpoints status | Same as barecheckpoints |
-| hermes checkpoints list | Alias forstatus |
-| hermes checkpoints prune | Force a sweep: delete orphans/stale, GC, enforce size cap |
-| hermes checkpoints clear | Nuke the entire checkpoint base (asks first) |
-| hermes checkpoints clear-legacy | Delete only thelegacy-*archives from v1 migration |
+| `hermes checkpoints` | نمایش اندازه کل، تعداد پروژه، جزئیات به ازای هر پروژه |
+| `hermes checkpoints status` | مشابه `checkpoints` ساده |
+| `hermes checkpoints list` | نام مستعار برای `status` |
+| `hermes checkpoints prune` | اجرای اجباری sweep: حذف orphan‌ها/قدیمی‌ها، GC، اجرای محدودیت اندازه |
+| `hermes checkpoints clear` | حذف کل پایگاه checkpoint (اول تأیید می‌گیرد) |
+| `hermes checkpoints clear-legacy` | حذف فقط آرشیوهای `legacy-*` از مهاجرت v1 |
 
 `hermes checkpoints`
 `hermes checkpoints status`
@@ -99,89 +100,125 @@ CLI for inspecting and managing the store outside a session:
 `hermes checkpoints clear-legacy`
 `legacy-*`
 
-## How Checkpoints Work​
+## نحوه کار Checkpoints
 
-At a high level:
+در سطح بالا:
 
-- Hermes detects when tools are about tomodify filesin your working tree.
-- Once per conversation turn (per directory), it:Resolves a reasonable project root for the file.Initialises or reuses thesingle shared shadow storeat~/.hermes/checkpoints/store/.Stages into a per-project index, builds a tree, and commits to a per-project ref (refs/hermes/<project-hash>).
-- These per-project refs form a checkpoint history that you can inspect and restore via/rollback.
+- Hermes تشخیص می‌دهد وقتی ابزارها در حال **ویرایش فایل‌ها** در درخت کاری شما هستند.
+- یک بار در هر نوبت مکالمه (به ازای هر دایرکتوری):
+  - یک ریشه پروژه معقول برای فایل حل می‌کند.
+  - **فروشگاه سایه‌ای مشترک** در `~/.hermes/checkpoints/store/` را مقداردهی اولیه یا استفاده مجدد می‌کند.
+  - در یک ایندکس به ازای پروژه staging می‌کند، یک درخت می‌سازد، و به یک ref به ازای پروژه (`refs/hermes/<project-hash>`) commit می‌کند.
 
-- Resolves a reasonable project root for the file.
-- Initialises or reuses thesingle shared shadow storeat~/.hermes/checkpoints/store/.
-- Stages into a per-project index, builds a tree, and commits to a per-project ref (refs/hermes/<project-hash>).
+- این ref‌های به ازای پروژه یک تاریخچه checkpoint تشکیل می‌دهند که می‌توانید از طریق `/rollback` آن را بررسی و بازیابی کنید.
+
+- یک ریشه پروژه معقول برای فایل حل می‌کند.
+- فروشگاه سایه‌ای مشترک در `~/.hermes/checkpoints/store/` را مقداردهی اولیه یا استفاده مجدد می‌کند.
+- در یک ایندکس به ازای پروژه staging می‌کند، یک درخت می‌سازد، و به یک ref به ازای پروژه commit می‌کند.
 
 `~/.hermes/checkpoints/store/`
 `refs/hermes/<project-hash>`
 `/rollback`
 
-## Configuration​
+## پیکربندی
 
-Configure in~/.hermes/config.yaml:
+در `~/.hermes/config.yaml` پیکربندی کنید:
 
 `~/.hermes/config.yaml`
 
 ```
-checkpoints:  enabled: false              # master switch (default: false — opt-in)  max_snapshots: 20           # max checkpoints per project (enforced via ref rewrite + gc)  max_total_size_mb: 500      # hard cap on total store size; oldest commits dropped  max_file_size_mb: 10        # skip any single file larger than this  # Auto-maintenance (on by default): sweep ~/.hermes/checkpoints/ at startup  # and delete project entries whose working directory no longer exists  # (orphans) or whose last_touch is older than retention_days. Runs at most  # once per min_interval_hours, tracked via a .last_prune marker.  auto_prune: true  retention_days: 7  delete_orphans: true  min_interval_hours: 24
+checkpoints:
+  enabled: false              # master switch (default: false — opt-in)
+  max_snapshots: 20           # max checkpoints per project (enforced via ref rewrite + gc)
+  max_total_size_mb: 500      # hard cap on total store size; oldest commits dropped
+  max_file_size_mb: 10        # skip any single file larger than this
+  # Auto-maintenance (on by default): sweep ~/.hermes/checkpoints/ at startup
+  # and delete project entries whose working directory no longer exists
+  # (orphans) or whose last_touch is older than retention_days. Runs at most
+  # once per min_interval_hours, tracked via a .last_prune marker.
+  auto_prune: true
+  retention_days: 7
+  delete_orphans: true
+  min_interval_hours: 24
 ```
 
-To disable everything:
+برای غیرفعال کردن همه چیز:
 
 ```
-checkpoints:  enabled: false  auto_prune: false
+checkpoints:
+  enabled: false
+  auto_prune: false
 ```
 
-Whenenabled: false, the Checkpoint Manager is a no-op and never attempts git operations. Whenauto_prune: false, the store grows until you runhermes checkpoints prunemanually.
+وقتی `enabled: false` باشد، Checkpoint Manager بی‌عمل است و هرگز عملیات git را انجام نمی‌دهد. وقتی `auto_prune: false` باشد، فروشگاه رشد می‌کند تا زمانی که `hermes checkpoints prune` را دستی اجرا کنید.
 
 `enabled: false`
 `auto_prune: false`
 `hermes checkpoints prune`
 
-## Listing Checkpoints​
+## فهرست‌بندی Checkpoints
 
-From a CLI session:
+از یک نشست CLI:
 
 ```
 /rollback
 ```
 
-Hermes responds with a formatted list showing change statistics:
+Hermes با یک فهرست قالب‌بندی‌شده نشان داده شده با آمار تغییرات پاسخ می‌دهد:
 
 ```
-📸 Checkpoints for /path/to/project:  1. 4270a8c  2026-03-16 04:36  before patch  (1 file, +1/-0)  2. eaf4c1f  2026-03-16 04:35  before write_file  3. b3f9d2e  2026-03-16 04:34  before terminal: sed -i s/old/new/ config.py  (1 file, +1/-1)  /rollback <N>             restore to checkpoint N  /rollback diff <N>        preview changes since checkpoint N  /rollback <N> <file>      restore a single file from checkpoint N
+📸 Checkpoints for /path/to/project:
+  1. 4270a8c  2026-03-16 04:36  before patch  (1 file, +1/-0)
+  2. eaf4c1f  2026-03-16 04:35  before write_file
+  3. b3f9d2e  2026-03-16 04:34  before terminal: sed -i s/old/new/ config.py  (1 file, +1/-1)
+  /rollback <N>             restore to checkpoint N
+  /rollback diff <N>        preview changes since checkpoint N
+  /rollback <N> <file>      restore a single file from checkpoint N
 ```
 
-## Inspecting the Store from the Shell​
+## بررسی فروشگاه از Shell
 
 ```
 hermes checkpoints
 ```
 
-Sample output:
+خروجی نمونه:
 
 ```
-Checkpoint base: /home/you/.hermes/checkpointsTotal size:      142.3 MB  store/         138.1 MB  legacy-*       4.2 MBProjects:        12  WORKDIR                                                       COMMITS    LAST TOUCH  STATE  /home/you/code/hermes-agent                                        20       2h ago  live  /home/you/code/experiments/rl-runner                                8       1d ago  live  /home/you/code/old-prototype                                        3       9d ago  orphan  ...Legacy archives (1):  legacy-20260506-050616                           4.2 MBClear with: hermes checkpoints clear-legacy
+Checkpoint base: /home/you/.hermes/checkpoints
+Total size:      142.3 MB
+  store/         138.1 MB
+  legacy-*       4.2 MB
+Projects:        12
+  WORKDIR                                                       COMMITS    LAST TOUCH  STATE
+  /home/you/code/hermes-agent                                        20       2h ago  live
+  /home/you/code/experiments/rl-runner                                8       1d ago  live
+  /home/you/code/old-prototype                                        3       9d ago  orphan
+  ...
+Legacy archives (1):
+  legacy-20260506-050616                           4.2 MB
+Clear with: hermes checkpoints clear-legacy
 ```
 
-Force a full sweep (ignores the 24h idempotency marker):
+اجرای اجباری sweep کامل (نادیده گرفتن نشانگر idempotency 24 ساعته):
 
 ```
 hermes checkpoints prune --retention-days 3 --max-size-mb 200
 ```
 
-## Previewing Changes with/rollback diff​
+## پیش‌نمایش تغییرات با `/rollback diff`
 
 `/rollback diff`
 
-Before committing to a restore, preview what has changed since a checkpoint:
+قبل از تعهد به بازیابی، تغییراتی که از یک checkpoint ایجاد شده را پیش‌نمایش کنید:
 
 ```
 /rollback diff 1
 ```
 
-This shows a git diff stat summary followed by the actual diff.
+این یک خلاصه git diff stat و سپس diff واقعی را نشان می‌دهد.
 
-## Restoring with/rollback​
+## بازیابی با `/rollback`
 
 `/rollback`
 
@@ -189,31 +226,31 @@ This shows a git diff stat summary followed by the actual diff.
 /rollback 1
 ```
 
-Behind the scenes, Hermes:
+در پشت صحنه، Hermes:
 
-1. Verifies the target commit exists in the shadow store.
-2. Takes apre-rollback snapshotof the current state so you can "undo the undo" later.
-3. Restores tracked files in your working directory.
-4. Undoes the last conversation turnso the agent's context matches the restored filesystem state.
+1. تأیید می‌کند که commit هدف در فروشگاه سایه‌ای وجود دارد.
+2. یک **اسکنپشت قبل از بازیابی** از وضعیت فعلی می‌گیرد تا بعداً بتوانید «undo را undo کنید».
+3. فایل‌های ردیابی‌شده در دایرکتوری کاری شما را بازیابی می‌کند.
+4. **آخرین نوبت مکالمه را undo می‌کند** تا زمینه عامل با وضعیت فایل‌سیستم بازیابی‌شده مطابقت داشته باشد.
 
-## Single-File Restore​
+## بازیابی تک‌فایلی
 
-Restore just one file from a checkpoint without affecting the rest of the directory:
+فقط یک فایل از یک checkpoint بازیابی کنید بدون تأثیر روی بقیه دایرکتوری:
 
 ```
 /rollback 1 src/broken_file.py
 ```
 
-## Safety and Performance Guards​
+## محافظت‌های ایمنی و عملکردی
 
-- Git availability— ifgitis not found onPATH, checkpoints are transparently disabled.
-- Directory scope— Hermes skips overly broad directories (root/, home$HOME).
-- Repository size— directories with more than 50,000 files are skipped.
-- Per-file size cap— files larger thanmax_file_size_mb(default 10 MB) are excluded from the snapshot. Prevents accidentally swallowing datasets, model weights, or generated media.
-- Total store size cap— when the store exceedsmax_total_size_mb(default 500 MB), the oldest commit per project is dropped round-robin until under the cap.
-- Real pruning—max_snapshotsis enforced by rewriting the per-project ref and runninggit gc --prune=nowafterwards, so loose objects don't accumulate.
-- No-change snapshots— if there are no changes since the last snapshot, the checkpoint is skipped.
-- Non-fatal errors— all errors inside the Checkpoint Manager are logged at debug level; your tools continue to run.
+- **دسترسی git** — اگر `git` در `PATH` یافت نشود، checkpoints به طور شفاف غیرفعال می‌شوند.
+- **دامنه دایرکتوری** — Hermes دایرکتوری‌های بیش از حد وسیع (`root/`، `home$HOME`) را رد می‌کند.
+- **اندازه مخزن** — دایرکتوری‌های با بیش از 50,000 فایل رد می‌شوند.
+- **محدودیت اندازه فایل** — فایل‌های بزرگتر از `max_file_size_mb` (پیش‌فرض 10 MB) از اسکنپشت حذف می‌شوند. از بلعیدن تصادفی مجموعه‌داده‌ها، وزن‌های مدل یا رسانه تولیدشده جلوگیری می‌کند.
+- **محدودیت اندازه کل فروشگاه** — وقتی فروشگاه از `max_total_size_mb` (پیش‌فرض 500 MB) تجاوز کند، قدیمی‌ترین commit به ازای هر پروژه به صورت round-robin حذف می‌شود تا زیر محدودیت باشد.
+- **Pruning واقعی** — `max_snapshots` با بازنویسی ref به ازای پروژه و اجرای `git gc --prune=now` بعد از آن اجرا می‌شود، بنابراین اشیای loose جمع نمی‌شوند.
+- **اسکنپشت‌های بدون تغییر** — اگر از آخرین اسکنپشت تغییری وجود نداشته باشد، checkpoint رد می‌شود.
+- **خطاهای غیرکشنده** — همه خطاها داخل Checkpoint Manager در سطح debug ثبت می‌شوند؛ ابزارهای شما به اجرای خود ادامه می‌دهند.
 
 `git`
 `PATH`
@@ -224,26 +261,34 @@ Restore just one file from a checkpoint without affecting the rest of the direct
 `max_snapshots`
 `git gc --prune=now`
 
-## Where Checkpoints Live​
+## محل قرارگیری Checkpoints
 
 ```
-~/.hermes/checkpoints/  ├── store/                 # single shared bare git repo  │   ├── HEAD, objects/     # git internals (shared across projects)  │   ├── refs/hermes/<hash> # per-project branch tip  │   ├── indexes/<hash>     # per-project git index  │   ├── projects/<hash>.json  # workdir + created_at + last_touch  │   └── info/exclude  ├── .last_prune            # auto-prune idempotency marker  └── legacy-<ts>/           # archived pre-v2 per-project shadow repos
+~/.hermes/checkpoints/
+  ├── store/                 # single shared bare git repo
+  │   ├── HEAD, objects/     # git internals (shared across projects)
+  │   ├── refs/hermes/<hash> # per-project branch tip
+  │   ├── indexes/<hash>     # per-project git index
+  │   ├── projects/<hash>.json  # workdir + created_at + last_touch
+  │   └── info/exclude
+  ├── .last_prune            # auto-prune idempotency marker
+  └── legacy-<ts>/           # archived pre-v2 per-project shadow repos
 ```
 
-Each<hash>is derived from the absolute path of the working directory. You normally never need to touch these manually — usehermes checkpoints status/prune/clearinstead.
+هر `<hash>` از مسیر مطلق دایرکتوری کاری مشتق شده است. معمولاً هرگز نیازی به لمس دستی آن‌ها نیست — به جای آن از `hermes checkpoints status`/`prune`/`clear` استفاده کنید.
 
 `<hash>`
 `hermes checkpoints status`
 `prune`
 `clear`
 
-### Migration from v1​
+### مهاجرت از v1
 
-Before the v2 rewrite, each working directory got its own complete shadow git repo directly under~/.hermes/checkpoints/<hash>/. That layout couldn't dedup objects across projects and had a documented no-op pruner — the store would grow without bound.
+قبل از بازنویسی v2، هر دایرکتوری کاری یک مخزن git سایه‌ای کامل جداگانه مستقیماً زیر `~/.hermes/checkpoints/<hash>/` داشت. آن چیدمان نمی‌توانست object‌ها را بین پروژه‌ها dedup کند و یک pruner بی‌عمل مستند داشت — فروشگاه بدون محدودیت رشد می‌کرد.
 
 `~/.hermes/checkpoints/<hash>/`
 
-On first v2 run, any pre-v2 shadow repos are moved into~/.hermes/checkpoints/legacy-<timestamp>/so the new single-store layout starts clean. Old/rollbackhistory is still reachable by manually inspecting the legacy archive withgit; once you're confident you don't need it, run:
+در اولین اجرای v2، هر مخزن سایه‌ای قبل از v2 به `~/.hermes/checkpoints/legacy-<timestamp>/` منتقل می‌شود تا چیدمان فروشگاه واحد جدید تمیز شروع شود. تاریخچه `/rollback` قدیمی همچنان با بررسی دستی آرشیو legacy از طریق `git` قابل دسترسی است؛ وقتی مطمئن شدید به آن نیاز ندارید، اجرا کنید:
 
 `~/.hermes/checkpoints/legacy-<timestamp>/`
 `/rollback`
@@ -253,18 +298,18 @@ On first v2 run, any pre-v2 shadow repos are moved into~/.hermes/checkpoints/leg
 hermes checkpoints clear-legacy
 ```
 
-to reclaim the space. Legacy archives are also swept byauto_pruneafterretention_days.
+برای بازپس‌گیری فضا. آرشیوهای legacy همچنین توسط `auto_prune` پس از `retention_days` sweep می‌شوند.
 
 `auto_prune`
 `retention_days`
 
-## Best Practices​
+## بهترین شیوه‌ها
 
-- Enable checkpoints only when you need them—hermes chat --checkpointsor per-profileenabled: true.
-- Use/rollback diffbefore restoring— preview what will change to pick the right checkpoint.
-- Use/rollbackinstead ofgit resetwhen you want to undo agent-driven changes only.
-- Checkhermes checkpoints statusoccasionallyif you use checkpoints regularly — shows which projects are active and what the store costs you.
-- Combine with Git worktreesfor maximum safety — keep each Hermes session in its own worktree/branch, with checkpoints as an extra layer.
+- **checkpoints را فقط وقتی فعال کنید که به آن‌ها نیاز دارید** — `hermes chat --checkpoints` یا `enabled: true` به ازای هر پروفایل.
+- **قبل از بازیابی از `/rollback diff` استفاده کنید** — پیش‌نمایش کنید چه چیزی تغییر خواهد کرد تا checkpoint مناسب را انتخاب کنید.
+- **از `/rollback` به جای `git reset` استفاده کنید** وقتی فقط می‌خواهید تغییرات عامل‌محور را undo کنید.
+- **گاهی `hermes checkpoints status` را بررسی کنید** اگر منظماً از checkpoints استفاده می‌کنید — نشان می‌دهد کدام پروژه‌ها فعال هستند و فروشگاه چه هزینه‌ای برای شما دارد.
+- **با Git worktrees ترکیب کنید** برای حداکثر ایمنی — هر جلسه Hermes را در worktree/branch خود نگه دارید، با checkpoints به عنوان یک لایه اضافی.
 
 `hermes chat --checkpoints`
 `enabled: true`
@@ -273,7 +318,6 @@ to reclaim the space. Legacy archives are also swept byauto_pruneafterretention_
 `git reset`
 `hermes checkpoints status`
 
-For running multiple agents in parallel on the same repo, see the guide onGit worktrees.
+برای اجرای عوامل متعدد به صورت موازی روی همان مخزن، به راهنمای [Git worktrees](/docs/user-guide/git-worktrees) مراجعه کنید.
 
-[Git worktrees](/docs/user-guide/git-worktrees)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/checkpoints-and-rollback.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/checkpoints-and-rollback.md)

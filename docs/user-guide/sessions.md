@@ -1,72 +1,53 @@
 ---
 layout: docs
 title: "جلسات"
-permalink: /user-guide/sessions/
+permalink: /docs/user-guide/sessions/
 ---
 
 - 
-- Using Hermes
-- Sessions
+- استفاده از Hermes
+- جلسات
 
-# Sessions
+# جلسات
 
-Hermes Agent automatically saves every conversation as a session. Sessions enable conversation resume, cross-session search, and full conversation history management.
+Hermes Agent به طور خودکار هر مکالمه را به عنوان یک جلسه ذخیره می‌کند. جلسات بازیابی مکالمه، جستجوی بین جلسه‌ای و مدیریت کامل تاریخچه مکالمه را ممکن می‌سازند.
 
-## How Sessions Work​
+## نحوه کار جلسات
 
-Every conversation — whether from the CLI, Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Teams, or any other messaging platform — is stored as a session with full message history. Sessions are tracked in:
+هر مکالمه — چه از CLI، Telegram، Discord، Slack، WhatsApp، Signal، Matrix، Teams یا هر پلتفرم پیام‌رسان دیگر — به عنوان یک جلسه با تاریخچه کامل پیام ذخیره می‌شود. جلسات در مکان‌های زیر ردیابی می‌شوند:
 
-1. SQLite database(~/.hermes/state.db) — structured session metadata with FTS5 full-text search, plus full message history
+1. دیتابیس SQLite (`~/.hermes/state.db`) — فراداده ساختاریافته جلسه با FTS5 full-text search، به علاوه تاریخچه کامل پیام
 
 `~/.hermes/state.db`
 
-The SQLite database stores:
+دیتابیس SQLite ذخیره می‌کند:
 
-- Session ID, source platform, user ID
-- Session title(unique, human-readable name)
-- Model name and configuration
-- System prompt snapshot
-- Full message history (role, content, tool calls, tool results)
-- Token counts (input/output)
-- Timestamps (started_at, ended_at)
-- Parent session ID (for compression-triggered session splitting)
+- شناسه جلسه، پلتفرم منبع، شناسه کاربر
+- عنوان جلسه (نام منحصربفرد و خوانا)
+- نام مدل و پیکربندی
+- اسنپشات system prompt
+- تاریخچه کامل پیام (نقش، محتوا، فراخوانی‌های ابزار، نتایج ابزار)
+- شمارش توکن (ورودی/خروجی)
+- برچسب‌های زمانی (started_at, ended_at)
+- شناسه جلسه والد (برای تقسیم جلسه ناشی از فشرده‌سازی)
 
-### What Counts Toward Context​
+### چه چیزی به سیاق اضافه می‌کند
 
-Hermes stores session history so it can resume conversations, but it does not
-keep re-sending every byte it has ever handled. On each turn, the model sees
-the selected system prompt, the current conversation window, and any content
-Hermes explicitly injects for that turn.
+Hermes تاریخچه جلسه را ذخیره می‌کند تا بتواند مکالمات را بازیابی کند، اما هر بایتی که تاکنون پردازش کرده را دوباره ارسال نمی‌کند. در هر نوبت، مدل system prompt انتخاب شده، پنجره مکالمه فعلی و هر محتوایی که Hermes به طور صریح برای آن نوبت تزریق می‌کند را می‌بیند.
 
-Media attachments are handled as turn-scoped inputs:
+پیوست‌های رسانه به عنوان ورودی‌های محدود به نوبت مدیریت می‌شوند:
 
-- Images may be attached natively to the next model call, or pre-analyzed into
-a text description when the active model does not support native vision.
-- Audio is transcribed into text when speech-to-text is configured.
-- Text documents can have their extracted text included; other document types
-are usually represented by a saved local path and a short note.
-- Attachment paths and extracted/derived text can appear in the transcript, but
-the raw image, audio, or binary file bytes are not repeatedly copied into
-future prompts.
+- تصاویر ممکن است به طور بومی به فراخوانی مدل بعدی پیوست شوند، یا وقتی مدل فعال از vision بومی پشتیبانی نمی‌کند به یک توصیف متنی پیش‌تحلیل شوند.
+- صدا وقتی speech-to-text پیکربندی شده باشد به متن تبدیل می‌شود.
+- اسناد متنی می‌توانند متن استخراج شده خود را داشته باشند؛ سایر انواع اسناد معمولاً با یک مسیر محلی ذخیره شده و یک یادداشت کوتاه نمایش داده می‌شوند.
+- مسیرهای پیوست و متن استخراج/مشتق شده می‌توانند در رونوشت ظاهر شوند، اما بایت‌های خام تصویر، صدا یا فایل باینری به طور مکرر به پرامپت‌های آینده کپی نمی‌شوند.
 
-For example, if a user sends an image and asks Hermes to make a meme from it,
-Hermes may inspect that image once with vision and run an image-processing
-script. Future turns do not automatically carry the original JPEG in context.
-They carry only whatever was written into the conversation, such as the user's
-request, a short image description, a local cache path, or the final assistant
-response.
+به عنوان مثال، اگر کاربری تصویری ارسال کند و از Hermes بخواهد از آن meme بسازد، Hermes ممکن است آن تصویر را یک بار با vision بررسی کند و یک اسکریپت پردازش تصویر اجرا کند. نوبت‌های آینده JPEG اصلی را به طور خودکار در سیاق حمل نمی‌کنند. فقط آنچه را که در مکالمه نوشته شده حمل می‌کنند، مانند درخواست کاربر، توصیف کوتاه تصویر، مسیر کش محلی یا پاسخ نهایی assistant.
 
-The most common cause of context growth is not the media file itself. It is
-verbose text: pasted transcripts, full logs, large tool outputs, long diffs,
-repeated status reports, and detailed proof dumps. Prefer summaries, file
-paths, focused excerpts, and tool-backed lookups over copying large artifacts
-into chat.
+شایع‌ترین دلیل رشد سیاق خود فایل رسانه نیست. متن مفصل است: رونوشتهای چسبانده شده، لاگ‌های کامل، خروجی‌های بزرگ ابزار، diff‌های طولانی، گزارش‌های وضعیت تکراری و اثبات‌های مفصل. خلاصه‌ها، مسیرهای فایل، قطعات متمرکز و جستجوهای مبتنی بر ابزار را بر کپی کردن artifact‌های بزرگ در چت ترجیح دهید.
 
-Use/compresswhen a session gets long,/newfor a fresh thread, andhermes sessions pruneonly when you want to delete old ended sessions from
-storage. Compression reduces the active context; it is not a privacy delete.
-Pass a name to/new(e.g./new payments-refactor) to set the new session's
-initial title up front — useful for finding it later with/resume <name>or
-in the/sessionspicker.
+از `/compress` وقتی یک جسله طولانی شود، `/new` برای یک رشته جدید و `hermes sessions prune` فقط وقتی می‌خواهید جلسات قدیمی پایان یافته را از فروشگاه حذف کنید استفاده کنید. فشرده‌سازی سیاق فعال را کاهش می‌دهد؛ حذف حریم خصوصی نیست.
+یک نام به `/new` ارسال کنید (مثلاً `/new payments-refactor`) تا عنوان اولیه جسله جدید را از ابتدا تنظیم کنید — مفید برای پیدا کردن آن بعداً با `/resume <name>` یا در انتخابگر `/sessions`.
 
 `/compress`
 `/new`
@@ -74,117 +55,90 @@ in the/sessionspicker.
 `/new`
 `/new payments-refactor`
 `/resume <name>`
-`/sessions`
+`sessions`
 
-### Session Sources​
+### منابع جلسه
 
-Each session is tagged with its source platform:
+هر جلسه با پلتفرم منبع خود برچسب گذاری شده است:
 
-| Source | Description |
+| منبع | توضیحات |
 | --- | --- |
-| cli | Interactive CLI (hermesorhermes chat) |
-| telegram | Telegram messenger |
-| discord | Discord server/DM |
-| slack | Slack workspace |
-| whatsapp | WhatsApp messenger |
-| signal | Signal messenger |
-| matrix | Matrix rooms and DMs |
-| mattermost | Mattermost channels |
-| email | Email (IMAP/SMTP) |
-| sms | SMS via Twilio |
-| dingtalk | DingTalk messenger |
-| feishu | Feishu/Lark messenger |
+| cli | CLI تعاملی (`hermes` یا `hermes chat`) |
+| telegram | پیام‌رسان Telegram |
+| discord | سرور/DM Discord |
+| slack | workspace Slack |
+| whatsapp | پیام‌رسان WhatsApp |
+| signal | پیام‌رسان Signal |
+| matrix | اتاق‌های Matrix و DMs |
+| mattermost | کانال‌های Mattermost |
+| email | ایمیل (IMAP/SMTP) |
+| sms | SMS از طریق Twilio |
+| dingtalk | پیام‌رسان DingTalk |
+| feishu | پیام‌رسان Feishu/Lark |
 | wecom | WeCom (WeChat Work) |
-| weixin | Weixin (personal WeChat) |
-| bluebubbles | Apple iMessage via BlueBubbles macOS server |
-| qqbot | QQ Bot (Tencent QQ) via Official API v2 |
-| homeassistant | Home Assistant conversation |
-| webhook | Incoming webhooks |
-| api-server | API server requests |
-| acp | ACP editor integration |
-| cron | Scheduled cron jobs |
-| batch | Batch processing runs |
+| weixin | Weixin (WeChat شخصی) |
+| bluebubbles | Apple iMessage از طریق سرور macOS BlueBubbles |
+| qqbot | QQ Bot (Tencent QQ) از طریق API رسمی v2 |
+| homeassistant | مکالمه Home Assistant |
+| webhook | webhook‌های ورودی |
+| api-server | درخواست‌های سرور API |
+| acp | یکپارچه‌سازی ویرایشگر ACP |
+| cron | کارهای cron زمان‌بندی شده |
+| batch | اجرای پردازش دسته‌ای |
 
-`cli`
-`hermes`
-`hermes chat`
-`telegram`
-`discord`
-`slack`
-`whatsapp`
-`signal`
-`matrix`
-`mattermost`
-`email`
-`sms`
-`dingtalk`
-`feishu`
-`wecom`
-`weixin`
-`bluebubbles`
-`qqbot`
-`homeassistant`
-`webhook`
-`api-server`
-`acp`
-`cron`
-`batch`
+## بازیابی جلسه CLI
 
-## CLI Session Resume​
-
-Resume previous conversations from the CLI using--continueor--resume:
+مکالمات قبلی را از CLI با استفاده از `--continue` یا `--resume` بازیابی کنید:
 
 `--continue`
 `--resume`
 
-### Continue Last Session​
+### ادامه آخرین جلسه
 
 ```
-# Resume the most recent CLI sessionhermes --continuehermes -c# Or with the chat subcommandhermes chat --continuehermes chat -c
+# بازیابی آخرین جلسه CLIhermes --continuehermes -c# یا با زیر دستور chathermes chat --continuehermes chat -c
 ```
 
-This looks up the most recentclisession from the SQLite database and loads its full conversation history.
+این آخرین جلسه `cli` را از دیتابیس SQLite جستجو کرده و تاریخچه مکالمه کامل آن را بارگذاری می‌کند.
 
-`cli`
+### بازیابی بر اساس نام
 
-### Resume by Name​
-
-If you've given a session a title (seeSession Namingbelow), you can resume it by name:
+اگر به یک جلسه عنوان داده باشید (به Naming جلسه در زیر مراجعه کنید)، می‌توانید آن را بر اساس نام بازیابی کنید:
 
 ```
-# Resume a named sessionhermes -c "my project"# If there are lineage variants (my project, my project #2, my project #3),# this automatically resumes the most recent onehermes -c "my project"   # → resumes "my project #3"
+# بازیابی یک جلسه با نامhermes -c "my project"# اگر variant‌های lineage وجود دارند (my project, my project #2, my project #3),# این به طور خودکار آخرین را بازیابی می‌کندhermes -c "my project"   # → resumes "my project #3"
 ```
 
-### Resume Specific Session​
+### بازیابی جلسه مشخص
 
 ```
-# Resume a specific session by IDhermes --resume 20250305_091523_a1b2c3d4hermes -r 20250305_091523_a1b2c3d4# Resume by titlehermes --resume "refactoring auth"# Or with the chat subcommandhermes chat --resume 20250305_091523_a1b2c3d4
+# بازیابی یک جلسه مشخص بر اساس شناسهhermes --resume 20250305_091523_a1b2c3d4hermes -r 20250305_091523_a1b2c3d4# بازیابی بر اساس عنوانhermes --resume "refactoring auth"# یا با زیر دستور chathermes chat --resume 20250305_091523_a1b2c3d4
 ```
 
-Session IDs are shown when you exit a CLI session, and can be found withhermes sessions list.
+شناسه‌های جلسه هنگام خروج از جلسه CLI نمایش داده می‌شوند و با `hermes sessions list` قابل پیدا کردن هستند.
 
 `hermes sessions list`
 
-### Conversation Recap on Resume​
+### بازبینی مکالمه هنگام بازیابی
 
-When you resume a session, Hermes displays a compact recap of the previous conversation in a styled panel before the input prompt:
+وقتی یک جلسه را بازیابی می‌کنید، Hermes قبل از پرامپت ورودی یک بازبینی فشرده از مکالمه قبلی را در یک پنل استایل‌دار نمایش می‌دهد:
 
-Resume mode shows a compact recap panel with recent user and assistant turns before returning you to the live prompt.
+حالت بازیابی یک پنل بازبینی فشرده با نوبت‌های اخیر کاربر و assistant نمایش می‌دهد قبل از بازگرداندن شما به پرامپت زنده.
 
-The recap:
+بازبینی:
 
-- Showsuser messages(gold●) andassistant responses(green◆)
-- Truncateslong messages (300 chars for user, 200 chars / 3 lines for assistant)
-- Collapses tool callsto a count with tool names (e.g.,[3 tool calls: terminal, web_search])
-- Hidessystem messages, tool results, and internal reasoning
-- Capsat the last 10 exchanges with a "... N earlier messages ..." indicator
-- Usesdim stylingto distinguish from the active conversation
+- پیام‌های کاربر (طلایی ●) و پاسخ‌های assistant (سبز ◆) را نشان می‌دهد
+- پیام‌های طولانی را کوتاه می‌کند (300 کاراکتر برای کاربر، 200 کاراکتر / 3 خط برای assistant)
+- فراخوانی‌های ابزار را به یک شمارش با نام ابزارها فشرده می‌کند (مثلاً [3 tool calls: terminal, web_search])
+- پیام‌های سیستم، نتایج ابزار و استدلال داخلی را پنهان می‌کند
+- در 10 تبادل آخر با یک شاگر "... N earlier messages ..." محدود می‌شود
+- از استایل کم‌رنگ برای تمایز از مکالمه فعال استفاده می‌کند
 
-`●`
-`◆`
-`[3 tool calls: terminal, web_search]`
+```
+[3 tool calls: terminal, web_search]
+```
 
-To disable the recap and keep the minimal one-liner behavior, set in~/.hermes/config.yaml:
+برای غیرفعال کردن بازبینی و حفظ رفتار minimal one-liner، در `~/.hermes/config.yaml` تنظیم کنید:
 
 `~/.hermes/config.yaml`
 
@@ -192,96 +146,70 @@ To disable the recap and keep the minimal one-liner behavior, set in~/.hermes/co
 display:  resume_display: minimal   # default: full
 ```
 
-Session IDs follow the formatYYYYMMDD_HHMMSS_<hex>— CLI/TUI sessions use a 6-char hex suffix (e.g.20250305_091523_a1b2c3), gateway sessions use an 8-char suffix (e.g.20250305_091523_a1b2c3d4). You can resume by ID (full or unique prefix) or by title — both work with-cand-r.
+شناسه‌های جلسه فرمت `YYYYMMDD_HHMMSS_<hex>` را دنبال می‌کنند — نشست‌های CLI/TUI از پسوند hex 6 کاراکتری (مثلاً `20250305_091523_a1b2c3`) و نشست‌های gateway از پسوند 8 کاراکتری (مثلاً `20250305_091523_a1b2c3d4`) استفاده می‌کنند. می‌توانید بر اساس شناسه (کامل یا پیشوند یکتا) یا عنوان بازیابی کنید — هر دو با `-c` و `-r` کار می‌کنند.
 
-`YYYYMMDD_HHMMSS_<hex>`
-`20250305_091523_a1b2c3`
-`20250305_091523_a1b2c3d4`
-`-c`
-`-r`
+## انتقال بین پلتفرم‌ها
 
-## Cross-Platform Handoff​
-
-Use/handoff <platform>from a CLI session to transfer the live conversation to a messaging platform's home channel. The agent picks up exactly where the CLI left off — same session id, full role-aware transcript, tool calls and all.
+از `/handoff <platform>` در یک جلسه CLI استفاده کنید تا مکالمه زنده را به کانال اصلی یک پلتفرم پیام‌رسان منتقل کنید. ایجنت دقیقاً از جایی که CLI متوقف شده ادامه می‌دهد — همان شناسه جلسه، رونوشت کامل آگاه از نقش، فراخوانی‌های ابزار و همه چیز.
 
 `/handoff <platform>`
 
 ```
-# Inside a CLI session/handoff telegram
+# داخل یک جلسه CLI/handoff telegram
 ```
 
-What happens:
+چه اتفاقی می‌افتد:
 
-1. The CLI validates that<platform>is enabled and has a home channel set (run/sethomefrom the destination chat once to configure it).
-2. The CLI marks the session pending andblock-polls the gateway. It refuses if the agent is mid-turn — wait for the current response to finish first.
-3. The gateway watcher claims the handoff and asks the destination adapter for a fresh thread:Telegram— opens a new forum topic (DM topics if Bot API 9.4+ Topics mode is enabled in the chat, or a forum supergroup topic).Discord— creates a 1440-min auto-archive thread under the home text channel.Slack— posts a seed message and uses itstsas the thread anchor.WhatsApp / Signal / Matrix / SMS— no native threads, falls back to the home channel directly.
-4. The gateway re-binds the destination key to your existing CLI session id, then forges a synthetic user turn asking the agent to confirm and summarize. The reply lands in the new thread.
-5. When the gateway acknowledges success, the CLI prints a/resumehint and exits cleanly:↻ Handoff complete. The session is now active on telegram.Resume it on this CLI later with: /resume my-session-title
-6. From that point, the conversation lives on the platform. Reply in the new thread — anyone authorized in that channel shares the same session, and any later real user message in the thread joins seamlessly because thread sessions key withoutuser_id.
+1. CLI تأیید می‌کند که `<platform>` فعال است و یک کانال اصلی تنظیم شده دارد (یک بار `/sethome` را از چت مقصد اجرا کنید تا آن را پیکربندی کنید).
+2. CLI جلسه را به حالت pending علامت‌گذاری کرده و gateway را به طور مسدود کننده poll می‌کند. اگر ایجنت در وسط نوبت باشد امتناع می‌کند — منتظر باشید پاسخ فعلی تمام شود.
+3. ناظر gateway انتقال را ادعا کرده و از آداپتور مقصد یک رشته جدید می‌خواهد: Telegram — یک topic فروم جدید باز می‌کند (topic‌های DM اگر Bot API 9.4+ فعال باشد، یا topic فروم supergroup). Discord — یک رشته با بایگانی خودکار 1440 دقیقه‌ای زیر کانال متنی اصلی ایجاد می‌کند. Slack — یک پیام seed ارسال کرده و `ts` آن را به عنوان anchor رشته استفاده می‌کند. WhatsApp / Signal / Matrix / SMS — رشته‌های بومی ندارند، مستقیماً به کانال اصلی بازمی‌گردند.
+4. Gateway کلید مقصد را دوباره به شناسه جلسه CLI موجود شما bind می‌کند، سپس یک نوبت کاربر مصنوعی ایجاد می‌کند که از ایجنت می‌خواهد تأیید و خلاصه کند. پاسخ در رشته جدید فرود می‌آید.
+5. وقتی gateway موفقیت را تأیید می‌کند، CLI یک راهنمای `/resume` چاپ کرده و به طور تمیز خارج می‌شود:
 
-The CLI validates that<platform>is enabled and has a home channel set (run/sethomefrom the destination chat once to configure it).
+```
+↻ Handoff complete. The session is now active on telegram.
+  Resume it on this CLI later with: /resume my-session-title
+```
+
+6. از آن نقطه، مکالمه روی پلتفرم زندگی می‌کند. در رشته جدید پاسخ دهید — هر کسی که در آن کانال مجاز باشد همان جلسه را به اشتراک می‌گذارد و هر پیام کاربر واقعی بعدی در رشته به طور یکپارچه می‌پیوندد زیرا جلسات رشته بدون `user_id` کلید می‌خورند.
 
 `<platform>`
 `/sethome`
-
-The CLI marks the session pending andblock-polls the gateway. It refuses if the agent is mid-turn — wait for the current response to finish first.
-
-The gateway watcher claims the handoff and asks the destination adapter for a fresh thread:
-
-- Telegram— opens a new forum topic (DM topics if Bot API 9.4+ Topics mode is enabled in the chat, or a forum supergroup topic).
-- Discord— creates a 1440-min auto-archive thread under the home text channel.
-- Slack— posts a seed message and uses itstsas the thread anchor.
-- WhatsApp / Signal / Matrix / SMS— no native threads, falls back to the home channel directly.
-
 `ts`
 
-The gateway re-binds the destination key to your existing CLI session id, then forges a synthetic user turn asking the agent to confirm and summarize. The reply lands in the new thread.
-
-When the gateway acknowledges success, the CLI prints a/resumehint and exits cleanly:
-
-`/resume`
-
-```
-↻ Handoff complete. The session is now active on telegram.  Resume it on this CLI later with: /resume my-session-title
-```
-
-From that point, the conversation lives on the platform. Reply in the new thread — anyone authorized in that channel shares the same session, and any later real user message in the thread joins seamlessly because thread sessions key withoutuser_id.
-
-`user_id`
-
-Resume back to CLI:when you want to come back to a desktop, just run/resume <title>(orhermes -r "<title>"from the shell) and pick up where the platform left off.
+بازیابی به CLI: وقتی می‌خواهید به دسکتاپ برگردید، فقط `/resume <title>` (یا `hermes -r "<title>"` از shell) اجرا کنید و از جایی که پلتفرم متوقف شده ادامه دهید.
 
 `/resume <title>`
 `hermes -r "<title>"`
 
-Failure modes:
+حالت‌های شکست:
 
-- No home channel configured → CLI refuses with a/sethomehint.
-- Platform not enabled / gateway not running → CLI times out at 60s with a clear message and your CLI session stays intact.
-- Thread creation fails (permissions, topics-mode off) → falls back to the home channel directly and still completes; no thread isolation but the handoff itself works.
-- adapter.sendfails (rate limit, transient API error) → handoff marked failed with the reason; the row clears so you can retry.
+- کانال اصلی پیکربندی نشده → CLI با راهنمای `/sethome` امتناع می‌کند.
+- پلتفرم فعال نیست / gateway در حال اجرا نیست → CLI با یک پیام واضح در 60 ثانیه timeout می‌دهد و جلسه CLI شما دست‌نخورده باقی می‌ماند.
+- ایجاد رشته شکست می‌خورد (مجوزها، topics-mode خاموش) → مستقیماً به کانال اصلی بازمی‌گردد و هنوز تکمیل می‌شود؛ جداسازی رشته وجود ندارد اما خود انتقال کار می‌کند.
+- `adapter.send` شکست می‌خورد (محدودیت rate، خطای گذرا API) → انتقال به عنوان شکست خورده با دلیل علامت‌گذاری می‌شود؛ ردیف پاک می‌شود تا بتوانید دوباره تلاش کنید.
 
 `/sethome`
 `adapter.send`
 
-Limitation worth knowing:for non-thread-capable platforms with multi-user group home channels, the synthetic turn keys as a DM-style session. This works for self-DM home channels (the typical setup) but isn't ideal for genuinely shared group chats. Threading covers Telegram / Discord / Slack — by far the common case — so most setups never hit this.
+محدودیت ارزش دانستن: برای پلتفرم‌های بدون قابلیت رشته با کانال‌های اصلی گروهی چند کاربره، نوبت مصنوعی به عنوان یک جلسه DM-style کلید می‌خورد. این برای کانال‌های اصلی self-DM (تنظیم رایج) کار می‌کند اما برای چت‌های گروهی واقعاً مشترک ایده‌آل نیست. رشته‌بندی Telegram / Discord / Slack را پوشش می‌دهد — که قطعاً حالت رایج است — بنابراین اکثر تنظیمات هرگز به این مشکل نمی‌خورند.
 
-## Session Naming​
+## نام‌گذاری جلسه
 
-Give sessions human-readable titles so you can find and resume them easily.
+جلسات را با عناوین خوانا نام‌گذاری کنید تا بتوانید به راحتی آنها را پیدا و بازیابی کنید.
 
-### Auto-Generated Titles​
+### عناوین خودکار تولید شده
 
-Hermes automatically generates a short descriptive title (3–7 words) for each session after the first exchange. This runs in a background thread using a fast auxiliary model, so it adds no latency. You'll see auto-generated titles when browsing sessions withhermes sessions listorhermes sessions browse.
+Hermes پس از اولین تبادل به طور خودکار یک عنوان توصیفی کوتاه (۳–۷ کلمه) برای هر جلسه تولید می‌کند. این در یک رشته پس‌زمینه با یک مدل کمکی سریع اجرا می‌شود، بنابراین latency اضافه نمی‌کند. عناوین خودکار تولید شده را هنگام مرور جلسات با `hermes sessions list` یا `hermes sessions browse` خواهید دید.
 
 `hermes sessions list`
 `hermes sessions browse`
 
-Auto-titling only fires once per session and is skipped if you've already set a title manually.
+نام‌گذاری خودکار فقط یک بار برای هر جلسه اجرا می‌شود و اگر قبلاً عنوانی را به صورت دستی تنظیم کرده باشید رد می‌شود.
 
-### Setting a Title Manually​
+### تنظیم عنوان به صورت دستی
 
-Use the/titleslash command inside any chat session (CLI or gateway):
+از دستور اسلش `/title` در هر جلسه چت (CLI یا gateway) استفاده کنید:
 
 `/title`
 
@@ -289,26 +217,24 @@ Use the/titleslash command inside any chat session (CLI or gateway):
 /title my research project
 ```
 
-The title is applied immediately. If the session hasn't been created in the database yet (e.g., you run/titlebefore sending your first message), it's queued and applied once the session starts.
+عنوان فوراً اعمال می‌شود. اگر جلسه هنوز در دیتابیس ایجاد نشده باشد (مثلاً قبل از ارسال اولین پیام `/title` اجرا کنید)، در صف قرار گرفته و وقتی جلسه شروع شد اعمال می‌شود.
 
-`/title`
-
-You can also rename existing sessions from the command line:
+همچنین می‌توانید جلسات موجود را از خط فرمان تغییر نام دهید:
 
 ```
 hermes sessions rename 20250305_091523_a1b2c3d4 "refactoring auth module"
 ```
 
-### Title Rules​
+### قوانین عنوان
 
-- Unique— no two sessions can share the same title
-- Max 100 characters— keeps listing output clean
-- Sanitized— control characters, zero-width chars, and RTL overrides are stripped automatically
-- Normal Unicode is fine— emoji, CJK, accented characters all work
+- منحصربفرد — دو جلسه نمی‌توانند عنوان مشترک داشته باشند
+- حداکثر 100 کاراکتر — خروجی فهرست را تمیز نگه می‌دارد
+- پاکسازی شده — کاراکترهای کنترلی، کاراکترهای عرض صفر و override‌های RTL به طور خودکار حذف می‌شوند
+- یونیکد عادی مشکلی ندارد — emoji، CJK، کاراکترهای لهجه‌دار همه کار می‌کنند
 
-### Auto-Lineage on Compression​
+### lineage خودکار هنگام فشرده‌سازی
 
-When a session's context is compressed (manually via/compressor automatically), Hermes creates a new continuation session. If the original had a title, the new session automatically gets a numbered title:
+وقتی سیاق یک جلسه فشرده شود (دستی از طریق `/compress` یا خودکار)، Hermes یک جلسه ادامه جدید ایجاد می‌کند. اگر اصلی عنوان داشته باشد، جلسه جدید به طور خودکار یک عنوان شماره‌گذاری شده دریافت می‌کند:
 
 `/compress`
 
@@ -316,58 +242,53 @@ When a session's context is compressed (manually via/compressor automatically), 
 "my project" → "my project #2" → "my project #3"
 ```
 
-When you resume by name (hermes -c "my project"), it automatically picks the most recent session in the lineage.
+وقتی بر اساس نام بازیابی می‌کنید (`hermes -c "my project"`)، به طور خودکار آخرین جلسه در lineage را انتخاب می‌کند.
 
-`hermes -c "my project"`
+### `/title` در پلتفرم‌های پیام‌رسان
 
-### /title in Messaging Platforms​
-
-The/titlecommand works in all gateway platforms (Telegram, Discord, Slack, WhatsApp):
+دستور `/title` در تمام پلتفرم‌های gateway (Telegram، Discord، Slack، WhatsApp) کار می‌کند:
 
 `/title`
-- /title My Research— set the session title
-- /title— show the current title
+- `/title My Research` — تنظیم عنوان جلسه
+- `/title` — نمایش عنوان فعلی
 
-`/title My Research`
-`/title`
+## دستورات مدیریت جلسه
 
-## Session Management Commands​
-
-Hermes provides a full set of session management commands viahermes sessions:
+Hermes مجموعه کاملی از دستورات مدیریت جلسه را از طریق `hermes sessions` ارائه می‌دهد:
 
 `hermes sessions`
 
-### List Sessions​
+### فهرست جلسات
 
 ```
-# List recent sessions (default: last 20)hermes sessions list# Filter by platformhermes sessions list --source telegram# Show more sessionshermes sessions list --limit 50
+# فهرست جلسات اخیر (پیش‌فرض: 20 مورد اخیر)hermes sessions list# فیلتر بر اساس پلتفرمhermes sessions list --source telegram# نمایش جلسات بیشترhermes sessions list --limit 50
 ```
 
-When sessions have titles, the output shows titles, previews, and relative timestamps:
+وقتی جلسات عنوان دارند، خروجی عناوین، پیش‌نمایش‌ها و برچسب‌های زمانی نسبی را نمایش می‌دهد:
 
 ```
 Title                  Preview                                  Last Active   ID────────────────────────────────────────────────────────────────────────────────────────────────refactoring auth       Help me refactor the auth module please   2h ago        20250305_091523_amy project #3          Can you check the test failures?          yesterday     20250304_143022_e—                      What's the weather in Las Vegas?          3d ago        20250303_101500_f
 ```
 
-When no sessions have titles, a simpler format is used:
+وقتی هیچ جلسه‌ای عنوان ندارد، فرمت ساده‌تری استفاده می‌شود:
 
 ```
 Preview                                            Last Active   Src    ID──────────────────────────────────────────────────────────────────────────────────────Help me refactor the auth module please             2h ago        cli    20250305_091523_aWhat's the weather in Las Vegas?                    3d ago        tele   20250303_101500_f
 ```
 
-### Export Sessions​
+### خروجی جلسات
 
-hermes sessions exportis one surface for every export format, selected with--format:
+`hermes sessions export` یک سطح برای هر فرمت خروجی است، با `--format` انتخاب شده:
 
 `hermes sessions export`
 `--format`
 
-| Format | Output | Use it for |
+| فرمت | خروجی | استفاده |
 | --- | --- | --- |
-| jsonl(default) | one JSON object per session | backups, machine round-trip |
-| md/qmd | one Markdown/Quarto file per session + manifest | readable archives, notes |
-| html | single self-contained page (sidebar for multi-session) | sharing, browsing |
-| trace | Claude Code JSONL | HF Agent Trace Viewer,--upload |
+| jsonl (پیش‌فرض) | یک شیء JSON به ازای هر جلسه | پشتیبان‌گیری، بازگشت ماشینی |
+| md/qmd | یک فایل Markdown/Quarto به ازای هر جلسه + manifest | آرشیوهای خوانا، یادداشت‌ها |
+| html | یک صفحه خود-contained (sidebar برای جلسات متعدد) | اشتراک‌گذاری، مرور |
+| trace | Claude Code JSONL | HF Agent Trace Viewer، `--upload` |
 
 `jsonl`
 `md`
@@ -376,11 +297,11 @@ hermes sessions exportis one surface for every export format, selected with--for
 `trace`
 `--upload`
 
-Plus--only user-promptsfor a prompts-only view (jsonl or md).
+به علاوه `--only user-prompts` برای نمای فقط پرامپت‌ها (jsonl یا md).
 
 `--only user-prompts`
 
-All formats share the same selection knobs:--session-idfor one session, or the fullprune/archivefilter set for bulk —--older-than/--newer-than/--before/--after(durations like5h/2d/1w, bare days, or ISO timestamps),--source,--title,--model,--provider,--cwd,--min/--max-messages,--min/--max-tokens,--min/--max-cost,--min/--max-tool-calls,--user,--chat-id,--chat-type,--branch,--end-reason.--dry-runpreviews the match set without writing.--redactscrubs secrets (API keys, tokens, credentials) from exported content on any format — recommended for anything you plan to share. Note: bulk filters matchendedsessions; unfilteredexportdumps everything, including active ones.
+تمام فرمت‌ها کنترل‌های انتخاب مشترک را به اشتراک می‌گذارند: `--session-id` برای یک جلسه، یا مجموعه فیلتر کامل `prune`/`archive` برای حجم — `--older-than`/`--newer-than`/`--before`/`--after` (مدت زمان مانند `5h`/`2d`/`1w`، روزهای خام، یا برچسب‌های زمانی ISO)، `--source`، `--title`، `--model`، `--provider`، `--cwd`، `--min`/`--max-messages`، `--min`/`--max-tokens`، `--min`/`--max-cost`، `--min`/`--max-tool-calls`، `--user`، `--chat-id`، `--chat-type`، `--branch`، `--end-reason`. `--dry-run` مجموعه تطابق را بدون نوشتن پیش‌نمایش می‌دهد. `--redact` رمزها (کلیدهای API، توکن‌ها، اعتبارنامه‌ها) را از محتوای خروجی در هر فرمت پاک می‌کند — برای هر چیزی که قصد اشتراک‌گذاری دارید توصیه می‌شود. توجه: فیلترهای حجم جلسات پایان یافته را تطابق می‌دهند؛ `export` بدون فیلتر همه چیز را خالی می‌کند، از جمله فعال‌ها.
 
 `--session-id`
 `prune`
@@ -410,43 +331,39 @@ All formats share the same selection knobs:--session-idfor one session, or the f
 `--redact`
 `export`
 
-#### JSONL (default)​
+#### JSONL (پیش‌فرض)
 
 ```
-# Export all sessions to a JSONL filehermes sessions export backup.jsonl# Export sessions from a specific platformhermes sessions export telegram-history.jsonl --source telegram# Export a single sessionhermes sessions export session.jsonl --session-id 20250305_091523_a1b2c3d4# Redact API keys/tokens/credentials from the exported contenthermes sessions export backup.jsonl --redact
+# خروجی تمام جلسات به یک فایل JSONLhermes sessions export backup.jsonl# خروجی جلسات از یک پلتفرم مشخصhermes sessions export telegram-history.jsonl --source telegram# خروجی یک جلسهhermes sessions export session.jsonl --session-id 20250305_091523_a1b2c3d4# پاک کردن کلیدهای API/توکن‌ها/اعتبارنامه‌ها از محتوای خروجیhermes sessions export backup.jsonl --redact
 ```
 
-Exported files contain one JSON object per line with full session metadata and all messages.
+فایل‌های خروجی حاوی یک شیء JSON در هر خط با فراداده کامل جلسه و تمام پیام‌ها هستند.
 
-#### HTML​
+#### HTML
 
---format htmlwrites a single self-contained HTML file — no remote dependencies — with styled message bubbles, collapsible tool output, and (for multi-session exports) a sidebar to switch between sessions:
+`--format html` یک فایل HTML خود-contained واحد می‌نویسد — بدون dependency‌های دور — با حباب‌های پیام استایل‌دار، خروجی ابزار جمع‌شونده و (برای خروجی جلسات متعدد) یک sidebar برای سوئیچ بین جلسات:
 
 `--format html`
 
 ```
-# One session as a standalone HTML pagehermes sessions export --format html --session-id 20250305_091523_a1b2c3d4 transcript.html# All Telegram sessions from the last week in one file, secrets redactedhermes sessions export --format html --newer-than 1w --source telegram --redact archive.html
+# یک جلسه به عنوان یک صفحه HTML مستقلhermes sessions export --format html --session-id 20250305_091523_a1b2c3d4 transcript.html# تمام جلسات Telegram هفته اخیر در یک فایل، رمزها پاک شدهhermes sessions export --format html --newer-than 1w --source telegram --redact archive.html
 ```
 
-#### Prompts Only​
+#### فقط پرامپت‌ها
 
---only user-promptsexports just the prompts you wrote — no assistant replies, tool output, or system context. Useful for building prompt libraries or reviewing what you asked:
+`--only user-prompts` فقط پرامپت‌هایی که نوشتید را خروجی می‌دهد — بدون پاسخ‌های assistant، خروجی ابزار یا سیاق سیستم. مفید برای ساخت کتابخانه پرامپت‌ها یا بازبینی آنچه پرسیدید:
 
 `--only user-prompts`
 
 ```
-# One JSONL record per prompt (session id, index, timestamp, text)hermes sessions export prompts.jsonl --session-id 20250305_091523_a1b2c3d4 --only user-prompts# Markdown, straight to stdouthermes sessions export - --session-id 20250305_091523_a1b2c3d4 --only user-prompts --format md
+# یک رکورد JSONL به ازای هر پرامپت (شناسه جلسه، ایندکس، برچسب زمانی، متن)hermes sessions export prompts.jsonl --session-id 20250305_091523_a1b2c3d4 --only user-prompts# Markdown، مستقیماً به stdouthermes sessions export - --session-id 20250305_091523_a1b2c3d4 --only user-prompts --format md
 ```
 
-Works with--format jsonl(default) ormd, honors the same filters for bulk export, and combines with--redact.
+با `--format jsonl` (پیش‌فرض) یا `md` کار می‌کند، همان فیلترها برای خروجی حجم را رعایت می‌کند و با `--redact` ترکیب می‌شود.
 
-`--format jsonl`
-`md`
-`--redact`
+#### Trace (HF Agent Trace Viewer)
 
-#### Traces (HF Agent Trace Viewer)​
-
---format traceemits Claude Code JSONL — the transcript shape the Hugging Face Hub auto-detects for itsAgent Trace Viewer. Write it locally, or add--uploadto push it to your own privatehermes-tracesdataset (readsHF_TOKEN):
+`--format trace` Claude Code JSONL تولید می‌کند — شکل رونوشتی که Hugging Face Hub برای Agent Trace Viewer خود شناسایی خودکار می‌کند. آن را محلی بنویسید، یا `--upload` را اضافه کنید تا آن را به dataset خصوصی `hermes-traces` خودتان push کنید ( `HF_TOKEN` را می‌خواند):
 
 `--format trace`
 [Agent Trace Viewer](https://huggingface.co/docs/hub/agent-traces)
@@ -455,399 +372,245 @@ Works with--format jsonl(default) ormd, honors the same filters for bulk export,
 `HF_TOKEN`
 
 ```
-# Trace of the most recent session, to stdouthermes sessions export --format trace# One session to a local trace filehermes sessions export --format trace --session-id 20250305_091523_a1b2c3d4 trace.jsonl# Upload straight to your private HF traces datasethermes sessions export --format trace --session-id 20250305_091523_a1b2c3d4 --upload
+# Trace جلسه اخیر، به stdouthermes sessions export --format trace# یک جلسه به یک فایل trace محلیhermes sessions export --format trace --session-id 20250305_091523_a1b2c3d4 trace.jsonl# آپلود مستقیماً به dataset HF traces خصوصیhermes sessions export --format trace --session-id 20250305_091523_a1b2c3d4 --upload
 ```
 
-Trace exports are secret-redacted by default (they're meant to leave the machine);--no-redactopts out after manual review.--uploadis private unless--public. Bulk trace export with filters writes one<id>.trace.jsonlper session.
+خروجی‌های trace به طور پیش‌فرض رمزها را پاک می‌کنند (برای خروج از ماشین در نظر گرفته شده‌اند)؛ `--no-redact` پس از بازبینی دستی غیرفعال می‌کند. `--upload` خصوصی است مگر `--public`. خروجی حجم trace با فیلترها یک `<id>.trace.jsonl` به ازای هر جلسه می‌نویسد.
 
-`--no-redact`
-`--upload`
-`--public`
-`<id>.trace.jsonl`
+#### Markdown / QMD
 
-#### Markdown / QMD​
-
-Pass--format mdor--format qmdwhen you want a readable, file-based archive before hiding or deleting old sessions. Markdown/QMD exports write one file per session into a directory (default:~/.hermes/session-exports).
+`--format md` یا `--format qmd` را ارسال کنید وقتی می‌خواهید قبل از پنهان کردن یا حذف جلسات قدیمی یک آرشیو خوانا و مبتنی بر فایل داشته باشید. خروجی Markdown/QMD یک فایل به ازای هر جلسه در یک دایرکتوری می‌نویسد (پیش‌فرض: `~/.hermes/session-exports`).
 
 `--format md`
 `--format qmd`
 `~/.hermes/session-exports`
 
 ```
-# Export one session to Markdownhermes sessions export --format md --session-id 20250305_091523_a1b2c3d4# Export a compression lineage as one logical documenthermes sessions export --format md --session-id 20250305_091523_a1b2c3d4 --lineage logical# Preview ended sessions older than 90 days without writing fileshermes sessions export --format md --older-than 90 --dry-run# Export ended Telegram sessions older than 2 weeks to QMD fileshermes sessions export --format qmd --older-than 2w --source telegram# Export long Claude sessions, secrets redactedhermes sessions export --format md --model sonnet --min-messages 50 --redact# Only after verification, export and delete one explicitly named sessionhermes sessions export --format md --session-id 20250305_091523_a1b2c3d4 --delete-after-verified --yes
+# خروجی یک جلسه به Markdownhermes sessions export --format md --session-id 20250305_091523_a1b2c3d4# خروجی یک lineage فشرده‌سازی به عنوان یک سند منطقیhermes sessions export --format md --session-id 20250305_091523_a1b2c3d4 --lineage logical# پیش‌نمایش جلسات پایان یافته قدیمی‌تر از 90 روز بدون نوشتن فایلhermes sessions export --format md --older-than 90 --dry-run# خروجی جلسات پایان یافته Telegram قدیمی‌تر از 2 هفته به فایل‌های QMDhermes sessions export --format qmd --older-than 2w --source telegram# خروجی جلسات طولانی Claude، رمزها پاک شدهhermes sessions export --format md --model sonnet --min-messages 50 --redact# فقط پس از تأیید، خروجی و حذف یک جلسه با نام مشخصhermes sessions export --format md --session-id 20250305_091523_a1b2c3d4 --delete-after-verified --yes
 ```
 
-Markdown/QMD export writes one.mdor.qmdfile per exported session plus amanifest.jsonlwith the file path, message count, lineage ids, and SHA-256. Bulk export requires at least one filter; a bare bulk export is refused.--delete-after-verifiedis intentionally limited to--session-idand requires--yes.--redactscrubs secrets (API keys, tokens, credentials) from message content and tool output before writing — recommended for any export you plan to share.
+خروجی Markdown/QMD یک فایل `.md` یا `.qmd` به ازای هر جلسه خروجی شده به علاوه یک `manifest.jsonl` با مسیر فایل، شمارش پیام، شناسه‌های lineage و SHA-256 می‌نویسد. خروجی حجم حداقل یک فیلتر می‌خواهد؛ یک خروجی حجم خام رد می‌شود. `--delete-after-verified` عمداً فقط به `--session-id` محدود شده و `--yes` نیاز دارد. `--redact` رمزها (کلیدهای API، توکن‌ها، اعتبارنامه‌ها) را از محتوای پیام و خروجی ابزار قبل از نوشتن پاک می‌کند — برای هر خروجی که قصد اشتراک‌گذاری دارید توصیه می‌شود.
 
-`.md`
-`.qmd`
-`manifest.jsonl`
-`--delete-after-verified`
-`--session-id`
-`--yes`
-`--redact`
-
-### Delete a Session​
+### حذف جلسه
 
 ```
-# Delete a specific session (with confirmation)hermes sessions delete 20250305_091523_a1b2c3d4# Delete without confirmationhermes sessions delete 20250305_091523_a1b2c3d4 --yes
+# حذف یک جلسه مشخص (با تأیید)hermes sessions delete 20250305_091523_a1b2c3d4# حذف بدون تأییدhermes sessions delete 20250305_091523_a1b2c3d4 --yes
 ```
 
-### Rename a Session​
+### تغییر نام جلسه
 
 ```
-# Set or change a session's titlehermes sessions rename 20250305_091523_a1b2c3d4 "debugging auth flow"# Multi-word titles don't need quotes in the CLIhermes sessions rename 20250305_091523_a1b2c3d4 debugging auth flow
+# تنظیم یا تغییر عنوان جلسهhermes sessions rename 20250305_091523_a1b2c3d4 "debugging auth flow"# عناوین چند کلمه‌ای در CLI نیازی به نقل قول ندارندhermes sessions rename 20250305_091523_a1b2c3d4 debugging auth flow
 ```
 
-If the title is already in use by another session, an error is shown.
+اگر عنوان قبلاً توسط جلسه دیگری استفاده شده باشد، یک خطا نمایش داده می‌شود.
 
-### Prune Old Sessions​
+### حذف جلسات قدیمی
 
 ```
-# Delete ended sessions older than 90 days (default)hermes sessions prune# Custom age threshold — bare numbers are dayshermes sessions prune --older-than 30# Durations work too: 5h, 30m, 2d, 1whermes sessions prune --older-than 12h# Delete only a specific time window (e.g. a batch of test sessions# created in the last 5 hours)hermes sessions prune --newer-than 5h# Explicit window with absolute timestampshermes sessions prune --after "2026-07-05 09:00" --before "2026-07-05 14:30"# Only prune sessions from a specific platform (all ages — any filter# disables the implicit 90-day default)hermes sessions prune --source telegramhermes sessions prune --source cron --older-than 60   # add a time flag to narrow# More filters — all AND togetherhermes sessions prune --newer-than 5h --title "smoke test"   # title substringhermes sessions prune --older-than 30 --max-messages 3        # tiny sessionshermes sessions prune --cwd ~/scratch --end-reason done       # by cwd / end reasonhermes sessions prune --model gpt-5 --older-than 1w           # by model (substring)hermes sessions prune --provider openrouter --older-than 60   # by billing providerhermes sessions prune --branch feature/old-experiment         # by git branchhermes sessions prune --user 12345678 --chat-type group       # by messaging originhermes sessions prune --max-tokens 500 --older-than 7         # by token usagehermes sessions prune --max-cost 0.01 --max-tool-calls 0      # cheap, tool-less runs# Preview what would be deleted, without deleting anythinghermes sessions prune --newer-than 5h --dry-run# Skip confirmationhermes sessions prune --older-than 30 --yes
+# حذف جلسات پایان یافته قدیمی‌تر از 90 روز (پیش‌فرض)hermes sessions prune# آستانه سن سفارشی — اعداد خام روزها هستندهermes sessions prune --older-than 30# مدت زمان هم کار می‌کند: 5h, 30m, 2d, 1whermes sessions prune --older-than 12h# حذف فقط یک بازه زمانی مشخص (مثلاً مجموعه‌ای از جلسات تست# ایجاد شده در 5 ساعت اخیر)hermes sessions prune --newer-than 5h# بازه صریح با برچسب‌های زمانی مطلقhermes sessions prune --after "2026-07-05 09:00" --before "2026-07-05 14:30"# فقط حذف جلسات از یک پلتفرم مشخص (همه سن‌ها — هر فیلتر# پیش‌فرض ضمنی 90 روز را غیرفعال می‌کند)hermes sessions prune --source telegramhermes sessions prune --source cron --older-than 60   # افزودن پرچم زمانی برای محدود کردن# فیلترهای بیشتر — همه AND با همhermes sessions prune --newer-than 5h --title "smoke test"   # زیررشته عنوانhermes sessions prune --older-than 30 --max-messages 3        # جلسات کوچکhermes sessions prune --cwd ~/scratch --end-reason done       # بر اساس cwd / دلیل پایانhermes sessions prune --model gpt-5 --older-than 1w           # بر اساس مدل (زیررشته)hermes sessions prune --provider openrouter --older-than 60   # بر اساس ارائه‌دهنده صورتحسابhermes sessions prune --branch feature/old-experiment         # بر اساس شاخه githermes sessions prune --user 12345678 --chat-type group       # بر اساس منبع پیام‌رسانhermes sessions prune --max-tokens 500 --older-than 7         # بر اساس استفاده توکنhermes sessions prune --max-cost 0.01 --max-tool-calls 0      # ارزان، بدون ابزار# پیش‌نمایش آنچه حذف می‌شد، بدون حذف هیچ چیزیhermes sessions prune --newer-than 5h --dry-run# رد کردن تأییدhermes sessions prune --older-than 30 --yes
 ```
 
-Time values (--older-than,--newer-than,--before,--after) accept a
-duration (5h,30m,2d,1w), a bare number of days, or an ISO
-timestamp (2026-07-05,2026-07-05 14:30).--older-than/--beforeset
-the upper bound;--newer-than/--afterset the lower bound. Combine both
-for a window.
+مقادیر زمانی (`--older-than`، `--newer-than`، `--before`، `--after`) یک مدت زمان (`5h`، `30m`، `2d`، `1w`)، یک عدد خام روزها، یا یک برچسب زمانی ISO (`2026-07-05`، `2026-07-05 14:30`) می‌پذیرند. `--older-than` / `--before` مرز بالایی را تنظیم می‌کنند؛ `--newer-than` / `--after` مرز پایینی. هر دو را برای یک بازه ترکیب کنید.
 
-`--older-than`
-`--newer-than`
-`--before`
-`--after`
-`5h`
-`30m`
-`2d`
-`1w`
-`2026-07-05`
-`2026-07-05 14:30`
-`--older-than`
-`--before`
-`--newer-than`
-`--after`
+فیلترهای ویژگی: `--source` (پلتفرم، دقیق)، `--title` / `--model` / `--branch` (زیررشته بدون حساسیت به حالت)، `--provider` (ارائه‌دهنده صورتحساب، دقیق)، `--end-reason`، `--user`، `--chat-id`، `--chat-type` (دقیق)، `--cwd` (پیشوند مسیر)، به علاوه محدودیت‌های عددی `--min`/`--max-messages`، `--min`/`--max-tokens` (ورودی+خروجی)، `--min`/`--max-cost` (USD، واقعی با fallback به تخمینی)، و `--min`/`--max-tool-calls`. استفاده از هر فیلتری پیش‌فرض ضمنی 90 روز را غیرفعال می‌کند، بنابراین `hermes sessions prune --source cron` یا `--model gpt-4o` همه سن‌ها را تطابق می‌دهد — یک پرچم زمانی اضافه کنید تا محدود شود. فقط `hermes sessions prune` کاملاً خام برش 90 روزه را حفظ می‌کند. هر اجرا غیر `--yes` شمارش تطابق به علاوه قدیمی‌ترین و جدیدترین جلسه تطابق را قبل از درخواست تأیید نمایش می‌دهد.
 
-Attribute filters:--source(platform, exact),--title/--model/--branch(case-insensitive substring),--provider(billing provider,
-exact),--end-reason,--user,--chat-id,--chat-type(exact),--cwd(path prefix), plus numeric bounds--min/--max-messages,--min/--max-tokens(input+output),--min/--max-cost(USD, actual falling
-back to estimated), and--min/--max-tool-calls. Using any filter disables
-the implicit 90-day default, sohermes sessions prune --source cronor--model gpt-4omatches all ages — add a time flag to narrow it. Only a
-completely barehermes sessions prunekeeps the 90-day cutoff. Every
-non---yesrun shows the match count plus the oldest and newest matching
-session before asking for confirmation.
+جلسات بایگانی شده به طور پیش‌فرض رد می‌شوند؛ `--include-archived` را ارسال کنید تا آنها را هم حذف کنید.
 
-`--source`
-`--title`
-`--model`
-`--branch`
-`--provider`
-`--end-reason`
-`--user`
-`--chat-id`
-`--chat-type`
-`--cwd`
-`--min/--max-messages`
-`--min/--max-tokens`
-`--min/--max-cost`
-`--min/--max-tool-calls`
-`hermes sessions prune --source cron`
-`--model gpt-4o`
-`hermes sessions prune`
-`--yes`
+حذف فقط جلسات پایان یافته (جلساتی که به طور صریح پایان یافته یا بازنشانی خودکار شده‌اند) را حذف می‌کند. جلسات فعال هرگز حذف نمی‌شوند.
 
-Archived sessions are skipped by default; pass--include-archivedto
-delete them too.
+### بایگانی حجمی جلسات
 
-`--include-archived`
-
-Pruning only deletesendedsessions (sessions that have been explicitly ended or auto-reset). Active sessions are never pruned.
-
-### Bulk-Archive Sessions​
-
-If you want sessions out of your listings without deleting anything,hermes sessions archivetakes the same filters asprunebut soft-hides
-matching sessions instead (sets the same archived flag as archiving a single
-session from the Desktop/Dashboard UI — messages and search stay intact):
+اگر می‌خواهید جلسات از فهرست‌های شما خارج شوند بدون حذف هیچ چیزی، `hermes sessions archive` همان فیلترها را به عنوان `prune` می‌پذیرد اما جلسات تطابق را به جای آن soft-hide می‌کند (همان پرچم بایگانی شده را تنظیم می‌کند که بایگانی یک جلسه از UI Desktop/Dashboard — پیام‌ها و جستجو دست‌نخورده باقی می‌مانند):
 
 `hermes sessions archive`
 `prune`
 
 ```
-# Archive everything from the last 5 hours (e.g. 75 CI smoke-test sessions)hermes sessions archive --newer-than 5h# Archive by title substring, preview firsthermes sessions archive --title "dry run" --dry-runhermes sessions archive --title "dry run" --yes
+# بایگانی همه چیز از 5 ساعت اخیر (مثلاً 75 جلسه smoke-test CI)hermes sessions archive --newer-than 5h# بایگانی بر اساس زیررشته عنوان، ابتدا پیش‌نمایشhermes sessions archive --title "dry run" --dry-runhermes sessions archive --title "dry run" --yes
 ```
 
-At least one filter is required — a barehermes sessions archiverefuses to
-archive your entire history. Archived sessions are hidden fromhermes sessions listand/resumebut remain in the database and can be
-unarchived from the Desktop/Dashboard session list.
+حداقل یک فیلتر لازم است — `hermes sessions archive` خام کل تاریخچه شما را بایگانی نمی‌کند. جلسات بایگانی شده از `hermes sessions list` و `/resume` پنهان می‌شوند اما در دیتابیس باقی می‌مانند و از فهرست جلسات Desktop/Dashboard قابل بازیابی هستند.
 
-`hermes sessions archive`
-`hermes sessions list`
-`/resume`
-
-### Session Statistics​
+### آمار جلسات
 
 ```
 hermes sessions stats
 ```
 
-Output:
+خروجی:
 
 ```
 Total sessions: 142Total messages: 3847  cli: 89 sessions  telegram: 38 sessions  discord: 15 sessionsDatabase size: 12.4 MB
 ```
 
-For deeper analytics — token usage, cost estimates, tool breakdown, and activity patterns — usehermes insights.
+برای تحلیل عمیق‌تر — استفاده توکن، تخمین هزینه، تفکیک ابزار و الگوهای فعالیت — از `hermes insights` استفاده کنید.
 
 [hermes insights](/docs/reference/cli-commands#hermes-insights)
 `hermes insights`
 
-## Session Search Tool​
+## ابزار جستجوی جلسه
 
-The agent has a built-insession_searchtool that performs full-text search across all past conversations using SQLite's FTS5 engine — and lets the agent scroll through any session it finds. No LLM calls, no summarization, no truncation. Every shape returns actual messages from the DB.
+ایجنت یک ابزار داخلی `session_search` دارد که full-text search در تمام مکالمات گذشته با استفاده از موتور FTS5 SQLite انجام می‌دهد — و به ایجنت اجازه می‌دهد در هر جلسه‌ای که پیدا می‌کند scroll کند. بدون فراخوانی‌های LLM، بدون خلاصه‌سازی، بدون کوتاه‌سازی. هر شکل پیام‌های واقعی از دیتابیس را برمی‌گرداند.
 
-`session_search`
+### سه شکل فراخوانی
 
-### Three calling shapes​
+ابزار از اینکه کدام آرگومان‌ها را تنظیم می‌کنید می‌فهمد چه می‌خواهید. پارامتر `mode` وجود ندارد.
 
-The tool infers what you want from which arguments you set. There's nomodeparameter.
-
-`mode`
-
-1. Discovery — passquery:
-
-`query`
+1. کشف — `query` را ارسال کنید:
 
 ```
 session_search(query="auth refactor", limit=3)
 ```
 
-Runs FTS5, dedupes hits by session lineage, returns the top N sessions. Each result carries:
+FTS5 را اجرا می‌کند، ضربه‌ها را بر اساس lineage جلسه dedupe می‌کند، N جلسه برتر را برمی‌گرداند. هر نتیجه شامل موارد زیر است:
 
-- session_id,title,when,source
-- snippet— FTS5-highlighted match excerpt
-- bookend_start— first 3 user+assistant messages of the session (the goal/kickoff)
-- messages— ±5 messages around the FTS5 match, with the anchor message flagged (the hit in context)
-- bookend_end— last 3 user+assistant messages of the session (the resolution/decisions)
-- match_message_id,messages_before,messages_after
+- `session_id`، `title`، `when`، `source`
+- `snippet` — قطعه تطابق با هایلایت FTS5
+- `bookend_start` — اولین ۳ پیام کاربر+assistant جلسه (هدف/شروع)
+- `messages` — ±۵ پیام اطراف تطابق FTS5، با پیام anchor علامت‌گذاری شده (تطابق در سیاق)
+- `bookend_end` — آخرین ۳ پیام کاربر+assistant جلسه (حل/تصمیمات)
+- `match_message_id`، `messages_before`، `messages_after`
 
-`session_id`
-`title`
-`when`
-`source`
-`snippet`
-`bookend_start`
-`messages`
-`bookend_end`
-`match_message_id`
-`messages_before`
-`messages_after`
+bookend‌ها + پنجره با هم هدف → تطابق → حل را بدون پرداخت هزینه کل رونوشت بازسازی می‌کنند. زمان دیواری معمول: 15–50ms در یک دیتابیس جلسه واقعی.
 
-Bookends + window together reconstruct goal → match → resolution without paying for the whole transcript. Typical wall time: 15–50ms on a real session DB.
-
-2. Scroll — passsession_id+around_message_id:
-
-`session_id`
-`around_message_id`
+2. scroll — `session_id` + `around_message_id` را ارسال کنید:
 
 ```
 session_search(session_id="20260510_174648_805cc2", around_message_id=590803, window=10)
 ```
 
-Returns a window of ±windowmessages centered on the anchor. No FTS5, no bookends — just the slice. Use after a discovery call when you need more context than the ±5 default window.
+یک پنجره از ±`window` پیام مرکز شده روی anchor برمی‌گرداند. بدون FTS5، بدون bookend — فقط برش. بعد از فراخوانی کشف وقتی به سیاق بیشتری از پنجره پیش‌فرض ±۵ نیاز دارید استفاده کنید.
 
-`window`
-- To scrollforward: passmessages[-1].idback asaround_message_id
-- To scrollbackward: passmessages[0].idback asaround_message_id
-- The boundary message appears in both windows as an orientation marker
-- Whenmessages_beforeormessages_afteris less thanwindow, you're at the start or end of the session
+- برای scroll رو به جلو: `messages[-1].id` را به عنوان `around_message_id` پاس دهید
+- برای scroll رو به عقب: `messages[0].id` را به عنوان `around_message_id` پاس دهید
+- پیام مرزی در هر دو پنجره به عنوان شاگر جهت‌گیری ظاهر می‌شود
+- وقتی `messages_before` یا `messages_after` کمتر از `window` باشد، در ابتدای یا انتهای جلسه هستید
 
-`messages[-1].id`
-`around_message_id`
-`messages[0].id`
-`around_message_id`
-`messages_before`
-`messages_after`
-`window`
+زمان دیواری معمول: 1–2ms به ازای هر فراخوانی scroll.
 
-Typical wall time: 1–2ms per scroll call.
-
-3. Browse — no args:
+3. مرور — بدون آرگومان:
 
 ```
 session_search()
 ```
 
-Returns recent sessions chronologically (titles, previews, timestamps). Useful when the user asks "what was I working on" without naming a topic.
+جلسات اخیر را به ترتیب زمانی برمی‌گرداند (عناوین، پیش‌نمایش‌ها، برچسب‌های زمانی). مفید وقتی کاربر می‌پرسد "مشغول چه کاری بودم" بدون نام بردن از یک موضوع.
 
-### FTS5 query syntax​
+### سntax پرس و جو FTS5
 
-The keyword mode supports standard FTS5 query syntax:
+حالت کلمه کلیدی از سntax پرس و جو استاندارد FTS5 پشتیبانی می‌کند:
 
-- Simple keywords:docker deployment(FTS5 defaults to AND)
-- Phrases:"exact phrase"
-- Boolean:docker OR kubernetes,python NOT java
-- Prefix:deploy*
+- کلمات کلیدی ساده: `docker deployment` (FTS5 به طور پیش‌فرض AND است)
+- عبارات: `"exact phrase"`
+- بولی: `docker OR kubernetes`، `python NOT java`
+- پیشوند: `deploy*`
 
-`docker deployment`
-`"exact phrase"`
-`docker OR kubernetes`
-`python NOT java`
-`deploy*`
+### پارامترهای اختیاری
 
-### Optional parameters​
+- `sort` — `newest` یا `oldest`، علاوه بر رتبه‌بندی FTS5. برای مرتب‌سازی فقط بر اساس ارتباط (پیش‌فرض؛ مناسب برای یادآوری اکتشافی) حذف کنید. از `newest` برای سؤالات "X را کجا ترک کردیم" و `oldest` برای سؤالات "X چگونه شروع شد" استفاده کنید.
+- `role_filter` — نقش‌های جدا شده با کاما. کشف به طور پیش‌فرض `user,assistant` (خروجی ابزار معمولاً نویز است). `user,assistant,tool` برای شامل کردن خروجی ابزار (ابزار debugging) یا `tool` برای فقط جستجوی خروجی ابزار ارسال کنید.
 
-- sort—newestoroldest, on top of FTS5 ranking. Omit for relevance-only ordering (the default; suitable for exploratory recall). Usenewestfor "where did we leave X" questions,oldestfor "how did X start" questions.
-- role_filter— comma-separated roles to include. Discovery defaults touser,assistant(tool output is usually noise). Passuser,assistant,toolto include tool output (debugging tool behaviour) ortoolto search tool output only.
+## ردیابی جلسه به ازای هر پلتفرم
 
-`sort`
-`newest`
-`oldest`
-`newest`
-`oldest`
-`role_filter`
-`user,assistant`
-`user,assistant,tool`
-`tool`
+### جلسات Gateway
 
-### When It's Used​
+در پلتفرم‌های پیام‌رسان، جلسات با یک کلید جلسه قطعی که از منبع پیام ساخته شده کلید می‌خورند:
 
-The agent is prompted to use session search automatically:
-
-> "When the user references something from a past conversation or you suspect relevant prior context exists, use session_search to recall it before asking them to repeat themselves."
-
-"When the user references something from a past conversation or you suspect relevant prior context exists, use session_search to recall it before asking them to repeat themselves."
-
-Typical triggers: "we did this before", "remember when", "last time", "as I mentioned", or any reference to a project/person/concept that isn't in the current window.
-
-## Per-Platform Session Tracking​
-
-### Gateway Sessions​
-
-On messaging platforms, sessions are keyed by a deterministic session key built from the message source:
-
-| Chat Type | Default Key Format | Behavior |
+| نوع چت | فرمت کلید پیش‌فرض | رفتار |
 | --- | --- | --- |
-| Telegram DM | agent:main:telegram:dm:<chat_id> | One session per DM chat |
-| Discord DM | agent:main:discord:dm:<chat_id> | One session per DM chat |
-| WhatsApp DM | agent:main:whatsapp:dm:<canonical_identifier> | One session per DM user (LID/phone aliases collapse to one identity when mapping exists) |
-| Group chat | agent:main:<platform>:group:<chat_id>:<user_id> | Per-user inside the group when the platform exposes a user ID |
-| Group thread/topic | agent:main:<platform>:group:<chat_id>:<thread_id> | Shared session for all thread participants (default). Per-user withthread_sessions_per_user: true. |
-| Channel | agent:main:<platform>:channel:<chat_id>:<user_id> | Per-user inside the channel when the platform exposes a user ID |
+| Telegram DM | `agent:main:telegram:dm:<chat_id>` | یک جلسه به ازای هر چت DM |
+| Discord DM | `agent:main:discord:dm:<chat_id>` | یک جلسه به ازای هر چت DM |
+| WhatsApp DM | `agent:main:whatsapp:dm:<canonical_identifier>` | یک جلسه به ازای هر کاربر DM ( псевдо‌نام‌های LID/تلفن به یک هویت فرو می‌ریزند وقتی نگاشت وجود دارد) |
+| چت گروهی | `agent:main:<platform>:group:<chat_id>:<user_id>` | به ازای هر کاربر داخل گروه وقتی پلتفرم شناسه کاربر نمایان می‌کند |
+| رشته/topic گروهی | `agent:main:<platform>:group:<chat_id>:<thread_id>` | جلسه مشترک برای تمام شرکت‌کنندگان رشته (پیش‌فرض). به ازای هر کاربر با `thread_sessions_per_user: true`. |
+| کانال | `agent:main:<platform>:channel:<chat_id>:<user_id>` | به ازای هر کاربر داخل کانال وقتی پلتفرم شناسه کاربر نمایان می‌کند |
 
-`agent:main:telegram:dm:<chat_id>`
-`agent:main:discord:dm:<chat_id>`
-`agent:main:whatsapp:dm:<canonical_identifier>`
-`agent:main:<platform>:group:<chat_id>:<user_id>`
-`agent:main:<platform>:group:<chat_id>:<thread_id>`
-`thread_sessions_per_user: true`
-`agent:main:<platform>:channel:<chat_id>:<user_id>`
+وقتی Hermes نمی‌تواند شناسه شرکت‌کننده‌ای برای چت مشترک پیدا کند، به یک جلسه مشترک برای آن اتاق بازمی‌گردد.
 
-When Hermes cannot get a participant identifier for a shared chat, it falls back to one shared session for that room.
+### جلسات گروهی مشترک در مقابل ایزوله
 
-### Shared vs Isolated Group Sessions​
-
-By default, Hermes usesgroup_sessions_per_user: trueinconfig.yaml. That means:
+به طور پیش‌فرض، Hermes از `group_sessions_per_user: true` در `config.yaml` استفاده می‌کند. این بدان معناست:
 
 `group_sessions_per_user: true`
 `config.yaml`
-- Alice and Bob can both talk to Hermes in the same Discord channel without sharing transcript history
-- one user's long tool-heavy task does not pollute another user's context window
-- interrupt handling also stays per-user because the running-agent key matches the isolated session key
+- Alice و Bob هر دو می‌توانند در همان کانال Discord با Hermes صحبت کنند بدون به اشتراک گذاشتن تاریخچه رونوشت
+- کار یک کاربر طولانی و ابزار-سنگین پنجره سیاق کاربر دیگر را آلوده نمی‌کند
+- مدیریت وقفه هم به ازای هر کاربر باقی می‌ماند زیرا کلید ایجنت در حال اجرا با کلید جلسه ایزوله مطابقت دارد
 
-If you want one shared "room brain" instead, set:
+اگر می‌خواهید به جای آن یک "mroom مشترک" داشته باشید، تنظیم کنید:
 
 ```
 group_sessions_per_user: false
 ```
 
-That reverts groups/channels to a single shared session per room, which preserves shared conversational context but also shares token costs, interrupt state, and context growth.
+این گروه‌ها/کانال‌ها را به یک جلسه مشترک واحد به ازای هر اتاق برمی‌گرداند، که سیاق مکالمه مشترک را حفظ می‌کند اما هزینه‌های توکن، وضعیت وقفه و رشد سیاق را هم به اشتراک می‌گذارد.
 
-### Session Reset Policies​
+### سیاست‌های بازنشانی جلسه
 
-By default gateway sessions never auto-reset(mode: none). You can opt
-in to automatic resets via thesession_resetsection inconfig.yaml:
+به طور پیش‌فرض جلسات gateway هرگز بازنشانی خودکار نمی‌دهند (`mode: none`). می‌توانید بازنشانی‌های خودکار را از طریق بخش `session_reset` در `config.yaml` فعال کنید:
 
 `mode: none`
 `session_reset`
 `config.yaml`
-- none— never auto-reset (default; context managed by/resetand compression)
-- idle— reset after N minutes of inactivity
-- daily— reset at a specific hour each day
-- both— reset on whichever comes first (idle or daily)
+- `none` — هرگز بازنشانی خودکار نکن (پیش‌فرض؛ سیاق توسط `/reset` و فشرده‌سازی مدیریت می‌شود)
+- `idle` — پس از N دقیقه عدم فعالیت بازنشانی کن
+- `daily` — در ساعت مشخصی هر روز بازنشانی کن
+- `both` — در هر کدام که اول برسد بازنشانی کن (idle یا daily)
 
-`/reset`
+قبل از بازنشانی خودکار جلسه، به ایجنت یک نوبت داده می‌شود تا هر حافظه یا مهارت مهمی از مکالمه را ذخیره کند.
 
-Before a session is auto-reset, the agent is given a turn to save any important memories or skills from the conversation.
+جلسات با فرآیندهای پس‌زمینه فعال هرگز بازنشانی خودکار نمی‌شوند، صرف نظر از سیاست.
 
-Sessions withactive background processesare never auto-reset, regardless of policy.
+## مکان‌های فروشگاه‌سازی
 
-## Storage Locations​
-
-| What | Path | Description |
+| چه چیزی | مسیر | توضیحات |
 | --- | --- | --- |
-| SQLite database | ~/.hermes/state.db | All session metadata + messages with FTS5 |
-| Gateway messages | ~/.hermes/state.db | SQLite — canonical store for all session messages |
-| Gateway routing index | ~/.hermes/sessions/sessions.json | Maps session keys to active session IDs (origin metadata, expiry flags) |
+| دیتابیس SQLite | `~/.hermes/state.db` | تمام فراداده جلسه + پیام‌ها با FTS5 |
+| پیام‌های Gateway | `~/.hermes/state.db` | SQLite — فروشگاه اصلی برای تمام پیام‌های جلسه |
+| ایندکس مسیریابی Gateway | `~/.hermes/sessions/sessions.json` | کلیدهای جلسه را به شناسه‌های جلسه فعال نگاشت می‌کند (فراداده منبع، پرچم‌های انقضا) |
 
-`~/.hermes/state.db`
-`~/.hermes/state.db`
-`~/.hermes/sessions/sessions.json`
+دیتابیس SQLite از حالت WAL برای خوانندگان همزمان و یک نویسنده واحد استفاده می‌کند، که معماری چند پلتفرمی gateway را به خوبی تطبیق می‌دهد.
 
-The SQLite database uses WAL mode for concurrent readers and a single writer, which suits the gateway's multi-platform architecture well.
+`~/.hermes/sessions/sessions.json` ایندکس مسیریابی gateway است — کلیدهای جلسه پیام‌رسان (`agent:main:<platform>:...`) را به شناسه‌های جلسه فعال نگاشت می‌کند. فقط حاوی ورودی‌های gateway/پیام‌رسان است، بنابراین اگر یک پلتفرم پیام‌رسان اجرا کنید فقط آنها را خواهید دید (مثلاً `agent:main:whatsapp:dm:...`).
 
-`sessions.json`
-
-~/.hermes/sessions/sessions.jsonis thegateway routing index— it maps
-messaging session keys (agent:main:<platform>:...) to active session IDs.
-It only ever contains gateway/messaging entries, so if you run a messaging
-platform you'll see only those (e.g.agent:main:whatsapp:dm:...).
-
-`~/.hermes/sessions/sessions.json`
 `agent:main:<platform>:...`
 `agent:main:whatsapp:dm:...`
 
-This isexpectedand doesnotmean your CLI sessions are missing.hermes sessions list,/sessions, and the dashboard all readstate.db,
-which holdseverysession (CLI, TUI, and gateway). The/savesnapshots
-under~/.hermes/sessions/saved/*.jsonare convenience exports, not the index.
+این **عادی** است و **به این معنا نیست** که جلسات CLI شما ناپدید شده‌اند. `hermes sessions list`، `/sessions` و داشبورد همه `state.db` را می‌خوانند، که **هر** جلسه‌ای (CLI، TUI و gateway) را نگه می‌دارد. اسنپشات‌های `/save` در `~/.hermes/sessions/saved/*.json` خروجی‌های راحت هستند، نه ایندکس.
 
 `hermes sessions list`
-`/sessions`
+`sessions`
 `state.db`
 `/save`
 `~/.hermes/sessions/saved/*.json`
 
-If CLI sessions genuinely don't appear inhermes sessions list, the cause isstate.dbnot receiving them — runhermes sessions repairand watch for a⚠ Session store unavailablewarning at CLI startup, which means SQLite
-persistence failed for that run.
+اگر جلسات CLI واقعاً در `hermes sessions list` ظاهر نمی‌شوند، علت `state.db` است که آنها را دریافت نمی‌کند — `hermes sessions repair` را اجرا کنید و به دنبال هشدار `⚠ Session store unavailable` در شروع CLI بگردید، که به این معناست ماندگاری SQLite برای آن اجرا شکست خورده.
 
 `hermes sessions list`
 `state.db`
 `hermes sessions repair`
 `⚠ Session store unavailable`
 
-Sessions created before state.db became canonical may have leftover*.jsonlfiles in~/.hermes/sessions/. They are no longer written or
-read by Hermes. Safe to delete after verifying the corresponding session
-exists in state.db.
+جلسات ایجاد شده قبل از canonical شدن state.db ممکن است فایل‌های `*.jsonl` باقی‌مانده در `~/.hermes/sessions/` داشته باشند. آنها دیگر توسط Hermes نه نوشته و نه خوانده می‌شوند. پس از تأیید وجود جلسه مربوطه در state.db، حذف آنها بی‌خطر است.
 
-`*.jsonl`
-`~/.hermes/sessions/`
+### طرح دیتابیس
 
-### Database Schema​
+جداول کلیدی در `state.db`:
 
-Key tables instate.db:
+- `sessions` — فراداده جلسه (id, source, user_id, model, title, timestamps, token counts). عناوین ایندکس یکتا دارند (عناوین NULL مجاز هستند، فقط غیر-NULL باید یکتا باشند).
+- `messages` — تاریخچه کامل پیام (role, content, tool_calls, tool_name, token_count)
+- `messages_fts` — جدول مجازی FTS5 برای full-text search در محتوای پیام
 
-`state.db`
-- sessions— session metadata (id, source, user_id, model, title, timestamps, token counts). Titles have a unique index (NULL titles allowed, only non-NULL must be unique).
-- messages— full message history (role, content, tool_calls, tool_name, token_count)
-- messages_fts— FTS5 virtual table for full-text search across message content
+## انقضای جلسه و پاکسازی
 
-## Session Expiry and Cleanup​
+### پاکسازی خودکار
 
-### Automatic Cleanup​
-
-- Gateway sessions auto-reset based on the configured reset policy
-- Before reset, the agent saves memories and skills from the expiring session
-- Opt-in auto-pruning: whensessions.auto_pruneistrue, ended sessions older thansessions.retention_days(default 90) are pruned at CLI/gateway startup
-- After a prune that actually removed rows,state.dbisVACUUMed to reclaim disk space (SQLite does not shrink the file on plain DELETE)
-- Pruning runs at most once persessions.min_interval_hours(default 24); the last-run timestamp is tracked insidestate.dbitself so it's shared across every Hermes process in the sameHERMES_HOME
+- جلسات gateway بر اساس سیاست بازنشانی پیکربندی شده بازنشانی خودکار می‌شوند
+- قبل از بازنشانی، ایجنت حافظه‌ها و مهارت‌های جلسه منقضی شده را ذخیره می‌کند
+- حذف خودکار اختیاری: وقتی `sessions.auto_prune` برابر `true` باشد، جلسات پایان یافته قدیمی‌تر از `sessions.retention_days` (پیش‌فرض 90) در شروع CLI/gateway حذف می‌شوند
+- پس از حذفی که واقعاً ردیف‌ها را حذف کرده، `state.db` VACUUM می‌شود تا فضای دیسک بازیابی شود (SQLite با DELETE معمولی فایل را کوچک نمی‌کند)
+- حذف حداکثر یک بار در هر `sessions.min_interval_hours` (پیش‌فرض 24) اجرا می‌شود؛ برچسب زمانی اجرای آخر در داخل خود `state.db` ردیابی می‌شود بنابراین در سراسر هر فرآیند Hermes در همان `HERMES_HOME` مشترک است
 
 `sessions.auto_prune`
 `true`
@@ -858,7 +621,7 @@ Key tables instate.db:
 `state.db`
 `HERMES_HOME`
 
-Default isoff— session history is valuable forsession_searchrecall, and silently deleting it could surprise users. Enable in~/.hermes/config.yaml:
+پیش‌فرض `off` است — تاریخچه جلسه برای یادآوری `session_search` ارزشمند است و حذف خاموش آن می‌تواند کاربران را شگفت‌زده کند. در `~/.hermes/config.yaml` فعال کنید:
 
 `session_search`
 `~/.hermes/config.yaml`
@@ -867,18 +630,14 @@ Default isoff— session history is valuable forsession_searchrecall, and silent
 sessions:  auto_prune: true          # opt in — default is false  retention_days: 90        # keep ended sessions this many days  vacuum_after_prune: true  # reclaim disk space after a pruning sweep  min_interval_hours: 24    # don't re-run the sweep more often than this
 ```
 
-Active sessions are never auto-pruned, regardless of age.
+جلسات فعال هرگز حذف خودکار نمی‌شوند، صرف نظر از سن.
 
-### Manual Cleanup​
+### پاکسازی دستی
 
 ```
-# Prune sessions older than 90 dayshermes sessions prune# Delete a specific sessionhermes sessions delete <session_id># Export before pruning (backup)hermes sessions export backup.jsonlhermes sessions prune --older-than 30 --yes
+# حذف جلسات قدیمی‌تر از 90 روزhermes sessions prune# حذف یک جلسه مشخصhermes sessions delete <session_id># خروجی قبل از حذف (پشتیبان)hermes sessions export backup.jsonlhermes sessions prune --older-than 30 --yes
 ```
 
-The database grows slowly (typical: 10-15 MB for hundreds of sessions) and session history powerssession_searchrecall across past conversations, so auto-prune ships disabled. Enable it if you're running a heavy gateway/cron workload wherestate.dbis meaningfully affecting performance (observed failure mode: 384 MB state.db with ~1000 sessions slowing down FTS5 inserts and/resumelisting). Usehermes sessions prunefor one-off cleanup without turning on the automatic sweep.
+دیتابیس به آهستگی رشد می‌کند (معمول: 10-15 MB برای صدها جلسه) و تاریخچه جلسه یادآوری `session_search` در سراسر مکالمات گذشته را تقویت می‌کند، بنابراین حذف خودکار به طور پیش‌فرض غیرفعال است. اگر یک workload سنگین gateway/cron اجرا می‌کنید که `state.db` به طور معناداری بر عملکرد تأثیر می‌گذارد آن را فعال کنید (حالت شکست مشاهده شده: state.db با ~1000 جلسه 3848 MB که درج FTS5 و لیست `/resume` را کند می‌کند). از `hermes sessions prune` برای پاکسازی یک‌باره بدون فعال کردن جاروب خودکار استفاده کنید.
 
-`session_search`
-`state.db`
-`/resume`
-`hermes sessions prune`
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/sessions.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/sessions.md)

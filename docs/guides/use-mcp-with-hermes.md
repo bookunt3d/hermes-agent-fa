@@ -8,149 +8,149 @@ permalink: /guides/use-mcp-with-hermes/
 - Guides & Tutorials
 - Use MCP with Hermes
 
-# Use MCP with Hermes
+# استفاده از MCP با Hermes
 
-This guide shows how to actually use MCP with Hermes Agent in day-to-day workflows.
+این راهنما نشان می‌دهد چگونه واقعاً از MCP با Hermes Agent در workflowهای روزمره استفاده کنید.
 
-If the feature page explains what MCP is, this guide is about how to get value from it quickly and safely.
+اگر صفحه ویژگی توضیح می‌دهد MCP چیست، این راهنما درباره نحوه دریافت ارزش از آن به سرعت و به طور ایمن است.
 
-## When should you use MCP?​
+## چه زمانی باید از MCP استفاده کنید؟
 
-Use MCP when:
+از MCP استفاده کنید وقتی:
 
-- a tool already exists in MCP form and you do not want to build a native Hermes tool
-- you want Hermes to operate against a local or remote system through a clean RPC layer
-- you want fine-grained per-server exposure control
-- you want to connect Hermes to internal APIs, databases, or company systems without modifying Hermes core
+- ابزاری از قبل به شکل MCP وجود دارد و نمی‌خواهید یک ابزار بومی Hermes بسازید
+- می‌خواهید Hermes از طریق یک لایه RPC تمیز با یک سیستم محلی یا راه دور کار کند
+- کنترل دقیق نمایش به ازای هر سرور می‌خواهید
+- می‌خواهید Hermes را به APIهای داخلی، پایگاه‌های داده یا سیستم‌های شرکت متصل کنید بدون تغییر هسته Hermes
 
-Do not use MCP when:
+از MCP استفاده نکنید وقتی:
 
-- a built-in Hermes tool already solves the job well
-- the server exposes a huge dangerous tool surface and you are not prepared to filter it
-- you only need one very narrow integration and a native tool would be simpler and safer
+- یک ابزار داخلی Hermes از قبل کار را به خوبی انجام می‌دهد
+- سرور یک سطح ابزار خطرناک عظیم را در معرض دید قرار می‌دهد و آماده فیلتر کردن آن نیستید
+- فقط به یک ادغام بسیار باریک نیاز دارید و یک ابزار بومی ساده‌تر و ایمن‌تر خواهد بود
 
-## Mental model​
+## مدل ذهنی
 
-Think of MCP as an adapter layer:
+MCP را به عنوان یک لایه adapter در نظر بگیرید:
 
-- Hermes remains the agent
-- MCP servers contribute tools
-- Hermes discovers those tools at startup or reload time
-- the model can use them like normal tools
-- you control how much of each server is visible
+- Hermes agent باقی می‌ماند
+- سرورهای MCP ابزارها را ارائه می‌دهند
+- Hermes این ابزارها را در زمان راه‌اندازی یا بارگذاری مجدد کشف می‌کند
+- مدل می‌تواند مانند ابزارهای عادی از آنها استفاده کند
+- شما کنترل می‌کنید هر سرور چقدر قابل مشاهده باشد
 
-That last part matters. Good MCP usage is not just “connect everything.” It is “connect the right thing, with the smallest useful surface.”
+آن بخش آخر مهم است. استفاده خوب MCP فقط «همه چیز را متصل کن» نیست. «درست را با کوچک‌ترین سطح مفید متصل کن» است.
 
-## Step 1: install MCP support​
+## مرحله ۱: نصب پشتیبانی MCP
 
-If you installed Hermes with the standard install script, MCP support is already included (the installer runsuv pip install -e ".[all]").
+اگر Hermes را با اسکریپت نصب استاندارد نصب کرده‌اید، پشتیبانی MCP از قبل شامل شده است (نصب‌کننده `uv pip install -e ".[all]"` را اجرا می‌کند).
 
 `uv pip install -e ".[all]"`
 
-If you installed without extras and need to add MCP separately:
+اگر بدون extras نصب کرده‌اید و نیاز دارید MCP را جداگانه اضافه کنید:
 
 ```
 cd ~/.hermes/hermes-agentuv pip install -e ".[mcp]"
 ```
 
-For npm-based servers, make sure Node.js andnpxare available.
+برای سرورهای مبتنی بر npm، مطمئن شوید Node.js و `npx` در دسترس هستند.
 
 `npx`
 
-For many Python MCP servers,uvxis a nice default.
+برای بسیاری از سرورهای Python MCP، `uvx` یک گزینه خوب پیش‌فرض است.
 
 `uvx`
 
-## Step 2: add one server first​
+## مرحله ۲: ابتدا یک سرور اضافه کنید
 
-Start with a single, safe server.
+با یک سرور ایمن شروع کنید.
 
-Example: filesystem access to one project directory only.
+مثال: دسترسی فایل‌سیستم فقط به یک دایرکتوری پروژه.
 
 ```
 mcp_servers:  project_fs:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/my-project"]
 ```
 
-Then start Hermes:
+سپس Hermes را راه‌اندازی کنید:
 
 ```
 hermes chat
 ```
 
-Now ask something concrete:
+حالا چیز مشخصی بپرسید:
 
 ```
 Inspect this project and summarize the repo layout.
 ```
 
-## Step 3: verify MCP loaded​
+## مرحله ۳: تأیید بارگذاری MCP
 
-You can verify MCP in a few ways:
+می‌توانید MCP را به چند روش تأیید کنید:
 
-- Hermes banner/status should show MCP integration when configured
-- ask Hermes what tools it has available
-- use/reload-mcpafter config changes
-- check logs if the server failed to connect
+- بنر/وضعیت Hermes باید ادغام MCP را هنگام پیکربندی نشان دهد
+- از Hermes بپرسید چه ابزارهایی در دسترس دارد
+- پس از تغییرات config از `/reload-mcp` استفاده کنید
+- اگر سرور نتوانست متصل شود، لاگ‌ها را بررسی کنید
 
 `/reload-mcp`
 
-A practical test prompt:
+یک پرامپت آزمایشی عملی:
 
 ```
 Tell me which MCP-backed tools are available right now.
 ```
 
-## Step 4: start filtering immediately​
+## مرحله ۴: بلافاصله شروع به فیلتر کردن کنید
 
-Do not wait until later if the server exposes a lot of tools.
+اگر سرور ابزارهای زیادی را در معرض دید قرار می‌دهد، منتظر نمانید.
 
-### Example: whitelist only what you want​
+### مثال: فقط آنچه می‌خواهید را لیست سفید کنید
 
 ```
 mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"    tools:      include: [list_issues, create_issue, search_code]
 ```
 
-This is usually the best default for sensitive systems.
+این معمولاً بهترین پیش‌فرض برای سیستم‌های حساس است.
 
-## WSL2: bridge Hermes in WSL to Windows Chrome​
+## WSL2: اتصال Hermes در WSL به Windows Chrome
 
-This is the practical setup when:
+این راه‌اندازی عملی وقتی است که:
 
-- Hermes runs inside WSL2
-- the browser you want to control is your normal signed-in Chrome on Windows
-- /browser connectis awkward or unreliable from WSL
+- Hermes در WSL2 اجرا می‌شود
+- مرورگری که می‌خواهید کنترل کنید Chrome معمولی شما در ویندوز است که وارد شده‌اید
+- `/browser connect` از WSL ناخوشایند یا غیرقابل اعتماد است
 
 `/browser connect`
 
-In this setup, Hermes doesnotconnect to Chrome directly. Instead:
+در این راه‌اندازی، Hermes مستقیماً به Chrome متصل نمی‌شود. در عوض:
 
-- Hermes runs in WSL
-- Hermes starts a local stdio MCP server
-- that MCP server is launched through Windows interop (cmd.exeorpowershell.exe)
-- the MCP server attaches to your live Windows Chrome session
+- Hermes در WSL اجرا می‌شود
+- Hermes یک سرور stdio MCP محلی راه‌اندازی می‌کند
+- آن سرور MCP از طریق windows interop (`cmd.exe` یا `powershell.exe`) راه‌اندازی می‌شود
+- سرور MCP به نشست Chrome زنده ویندوز شما متصل می‌شود
 
 `cmd.exe`
 `powershell.exe`
 
-Mental model:
+مدل ذهنی:
 
 ```
 Hermes (WSL) -> MCP stdio bridge -> Windows Chrome
 ```
 
-### Why this mode is useful​
+### چرا این حالت مفید است
 
-- you keep your real Windows browser profile, cookies, and logins
-- Hermes stays in its supported Unix environment (WSL2)
-- browser control is exposed as MCP tools instead of relying on Hermes core browser transport
+- پروفایل مرورگر واقعی ویندوز، کوکی‌ها و ورودهای خود را حفظ می‌کنید
+- Hermes در محیط پشتیبانی‌شده Unix خود (WSL2) باقی می‌ماند
+- کنترل مرورگر به عنوان ابزارهای MCP در معرض دید قرار می‌گیرد به جای تکیه بر انتقال مرورگر هسته Hermes
 
-### Recommended server​
+### سرور توصیه شده
 
-Usechrome-devtools-mcp.
+از `chrome-devtools-mcp` استفاده کنید.
 
 `chrome-devtools-mcp`
 
-If your Windows Chrome already has live remote debugging enabled fromchrome://inspect/#remote-debugging, add it like this from WSL:
+اگر Chrome ویندوز شما قبلاً از `chrome://inspect/#remote-debugging` debugging از راه دور زنده فعال دارد، آن را اینگونه از WSL اضافه کنید:
 
 `chrome://inspect/#remote-debugging`
 
@@ -158,52 +158,52 @@ If your Windows Chrome already has live remote debugging enabled fromchrome://in
 hermes mcp add chrome-devtools-win --command cmd.exe --args /c npx -y chrome-devtools-mcp@latest --autoConnect --no-usage-statistics
 ```
 
-After saving the server:
+پس از ذخیره سرور:
 
 ```
 hermes mcp test chrome-devtools-win
 ```
 
-Then start a fresh Hermes session or run:
+سپس یک نشست تازه Hermes شروع کنید یا اجرا کنید:
 
 ```
 /reload-mcp
 ```
 
-### Typical prompt​
+### پرامپت معمول
 
-Once loaded, Hermes can use the MCP-prefixed browser tools directly. For example:
+پس از بارگذاری، Hermes می‌تواند مستقیماً از ابزارهای مرورگر با پیشوند MCP استفاده کند. مثلاً:
 
 ```
 调用 MCP 工具 mcp_chrome_devtools_win_list_pages，列出当前浏览器标签页。
 ```
 
-### When/browser connectis the wrong tool​
+### چه زمانی `/browser connect` ابزار اشتباهی است
 
 `/browser connect`
 
-If Hermes runs in WSL and Chrome runs on Windows,/browser connectmay fail even though Chrome is open and debuggable.
+اگر Hermes در WSL اجرا می‌شود و Chrome در ویندوز، `/browser connect` ممکن است ناموفق باشد حتی اگر Chrome باز و قابل debugging باشد.
 
 `/browser connect`
 
-Common reasons:
+دلایل رایج:
 
-- WSL cannot reach the same host-local endpoint Chrome exposes to Windows tools
-- newer Chrome live-debugging flows are not the same as a classicws://localhost:9222
-- the browser is easier to attach to from a Windows-side helper likechrome-devtools-mcp
+- WSL نمی‌تواند به همان endpoint host-local که Chrome در معرض ابزارهای ویندوز قرار می‌دهد برسد
+- جریان‌های debugging زنده Chrome جدیدتر مشابه `ws://localhost:9222` کلاسیک نیستند
+- مرورگر از یک helper سمت ویندوز مانند `chrome-devtools-mcp` آسان‌تر متصل می‌شود
 
 `ws://localhost:9222`
 `chrome-devtools-mcp`
 
-In those cases, keep/browser connectfor same-environment setups and use MCP for WSL-to-Windows browser bridging.
+در آن موارد، `/browser connect` را برای تنظیمات همان محیط نگه دارید و از MCP برای اتصال مرورگر WSL به ویندوز استفاده کنید.
 
 `/browser connect`
 
-### Known pitfalls​
+### دام‌های شناخته‌شده
 
-- Start Hermes from a Windows-mounted path like/mnt/c/Users/<you>or/mnt/c/workspace/...when using Windows stdio executables through MCP.
-- If you start Hermes from/rootor/home/..., Windows may emit aUNCcurrent-directory warning before the MCP server starts.
-- Ifchrome-devtools-mcp --autoConnecttimes out while enumerating pages, reduce background/frozen tabs in Chrome and retry.
+- Hermes را از یک مسیر mount شده در ویندوز مانند `/mnt/c/Users/<you>` یا `/mnt/c/workspace/...` هنگام استفاده از ابزارهای stdio ویندوز از طریق MCP راه‌اندازی کنید.
+- اگر Hermes را از `/root` یا `/home/...` راه‌اندازی کنید، ویندوز ممکن است یک هشدار current-directory UNC قبل از شروع سرور MCP منتشر کند.
+- اگر `chrome-devtools-mcp --autoConnect` هنگام فهرست کردن صفحات timeout شود، تب‌های پس‌زمینه/منجمد در Chrome را کاهش دهید و دوباره تلاش کنید.
 
 `/mnt/c/Users/<you>`
 `/mnt/c/workspace/...`
@@ -212,77 +212,66 @@ In those cases, keep/browser connectfor same-environment setups and use MCP for 
 `UNC`
 `chrome-devtools-mcp --autoConnect`
 
-### Example: blacklist dangerous actions​
+### مثال: لیست سیاه اقدامات خطرناک
 
 ```
 mcp_servers:  stripe:    url: "https://mcp.stripe.com"    headers:      Authorization: "Bearer ***"    tools:      exclude: [delete_customer, refund_payment]
 ```
 
-### Example: disable utility wrappers too​
+### مثال: غیرفعال کردن wrapperهای کمکی نیز
 
 ```
 mcp_servers:  docs:    url: "https://mcp.docs.example.com"    tools:      prompts: false      resources: false
 ```
 
-## What does filtering actually affect?​
+## فیلتر کردن واقعاً چه چیزی را تحت تأثیر قرار می‌دهد؟
 
-There are two categories of MCP-exposed functionality in Hermes:
+دو دسته از عملکرد MCP در Hermes وجود دارد:
 
-1. Server-native MCP tools
+۱. ابزارهای بومی سرور MCP
 
-- filtered with:tools.includetools.exclude
-
-- tools.include
-- tools.exclude
+- با `tools.include` / `tools.exclude` فیلتر می‌شوند
 
 `tools.include`
 `tools.exclude`
-1. Hermes-added utility wrappers
 
-- filtered with:tools.resourcestools.prompts
+۲. wrapperهای کمکی اضافه‌شده توسط Hermes
 
-- tools.resources
-- tools.prompts
+- با `tools.resources` / `tools.prompts` فیلتر می‌شوند
 
 `tools.resources`
 `tools.prompts`
 
-### Utility wrappers you may see​
+### wrapperهای کمکی که ممکن است ببینید
 
-Resources:
+منابع:
 
-- list_resources
-- read_resource
+- `list_resources`
+- `read_resource`
 
-`list_resources`
-`read_resource`
+پرامپت‌ها:
 
-Prompts:
+- `list_prompts`
+- `get_prompt`
 
-- list_prompts
-- get_prompt
+این wrapperها فقط زمانی ظاهر می‌شوند که:
 
-`list_prompts`
-`get_prompt`
+- config شما آنها را مجاز بداند، و
+- جلسه سرور MCP واقعاً از آن قابلیت‌ها پشتیبانی کند
 
-These wrappers only appear if:
+بنابراین Hermes وانمود نمی‌کند سرور منابع/پرامپت‌ها دارد اگر ندارد.
 
-- your config allows them, and
-- the MCP server session actually supports those capabilities
+## الگوهای رایج
 
-So Hermes will not pretend a server has resources/prompts if it does not.
+### الگو ۱: دستیار پروژه محلی
 
-## Common patterns​
-
-### Pattern 1: local project assistant​
-
-Use MCP for a repo-local filesystem or git server when you want Hermes to reason over a bounded workspace.
+از MCP برای فایل‌سیستم یا سرور git محلی پروژه استفاده کنید وقتی می‌خواهید Hermes در یک فضای کاری محدود استدلال کند.
 
 ```
 mcp_servers:  fs:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/project"]  git:    command: "uvx"    args: ["mcp-server-git", "--repository", "/home/user/project"]
 ```
 
-Good prompts:
+پرامپت‌های خوب:
 
 ```
 Review the project structure and identify where configuration lives.
@@ -292,19 +281,19 @@ Review the project structure and identify where configuration lives.
 Check the local git state and summarize what changed recently.
 ```
 
-### Pattern 2: repo-native work record with Open Scaffold​
+### الگو ۲: سوابق کاری بومی repo با Open Scaffold
 
-UseOpen Scaffoldwhen you want Hermes to read a repository's durable AI-work record: mission, plans, evidence notes, handoff packets, and review/gate results. Hermes remains the agent; Open Scaffold remains the repo-local record.
+از Open Scaffold استفاده کنید وقتی می‌خواهید Hermes سوابق کاری AI ماندگار یک مخزن را بخواند: مأموریت، برنامه‌ها، یادداشت‌های شواهد، بسته‌های handoff و نتایج review/gate. Hermes agent باقی می‌ماند؛ Open Scaffold سوابق محلی repo باقی می‌ماند.
 
 [Open Scaffold](https://github.com/graphanov/open-scaffold)
 
-Add the server for one scaffolded repository:
+سرور را برای یک مخزن scaffoldd شده اضافه کنید:
 
 ```
 hermes mcp add open_scaffold --command npx --args -y open-scaffold@latest mcp serve --repo /absolute/path/to/repohermes mcp test open_scaffold
 ```
 
-Then keep the exposed surface read-oriented. Chooseselectin thehermes mcp addprompt, or editconfig.yamlafterward:
+سپس سطح نمایش را خوانش-محور نگه دارید. `select` را در پرامپت `hermes mcp add` انتخاب کنید یا بعداً `config.yaml` را ویرایش کنید:
 
 `select`
 `hermes mcp add`
@@ -314,7 +303,7 @@ Then keep the exposed surface read-oriented. Chooseselectin thehermes mcp addpro
 mcp_servers:  open_scaffold:    command: "npx"    args: ["-y", "open-scaffold@latest", "mcp", "serve", "--repo", "/absolute/path/to/repo"]    tools:      include:        - list_plans        - get_plan        - get_mission        - list_evidence        - get_evidence        - get_status        - search_plans        - list_amendments        - get_handoff        - analyze_loop        - gate_loop      prompts: false
 ```
 
-Good prompts:
+پرامپت‌های خوب:
 
 ```
 Use the Open Scaffold MCP tools to compile the current handoff packet and tell me the next legal action.
@@ -324,25 +313,25 @@ Use the Open Scaffold MCP tools to compile the current handoff packet and tell m
 Inspect the active plans and evidence notes, then say whether this repo is ready for human review or needs another attempt.
 ```
 
-Boundary notes:
+یادداشت‌های مرزی:
 
-- Open Scaffold MCP is local-first and read-only by default.
-- Its write tools require the server to be started with--allow-write; do not enable that until you explicitly want Hermes to mutate.oscfiles.
-- Open Scaffold records and gates work; it does not authorize Hermes to merge, publish, deploy, or spawn runtimes.
-- Pinopen-scaffold@<version>instead of@latestif you need reproducible tool schemas.
+- Open Scaffold MCP محلی-اول و فقط خواندنی به طور پیش‌فرض است.
+- ابزارهای نوشتن آن نیاز دارند سرور با `--allow-write` شروع شود؛ آن را فعال نکنید تا زمانی که واقعاً بخواهید Hermes فایل‌های `.osc` را تغییر دهد.
+- Open Scaffold سوابق و gateها را کار می‌کند؛ Hermes را برای ادغام، انتشار، استقرار یا ایجاد runtimeها مجاز نمی‌کند.
+- `open-scaffold@<version>` را به جای `@latest` ثابت کنید اگر schemaهای ابزار قابل بازتولید نیاز دارید.
 
 `--allow-write`
 `.osc`
 `open-scaffold@<version>`
 `@latest`
 
-### Pattern 3: GitHub triage assistant​
+### الگو ۳: دستیار triage GitHub
 
 ```
 mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"    tools:      include: [list_issues, create_issue, update_issue, search_code]      prompts: false      resources: false
 ```
 
-Good prompts:
+پرامپت‌های خوب:
 
 ```
 List open issues about MCP, cluster them by theme, and draft a high-quality issue for the most common bug.
@@ -352,29 +341,29 @@ List open issues about MCP, cluster them by theme, and draft a high-quality issu
 Search the repo for uses of _discover_and_register_server and explain how MCP tools are registered.
 ```
 
-### Pattern 4: internal API assistant​
+### الگو ۴: دستیار API داخلی
 
 ```
 mcp_servers:  internal_api:    url: "https://mcp.internal.example.com"    headers:      Authorization: "Bearer ***"    tools:      include: [list_customers, get_customer, list_invoices]      resources: false      prompts: false
 ```
 
-Good prompts:
+پرامپت‌های خوب:
 
 ```
 Look up customer ACME Corp and summarize recent invoice activity.
 ```
 
-This is the sort of place where a strict whitelist is far better than an exclude list.
+این نوع جایی است که لیست سفید سخت بسیار بهتر از لیست exclude است.
 
-### Pattern 4: documentation / knowledge servers​
+### الگو ۴: سرورهای مستندات / دانش
 
-Some MCP servers expose prompts or resources that are more like shared knowledge assets than direct actions.
+برخی سرورهای MCP پرامپت‌ها یا منابعی را در معرض دید قرار می‌دهند که بیشتر شبیه دارایی‌های دانش مشترک هستند تا اقدامات مستقیم.
 
 ```
 mcp_servers:  docs:    url: "https://mcp.docs.example.com"    tools:      prompts: true      resources: true
 ```
 
-Good prompts:
+پرامپت‌های خوب:
 
 ```
 List available MCP resources from the docs server, then read the onboarding guide and summarize it.
@@ -384,155 +373,155 @@ List available MCP resources from the docs server, then read the onboarding guid
 List prompts exposed by the docs server and tell me which ones would help with incident response.
 ```
 
-## Tutorial: end-to-end setup with filtering​
+## آموزش: راه‌اندازی سرتاسری با فیلتر کردن
 
-Here is a practical progression.
+این یک پیشرفت عملی است.
 
-### Phase 1: add GitHub MCP with a tight whitelist​
+### فاز ۱: اضافه کردن GitHub MCP با لیست سفید سخت
 
 ```
 mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"    tools:      include: [list_issues, create_issue, search_code]      prompts: false      resources: false
 ```
 
-Start Hermes and ask:
+Hermes را راه‌اندازی کنید و بپرسید:
 
 ```
 Search the codebase for references to MCP and summarize the main integration points.
 ```
 
-### Phase 2: expand only when needed​
+### فاز ۲: فقط در صورت نیاز گسترش دهید
 
-If you later need issue updates too:
+اگر بعداً به به‌روزرسانی issues نیاز دارید:
 
 ```
 tools:  include: [list_issues, create_issue, update_issue, search_code]
 ```
 
-Then reload:
+سپس بارگذاری مجدد کنید:
 
 ```
 /reload-mcp
 ```
 
-### Phase 3: add a second server with different policy​
+### فاز ۳: اضافه کردن سرور دوم با سیاست متفاوت
 
 ```
 mcp_servers:  github:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "***"    tools:      include: [list_issues, create_issue, update_issue, search_code]      prompts: false      resources: false  filesystem:    command: "npx"    args: ["-y", "@modelcontextprotocol/server-filesystem", "/home/user/project"]
 ```
 
-Now Hermes can combine them:
+حالا Hermes می‌تواند آنها را ترکیب کند:
 
 ```
 Inspect the local project files, then create a GitHub issue summarizing the bug you find.
 ```
 
-That is where MCP gets powerful: multi-system workflows without changing Hermes core.
+اینجاست که MCP قدرتمند می‌شود: workflowهای چند سیستمی بدون تغییر هسته Hermes.
 
-## Safe usage recommendations​
+## توصیه‌های استفاده ایمن
 
-### Prefer allowlists for dangerous systems​
+### برای سیستم‌های خطرناک لیست سفید ترجیح دهید
 
-For anything financial, customer-facing, or destructive:
+برای هر چیز مالی، مربوط به مشتری یا مخرب:
 
-- usetools.include
-- start with the smallest set possible
+- از `tools.include` استفاده کنید
+- با کوچک‌ترین مجموعه ممکن شروع کنید
 
 `tools.include`
 
-### Disable unused utilities​
+### ابزارهای کمکی غیرفعال را غیرفعال کنید
 
-If you do not want the model browsing server-provided resources/prompts, turn them off:
+اگر نمی‌خواهید مدل منابع/پرامپت‌های ارائه‌شده توسط سرور را مرور کند، آنها را خاموش کنید:
 
 ```
 tools:  resources: false  prompts: false
 ```
 
-### Keep servers scoped narrowly​
+### سرورها را باریک نگه دارید
 
-Examples:
+مثال‌ها:
 
-- filesystem server rooted to one project dir, not your whole home directory
-- git server pointed at one repo
-- internal API server with read-heavy tool exposure by default
+- سرور فایل‌سیستم در یک دایرکتوری پروژه ریشه‌دار شده، نه کل دایرکتوری خانه شما
+- سرور git به یک مخزن اشاره شده
+- سرور API داخلی با نمایش ابزارهای سنگین خوانش به طور پیش‌فرض
 
-### Reload after config changes​
+### پس از تغییرات config بارگذاری مجدد کنید
 
 ```
 /reload-mcp
 ```
 
-Do this after changing:
+این کار را پس از تغییر انجام دهید:
 
-- include/exclude lists
-- enabled flags
-- resources/prompts toggles
-- auth headers / env
+- لیست‌های include/exclude
+- پرچم‌های enabled
+- کلیدهای resources/prompts
+- هدرهای auth / env
 
-## Troubleshooting by symptom​
+## عیب‌یابی بر اساس علائم
 
-### "The server connects but the tools I expected are missing"​
+### «سرور متصل می‌شود اما ابزارهایی که انتظار داشتم وجود ندارند»
 
-Possible causes:
+علل احتمالی:
 
-- filtered bytools.include
-- excluded bytools.exclude
-- utility wrappers disabled viaresources: falseorprompts: false
-- server does not actually support resources/prompts
+- توسط `tools.include` فیلتر شده
+- توسط `tools.exclude` حذف شده
+- wrapperهای کمکی از طریق `resources: false` یا `prompts: false` غیرفعال شده‌اند
+- سرور واقعاً از resources/prompts پشتیبانی نمی‌کند
 
 `tools.include`
 `tools.exclude`
 `resources: false`
 `prompts: false`
 
-### "The server is configured but nothing loads"​
+### «سرور پیکربندی شده اما چیزی بارگذاری نمی‌شود»
 
-Check:
+بررسی کنید:
 
-- enabled: falsewas not left in config
-- command/runtime exists (npx,uvx, etc.)
-- HTTP endpoint is reachable
-- auth env or headers are correct
+- `enabled: false` در config باقی نمانده باشد
+- command/runtime وجود داشته باشد (npx، uvx و غیره)
+- endpoint HTTP قابل دسترس باشد
+- env یا هدرهای auth صحیح باشند
 
 `enabled: false`
 `npx`
 `uvx`
 
-### "Why do I see fewer tools than the MCP server advertises?"​
+### «چرا ابزارهای کمتری نسبت به آنچه سرور MCP تبلیغ می‌کند می‌بینم؟»
 
-Because Hermes now respects your per-server policy and capability-aware registration. That is expected, and usually desirable.
+چون Hermes اکنون سیاست به ازای هر سرور شما و ثبت‌نام آگاه به قابلیت را رعایت می‌کند. این انتظار است و معمولاً مطلوب است.
 
-### "How do I remove an MCP server without deleting the config?"​
+### «چگونه یک سرور MCP را بدون حذف config حذف کنم؟`
 
-Use:
+از:
 
 ```
 enabled: false
 ```
 
-That keeps the config around but prevents connection and registration.
+استفاده کنید. این config را حفظ می‌کند اما اتصال و ثبت‌نام را متوقف می‌کند.
 
-## Recommended first MCP setups​
+## راه‌اندازی‌های اولیه MCP توصیه شده
 
-Good first servers for most users:
+سرورهای خوب اولیه برای اکثر کاربران:
 
 - filesystem
 - git
 - GitHub
-- fetch / documentation MCP servers
-- one narrow internal API
+- سرورهای fetch / مستندات MCP
+- یک API داخلی باریک
 
-Not-great first servers:
+سرورهای اولیه نه چندان خوب:
 
-- giant business systems with lots of destructive actions and no filtering
-- anything you do not understand well enough to constrain
+- سیستم‌های تجاری عظیم با اقدامات مخرب زیاد و بدون فیلتر
+- هر چیزی که به اندازه کافی درک نمی‌کنید تا محدود شود
 
-## Related docs​
+## اسناد مرتبط
 
 - MCP (Model Context Protocol)
-- FAQ
-- Slash Commands
+- سؤالات متداول
+- دستورات اسلش
 
 [MCP (Model Context Protocol)](/docs/user-guide/features/mcp)
-[FAQ](/docs/reference/faq)
-[Slash Commands](/docs/reference/slash-commands)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/use-mcp-with-hermes.md)
+[سؤالات متداول](/docs/reference/faq)
+[دستورات اسلش](/docs/reference/slash-commands)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/use-mcp-with-hermes.md)

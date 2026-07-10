@@ -5,40 +5,40 @@ permalink: /reference/cli-commands/
 ---
 
 - 
-- Reference
-- Command Reference
-- CLI Commands Reference
+- مرجع
+- مرجع دستورات
+- مرجع دستورات CLI
 
-# CLI Commands Reference
+# مرجع دستورات CLI
 
-This page covers theterminal commandsyou run from your shell.
+این صفحه دستورات ترمینالی را پوشش می‌دهد که از shell خود اجرا می‌کنید.
 
-For in-chat slash commands, seeSlash Commands Reference.
+برای دستورات اسلش داخل چت، به Slash Commands Reference مراجعه کنید.
 
 [Slash Commands Reference](/docs/reference/slash-commands)
 
-## Global entrypoint​
+## نقطه ورود جهانی​
 
 ```
 hermes [global-options] <command> [subcommand/options]
 ```
 
-### Global options​
+### گزینه‌های جهانی​
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --version,-V | Show version and exit. |
-| --profile <name>,-p <name> | Select which Hermes profile to use for this invocation. Overrides the sticky default set byhermes profile use. |
-| --resume <session>,-r <session> | Resume a previous session by ID or title. |
-| --continue [name],-c [name] | Resume the most recent session, or the most recent session matching a title. |
-| --worktree,-w | Start in an isolated git worktree for parallel-agent workflows. |
-| --yolo | Bypass dangerous-command approval prompts. |
-| --pass-session-id | Include the session ID in the agent's system prompt. |
-| --ignore-user-config | Ignore~/.hermes/config.yamland fall back to built-in defaults. Credentials in.envare still loaded. |
-| --ignore-rules | Skip auto-injection ofAGENTS.md,SOUL.md,.cursorrules, memory, and preloaded skills. |
-| --tui | Launch theTUIinstead of the classic CLI. Equivalent toHERMES_TUI=1. Always wins overdisplay.interface. |
-| --cli | Force the classic prompt_toolkit REPL. Use this to overridedisplay.interface: tuifor a single invocation. |
-| --dev | With--tui: run the TypeScript sources directly viatsxinstead of the prebuilt bundle (for TUI contributors). |
+| `--version`, `-V` | نمایش نسخه و خروج. |
+| `--profile <name>`, `-p <name>` | انتخاب پروفایل Hermes برای این فراخوانی. مقدار پیش‌فرض چسبناک تعیین شده توسط `hermes profile use` را override می‌کند. |
+| `--resume <session>`, `-r <session>` | از سرگیری نشست قبلی با ID یا عنوان. |
+| `--continue [name]`, `-c [name]` | از سرگیری آخرین نشست، یا آخرین نشست مطابق با عنوان. |
+| `--worktree`, `-w` | شروع در یک git worktree ایزوله برای workflowهای agent موازی. |
+| `--yolo` | دور زدن درخواستهای تأیید دستور خطرناک. |
+| `--pass-session-id` | شامل کردن session ID در system prompt agent. |
+| `--ignore-user-config` | نادیده گرفتن `~/.hermes/config.yaml` و بازگشت به پیش‌فرض‌های داخلی. اعتبارنامه‌ها در `.env` همچنان بارگذاری می‌شوند. |
+| `--ignore-rules` | رد شدن از تزریق خودکار `AGENTS.md`، `SOUL.md`، `.cursorrules`، حافظه و مهارت‌های پیش‌بارگذاری شده. |
+| `--tui` | راه‌اندازی [TUI](/docs/user-guide/tui) به جای CLI کلاسیک. معادل `HERMES_TUI=1`. همیشه بر `display.interface` ارجحیت دارد. |
+| `--cli` | اجبار به REPL کلاسیک prompt_toolkit. از این برای override کردن `display.interface: tui` در یک فراخوانی استفاده کنید. |
+| `--dev` | با `--tui`: اجرای منابع TypeScript مستقیماً از طریق `tsx` به جای bundle از پیش ساخته شده (برای مشارکت‌کنندگان TUI). |
 
 `--version`
 `-V`
@@ -70,64 +70,64 @@ hermes [global-options] <command> [subcommand/options]
 `--tui`
 `tsx`
 
-## Top-level commands​
+## دستورات سطح بالا​
 
-| Command | Purpose |
+| دستور | هدف |
 | --- | --- |
-| hermes chat | Interactive or one-shot chat with the agent. |
-| hermes model | Interactively choose the default provider and model. |
-| hermes moa | Configure named Mixture of Agents presets selectable from the model picker. |
-| hermes fallback | Manage fallback providers tried when the primary model errors. |
-| hermes gateway | Run or manage the messaging gateway service. |
-| hermes proxy | Local OpenAI-compatible proxy that attaches OAuth provider credentials. SeeSubscription Proxy. |
-| hermes lsp | Manage Language Server Protocol integration (semantic diagnostics for write_file/patch). |
-| hermes setup | Interactive setup wizard for all or part of the configuration. |
-| hermes whatsapp | Configure and pair the WhatsApp bridge. |
-| hermes whatsapp-cloud | Configure the official Meta WhatsApp Business Cloud API adapter (Business account + public webhook required). Distinct fromhermes whatsapp(Baileys personal-account bridge). |
-| hermes slack | Slack helpers (currently: generate the app manifest with every command as a native slash). |
-| hermes auth | Manage credentials — add, list, remove, reset, status, logout. Handles OAuth flows for Codex/Nous/Anthropic. |
-| hermes login/logout | Deprecated— usehermes authinstead. |
-| hermes send | Send a one-shot message to a configured messaging platform (Telegram, Discord, Slack, Signal, SMS, …). Useful from shell scripts, cron jobs, CI hooks, and monitoring daemons — no agent loop, no LLM. |
-| hermes secrets | Manage external secret sources (currently Bitwarden Secrets Manager) for pulling API keys at process startup instead of from~/.hermes/.env. |
-| hermes migrate | Diagnose and (optionally) rewriteconfig.yamlto replace references to retired models or deprecated settings (e.g.migrate xai). |
-| hermes status | Show agent, auth, and platform status. |
-| hermes cron | Inspect and tick the cron scheduler. |
-| hermes kanban | Multi-profile collaboration board (tasks, links, dispatcher). |
-| hermes project | Manage named, multi-folder workspaces (projects). Anchors desktop session grouping and, when bound to a kanban board, gives tasks a deterministic worktree + branch convention. State is per-profile. |
-| hermes webhook | Manage dynamic webhook subscriptions for event-driven activation. |
-| hermes hooks | Inspect, approve, or remove shell-script hooks declared inconfig.yaml. |
-| hermes doctor | Diagnose config and dependency issues. |
-| hermes security audit | On-demand supply-chain audit (OSV.dev) for the venv, plugin requirements, and pinned MCP servers. |
-| hermes dump | Copy-pasteable setup summary for support/debugging. |
-| hermes prompt-size | Show a byte breakdown of the system prompt + tool schemas (skills index, memory, profile). Runs offline. |
-| hermes debug | Debug tools — upload logs and system info for support. |
-| hermes backup | Back up Hermes home directory to a zip file. |
-| hermes checkpoints | Inspect / prune / clear~/.hermes/checkpoints/(the shadow store used by/rollback). Run with no args for a status overview. |
-| hermes import | Restore a Hermes backup from a zip file. |
-| hermes logs | View, tail, and filter agent/gateway/error log files. |
-| hermes config | Show, edit, migrate, and query configuration files. |
-| hermes pairing | Approve or revoke messaging pairing codes. |
-| hermes skills | Browse, install, publish, audit, and configure skills. |
-| hermes bundles | Group several skills under a single/<name>slash command. SeeSkill Bundles. |
-| hermes curator | Background skill maintenance — status, run, pause, pin. SeeCurator. |
-| hermes memory | Configure external memory provider. Plugin-specific subcommands (e.g.hermes honcho) register automatically when their provider is active. |
-| hermes acp | Run Hermes as an ACP server for editor integration. |
-| hermes mcp | Manage MCP server configurations and run Hermes as an MCP server. |
-| hermes plugins | Manage Hermes Agent plugins (install, enable, disable, remove). |
-| hermes portal | Nous Portal status, subscription link, and Tool Gateway routing. SeeTool Gateway. |
-| hermes tools | Configure enabled tools per platform. |
-| hermes computer-use | Install or check the cua-driver backend (macOS Computer Use). |
-| hermes pets | Browse, install, and selectpetdexanimated pets shown across the CLI, TUI, and desktop app. Subcommands:list,install,select,show,off,scale,remove,doctor. |
-| hermes sessions | Browse, export, prune, rename, and delete sessions. |
-| hermes insights | Show token/cost/activity analytics. |
-| hermes claw | OpenClaw migration helpers. |
-| hermes dashboard | Launch the web dashboard for managing config, API keys, and sessions. |
-| hermes desktop(aliasgui) | Build and launch the native Electron desktop app. |
-| hermes profile | Manage profiles — multiple isolated Hermes instances. |
-| hermes completion | Print shell completion scripts (bash/zsh/fish). |
-| hermes version | Show version information. |
-| hermes update | Pull latest code and reinstall dependencies.--checkpreviews without installing;--backuptakes a pre-pullHERMES_HOMEsnapshot. |
-| hermes uninstall | Remove Hermes from the system. |
+| `hermes chat` | چت تعاملی یا یکباره با agent. |
+| `hermes model` | انتخاب تعاملی ارائه‌دهنده و مدل پیش‌فرض. |
+| `hermes moa` | پیکربندی presetهای Mixture of Agents نام‌دار که از انتخابگر مدل قابل انتخاب هستند. |
+| `hermes fallback` | مدیریت ارائه‌دهندگان fallback که هنگام خطای مدل اصلی امتحان می‌شوند. |
+| `hermes gateway` | اجرا یا مدیریت سرویس گیت‌وی پیام‌رسانی. |
+| `hermes proxy` | پروکسی محلی سازگار با OpenAI که اعتبارنامه‌های OAuth ارائه‌دهنده را متصل می‌کند. به [Subscription Proxy](/docs/user-guide/features/subscription-proxy) مراجعه کنید. |
+| `hermes lsp` | مدیریت ادغام Language Server Protocol (تشخیص‌های معنایی برای `write_file`/`patch`). |
+| `hermes setup` | ویزار راه‌اندازی تعاملی برای همه یا بخشی از پیکربندی. |
+| `hermes whatsapp` | پیکربندی و جفت‌سازی پل WhatsApp. |
+| `hermes whatsapp-cloud` | پیکربندی آداپتور رسمی Meta WhatsApp Business Cloud API (حساب Business + webhook عمومی مورد نیاز). متمایز از `hermes whatsapp` (پل حساب شخصی Baileys). |
+| `hermes slack` | ابزارهای کمکی Slack (در حال حاضر: تولید manifest برنامه با هر دستور به عنوان اسلش بومی). |
+| `hermes auth` | مدیریت اعتبارنامه‌ها — اضافه کردن، فهرست کردن، حذف، بازنشانی، وضعیت، خروج از سیستم. مدیریت فلوهای OAuth برای Codex/Nous/Anthropic. |
+| `hermes login`/`logout` | **منسوخ** — به جای آن از `hermes auth` استفاده کنید. |
+| `hermes send` | ارسال یک پیام یکباره به یک پلتفرم پیام‌رسانی پیکربندی شده (Telegram، Discord، Slack، Signal، SMS، …). مفید از اسکریپت‌های shell، تسک‌های cron، هوک‌های CI و دیمن‌های پایش — بدون حلقه agent، بدون LLM. |
+| `hermes secrets` | مدیریت منابع خارجی secret (در حال حاضر Bitwarden Secrets Manager) برای کشیدن کلیدهای API در شروع فرآیند به جای ذخیره در `~/.hermes/.env`. |
+| `hermes migrate` | تشخیص و (اختیاری) بازنویسی `config.yaml` برای جایگزینی ارجاعات به مدل‌های بازنشسته یا تنظیمات منسوخ (مثلاً `migrate xai`). |
+| `hermes status` | نمایش وضعیت agent، auth و پلتفرم. |
+| `hermes cron` | بررسی و تیک زدن زمان‌بند cron. |
+| `hermes kanban` | تخته همکاری چندپروفایلی (تسک‌ها، لینک‌ها، dispatcher). |
+| `hermes project` | مدیریت فضاهای کاری نام‌دار چندپوشه (پروژه‌ها). گروه‌بندی نشست دسکتاپ را لنگر می‌اندازد و وقتی به تخته kanban متصل است، قرارداد worktree + branch تعیین‌شده به تسک‌ها می‌دهد. وضعیت به ازای هر پروفایل است. |
+| `hermes webhook` | مدیریت اشتراک‌های webhook پویا برای فعال‌سازی مبتنی بر رویداد. |
+| `hermes hooks` | بررسی، تأیید یا حذف هوک‌های اسکریپت shell اعلام شده در `config.yaml`. |
+| `hermes doctor` | تشخیص مشکلات پیکربندی و وابستگی. |
+| `hermes security audit` | ممیزی زنجیره تأمین on-demand (OSV.dev) برای venv، plugin requirements و سرورهای MCP ثابت شده. |
+| `hermes dump` | خلاصه راه‌اندازی قابل کپی-پیست برای پشتیبانی/عیب‌یابی. |
+| `hermes prompt-size` | نمایش تفکیک بایتی system prompt + اسکیماهای ابزار (ایندکس مهارت‌ها، حافظه، پروفایل). آفلاین اجرا می‌شود. |
+| `hermes debug` | ابزارهای دیباگ — آپلود لاگ‌ها و اطلاعات سیستم برای پشتیبانی. |
+| `hermes backup` | نسخه پشتیبان دایرکتوری Hermes home به فایل zip. |
+| `hermes checkpoints` | بررسی / هرس / پاک کردن `~/.hermes/checkpoints/` (فروشگاه سایه‌ای که توسط `/rollback` استفاده می‌شود). بدون آرگومان اجرا کنید برای نمای کلی وضعیت. |
+| `hermes import` | بازیابی نسخه پشتیبان Hermes از فایل zip. |
+| `hermes logs` | مشاهده، دنبال کردن و فیلتر کردن فایل‌های لاگ agent/گیت‌وی/خطا. |
+| `hermes config` | نمایش، ویرایش، مهاجرت و پرس‌وجو از فایل‌های پیکربندی. |
+| `hermes pairing` | تأیید یا لغو کدهای جفت‌سازی پیام‌رسانی. |
+| `hermes skills` | مرور، نصب، انتشار، ممیزی و پیکربندی مهارت‌ها. |
+| `hermes bundles` | گروه‌بندی چند مهارت تحت یک دستور اسلش `/<name>`. به [Skill Bundles](/docs/user-guide/features/skills#skill-bundles) مراجعه کنید. |
+| `hermes curator` | نگهداری پس‌زمینه مهارت‌ها — وضعیت، اجرا، توقف، pin. به [Curator](/docs/user-guide/features/curator) مراجعه کنید. |
+| `hermes memory` | پیکربندی ارائه‌دهنده حافظه خارجی. دستورات زیر سطح اختصاصی پلاگین (مثلاً `hermes honcho`) هنگام فعال بودن ارائه‌دهنده به طور خودکار ثبت می‌شوند. |
+| `hermes acp` | اجرای Hermes به عنوان سرور ACP برای ادغام ویرایشگر. |
+| `hermes mcp` | مدیریت پیکربندی سرورهای MCP و اجرای Hermes به عنوان سرور MCP. |
+| `hermes plugins` | مدیریت pluginهای Hermes Agent (نصب، فعال کردن، غیرفعال کردن، حذف). |
+| `hermes portal` | وضعیت Nous Portal، لینک اشتراک و مسیریابی Tool Gateway. به [Tool Gateway](/docs/user-guide/features/tool-gateway) مراجعه کنید. |
+| `hermes tools` | پیکربندی ابزارهای فعال به ازای هر پلتفرم. |
+| `hermes computer-use` | نصب یا بررسی backend cua-driver (macOS Computer Use). |
+| `hermes pets` | مرور، نصب و انتخاب حیوانات خانگی متحرک [petdex](/docs/user-guide/features/pets) که در CLI، TUI و اپ دسکتاپ نمایش داده می‌شوند. دستورات زیر سطح: `list`, `install`, `select`, `show`, `off`, `scale`, `remove`, `doctor`. |
+| `hermes sessions` | مرور، خروجی گرفتن، هرس، تغییر نام و حذف نشست‌ها. |
+| `hermes insights` | نمایش تحلیل‌های توکن/هزینه/فعالیت. |
+| `hermes claw` | ابزارهای کمکی مهاجرت OpenClaw. |
+| `hermes dashboard` | راه‌اندازی داشبورد وب برای مدیریت پیکربندی، کلیدهای API و نشست‌ها. |
+| `hermes desktop` (نام مستعار `gui`) | ساخت و راه‌اندازی اپ دسکتاپ بومی Electron. |
+| `hermes profile` | مدیریت پروفایل‌ها — نمونه‌های ایزوله متعدد Hermes. |
+| `hermes completion` | چاپ اسکریپت‌های تکمیل shell (bash/zsh/fish). |
+| `hermes version` | نمایش اطلاعات نسخه. |
+| `hermes update` | کشیدن آخرین کد و نصب مجدد وابستگی‌ها. `--check` بدون نصب پیش‌نمایش می‌دهد؛ `--backup` اسناپ‌شات `HERMES_HOME` قبل از کشیدن می‌گیرد. |
+| `hermes uninstall` | حذف Hermes از سیستم. |
 
 `hermes chat`
 `hermes model`
@@ -212,7 +212,7 @@ hermes [global-options] <command> [subcommand/options]
 `HERMES_HOME`
 `hermes uninstall`
 
-## hermes chat​
+## `hermes chat`​
 
 `hermes chat`
 
@@ -220,28 +220,28 @@ hermes [global-options] <command> [subcommand/options]
 hermes chat [options]
 ```
 
-Common options:
+گزینه‌های رایج:
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| -q,--query "..." | One-shot, non-interactive prompt. |
-| -m,--model <model> | Override the model for this run. |
-| -t,--toolsets <csv> | Enable a comma-separated set of toolsets. |
-| --provider <provider> | Force a provider:auto,openrouter,nous,openai-codex,copilot-acp,copilot,anthropic,gemini,huggingface,novita(aliasesnovita-ai,novitaai),openai-api,zai,kimi-coding,kimi-coding-cn,minimax,minimax-cn,minimax-oauth,kilocode,xiaomi,arcee,gmi,alibaba,alibaba-coding-plan(aliasalibaba_coding),deepseek,nvidia,ollama-cloud,xai(aliasgrok),xai-oauth(aliasgrok-oauth),qwen-oauth,bedrock,opencode-zen,opencode-go,azure-foundry,lmstudio,stepfun,tencent-tokenhub(aliastencent,tokenhub). |
-| -s,--skills <name> | Preload one or more skills for the session (can be repeated or comma-separated). |
-| -v,--verbose | Verbose output. |
-| -Q,--quiet | Programmatic mode: suppress banner/spinner/tool previews. |
-| --image <path> | Attach a local image to a single query. |
-| --resume <session>/--continue [name] | Resume a session directly fromchat. |
-| --worktree | Create an isolated git worktree for this run. |
-| --checkpoints | Enable filesystem checkpoints before destructive file changes. |
-| --yolo | Skip approval prompts. |
-| --pass-session-id | Pass the session ID into the system prompt. |
-| --ignore-user-config | Ignore~/.hermes/config.yamland use built-in defaults. Credentials in.envare still loaded. Useful for isolated CI runs, reproducible bug reports, and third-party integrations. |
-| --ignore-rules | Skip auto-injection ofAGENTS.md,SOUL.md,.cursorrules, persistent memory, and preloaded skills. Combine with--ignore-user-configfor a fully isolated run. |
-| --safe-mode | Troubleshooting mode: disable ALL customizations — user config, rules/memory injection, plugins, shell hooks, and MCP servers (implies--ignore-user-configand--ignore-rules). Use to isolate whether a problem comes from your setup or from Hermes itself. |
-| --source <tag> | Session source tag for filtering (default:cli). Usetoolfor third-party integrations that should not appear in user session lists. |
-| --max-turns <N> | Maximum tool-calling iterations per conversation turn (default: 90, oragent.max_turnsin config). |
+| `-q`, `--query "..."` | پرامپت یکباره، غیرتعاملی. |
+| `-m`, `--model <model>` | Override کردن مدل برای این اجرا. |
+| `-t`, `--toolsets <csv>` | فعال کردن مجموعه‌ای جداشده با کاما از toolsetها. |
+| `--provider <provider>` | اجبار به یک ارائه‌دهنده: `auto`, `openrouter`, `nous`, `openai-codex`, `copilot-acp`, `copilot`, `anthropic`, `gemini`, `huggingface`, `novita` (نام مستعار `novita-ai`, `novitaai`), `openai-api`, `zai`, `kimi-coding`, `kimi-coding-cn`, `minimax`, `minimax-cn`, `minimax-oauth`, `kilocode`, `xiaomi`, `arcee`, `gmi`, `alibaba`, `alibaba-coding-plan` (نام مستعار `alibaba_coding`), `deepseek`, `nvidia`, `ollama-cloud`, `xai` (نام مستعار `grok`), `xai-oauth` (نام مستعار `grok-oauth`), `qwen-oauth`, `bedrock`, `opencode-zen`, `opencode-go`, `azure-foundry`, `lmstudio`, `stepfun`, `tencent-tokenhub` (نام مستعار `tencent`, `tokenhub`). |
+| `-s`, `--skills <name>` | پیش‌بارگذاری یک یا چند مهارت برای نشست (قابل تکرار یا جداشده با کاما). |
+| `-v`, `--verbose` | خروجی مفصل. |
+| `-Q`, `--quiet` | حالت برنامه‌نویسی: سرکوب بنر/چرخنده/پیش‌نمایش ابزار. |
+| `--image <path>` | متصل کردن یک تصویر محلی به یک پرامپت. |
+| `--resume <session>`/`--continue [name]` | از سرگیری نشست مستقیماً از `chat`. |
+| `--worktree` | ایجاد یک git worktree ایزوله برای این اجرا. |
+| `--checkpoints` | فعال کردن checkpointهای فایل سیستم قبل از تغییرات فایلی مخرب. |
+| `--yolo` | رد شدن از درخواستهای تأیید. |
+| `--pass-session-id` | ارسال session ID به system prompt. |
+| `--ignore-user-config` | نادیده گرفتن `~/.hermes/config.yaml` و استفاده از پیش‌فرض‌های داخلی. اعتبارنامه‌ها در `.env` همچنان بارگذاری می‌شوند. مفید برای اجراهای CI ایزوله، گزارش‌های خطای قابل تکرار و ادغام‌های شخص ثالث. |
+| `--ignore-rules` | رد شدن از تزریق خودکار `AGENTS.md`، `SOUL.md`، `.cursorrules`، حافظه پایدار و مهارت‌های پیش‌بارگذاری شده. با `--ignore-user-config` ترکیب کنید برای اجرای کاملاً ایزوله. |
+| `--safe-mode` | حالت عیب‌یابی: غیرفعال کردن همه سفارشی‌سازی‌ها — پیکربندی کاربر، تزریق قوانین/حافظه، pluginها، هوک‌های shell و سرورهای MCP (شامل `--ignore-user-config` و `--ignore-rules`). برای جدا کردن اینکه مشکل از راه‌اندازی شماست یا خود Hermes استفاده کنید. |
+| `--source <tag>` | برچسب منبع نشست برای فیلتر کردن (پیش‌فرض: `cli`). از `tool` برای ادغام‌های شخص ثالث استفاده کنید که نباید در لیست نشست‌های کاربر ظاهر شوند. |
+| `--max-turns <N>` | حداکثر تکرارهای فراخوانی ابزار به ازای هر نوبت مکالمه (پیش‌فرض: 90، یا `agent.max_turns` در پیکربندی). |
 
 `-q`
 `--query "..."`
@@ -324,33 +324,43 @@ Common options:
 `--max-turns <N>`
 `agent.max_turns`
 
-Examples:
+مثال‌ها:
 
 ```
-hermeshermes chat -q "Summarize the latest PRs"hermes chat --provider openrouter --model anthropic/claude-sonnet-4.6hermes chat --toolsets web,terminal,skillshermes chat --quiet -q "Return only JSON"hermes chat --worktree -q "Review this repo and open a PR"hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"hermes chat --safe-mode -q "Is this bug mine or Hermes'?"
+hermes
+hermes chat -q "Summarize the latest PRs"
+hermes chat --provider openrouter --model anthropic/claude-sonnet-4.6
+hermes chat --toolsets web,terminal,skills
+hermes chat --quiet -q "Return only JSON"
+hermes chat --worktree -q "Review this repo and open a PR"
+hermes chat --ignore-user-config --ignore-rules -q "Repro without my personal setup"
+hermes chat --safe-mode -q "Is this bug mine or Hermes'?"
 ```
 
-### hermes -z <prompt>— scripted one-shot​
+### `hermes -z <prompt>` — یکباره اسکریپتی​
 
 `hermes -z <prompt>`
 
-For programmatic callers (shell scripts, CI, cron, parent processes piping in a prompt),hermes -zis the purest one-shot entry point:single prompt in, final response text out, nothing else on stdout or stderr.No banner, no spinner, no tool previews, noSession:line — just the agent's final reply as plain text.
+برای فراخوانندگان برنامه‌نویسی (اسکریپت‌های shell، CI، cron، فرآیندهای والد که پرامپت را لوله می‌کنند)، `hermes -z` خالص‌ترین نقطه ورود یکباره است: پرامپت واحد وارد، متن پاسخ نهایی خارج، چیز دیگری در stdout یا stderr نیست. بدون بنر، بدون چرخنده، بدون پیش‌نمایش ابزار، بدون خط `Session:` — فقط پاسخ نهایی agent به صورت متن ساده.
 
 `hermes -z`
 `Session:`
 
 ```
-hermes -z "What's the capital of France?"# → Paris.# Parent scripts can cleanly capture the response:answer=$(hermes -z "summarize this" < /path/to/file.txt)
+hermes -z "What's the capital of France?"
+# → Paris.
+# Parent scripts can cleanly capture the response:
+answer=$(hermes -z "summarize this" < /path/to/file.txt)
 ```
 
-Per-run overrides (no mutation to~/.hermes/config.yaml):
+بازنویسی‌های به ازای هر اجرا (بدون تغییر به `~/.hermes/config.yaml`):
 
 `~/.hermes/config.yaml`
 
-| Flag | Equivalent env var | Purpose |
+| پرچم | متغیر env معادل | هدف |
 | --- | --- | --- |
-| -m/--model <model> | HERMES_INFERENCE_MODEL | Override the model for this run |
-| --provider <provider> | (none) | Override the provider for this run |
+| `-m`/`--model <model>` | `HERMES_INFERENCE_MODEL` | Override کردن مدل برای این اجرا |
+| `--provider <provider>` | (هیچ) | Override کردن ارائه‌دهنده برای این اجرا |
 
 `-m`
 `--model <model>`
@@ -358,58 +368,66 @@ Per-run overrides (no mutation to~/.hermes/config.yaml):
 `--provider <provider>`
 
 ```
-hermes -z "…" --provider openrouter --model openai/gpt-5.5# or:HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
+hermes -z "…" --provider openrouter --model openai/gpt-5.5
+# or:
+HERMES_INFERENCE_MODEL=anthropic/claude-sonnet-4.6 hermes -z "…"
 ```
 
-Same agent, same tools, same skills — just strips every interactive / cosmetic layer. If you need tool output in the transcript too, usehermes chat -qinstead;-zis explicitly for "I only want the final answer".
+همان agent، همان ابزارها، همان مهارت‌ها — فقط همه لایه‌های تعاملی/زیبایی‌شناختی حذف شده‌اند. اگر خروجی ابزار را هم در رونویسی می‌خواهید، از `hermes chat -q` استفاده کنید؛ `-z` صریحاً برای «فقط پاسخ نهایی را می‌خواهم» است.
 
 `hermes chat -q`
 `-z`
 
-## hermes model​
+## `hermes model`​
 
 `hermes model`
 
-Interactive provider + model selector.This is the command for adding new providers, setting up API keys, and running OAuth flows.Run it from your terminal — not from inside an active Hermes chat session.
+انتخابگر تعاملی ارائه‌دهنده + مدل. این دستور برای اضافه کردن ارائه‌دهندگان جدید، تنظیم کلیدهای API و اجرای فلوهای OAuth است. آن را از ترمینال خود اجرا کنید — نه از داخل یک نشست چت فعال Hermes.
 
 ```
 hermes model
 ```
 
-Use this when you want to:
+از این استفاده کنید وقتی می‌خواهید:
 
-- add a new provider(OpenRouter, Anthropic, Copilot, DeepSeek, custom, etc.)
-- log into OAuth-backed providers (Anthropic, Copilot, Codex, Nous Portal)
-- enter or update API keys
-- pick from provider-specific model lists
-- configure a custom/self-hosted endpoint
-- save the new default into config
+- ارائه‌دهنده جدید اضافه کنید (OpenRouter، Anthropic، Copilot، DeepSeek، سفارشی و غیره)
+- به ارائه‌دهندگان OAuth وارد شوید (Anthropic، Copilot، Codex، Nous Portal)
+- کلیدهای API را وارد یا به‌روزرسانی کنید
+- از لیست‌های مدل اختصاصی ارائه‌دهنده انتخاب کنید
+- یک endpoint سفارشی/میزبانی‌شده پیکربندی کنید
+- مقدار پیش‌فرض جدید را در پیکربندی ذخیره کنید
 
-hermes model(run from your terminal, outside any Hermes session) is thefull provider setup wizard. It can add new providers, run OAuth flows, prompt for API keys, and configure endpoints.
+`hermes model` (از ترمینال خود، خارج از هر نشست Hermes) **ویزار کامل راه‌اندازی ارائه‌دهنده** است. می‌تواند ارائه‌دهندگان جدید اضافه کند، فلوهای OAuth اجرا کند، برای کلیدهای API درخواست کند و endpointها را پیکربندی کند.
 
 `hermes model`
 
-/model(typed inside an active Hermes chat session) can onlyswitch between providers and models you've already set up. It cannot add new providers, run OAuth, or prompt for API keys.
+`/model` (تایپ شده داخل یک نشست چت فعال Hermes) فقط می‌تواند بین ارائه‌دهندگان و مدل‌هایی که قبلاً راه‌اندازی کرده‌اید جابجا شود. نمی‌تواند ارائه‌دهندگان جدید اضافه کند، OAuth اجرا کند یا برای کلیدهای API درخواست کند.
 
 `/model`
 
-If you need to add a new provider:Exit your Hermes session first (Ctrl+Cor/quit), then runhermes modelfrom your terminal prompt.
+اگر به اضافه کردن ارائه‌دهنده جدید نیاز دارید: ابتدا نشست Hermes خود را ترک کنید (`Ctrl+C` یا `/quit`)، سپس `hermes model` را از پرامپت ترمینال خود اجرا کنید.
 
 `Ctrl+C`
 `/quit`
 `hermes model`
 
-### /modelslash command (mid-session)​
+### دستور اسلش `/model` (وسط نشست)​
 
 `/model`
 
-Switch between already-configured models without leaving a session:
+بین مدل‌های قبلاً پیکربندی شده بدون ترک نشست جابجا شوید:
 
 ```
-/model                              # Show current model and available options/model claude-sonnet-4              # Switch model (auto-detects provider)/model zai:glm-5                    # Switch provider and model/model custom:qwen-2.5              # Use model on your custom endpoint/model custom                       # Auto-detect model from custom endpoint/model custom:local:qwen-2.5        # Use a named custom provider/model openrouter:anthropic/claude-sonnet-4  # Switch back to cloud
+/model                              # Show current model and available options
+/model claude-sonnet-4              # Switch model (auto-detects provider)
+/model zai:glm-5                    # Switch provider and model
+/model custom:qwen-2.5              # Use model on your custom endpoint
+/model custom                       # Auto-detect model from custom endpoint
+/model custom:local:qwen-2.5        # Use a named custom provider
+/model openrouter:anthropic/claude-sonnet-4  # Switch back to cloud
 ```
 
-By default,/modelchanges applyto the current session only. Add--globalto persist the change toconfig.yaml:
+به طور پیش‌فرض، تغییرات `/model` فقط روی **نشست فعلی** اعمال می‌شوند. `--global` را اضافه کنید تا تغییر را در `config.yaml` ذخیره کنید:
 
 `/model`
 `--global`
@@ -419,16 +437,16 @@ By default,/modelchanges applyto the current session only. Add--globalto persist
 /model claude-sonnet-4 --global     # Switch and save as new default
 ```
 
-If you've only configured OpenRouter,/modelwill only show OpenRouter models. To add another provider (Anthropic, DeepSeek, Copilot, etc.), exit your session and runhermes modelfrom the terminal.
+اگر فقط OpenRouter را پیکربندی کرده‌اید، `/model` فقط مدل‌های OpenRouter را نشان خواهد داد. برای اضافه کردن ارائه‌دهنده دیگر (Anthropic، DeepSeek، Copilot و غیره)، نشست خود را ترک کنید و `hermes model` را از ترمینال اجرا کنید.
 
 `/model`
 `hermes model`
 
-Provider and base URL changes are persisted toconfig.yamlautomatically. When switching away from a custom endpoint, the stale base URL is cleared to prevent it leaking into other providers.
+تغییرات ارائه‌دهنده و base URL به طور خودکار در `config.yaml` ذخیره می‌شوند. هنگام جابجایی از یک endpoint سفارشی، base URL منقضی شده پاک می‌شود تا از نشت آن به ارائه‌دهندگان دیگر جلوگیری شود.
 
 `config.yaml`
 
-## hermes gateway​
+## `hermes gateway`​
 
 `hermes gateway`
 
@@ -436,21 +454,21 @@ Provider and base URL changes are persisted toconfig.yamlautomatically. When swi
 hermes gateway <subcommand>
 ```
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| run | Run the gateway in the foreground. Recommended for WSL, Docker, and Termux. |
-| start | Start the installed systemd/launchd background service. |
-| stop | Stop the service (or foreground process). |
-| restart | Restart the service. |
-| status | Show service status. |
-| list | Listall profilesand whether each profile's gateway is currently running (with PID where available). Handy when you run multiple profiles side-by-side and want a single overview. |
-| install | Install as a systemd (Linux) or launchd (macOS) background service. |
-| uninstall | Remove the installed service. |
-| setup | Interactive messaging-platform setup. |
-| migrate-legacy | Remove legacyhermes.serviceunits left over from pre-rename installs. Profile units (hermes-gateway-<profile>.service) and unrelated services are never touched. Flags:--dry-run,-y/--yes. |
-| enroll | Experimental: enroll this gateway with a relay connector and save relay credentials for connector-backed platforms. |
+| `run` | اجرای گیت‌وی در حالت foreground. توصیه شده برای WSL، Docker و Termux. |
+| `start` | شروع سرویس پس‌زمینه systemd/launchd نصب شده. |
+| `stop` | توقف سرویس (یا فرآیند foreground). |
+| `restart` | راه‌اندازی مجدد سرویس. |
+| `status` | نمایش وضعیت سرویس. |
+| `list` | فهرست همه پروفایل‌ها و اینکه آیا گیت‌وی هر پروفایل در حال اجراست (با PID در صورت وجود). مفید وقتی چند پروفایل را کنار هم اجرا می‌کنید و یک نمای کلی می‌خواهید. |
+| `install` | نصب به عنوان سرویس پس‌زمینه systemd (Linux) یا launchd (macOS). |
+| `uninstall` | حذف سرویس نصب شده. |
+| `setup` | راه‌اندازی تعاملی پلتفرم پیام‌رسانی. |
+| `migrate-legacy` | حذف واحدهای `hermes.service` قدیمی باقی‌مانده از نصب‌های قبل از تغییر نام. واحدهای پروفایل (`hermes-gateway-<profile>.service`) و سرویس‌های نامرتبط هرگز لمس نمی‌شوند. پرچم‌ها: `--dry-run`، `-y`/`--yes`. |
+| `enroll` | آزمایشی: ثبت این گیت‌وی با یک رله‌کننده و ذخیره اعتبارنامه‌های رله برای پلتفرم‌های پشتیبانی شده توسط رله‌کننده. |
 
 `run`
 `start`
@@ -469,12 +487,12 @@ Subcommands:
 `--yes`
 `enroll`
 
-Options:
+گزینه‌ها:
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --all | Onstart/restart/stop: act onevery profile'sgateway, not just the activeHERMES_HOME. Useful if you run multiple profiles side-by-side and want to restart them all afterhermes update. |
-| --no-supervise | Onrun: inside the s6-overlay Docker image, opt out of auto-supervision and use pre-s6 foreground semantics — gateway runs as the container's main process with no auto-restart. No-op outside the s6 image. Equivalent to settingHERMES_GATEWAY_NO_SUPERVISE=1. |
+| `--all` | در `start`/`restart`/`stop`: روی گیت‌وی **هر** پروفایل عمل کنید، نه فقط `HERMES_HOME` فعال. مفید وقتی چند پروفایل را کنار هم اجرا می‌کنید و می‌خواهید همه را پس از `hermes update` راه‌اندازی مجدد کنید. |
+| `--no-supervise` | در `run`: در تصویر Docker s6-overlay، از نظارت خودکار انصراف دهید و از معنای foreground قبل از s6 استفاده کنید — گیت‌وی به عنوان فرآیند اصلی کانتینر بدون راه‌اندازی مجدد خودکار اجرا می‌شود. خارج از تصویر s6 بی‌اثر است. معادل تنظیم `HERMES_GATEWAY_NO_SUPERVISE=1`. |
 
 `--all`
 `start`
@@ -486,7 +504,7 @@ Options:
 `run`
 `HERMES_GATEWAY_NO_SUPERVISE=1`
 
-hermes gateway enrollaccepts--token,--connector-url,--gateway-id, and--wake-url. It exchanges the enrollment token with the connector and writes the resultingGATEWAY_RELAY_ID,GATEWAY_RELAY_SECRET,GATEWAY_RELAY_DELIVERY_KEY, optionalGATEWAY_RELAY_URL, and (when--wake-urlis given)GATEWAY_RELAY_WAKE_URLvalues to the active profile's.env.
+`hermes gateway enroll` پرچم‌های `--token`، `--connector-url`، `--gateway-id` و `--wake-url` را می‌پذیرد. توکن ثبت را با رله‌کننده مبادله می‌کند و مقادیر `GATEWAY_RELAY_ID`، `GATEWAY_RELAY_SECRET`، `GATEWAY_RELAY_DELIVERY_KEY`، اختیاری `GATEWAY_RELAY_URL` و (وقتی `--wake-url` داده شود) `GATEWAY_RELAY_WAKE_URL` را در `.env` پروفایل فعال می‌نویسد.
 
 `hermes gateway enroll`
 `--token`
@@ -501,14 +519,13 @@ hermes gateway enrollaccepts--token,--connector-url,--gateway-id, and--wake-url.
 `GATEWAY_RELAY_WAKE_URL`
 `.env`
 
-Usehermes gateway runinstead ofhermes gateway start— WSL's systemd support is unreliable. Wrap it in tmux for persistence:tmux new -s hermes 'hermes gateway run'. SeeWSL FAQfor details.
+از `hermes gateway run` به جای `hermes gateway start` استفاده کنید — پشتیبانی systemd WSL غیرقابل اعتماد است. آن را در tmux برای پایداری بپیچید: `tmux new -s hermes 'hermes gateway run'`. برای جزئیات به [WSL FAQ](/docs/reference/faq#wsl-gateway-keeps-disconnecting-or-hermes-gateway-start-fails) مراجعه کنید.
 
 `hermes gateway run`
 `hermes gateway start`
 `tmux new -s hermes 'hermes gateway run'`
-[WSL FAQ](/docs/reference/faq#wsl-gateway-keeps-disconnecting-or-hermes-gateway-start-fails)
 
-## hermes lsp​
+## `hermes lsp`​
 
 `hermes lsp`
 
@@ -516,26 +533,21 @@ Usehermes gateway runinstead ofhermes gateway start— WSL's systemd support is 
 hermes lsp <subcommand>
 ```
 
-Manage the Language Server Protocol integration. LSP runs real
-language servers (pyright, gopls, rust-analyzer, …) in the
-background and feeds their diagnostics into the post-write check
-used bywrite_fileandpatch. Gated on git workspace detection
-— LSP only runs when the cwd or edited file is inside a git
-worktree.
+مدیریت ادغام Language Server Protocol. LSP سرورهای واقعی زبان (pyright، gopls، rust-analyzer، …) را در پس‌زمینه اجرا می‌کند و تشخیص‌های آنها را به بررسی پس از نوشتن که توسط `write_file` و `patch` استفاده می‌شود تغذیه می‌کند. مبتنی بر تشخیص فضای کاری git است — LSP فقط وقتی اجرا می‌شود که cwd یا فایل ویرایش شده داخل یک git worktree باشد.
 
 `write_file`
 `patch`
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| status | Show service state, configured servers, install status. |
-| list | Print the registry of supported servers. Pass--installed-onlyto skip missing ones. |
-| install <id> | Eagerly install one server's binary. |
-| install-all | Install every server with a known auto-install recipe. |
-| restart | Tear down running clients so the next edit re-spawns. |
-| which <id> | Print the resolved binary path for one server. |
+| `status` | نمایش وضعیت سرویس، سرورهای پیکربندی شده، وضعیت نصب. |
+| `list` | چاپ رجیستری سرورهای پشتیبانی شده. `--installed-only` برای رد کردن گم‌شده‌ها. |
+| `install <id>` | نصب اشتیاقی باینری یک سرور. |
+| `install-all` | نصب هر سرور با دستورالعمل نصب خودکار شناخته شده. |
+| `restart` | برچیدن کلاینت‌های در حال اجرا تا ویرایش بعدی دوباره ایجاد کند. |
+| `which <id>` | چاپ مسیر باینری حل شده برای یک سرور. |
 
 `status`
 `list`
@@ -545,12 +557,9 @@ Subcommands:
 `restart`
 `which <id>`
 
-SeeLSP — Semantic Diagnosticsfor
-the full guide, supported languages, and configuration knobs.
+برای راهنمای کامل، زبان‌های پشتیبانی شده و گزینه‌های پیکربندی به [LSP — Semantic Diagnostics](/docs/user-guide/features/lsp) مراجعه کنید.
 
-[LSP — Semantic Diagnostics](/docs/user-guide/features/lsp)
-
-## hermes setup​
+## `hermes setup`​
 
 `hermes setup`
 
@@ -558,24 +567,23 @@ the full guide, supported languages, and configuration knobs.
 hermes setup [model|tts|terminal|gateway|tools|agent] [--non-interactive] [--reset] [--quick] [--reconfigure] [--portal]
 ```
 
-Easiest path:hermes setup --portal— OAuth into Nous Portal and opt into theTool Gatewayin one shot.
+آسان‌ترین مسیر: `hermes setup --portal` — ورود OAuth به Nous Portal و فعال کردن [Tool Gateway](/docs/user-guide/features/tool-gateway) در یک ضربه.
 
 `hermes setup --portal`
-[Tool Gateway](/docs/user-guide/features/tool-gateway)
 
-First run:launches the first-time wizard.
+**اولین اجرا:** ویزار اولین بار راه‌اندازی می‌کند.
 
-Returning user (already configured):drops straight into the full reconfigure wizard — every prompt shows your current value as its default, press Enter to keep or type a new value. No menu.
+**کاربر بازگشتی (قبلاً پیکربندی شده):** مستقیماً به ویزار بازپیکربندی کامل می‌افتد — هر درخواست مقدار فعلی شما را به عنوان پیش‌فرض نشان می‌دهد، Enter را فشار دهید تا نگه دارید یا مقدار جدید تایپ کنید. بدون منو.
 
-Jump into one section instead of the full wizard:
+رفتن به یک بخش به جای ویزار کامل:
 
-| Section | Description |
+| بخش | توضیح |
 | --- | --- |
-| model | Provider and model setup. |
-| terminal | Terminal backend and sandbox setup. |
-| gateway | Messaging platform setup. |
-| tools | Enable/disable tools per platform. |
-| agent | Agent behavior settings. |
+| `model` | راه‌اندازی ارائه‌دهنده و مدل. |
+| `terminal` | راه‌اندازی backend ترمینال و sandbox. |
+| `gateway` | راه‌اندازی پلتفرم پیام‌رسانی. |
+| `tools` | فعال/غیرفعال کردن ابزارها به ازای هر پلتفرم. |
+| `agent` | تنظیمات رفتار agent. |
 
 `model`
 `terminal`
@@ -583,15 +591,15 @@ Jump into one section instead of the full wizard:
 `tools`
 `agent`
 
-Options:
+گزینه‌ها:
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --quick | On returning-user runs: only prompt for items that are missing or unset. Skip items you already have configured. |
-| --non-interactive | Use defaults / environment values without prompts. |
-| --reset | Reset configuration to defaults before setup. |
-| --reconfigure | Backwards-compat alias — barehermes setupon an existing install now does this by default. |
-| --portal | One-shot Nous Portal setup: log in via OAuth, set Nous as the inference provider, and opt into theTool Gateway. Skips the rest of the wizard. |
+| `--quick` | در اجراهای کاربر بازگشتی: فقط برای آیتم‌هایی درخواست کنید که گم‌شده یا تنظیم نشده‌اند. آیتم‌هایی که قبلاً پیکربندی کرده‌اید را رد کنید. |
+| `--non-interactive` | استفاده از پیش‌فرض‌ها/مقادیر محیطی بدون درخواست. |
+| `--reset` | بازنشانی پیکربندی به پیش‌فرض‌ها قبل از راه‌اندازی. |
+| `--reconfigure` | نام مستعار سازگاری معکوس — `hermes setup` بدون پرچم روی یک نصب موجود اکنون به طور پیش‌فرض این کار را انجام می‌دهد. |
+| `--portal` | راه‌اندازی یکباره Nous Portal: ورود از طریق OAuth، تنظیم Nous به عنوان ارائه‌دهنده inference و فعال کردن Tool Gateway. بقیه ویزار را رد می‌کند. |
 
 `--quick`
 `--non-interactive`
@@ -599,9 +607,8 @@ Options:
 `--reconfigure`
 `hermes setup`
 `--portal`
-[Tool Gateway](/docs/user-guide/features/tool-gateway)
 
-## hermes portal​
+## `hermes portal`​
 
 `hermes portal`
 
@@ -609,27 +616,24 @@ Options:
 hermes portal [status|open|tools]
 ```
 
-Inspect Nous Portal auth, Tool Gateway routing, and reach the subscription page. Subcommand-less invocation runsstatus.
+بررسی auth Nous Portal، مسیریابی Tool Gateway و دسترسی به صفحه اشتراک. فراخوانی بدون دستور زیر سطح `status` را اجرا می‌کند.
 
 `status`
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| status(default) | Portal auth state + per-tool Tool Gateway routing summary. Also shown when no subcommand is given. |
-| open | Openportal.nousresearch.com/manage-subscriptionin your default browser. |
-| tools | List every Tool Gateway partner (Firecrawl, FAL, OpenAI TTS, Browser Use, Modal) and which are routed via Nous. |
+| `status` (پیش‌فرض) | وضعیت auth Portal + خلاصه مسیریابی Tool Gateway به ازای هر ابزار. همچنین وقتی دستور زیر سطحی داده نشده نمایش داده می‌شود. |
+| `open` | باز کردن `portal.nousresearch.com/manage-subscription` در مرورگر پیش‌فرض شما. |
+| `tools` | فهرست همه شرکای Tool Gateway (Firecrawl، FAL، OpenAI TTS، Browser Use، Modal) و اینکه کدامها از طریق Nous مسیریابی می‌شوند. |
 
 `status`
 `open`
 `portal.nousresearch.com/manage-subscription`
 `tools`
 
-For configuration of the gateway itself, seeTool Gateway. For the one-shot setup path, seehermes setup --portalabove.
+برای پیکربندی خود گیت‌وی، به [Tool Gateway](/docs/user-guide/features/tool-gateway) مراجعه کنید. برای مسیر راه‌اندازی یکباره، به `hermes setup --portal` بالا مراجعه کنید.
 
-[Tool Gateway](/docs/user-guide/features/tool-gateway)
-`hermes setup --portal`
-
-## hermes whatsapp​
+## `hermes whatsapp`​
 
 `hermes whatsapp`
 
@@ -637,20 +641,19 @@ For configuration of the gateway itself, seeTool Gateway. For the one-shot setup
 hermes whatsapp
 ```
 
-Runs the WhatsApp pairing/setup flow, including mode selection and QR-code pairing.
+اجرای فلوی جفت‌سازی/راه‌اندازی WhatsApp، شامل انتخاب حالت و جفت‌سازی QR code.
 
-## hermes slack​
+## `hermes slack`​
 
 `hermes slack`
 
 ```
-hermes slack manifest              # print manifest to stdouthermes slack manifest --write      # write to ~/.hermes/slack-manifest.jsonhermes slack manifest --slashes-only  # just the features.slash_commands array
+hermes slack manifest              # print manifest to stdout
+hermes slack manifest --write      # write to ~/.hermes/slack-manifest.json
+hermes slack manifest --slashes-only  # just the features.slash_commands array
 ```
 
-Generates a Slack app manifest that registers every gateway command inCOMMAND_REGISTRY(/btw,/stop,/model, …) as a first-class
-Slack slash command — matching Discord and Telegram parity. Paste the
-output into your Slack app config athttps://api.slack.com/apps→ your app →Features → App Manifest → Edit, thenSave. Slack prompts for
-reinstall if scopes or slash commands changed.
+یک manifest برنامه Slack تولید می‌کند که هر دستور گیت‌وی در `COMMAND_REGISTRY` (`/btw`، `/stop`، `/model`، …) را به عنوان یک دستور اسلش Slack درجه یک ثبت می‌کند — مطابقت با Discord و Telegram. خروجی را در پیکربندی برنامه Slack خود در [https://api.slack.com/apps](https://api.scalk.com/apps) → برنامه شما → Features → App Manifest → Edit و سپس Save بچسبانید. Slack اگر scopeها یا دستورات اسلش تغییر کرده باشند برای نصب مجدد درخواست می‌کند.
 
 `COMMAND_REGISTRY`
 `/btw`
@@ -658,12 +661,12 @@ reinstall if scopes or slash commands changed.
 `/model`
 [https://api.slack.com/apps](https://api.slack.com/apps)
 
-| Flag | Default | Purpose |
+| پرچم | پیش‌فرض | هدف |
 | --- | --- | --- |
-| --write [PATH] | stdout | Write to a file instead of stdout. Bare--writewrites$HERMES_HOME/slack-manifest.json. |
-| --name NAME | Hermes | Bot display name in Slack. |
-| --description DESC | default blurb | Bot description shown in the Slack app directory. |
-| --slashes-only | off | Emit onlyfeatures.slash_commandsfor merging into a manually-maintained manifest. |
+| `--write [PATH]` | stdout | نوشتن در فایل به جای stdout. `--write` بدون مسیر `$HERMES_HOME/slack-manifest.json` می‌نویسد. |
+| `--name NAME` | Hermes | نام نمایشی ربات در Slack. |
+| `--description DESC` | توصیف پیش‌فرض | توصیف ربات نمایش داده شده در فهرست برنامه Slack. |
+| `--slashes-only` | off | فقط `features.slash_commands` برای ادغام در manifest دستی خارج کردن. |
 
 `--write [PATH]`
 `--write`
@@ -674,37 +677,39 @@ reinstall if scopes or slash commands changed.
 `--slashes-only`
 `features.slash_commands`
 
-Runhermes slack manifest --writeagain afterhermes updateto pick
-up any new commands.
+پس از `hermes update` مجدداً `hermes slack manifest --write` را اجرا کنید تا دستورات جدید انتخاب شوند.
 
 `hermes slack manifest --write`
 `hermes update`
 
-## hermes send​
+## `hermes send`​
 
 `hermes send`
 
 ```
-hermes send --to <target> "message text"hermes send --to <target> --file <path>echo "message" | hermes send --to <target>hermes send --list [platform]
+hermes send --to <target> "message text"
+hermes send --to <target> --file <path>
+echo "message" | hermes send --to <target>
+hermes send --list [platform]
 ```
 
-Send a one-shot message to a configured messaging platform without spinning up an agent or gateway loop. Reuses the gateway's already-configured credentials (~/.hermes/.env+~/.hermes/config.yaml) so ops scripts, cron jobs, CI hooks, and monitoring daemons can post status updates without reimplementing each platform's REST client.
+ارسال یک پیام یکباره به یک پلتفرم پیام‌رسانی پیکربندی شده بدون راه‌اندازی حلقه agent یا گیت‌وی. از اعتبارنامه‌های قبلاً پیکربندی شده گیت‌وی (`~/.hermes/.env` + `~/.hermes/config.yaml`) استفاده مجدد می‌کند بنابراین اسکریپت‌های ops، تسک‌های cron، هوک‌های CI و دیمن‌های پایش می‌توانند به‌روزرسانی‌های وضعیت ارسال کنند بدون پیاده‌سازی مجدد REST client هر پلتفرم.
 
 `~/.hermes/.env`
 `~/.hermes/config.yaml`
 
-For bot-token platforms (Telegram, Discord, Slack, Signal, SMS, WhatsApp-CloudAPI) no running gateway is required —hermes sendtalks directly to the platform's REST endpoint. Plugin platforms that need a persistent adapter still require a live gateway.
+برای پلتفرم‌های مبتنی بر توکن ربات (Telegram، Discord، Slack، Signal، SMS، WhatsApp-CloudAPI) نیازی به گیت‌وی در حال اجرا نیست — `hermes send` مستقیماً با endpoint REST پلتفرم صحبت می‌کند. پلتفرم‌های plugin که به آداپتور پایدار نیاز دارند همچنان به گیت‌وی زنده نیاز دارند.
 
 `hermes send`
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| -t,--to <TARGET> | Delivery target. Formats:platform(uses home channel),platform:chat_id,platform:chat_id:thread_id, orplatform:#channel-name. Examples:telegram,telegram:-1001234567890,discord:#ops,slack:C0123ABCD,signal:+15551234567. |
-| -f,--file <PATH> | Read the message body fromPATH(text files only — logs, reports, markdown). Pass-to force reading from stdin. To send an image or other binary file, useMEDIA:<path>(see below). |
-| -s,--subject <LINE> | Prepend a subject/header line before the message body. |
-| -l,--list [platform] | List configured targets across all platforms (or only the given platform). |
-| -q,--quiet | Suppress stdout on success — useful in scripts (rely on exit code only). |
-| --json | Emit raw JSON result instead of human-readable output. |
+| `-t`, `--to <TARGET>` | هدف تحویل. قالب‌ها: `platform` (از کانال خانه استفاده می‌کند)، `platform:chat_id`، `platform:chat_id:thread_id` یا `platform:#channel-name`. مثال‌ها: `telegram`، `telegram:-1001234567890`، `discord:#ops`، `slack:C0123ABCD`، `signal:+155****4567`. |
+| `-f`, `--file <PATH>` | خواندن بدنه پیام از `PATH` (فقط فایل‌های متنی — لاگ‌ها، گزارش‌ها، markdown). `-` برای اجبار خواندن از stdin. برای ارسال تصویر یا فایل باینری دیگر، از `MEDIA:<path>` استفاده کنید (پایین را ببینید). |
+| `-s`, `--subject <LINE>` | اضافه کردن خط عنوان/موضوع قبل از بدنه پیام. |
+| `-l`, `--list [platform]` | فهرست اهداف پیکربندی شده در همه پلتفرم‌ها (یا فقط پلتفرم داده شده). |
+| `-q`, `--quiet` | سرکوب stdout در موفقیت — مفید در اسکریپت‌ها (فقط به کد خروجی اعتماد کنید). |
+| `--json` | خروجی JSON خام به جای خروجی خوانا. |
 
 `-t`
 `--to <TARGET>`
@@ -716,7 +721,7 @@ For bot-token platforms (Telegram, Discord, Slack, Signal, SMS, WhatsApp-CloudAP
 `telegram:-1001234567890`
 `discord:#ops`
 `slack:C0123ABCD`
-`signal:+15551234567`
+`signal:+155****4567`
 `-f`
 `--file <PATH>`
 `PATH`
@@ -730,7 +735,7 @@ For bot-token platforms (Telegram, Discord, Slack, Signal, SMS, WhatsApp-CloudAP
 `--quiet`
 `--json`
 
-If neither a positionalmessageargument nor--fileis provided,hermes sendreads from stdin when it is not a TTY. Exit codes:0on success,1on delivery/backend failure,2on usage errors.
+اگر نه آرگومان موقعیتی `message` و نه `--file` ارائه شود، `hermes send` وقتی TTY نیست از stdin می‌خواند. کدهای خروج: `0` در موفقیت، `1` در خرابی تحویل/backend، `2` در خطاهای استفاده.
 
 `message`
 `--file`
@@ -739,18 +744,20 @@ If neither a positionalmessageargument nor--fileis provided,hermes sendreads fro
 `1`
 `2`
 
-### Sending images and other media​
+### ارسال تصاویر و رسانه دیگر​
 
---fileis fortextbodies only. To deliver an image, document, video, or audio file as a native platform attachment, reference it inside the message text with theMEDIA:<local_path>directive:
+`--file` فقط برای بدنه‌های **متنی** است. برای تحویل یک تصویر، سند، ویدیو یا فایل صوتی به عنوان پیوست بومی پلتفرم، آن را در متن پیام با دستور `MEDIA:<local_path>` ارجاع دهید:
 
 `--file`
 `MEDIA:<local_path>`
 
 ```
-hermes send --to telegram "MEDIA:/tmp/screenshot.png"hermes send --to telegram "Build chart for today MEDIA:/tmp/chart.png"   # with captionhermes send --to discord:#ops "MEDIA:/tmp/report.pdf"
+hermes send --to telegram "MEDIA:/tmp/screenshot.png"
+hermes send --to telegram "Build chart for today MEDIA:/tmp/chart.png"   # with caption
+hermes send --to discord:#ops "MEDIA:/tmp/report.pdf"
 ```
 
-By default, image files are sent as photos (platforms like Telegram recompress these). Add[[as_document]]to the message to deliver them as uncompressed file attachments instead:
+به طور پیش‌فرض، فایل‌های تصویر به عنوان عکس ارسال می‌شوند (پلتفرم‌هایی مانند Telegram آنها را مجدداً فشرده می‌کنند). `[[as_document]]` را به پیام اضافه کنید تا به جای آن به عنوان پیوست فایل فشرده‌نشده تحویل داده شوند:
 
 `[[as_document]]`
 
@@ -758,37 +765,42 @@ By default, image files are sent as photos (platforms like Telegram recompress t
 hermes send --to telegram "[[as_document]] MEDIA:/tmp/screenshot.png"
 ```
 
-Examples:
+مثال‌ها:
 
 ```
-hermes send --to telegram "deploy finished"echo "RAM 92%" | hermes send --to telegram:-1001234567890hermes send --to discord:#ops --file /tmp/report.mdhermes send --to slack:#eng --subject "[CI]" --file build.loghermes send --list                  # all platformshermes send --list telegram         # filter by platform
+hermes send --to telegram "deploy finished"
+echo "RAM 92%" | hermes send --to telegram:-1001234567890
+hermes send --to discord:#ops --file /tmp/report.md
+hermes send --to slack:#eng --subject "[CI]" --file build.log
+hermes send --list                  # all platforms
+hermes send --list telegram         # filter by platform
 ```
 
-## hermes secrets​
+## `hermes secrets`​
 
 `hermes secrets`
 
 ```
-hermes secrets bitwarden <subcommand>hermes secrets bw <subcommand>          # short alias
+hermes secrets bitwarden <subcommand>
+hermes secrets bw <subcommand>          # short alias
 ```
 
-Pull API keys from an external secret manager at process startup instead of storing them in~/.hermes/.env. Currently supportsBitwarden Secrets Manager. See the full guide:Bitwarden integration.
+کشیدن کلیدهای API از یک مدیر secret خارجی در شروع فرآیند به جای ذخیره آنها در `~/.hermes/.env`. در حال حاضر از [Bitwarden Secrets Manager](/docs/user-guide/secrets/bitwarden) پشتیبانی می‌کند.
 
 `~/.hermes/.env`
-[Bitwarden integration](/docs/user-guide/secrets/bitwarden)
 
-bitwarden(aliasbw) subcommands:
+دستورات زیر سطح `bitwarden` (نام مستعار `bw`):
 
 `bitwarden`
 `bw`
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| setup | Interactive wizard: install the pinnedbwsbinary, store an access token, and pick a project. Accepts--project-id,--access-token, and--server-urlfor non-interactive use. |
-| status | Show current config, binary path/version, and last fetch info. |
-| sync | Fetch secrets now and report what changed. Add--applyto actually export the secrets into the current shell's environment (default is dry-run). |
-| install | Download and verify the pinnedbwsbinary.--forcere-downloads even if a managed copy already exists. |
-| disable | Turn off the Bitwarden integration. |
+| `setup` | ویزار تعاملی: نصب باینری `bws` ثابت شده، ذخیره توکن دسترسی و انتخاب پروژه. `--project-id`، `--access-token` و `--server-url` برای استفاده غیرتعاملی می‌پذیرد. |
+| `status` | نمایش پیکربندی فعلی، مسیر/نسخه باینری و اطلاعات آخرین کشیدن. |
+| `sync` | کشیدن secretها اکنون و گزارش تغییرات. `--apply` برای خروجی واقعی secretها در محیط shell فعلی (پیش‌فرض dry-run است). |
+| `install` | دانلود و بررسی باینری `bws` ثابت شده. `--force` حتی اگر نسخه مدیریت شده موجود است دوباره دانلود می‌کند. |
+| `disable` | خاموش کردن ادغام Bitwarden. |
 
 `setup`
 `bws`
@@ -803,7 +815,7 @@ bitwarden(aliasbw) subcommands:
 `--force`
 `disable`
 
-## hermes migrate​
+## `hermes migrate`​
 
 `hermes migrate`
 
@@ -811,40 +823,38 @@ bitwarden(aliasbw) subcommands:
 hermes migrate <type>
 ```
 
-Diagnose and (optionally) rewrite the activeconfig.yamlto replace references to retired models or deprecated settings. A timestamped backup of the originalconfig.yamlis taken before any rewrite (skip with--no-backup).
+تشخیص و (اختیاری) بازنویسی `config.yaml` فعال برای جایگزینی ارجاعات به مدل‌های بازنشسته یا تنظیمات منسوخ. یک نسخه پشتیبان با تمبر زمانی از `config.yaml` اصلی قبل از هر بازنویسی گرفته می‌شود (با `--no-backup` رد شوید).
 
 `config.yaml`
 `config.yaml`
 `--no-backup`
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| xai | Scanconfig.yamlfor references to xAI models scheduled for retirement on May 15, 2026 and (with--apply) rewrite them in-place to the official replacements per the xAI migration guide. Defaults to dry-run. |
+| `xai` | اسکن `config.yaml` برای ارجاعات به مدل‌های xAI برنامه‌ریزی شده برای بازنشستگی در ۱۵ مه ۲۰۲۶ و (با `--apply`) بازنویسی آنها در جا به جایگزین‌های رسمی طبق راهنمای مهاجرت xAI. پیش‌فرض dry-run. |
 
 `xai`
 `config.yaml`
 `--apply`
 
-Common flags for migration subcommands:
+پرچم‌های رایج برای دستورات زیر سطح مهاجرت:
 
-| Flag | Description |
+| پرچم | توضیح |
 | --- | --- |
-| --apply | Rewriteconfig.yamlin-place (default: dry-run, no writes). |
-| --no-backup | Skip the timestamped backup ofconfig.yamlwhen applying. |
+| `--apply` | بازنویسی `config.yaml` در جا (پیش‌فرض: dry-run، بدون نوشتن). |
+| `--no-backup` | رد کردن نسخه پشتیبان با تمبر زمانی `config.yaml` هنگام اعمال. |
 
 `--apply`
 `config.yaml`
 `--no-backup`
 `config.yaml`
 
-> Not to be confused withhermes claw migrate(one-shot import of OpenClaw configuration into Hermes) —hermes migrateis the top-level config-rewrite command.
-
-Not to be confused withhermes claw migrate(one-shot import of OpenClaw configuration into Hermes) —hermes migrateis the top-level config-rewrite command.
+> با `hermes claw migrate` اشتباه گرفته نشود (واردات یکباره پیکربندی OpenClaw به Hermes) — `hermes migrate` دستور بازنویسی پیکربندی سطح بالا است.
 
 `hermes claw migrate`
 `hermes migrate`
 
-## hermes proxy​
+## `hermes proxy`​
 
 `hermes proxy`
 
@@ -852,15 +862,13 @@ Not to be confused withhermes claw migrate(one-shot import of OpenClaw configura
 hermes proxy <subcommand>
 ```
 
-Run a local OpenAI-compatible HTTP server that forwards requests to an OAuth-authenticated upstream provider (e.g. Nous Portal, xAI). External apps can point at the proxy with any bearer token; the proxy attaches your real OAuth credentials on the way out. SeeSubscription Proxyfor the full guide.
+اجرای یک سرور HTTP محلی سازگار با OpenAI که درخواست‌ها را به یک ارائه‌دهنده upstream احراز هویت شده با OAuth (مثلاً Nous Portal، xAI) ارسال می‌کند. برنامه‌های خارجی می‌توانند با هر bearer token به پروکسی اشاره کنند؛ پروکسی اعتبارنامه‌های واقعی OAuth شما را در خروجی متصل می‌کند. برای راهنمای کامل به [Subscription Proxy](/docs/user-guide/features/subscription-proxy) مراجعه کنید.
 
-[Subscription Proxy](/docs/user-guide/features/subscription-proxy)
-
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| start | Run the proxy in the foreground. Flags:--provider <nous|xai>(defaultnous),--host <addr>(default127.0.0.1; use0.0.0.0to expose on LAN),--port <int>(default8645). |
-| status | Show which proxy upstreams are ready (credentials present, OAuth valid). |
-| providers | List available proxy upstream providers. |
+| `start` | اجرای پروکسی در حالت foreground. پرچم‌ها: `--provider <nous\|xai>` (پیش‌فرض `nous`)، `--host <addr>` (پیش‌فرض `127.0.0.1`؛ از `0.0.0.0` برای نمایانی در LAN استفاده کنید)، `--port <int>` (پیش‌فرض `8645`). |
+| `status` | نمایش اینکه کدام upstreamهای پروکسی آماده هستند (اعتبارنامه‌ها موجود، OAuth معتبر). |
+| `providers` | فهرست ارائه‌دهندگان upstream پروکسی موجود. |
 
 `start`
 `--provider <nous|xai>`
@@ -873,7 +881,7 @@ Run a local OpenAI-compatible HTTP server that forwards requests to an OAuth-aut
 `status`
 `providers`
 
-## hermes security​
+## `hermes security`​
 
 `hermes security`
 
@@ -881,31 +889,28 @@ Run a local OpenAI-compatible HTTP server that forwards requests to an OAuth-aut
 hermes security <subcommand>
 ```
 
-On-demand vulnerability scan againstOSV.dev. Covers the Hermes venv (installed PyPI distributions), Python dependencies declared by plugins under~/.hermes/plugins/, and pinnednpx/uvxMCP servers inconfig.yaml. Does NOT scan globally-installed packages or editor/browser extensions.
+اسکن آسیب‌پذیری on-demand علیه [OSV.dev](https://osv.dev). شامل venv Hermes (توزیع‌های نصب شده PyPI)، وابستگی‌های پایتونی اعلام شده توسط pluginها زیر `~/.hermes/plugins/` و سرورهای MCP `npx`/`uvx` ثابت شده در `config.yaml` است. بسته‌های نصب شده به صورت جهانی یا extensionهای ویرایشگر/مرورگر را اسکن **نمی‌کند**.
 
-[OSV.dev](https://osv.dev)
 `~/.hermes/plugins/`
 `npx`
 `uvx`
 `config.yaml`
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| audit | Run a one-shot supply-chain audit. |
+| `audit` | اجرای یک ممیزی زنجیره تأمین یکباره. |
+
+پرچم‌های `audit`:
 
 `audit`
 
-auditflags:
-
-`audit`
-
-| Flag | Default | Description |
+| پرچم | پیش‌فرض | توضیح |
 | --- | --- | --- |
-| --json | off | Emit machine-readable JSON instead of human-readable text. |
-| --fail-on <level> | critical | Exit non-zero when any finding meets this severity (low,moderate,high,critical). |
-| --skip-venv | off | Skip scanning the Hermes Python venv. |
-| --skip-plugins | off | Skip scanning plugin requirements files. |
-| --skip-mcp | off | Skip scanning pinned MCP servers inconfig.yaml. |
+| `--json` | off | خروجی JSON خوانا توسط ماشین به جای متن خوانا توسط انسان. |
+| `--fail-on <level>` | critical | خروج با مقدار ناصفر وقتی هر یافته‌ای با این شدت مطابقت دارد (`low`، `moderate`، `high`، `critical`). |
+| `--skip-venv` | off | رد کردن اسکن venv پایتونی Hermes. |
+| `--skip-plugins` | off | رد کردن اسکن فایل‌های plugin requirements. |
+| `--skip-mcp` | off | رد کردن اسکن سرورهای MCP ثابت شده در `config.yaml`. |
 
 `--json`
 `--fail-on <level>`
@@ -919,31 +924,38 @@ auditflags:
 `--skip-mcp`
 `config.yaml`
 
-## hermes login/hermes logout(Deprecated)​
+## `hermes login`/`hermes logout` (منسوخ)​
 
 `hermes login`
 `hermes logout`
 
-hermes loginhas been removed. Usehermes authto manage OAuth credentials,hermes modelto select a provider, orhermes setupfor full interactive setup.
+`hermes login` حذف شده است. از `hermes auth` برای مدیریت اعتبارنامه‌های OAuth، `hermes model` برای انتخاب ارائه‌دهنده یا `hermes setup` برای راه‌اندازی تعاملی کامل استفاده کنید.
 
 `hermes login`
 `hermes auth`
 `hermes model`
 `hermes setup`
 
-## hermes auth​
+## `hermes auth`​
 
 `hermes auth`
 
-Manage credential pools for same-provider key rotation. SeeCredential Poolsfor full documentation.
-
-[Credential Pools](/docs/user-guide/features/credential-pools)
+مدیریت استخرهای اعتبارنامه برای چرخش کلید هم‌ارائه‌دهنده. برای مستندات کامل به [Credential Pools](/docs/user-guide/features/credential-pools) مراجعه کنید.
 
 ```
-hermes auth                                              # Interactive wizardhermes auth list                                         # Show all poolshermes auth list openrouter                              # Show specific providerhermes auth add openrouter --api-key sk-or-v1-xxx        # Add API keyhermes auth add anthropic --type oauth                   # Add OAuth credentialhermes auth remove openrouter 2                          # Remove by indexhermes auth reset openrouter                             # Clear cooldownshermes auth status anthropic                             # Show auth status for a providerhermes auth logout anthropic                             # Log out and clear stored auth statehermes auth spotify                                      # Authenticate Hermes with Spotify via PKCE
+hermes auth                                              # Interactive wizard
+hermes auth list                                         # Show all pools
+hermes auth list openrouter                              # Show specific provider
+hermes auth add openrouter --api-key sk-or-v1-xxx        # Add API key
+hermes auth add anthropic --type oauth                   # Add OAuth credential
+hermes auth remove openrouter 2                          # Remove by index
+hermes auth reset openrouter                             # Clear cooldowns
+hermes auth status anthropic                             # Show auth status for a provider
+hermes auth logout anthropic                             # Log out and clear stored auth state
+hermes auth spotify                                      # Authenticate Hermes with Spotify via PKCE
 ```
 
-Subcommands:add,list,remove,reset,status,logout,spotify. When called with no subcommand, launches the interactive management wizard.
+دستورات زیر سطح: `add`، `list`، `remove`، `reset`، `status`، `logout`، `spotify`. هنگام فراخوانی بدون دستور زیر سطح، ویزار مدیریت تعاملی راه‌اندازی می‌شود.
 
 `add`
 `list`
@@ -953,7 +965,7 @@ Subcommands:add,list,remove,reset,status,logout,spotify. When called with no sub
 `logout`
 `spotify`
 
-## hermes status​
+## `hermes status`​
 
 `hermes status`
 
@@ -961,15 +973,15 @@ Subcommands:add,list,remove,reset,status,logout,spotify. When called with no sub
 hermes status [--all] [--deep]
 ```
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --all | Show all details in a shareable redacted format. |
-| --deep | Run deeper checks that may take longer. |
+| `--all` | نمایش همه جزئیات در قالب قابل اشتراک‌گذاری ویرایش شده. |
+| `--deep` | اجرای بررسی‌های عمیق‌تر که ممکن است بیشتر طول بکشد. |
 
 `--all`
 `--deep`
 
-## hermes cron​
+## `hermes cron`​
 
 `hermes cron`
 
@@ -977,17 +989,17 @@ hermes status [--all] [--deep]
 hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
 ```
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list | Show scheduled jobs. |
-| create/add | Create a scheduled job from a prompt, optionally attaching one or more skills via repeated--skill. |
-| edit | Update a job's schedule, prompt, name, delivery, repeat count, or attached skills. Supports--clear-skills,--add-skill, and--remove-skill. |
-| pause | Pause a job without deleting it. |
-| resume | Resume a paused job and compute its next future run. |
-| run | Trigger a job on the next scheduler tick. |
-| remove | Delete a scheduled job. |
-| status | Check whether the cron scheduler is running. |
-| tick | Run due jobs once and exit. |
+| `list` | نمایش تسک‌های زمان‌بندی شده. |
+| `create`/`add` | ایجاد یک تسک زمان‌بندی شده از پرامپت، با اختیار پیوست کردن یک یا چند مهارت از طریق `--skill` تکراری. |
+| `edit` | به‌روزرسانی زمان‌بندی، پرامپت، نام، تحویل، تعداد تکرار یا مهارت‌های پیوست شده تسک. از `--clear-skills`، `--add-skill` و `--remove-skill` پشتیبانی می‌کند. |
+| `pause` | توقف یک تسک بدون حذف آن. |
+| `resume` | از سرگیری یک تسک متوقف شده و محاسبه اجرای آینده بعدی آن. |
+| `run` | فعال کردن یک تسک در تیک بعدی زمان‌بند. |
+| `remove` | حذف یک تسک زمان‌بندی شده. |
+| `status` | بررسی اینکه آیا زمان‌بند cron در حال اجراست. |
+| `tick` | اجرای تسک‌های سررسید یک بار و خروج. |
 
 `list`
 `create`
@@ -1004,10 +1016,7 @@ hermes cron <list|create|edit|pause|resume|run|remove|status|tick>
 `status`
 `tick`
 
-The crontriggeris pluggable via thecron.providerconfig key. Empty
-(the default) uses the built-in in-process ticker. Set it tochronos(the
-NAS-managed provider for scale-to-zero hosted gateways) — configured via thecron.chronos.*keys (portal_url,callback_url,expected_audience,nas_jwks_url) — or name a custom provider underplugins/cron/<name>/or$HERMES_HOME/plugins/<name>/. An unknown or unavailable provider falls back to
-the built-in, so cron is never left without a trigger. See thecron internalsdoc.
+trigger قابل اتصال از طریق کلید پیکربندی `cron.provider` است. خالی (پیش‌فرض) از ticker داخلی درون‌فرآیندی استفاده می‌کند. آن را روی `chronos` (ارائه‌دهنده مدیریت شده NAS برای دروازه‌های میزبانی شده scale-to-zero) تنظیم کنید — از طریق کلیدهای `cron.chronos.*` (`portal_url`، `callback_url`، `expected_audience`، `nas_jwks_url`) پیکربندی می‌شود — یا یک ارائه‌دهنده سفارشی تحت `plugins/cron/<name>/` یا `$HERMES_HOME/plugins/<name>/` نام ببرید. ارائه‌دهنده ناشناخته یا غیرموجود به داخلی بازمی‌گردد، بنابراین cron هرگز بدون trigger باقی نمی‌ماند. به مستندات [cron internals](/docs/developer-guide/cron-internals#gateway-integration) مراجعه کنید.
 
 `cron.provider`
 `chronos`
@@ -1018,9 +1027,8 @@ the built-in, so cron is never left without a trigger. See thecron internalsdoc.
 `nas_jwks_url`
 `plugins/cron/<name>/`
 `$HERMES_HOME/plugins/<name>/`
-[cron internals](/docs/developer-guide/cron-internals#gateway-integration)
 
-## hermes kanban​
+## `hermes kanban`​
 
 `hermes kanban`
 
@@ -1028,24 +1036,24 @@ the built-in, so cron is never left without a trigger. See thecron internalsdoc.
 hermes kanban [--board <slug>] <action> [options]
 ```
 
-Multi-profile, multi-project collaboration board. Each install can host many boards (one per project, repo, or domain); each board is a standalone queue with its own SQLite DB and dispatcher scope. New installs start with one board calleddefault, whose DB is~/.hermes/kanban.dbfor back-compat; additional boards live at~/.hermes/kanban/boards/<slug>/kanban.db. The gateway-embedded dispatcher sweeps every board per tick.
+تخته همکاری چندپروفایلی، چندپروژه‌ای. هر نصب می‌تواند تخته‌های متعددی میزبانی کند (یکی به ازای هر پروژه، repo یا حوزه)؛ هر تخته یک صف مستقل با پایگاه داده SQLite و scope dispatcher خود است. نصب‌های جدید با یک تخته به نام `start` شروع می‌شوند که پایگاه داده آن برای سازگاری معکوس `~/.hermes/kanban.db` است؛ تخته‌های اضافی در `~/.hermes/kanban/boards/<slug>/kanban.db` زندگی می‌کنند. dispatcher تعبیه شده در گیت‌وی هر تخته را در هر تیک جاروب می‌کند.
 
 `default`
 `~/.hermes/kanban.db`
 `~/.hermes/kanban/boards/<slug>/kanban.db`
 
-Global flags (apply to every action below):
+پرچم‌های جهانی (در همه اعمال زیر اعمال می‌شوند):
 
-| Flag | Purpose |
+| پرچم | هدف |
 | --- | --- |
-| --board <slug> | Operate on a specific board. Defaults to the current board (set viahermes kanban boards switch, theHERMES_KANBAN_BOARDenv var, ordefault). |
+| `--board <slug>` | عمل روی یک تخته خاص. پیش‌فرض تخته فعلی (تعیین شده توسط `hermes kanban boards switch`، متغیر env `HERMES_KANBAN_BOARD` یا `default`). |
 
 `--board <slug>`
 `hermes kanban boards switch`
 `HERMES_KANBAN_BOARD`
 `default`
 
-This is the human / scripting surface.Agent workers spawned by the dispatcher drive the board through a dedicatedkanban_*toolset(kanban_show,kanban_complete,kanban_block,kanban_create,kanban_link,kanban_comment,kanban_heartbeat; orchestrator profiles also getkanban_listandkanban_unblock) instead of shelling tohermes kanban. Workers haveHERMES_KANBAN_BOARDpinned in their env so they physically cannot see other boards.
+این سطح انسان/اسکریپت‌نویسی است. کارگران agent که توسط dispatcher ایجاد می‌شوند تخته را از طریق یک ابزار اختصاصی `kanban_*` (`kanban_show`، `kanban_complete`، `kanban_block`، `kanban_create`، `kanban_link`، `kanban_comment`، `kanban_heartbeat`؛ پروفایل‌های orchestrator همچنین `kanban_list` و `kanban_unblock` را دریافت می‌کنند) به جای shell کردن به `hermes kanban` هدایت می‌کنند. کارگران `HERMES_KANBAN_BOARD` را در env خود ثابت دارند بنابراین از نظر فیزیکی نمی‌توانند تخته‌های دیگر را ببینند.
 
 `kanban_*`
 [toolset](/docs/user-guide/features/kanban#how-workers-interact-with-the-board)
@@ -1061,34 +1069,34 @@ This is the human / scripting surface.Agent workers spawned by the dispatcher dr
 `hermes kanban`
 `HERMES_KANBAN_BOARD`
 
-| Action | Purpose |
+| عمل | هدف |
 | --- | --- |
-| init | Createkanban.dbif missing. Idempotent. |
-| boards list/boards ls | List all boards with task counts.--json,--all(include archived). |
-| boards create <slug> | Create a new board. Flags:--name,--description,--icon,--color,--switch(make active). Slug is kebab-case, auto-downcased. |
-| boards switch <slug>/boards use | Persist<slug>as the active board (writes~/.hermes/kanban/current). |
-| boards show/boards current | Print the currently-active board's name, DB path, and task counts. |
-| boards rename <slug> "<name>" | Change a board's display name. Slug is immutable. |
-| boards rm <slug> | Archive (default) or hard-delete a board.--deleteskips the archive step. Archived boards move toboards/_archived/<slug>-<ts>/. Refused fordefault. |
-| create "<title>" | Create a new task on the active board. Flags:--body,--assignee,--parent(repeatable),--workspace scratch|worktree|dir:<path>,--tenant,--priority,--triage,--idempotency-key,--max-runtime,--max-retries,--skill(repeatable). |
-| list/ls | List tasks on the active board. Filter with--mine,--assignee,--status,--tenant,--archived,--json. |
-| show <id> | Show a task with comments and events.--jsonfor machine output. |
-| assign <id> <profile> | Assign or reassign. Usenoneto unassign. Refused while task is running. |
-| link <parent> <child> | Add a dependency. Cycle-detected. Both tasks must be on the same board. |
-| unlink <parent> <child> | Remove a dependency. |
-| claim <id> | Atomically claim a ready task. Prints resolved workspace path. |
-| comment <id> "<text>" | Append a comment. The next worker that claims the task reads it as part of itskanban_show()response. |
-| complete <id> | Mark task done. Flags:--result,--summary,--metadata. |
-| block <id> "<reason>" | Mark task blocked for human input. Also appends the reason as a comment. |
-| schedule <id> "<reason>" | Park time-delay/follow-up work inscheduledso it is not shown as a human blocker. |
-| unblock <id> | Return a blocked or scheduled task to ready (ortodoif dependencies are still open). |
-| archive <id> | Hide from default list.gcwill remove scratch workspaces. |
-| tail <id> | Follow a task's event stream. |
-| dispatch | One dispatcher pass on the active board. Flags:--dry-run,--max N,--failure-limit N,--json. |
-| context <id> | Print the full context a worker would see (title + body + parent results + comments). |
-| specify <id>/specify --all | Flesh out a triage-column task into a concrete spec (title + body with goal, approach, acceptance criteria) via the auxiliary LLM, then promote it totodo. Flags:--tenant(scope--allto one tenant),--author,--json. Configure the model underauxiliary.triage_specifierinconfig.yaml. |
-| decompose <id>/decompose --all | Fan a triage-column task out into a graph of child tasks routed to specialist profiles by description. Falls back to specify-style single-task promotion when the LLM decides the task doesn't benefit from fan-out. Same flags asspecify. Configure the decomposer model underauxiliary.kanban_decomposerinconfig.yaml;kanban.orchestrator_profileonly controls who owns the root/orchestration task after fan-out. Also runs automatically every dispatcher tick whenkanban.auto_decompose: true(the default). SeeAuto vs Manual orchestration. |
-| gc | Remove scratch workspaces for archived tasks. |
+| `init` | ایجاد `kanban.db` اگر وجود ندارد. Idempotent. |
+| `boards list`/`boards ls` | فهرست همه تخته‌ها با تعداد تسک‌ها. `--json`، `--all` (شامل آرشیو شده‌ها). |
+| `boards create <slug>` | ایجاد تخته جدید. پرچم‌ها: `--name`، `--description`، `--icon`، `--color`، `--switch` (فعال کردن). Slug kebab-case است، به طور خودکار به حروف کوچک تبدیل می‌شود. |
+| `boards switch <slug>`/`boards use` | ذخیره `<slug>` به عنوان تخته فعال (در `~/.hermes/kanban/current` می‌نویسد). |
+| `boards show`/`boards current` | چاپ نام، مسیر پایگاه داده و تعداد تسک‌های تخته فعال فعلی. |
+| `boards rename <slug> "<name>"` | تغییر نام نمایشی تخته. Slug غیرقابل تغییر است. |
+| `boards rm <slug>` | آرشیو (پیش‌فرض) یا حذف سخت تخته. `--delete` مرحله آرشیو را رد می‌کند. تخته‌های آرشیو شده به `boards/_archived/<slug>-<ts>/` منتقل می‌شوند. برای `default` رد می‌شود. |
+| `create "<title>"` | ایجاد تسک جدید روی تخته فعال. پرچم‌ها: `--body`، `--assignee`، `--parent` (تکرارپذیر)، `--workspace scratch\|worktree\|dir:<path>`، `--tenant`، `--priority`، `--triage`، `--idempotency-key`، `--max-runtime`، `--max-retries`، `--skill` (تکرارپذیر). |
+| `list`/`ls` | فهرست تسک‌های روی تخته فعال. فیلتر با `--mine`، `--assignee`، `--status`، `--tenant`، `--archived`، `--json`. |
+| `show <id>` | نمایش تسک با نظرات و رویدادها. `--json` برای خروجی ماشین. |
+| `assign <id> <profile>` | اختصاص یا اختصاص مجدد. از `none` برای لغو اختصاص استفاده کنید. در حین اجرا رد می‌شود. |
+| `link <parent> <child>` | اضافه کردن وابستگی. تشخیص چرخه. هر دو تسک باید روی یک تخته باشند. |
+| `unlink <parent> <child>` | حذف وابستگی. |
+| `claim <id>` | به صورت اتمیک یک تسک آماده را مطالبه کنید. مسیر فضای کاری حل شده را چاپ می‌کند. |
+| `comment <id> "<text>"` | اضافه کردن نظر. کارگر بعدی که تسک را مطالبه می‌کند آن را به عنوان بخشی از پاسخ `kanban_show()` خود می‌خواند. |
+| `complete <id>` | نشانه‌گذاری تسک تمام شده. پرچم‌ها: `--result`، `--summary`، `--metadata`. |
+| `block <id> "<reason>"` | نشانه‌گذاری تسک مسدود شده برای ورود انسان. همچنین دلیل را به عنوان نظر اضافه می‌کند. |
+| `schedule <id> "<reason>"` | پارک کردن کار time-delay/پیگیری در `scheduled` تا به عنوان مسدودکننده انسانی نمایش داده نشود. |
+| `unblock <id>` | بازگرداندن تسک مسدود یا زمان‌بندی شده به حالت آماده (یا `todo` اگر وابستگی‌ها هنوز باز هستند). |
+| `archive <id>` | مخفی کردن از لیست پیش‌فرض. `gc` فضاهای کاری scratch را حذف می‌کند. |
+| `tail <id>` | دنبال کردن جریان رویدادهای تسک. |
+| `dispatch` | یک نوبت dispatcher روی تخته فعال. پرچم‌ها: `--dry-run`، `--max N`، `--failure-limit N`، `--json`. |
+| `context <id>` | چاپ context کاملی که یک کارگر می‌بیند (عنوان + بدنه + نتایج والد + نظرات). |
+| `specify <id>`/`specify --all` | تبدیل تسک ستون triage به یک مشخصات مشخص (عنوان + بدنه با هدف، رویکرد، معیارهای پذیرش) از طریق LLM کمکی، سپس ارتقا به `todo`. پرچم‌ها: `--tenant` (`--all` را به یک tenant محدود می‌کند)، `--author`، `--json`. مدل را تحت `auxiliary.triage_specifier` در `config.yaml` پیکربندی کنید. |
+| `decompose <id>`/`decompose --all` | تبدیل تسک ستون triage به یک گراف از تسک‌های فرزند مسیریابی شده به پروفایل‌های متخصص بر اساس توصیف. وقتی LLM تصمیم می‌گیرد تسک از fan-out سود نمی‌برد، به ارتقای سبک specify تک‌تسک بازمی‌گردد. همان پرچم‌های `specify`. مدل decomposer را تحت `auxiliary.kanban_decomposer` در `config.yaml` پیکربندی کنید؛ `kanban.orchestrator_profile` فقط کنترل می‌کند چه کسی مالک تسک root/orchestration پس از fan-out است. همچنین به طور خودکار در هر تیک dispatcher وقتی `kanban.auto_decompose: true` (پیش‌فرض) اجرا می‌شود. [Auto vs Manual orchestration](/docs/user-guide/features/kanban#auto-vs-manual-orchestration) را ببینید. |
+| `gc` | حذف فضاهای کاری scratch برای تسک‌های آرشیو شده. |
 
 `init`
 `kanban.db`
@@ -1179,31 +1187,38 @@ This is the human / scripting surface.Agent workers spawned by the dispatcher dr
 [Auto vs Manual orchestration](/docs/user-guide/features/kanban#auto-vs-manual-orchestration)
 `gc`
 
-Examples:
+مثال‌ها:
 
 ```
-# Create a second board and put a task on it without switching away.hermes kanban boards create atm10-server --name "ATM10 Server" --icon 🎮hermes kanban --board atm10-server create "Restart server" --assignee ops# Switch the active board for subsequent calls.hermes kanban boards switch atm10-serverhermes kanban list                  # shows atm10-server tasks# Archive a board (recoverable) or hard-delete it.hermes kanban boards rm atm10-serverhermes kanban boards rm atm10-server --delete
+# Create a second board and put a task on it without switching away.
+hermes kanban boards create atm10-server --name "ATM10 Server" --icon 🎮
+hermes kanban --board atm10-server create "Restart server" --assignee ops
+# Switch the active board for subsequent calls.
+hermes kanban boards switch atm10-server
+hermes kanban list                  # shows atm10-server tasks
+# Archive a board (recoverable) or hard-delete it.
+hermes kanban boards rm atm10-server
+hermes kanban boards rm atm10-server --delete
 ```
 
-Board resolution order (highest precedence first):--board <slug>flag →HERMES_KANBAN_BOARDenv var →~/.hermes/kanban/currentfile →default.
+ترتیب حل تخته (بالاترین اولویت اول): پرچم `--board <slug>` → متغیر env `HERMES_KANBAN_BOARD` → فایل `~/.hermes/kanban/current` → `default`.
 
 `--board <slug>`
 `HERMES_KANBAN_BOARD`
 `~/.hermes/kanban/current`
 `default`
 
-All actions are also available as a slash command in the gateway (/kanban …), with the same argument surface — includingboardssubcommands and the--boardflag.
+همه اعمال همچنین به عنوان دستور اسلش در گیت‌وی (`/kanban …`) با همان سطح آرگومان در دسترس هستند — شامل دستورات زیر سطح `boards` و پرچم `--board`.
 
 `/kanban …`
 `boards`
 `--board`
 
-For the full design — comparison with Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise, eight collaboration patterns, four user stories, concurrency correctness proof — seedocs/hermes-kanban-v1-spec.pdfin the repository or theKanban user guide.
+برای طراحی کامل — مقایسه با Cline Kanban / Paperclip / NanoClaw / Gemini Enterprise، هشت الگوی همکاری، چهار داستان کاربر، اثبات صحت همزمانی — به `docs/hermes-kanban-v1-spec.pdf` در مخزن یا [راهنمای کاربر Kanban](/docs/user-guide/features/kanban) مراجعه کنید.
 
 `docs/hermes-kanban-v1-spec.pdf`
-[Kanban user guide](/docs/user-guide/features/kanban)
 
-## hermes project​
+## `hermes project`​
 
 `hermes project`
 
@@ -1211,21 +1226,21 @@ For the full design — comparison with Cline Kanban / Paperclip / NanoClaw / Ge
 hermes project <create|list|show|add-folder|remove-folder|rename|set-primary|use|archive|restore|bind-board>
 ```
 
-Projects are human-named workspaces that can span multiple folders / repos. They anchor desktop session grouping and, when bound to a kanban board, give tasks a deterministic worktree + branch convention. State is per-profile.
+پروژه‌ها فضاهای کاری نام‌گذاری شده توسط انسان هستند که می‌توانند چندین پوشه/rep را در بر بگیرند. گروه‌بندی نشست دسکتاپ را لنگر می‌اندازند و وقتی به تخته kanban متصل هستند، قرارداد worktree + branch تعیین‌شده به تسک‌ها می‌دهند. وضعیت به ازای هر پروفایل است.
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| create | Create a new project. |
-| list(aliasls) | List projects. |
-| show | Show a project's details. |
-| add-folder | Add a folder / repo to a project. |
-| remove-folder | Remove a folder from a project. |
-| rename | Rename a project. |
-| set-primary | Set the primary folder. |
-| use | Set the active project. |
-| archive | Archive a project (recoverable). |
-| restore | Restore an archived project. |
-| bind-board | Bind a kanban board to this project. |
+| `create` | ایجاد پروژه جدید. |
+| `list` (نام مستعار `ls`) | فهرست پروژه‌ها. |
+| `show` | نمایش جزئیات پروژه. |
+| `add-folder` | اضافه کردن پوشه/rep به پروژه. |
+| `remove-folder` | حذف پوشه از پروژه. |
+| `rename` | تغییر نام پروژه. |
+| `set-primary` | تنظیم پوشه اصلی. |
+| `use` | تنظیم پروژه فعال. |
+| `archive` | آرشیو کردن پروژه (قابل بازیابی). |
+| `restore` | بازیابی پروژه آرشیو شده. |
+| `bind-board` | متصل کردن تخته kanban به این پروژه. |
 
 `create`
 `list`
@@ -1240,7 +1255,7 @@ Projects are human-named workspaces that can span multiple folders / repos. They
 `restore`
 `bind-board`
 
-## hermes webhook​
+## `hermes webhook`​
 
 `hermes webhook`
 
@@ -1248,14 +1263,14 @@ Projects are human-named workspaces that can span multiple folders / repos. They
 hermes webhook <subscribe|list|remove|test>
 ```
 
-Manage dynamic webhook subscriptions for event-driven agent activation. Requires the webhook platform to be enabled in config — if not configured, prints setup instructions.
+مدیریت اشتراک‌های webhook پویا برای فعال‌سازی agent مبتنی بر رویداد. نیاز به فعال بودن پلتفرم webhook در پیکربندی دارد — اگر پیکربندی نشده، دستورالعمل راه‌اندازی چاپ می‌شود.
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| subscribe/add | Create a webhook route. Returns the URL and HMAC secret to configure on your service. |
-| list/ls | Show all agent-created subscriptions. |
-| remove/rm | Delete a dynamic subscription. Static routes from config.yaml are not affected. |
-| test | Send a test POST to verify a subscription is working. |
+| `subscribe`/`add` | ایجاد مسیر webhook. URL و secret HMAC برای پیکربندی در سرویس شما برمی‌گرداند. |
+| `list`/`ls` | نمایش همه اشتراک‌های ایجاد شده توسط agent. |
+| `remove`/`rm` | حذف یک اشتراک پویا. مسیرهای ثابت از `config.yaml` تحت تأثیر قرار نمی‌گیرند. |
+| `test` | ارسال یک POST آزمایشی برای بررسی کارکرد اشتراک. |
 
 `subscribe`
 `add`
@@ -1265,7 +1280,7 @@ Manage dynamic webhook subscriptions for event-driven agent activation. Requires
 `rm`
 `test`
 
-### hermes webhook subscribe​
+### `hermes webhook subscribe`​
 
 `hermes webhook subscribe`
 
@@ -1273,17 +1288,17 @@ Manage dynamic webhook subscriptions for event-driven agent activation. Requires
 hermes webhook subscribe <name> [options]
 ```
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --prompt | Prompt template with{dot.notation}payload references. |
-| --events | Comma-separated event types to accept (e.g.issues,pull_request). Empty = all. |
-| --description | Human-readable description. |
-| --skills | Comma-separated skill names to load for the agent run. |
-| --deliver | Delivery target:log(default),telegram,discord,slack,github_comment. |
-| --deliver-chat-id | Target chat/channel ID for cross-platform delivery. |
-| --secret | Custom HMAC secret. Auto-generated if omitted. |
-| --deliver-only | Skip the agent — deliver the rendered--promptas the literal message. Zero LLM cost, sub-second delivery. Requires--deliverto be a real target (notlog). |
-| --script | Filter/transform script under~/.hermes/scripts/. The webhook payload is passed as JSON on stdin; JSON stdout replaces the payload, and empty stdout,[SILENT], or a nonzero exit code ignores the webhook. SeeScript Filters and Transforms. |
+| `--prompt` | الگوی پرامپت با ارجاعات payload `{dot.notation}`. |
+| `--events` | انواع رویداد جداشده با کاما برای پذیرش (مثلاً `issues`, `pull_request`). خالی = همه. |
+| `--description` | توصیف خوانا توسط انسان. |
+| `--skills` | نام مهارت‌های جداشده با کاما برای بارگذاری برای اجرای agent. |
+| `--deliver` | هدف تحویل: `log` (پیش‌فرض)، `telegram`، `discord`، `slack`، `github_comment`. |
+| `--deliver-chat-id` | شناسه چت/کانال هدف برای تحویل بین‌پلتفرمی. |
+| `--secret` | secret HMAC سفارشی. اگر حذف شود به طور خودکار تولید می‌شود. |
+| `--deliver-only` | رد کردن agent — تحویل `--prompt` رندر شده به عنوان پیام تحت الفظی. هزینه LLM صفر، تحویل زیر ثانیه. نیاز دارد `--deliver` یک هدف واقعی باشد (نه `log`). |
+| `--script` | اسکریپت فیلتر/تبدیل تحت `~/.hermes/scripts/`. payload webhook به عنوان JSON در stdin ارسال می‌شود؛ stdout JSON payload را جایگزین می‌کند و stdout خالی، `[SILENT]` یا کد خروجی ناصفر webhook را نادیده می‌گیرد. به [Script Filters and Transforms](/docs/user-guide/messaging/webhooks#script-filters-and-transforms) مراجعه کنید. |
 
 `--prompt`
 `{dot.notation}`
@@ -1306,13 +1321,12 @@ hermes webhook subscribe <name> [options]
 `--script`
 `~/.hermes/scripts/`
 `[SILENT]`
-[Script Filters and Transforms](/docs/user-guide/messaging/webhooks#script-filters-and-transforms)
 
-Subscriptions persist to~/.hermes/webhook_subscriptions.jsonand are hot-reloaded by the webhook adapter without a gateway restart.
+اشتراک‌ها در `~/.hermes/webhook_subscriptions.json` ذخیره می‌شوند و توسط آداپتور webhook بدون راه‌اندازی مجدد گیت‌وی بارگذاری مجدد داغ می‌شوند.
 
 `~/.hermes/webhook_subscriptions.json`
 
-## hermes doctor​
+## `hermes doctor`​
 
 `hermes doctor`
 
@@ -1320,13 +1334,13 @@ Subscriptions persist to~/.hermes/webhook_subscriptions.jsonand are hot-reloaded
 hermes doctor [--fix]
 ```
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --fix | Attempt automatic repairs where possible. |
+| `--fix` | تلاش برای تعمیرات خودکار در صورت امکان. |
 
 `--fix`
 
-## hermes dump​
+## `hermes dump`​
 
 `hermes dump`
 
@@ -1334,51 +1348,80 @@ hermes doctor [--fix]
 hermes dump [--show-keys]
 ```
 
-Outputs a compact, plain-text summary of your entire Hermes setup. Designed to be copy-pasted into Discord, GitHub issues, or Telegram when asking for support — no ANSI colors, no special formatting, just data.
+خلاصه‌ای فشرده و متن ساده از کل راه‌اندازی Hermes شما خروجی می‌دهد. طراحی شده برای کپی-پیست در Discord، GitHub issues یا Telegram هنگام درخواست پشتیبانی — بدون رنگ ANSI، بدون قالب‌بندی خاص، فقط داده.
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --show-keys | Show redacted API key prefixes (first and last 4 characters) instead of justset/not set. |
+| `--show-keys` | نمایش پیشوندهای کلید API ویرایش شده (۴ کاراکتر اول و آخر) به جای فقط `set`/`not set`. |
 
 `--show-keys`
 `set`
 `not set`
 
-### What it includes​
+### چه چیزی شامل می‌شود​
 
-| Section | Details |
+| بخش | جزئیات |
 | --- | --- |
-| Header | Hermes version, release date, git commit hash |
-| Environment | OS, Python version, OpenAI SDK version |
-| Identity | Active profile name, HERMES_HOME path |
-| Model | Configured default model and provider |
-| Terminal | Backend type (local, docker, ssh, etc.) |
-| API keys | Presence check for all 22 provider/tool API keys |
-| Features | Enabled toolsets, MCP server count, memory provider |
-| Services | Gateway status, configured messaging platforms |
-| Workload | Cron job counts, installed skill count |
-| Config overrides | Any config values that differ from defaults |
+| Header | نسخه Hermes، تاریخ انتشار، هش commit git |
+| Environment | OS، نسخه Python، نسخه OpenAI SDK |
+| Identity | نام پروفایل فعال، مسیر HERMES_HOME |
+| Model | مدل و ارائه‌دهنده پیش‌فرض پیکربندی شده |
+| Terminal | نوع backend (local, docker, ssh و غیره) |
+| API keys | بررسی وجود برای همه ۲۲ کلید API ارائه‌دهنده/ابزار |
+| Features | toolsetهای فعال، تعداد سرور MCP، ارائه‌دهنده حافظه |
+| Services | وضعیت گیت‌وی، پلتفرم‌های پیام‌رسانی پیکربندی شده |
+| Workload | تعداد تسک‌های cron، تعداد مهارت‌های نصب شده |
+| Config overrides | هر مقدار پیکربندی که با پیش‌فرض‌ها متفاوت است |
 
-### Example output​
+### خروجی مثال​
 
 ```
---- hermes dump ---version:          0.8.0 (2026.4.8) [af4abd2f]os:               Linux 6.14.0-37-generic x86_64python:           3.11.14openai_sdk:       2.24.0profile:          defaulthermes_home:      ~/.hermesmodel:            anthropic/claude-opus-4.6provider:         openrouterterminal:         localapi_keys:  openrouter           set  openai               not set  anthropic            set  nous                 not set  firecrawl            set  ...features:  toolsets:           all  mcp_servers:        0  memory_provider:    built-in  gateway:            running (systemd)  platforms:          telegram, discord  cron_jobs:          3 active / 5 total  skills:             42config_overrides:  agent.max_turns: 250  compression.threshold: 0.85  display.streaming: True--- end dump ---
+--- hermes dump ---
+version:          0.8.0 (2026.4.8) [af4abd2f]
+os:               Linux 6.14.0-37-generic x86_64
+python:           3.11.14
+openai_sdk:       2.24.0
+profile:          default
+hermes_home:      ~/.hermes
+model:            anthropic/claude-opus-4.6
+provider:         openrouter
+terminal:         local
+api_keys:
+  openrouter           set
+  openai               not set
+  anthropic            set
+  nous                 not set
+  firecrawl            set
+  ...
+features:
+  toolsets:           all
+  mcp_servers:        0
+  memory_provider:    built-in
+  gateway:            running (systemd)
+  platforms:          telegram, discord
+  cron_jobs:          3 active / 5 total
+  skills:             42
+config_overrides:
+  agent.max_turns: 250
+  compression.threshold: 0.85
+  display.streaming: True
+--- end dump ---
 ```
 
-### When to use​
+### چه زمانی استفاده کنید​
 
-- Reporting a bug on GitHub — paste the dump into your issue
-- Asking for help in Discord — share it in a code block
-- Comparing your setup to someone else's
-- Quick sanity check when something isn't working
+- گزارش خطا در GitHub — dump را در issue خود بچسبانید
+- درخواست کمک در Discord — آن را در یک بلوک کد به اشتراک بگذارید
+- مقایسه راه‌اندازی شما با راه‌اندازی شخص دیگر
+- بررسی سریع وقتی چیزی کار نمی‌کند
 
-hermes dumpis specifically designed for sharing. For interactive diagnostics, usehermes doctor. For a visual overview, usehermes status.
+`hermes dump` به طور خاص برای اشتراک‌گذاری طراحی شده. برای تشخیص‌های تعاملی، از `hermes doctor` استفاده کنید. برای نمای کلی بصری، از `hermes status` استفاده کنید.
 
 `hermes dump`
 `hermes doctor`
 `hermes status`
 
-## hermes debug​
+## `hermes debug`​
 
 `hermes debug`
 
@@ -1386,15 +1429,15 @@ hermes dumpis specifically designed for sharing. For interactive diagnostics, us
 hermes debug share [options]
 ```
 
-Upload a debug report (system info + recent logs) to a paste service and get a shareable URL. Useful for quick support requests — includes everything a helper needs to diagnose your issue.
+آپلود یک گزارش دیباگ (اطلاعات سیستم + لاگ‌های اخیر) در یک سرویس paste و دریافت یک URL قابل اشتراک‌گذاری. مفید برای درخواست‌های پشتیبانی سریع — شامل همه چیزی است که یک کمک‌کننده برای تشخیص مشکل شما نیاز دارد.
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --lines <N> | Number of log lines to include per log file (default: 200). |
-| --expire <days> | Paste expiry in days (default: 7). |
-| --nous | Upload to Nous-internal diagnostics storage instead of a public paste service. Use this when Nous support asks for a private diagnostic bundle. |
-| --local | Print the report locally instead of uploading. |
-| --no-redact | Disable upload-time secret redaction. By default, uploads are redacted. |
+| `--lines <N>` | تعداد خطوط لاگ برای شامل کردن به ازای هر فایل لاگ (پیش‌فرض: 200). |
+| `--expire <days>` | انقضای paste به روز (پیش‌فرض: 7). |
+| `--nous` | آپلود در ذخیره‌سازی تشخیص داخلی Nous به جای سرویس paste عمومی. وقتی پشتیبانی Nous باندل تشخیص خصوصی درخواست می‌کند استفاده کنید. |
+| `--local` | چاپ گزارش به صورت محلی به جای آپلود. |
+| `--no-redact` | غیرفعال کردن ویرایش secret هنگام آپلود. به طور پیش‌فرض، آپلودها ویرایش می‌شوند. |
 
 `--lines <N>`
 `--expire <days>`
@@ -1402,19 +1445,23 @@ Upload a debug report (system info + recent logs) to a paste service and get a s
 `--local`
 `--no-redact`
 
-The report includes system info (OS, Python version, Hermes version), recent agent, gateway, GUI/dashboard, and desktop logs (512 KB limit per file), and redacted API key status. By default, uploads are redacted so secrets are not included.
+گزارش شامل اطلاعات سیستم (OS، نسخه Python، نسخه Hermes)، لاگ‌های اخیر agent، گیت‌وی، GUI/dashboard و دسکتاپ (محدودیت 512 KB به ازای هر فایل) و وضعیت کلید API ویرایش شده است. به طور پیش‌فرض، آپلودها ویرایش می‌شوند بنابراین secretها شامل نمی‌شوند.
 
-Default uploads use public paste services tried in order: paste.rs, dpaste.com.--nousuploads the same debug bundle to private Nous diagnostics storage instead; the returned viewer link is for the Nous team and auto-deletes after 14 days.
+آپلودهای پیش‌فرض از سرویس‌های paste عمومی به ترتیب استفاده می‌کنند: paste.rs، dpaste.com. `--nous` همان باندل دیباگ را در ذخیره‌سازی تشخیص خصوصی Nous آپلود می‌کند؛ لینک viewer برگشتی برای تیم Nous است و پس از ۱۴ روز به طور خودکار حذف می‌شود.
 
 `--nous`
 
-### Examples​
+### مثال‌ها​
 
 ```
-hermes debug share              # Upload debug report, print URLhermes debug share --lines 500  # Include more log lineshermes debug share --expire 30  # Keep paste for 30 dayshermes debug share --nous       # Upload a private diagnostics bundle for Nous supporthermes debug share --local      # Print report to terminal (no upload)
+hermes debug share              # Upload debug report, print URL
+hermes debug share --lines 500  # Include more log lines
+hermes debug share --expire 30  # Keep paste for 30 days
+hermes debug share --nous       # Upload a private diagnostics bundle for Nous support
+hermes debug share --local      # Print report to terminal (no upload)
 ```
 
-## hermes backup​
+## `hermes backup`​
 
 `hermes backup`
 
@@ -1422,13 +1469,13 @@ hermes debug share              # Upload debug report, print URLhermes debug sha
 hermes backup [options]
 ```
 
-Create a zip archive of your Hermes configuration, skills, sessions, and data. The backup excludes the hermes-agent codebase itself.
+ایجاد یک آرشیو zip از پیکربندی، مهارت‌ها، نشست‌ها و داده‌های Hermes شما. نسخه پشتیبان خود مخزن کد hermes-agent را حذف می‌کند.
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| -o,--output <path> | Output path for the zip file (default:~/hermes-backup-<timestamp>.zip). |
-| -q,--quick | Quick snapshot: only critical state files (config.yaml, state.db, .env, auth, cron jobs). Much faster than a full backup. |
-| -l,--label <name> | Label for the snapshot (only used with--quick). |
+| `-o`, `--output <path>` | مسیر خروجی برای فایل zip (پیش‌فرض: `~/hermes-backup-<timestamp>.zip`). |
+| `-q`, `--quick` | اسناپ‌شات سریع: فقط فایل‌های وضعیت حیاتی (`config.yaml`، `state.db`، `.env`، auth، تسک‌های cron). بسیار سریع‌تر از نسخه پشتیبان کامل. |
+| `-l`, `--label <name>` | برچسب برای اسناپ‌شات (فقط با `--quick` استفاده می‌شود). |
 
 `-o`
 `--output <path>`
@@ -1439,15 +1486,15 @@ Create a zip archive of your Hermes configuration, skills, sessions, and data. T
 `--label <name>`
 `--quick`
 
-The backup uses SQLite'sbackup()API for safe copying, so it works correctly even when Hermes is running (WAL-mode safe).
+نسخه پشتیبان از API `backup()` SQLite برای کپی ایمن استفاده می‌کند، بنابراین حتی وقتی Hermes در حال اجراست به درستی کار می‌کند (امن در حالت WAL).
 
 `backup()`
 
-What's excluded from the zip:
+چه چیزی از zip حذف می‌شود:
 
-- *.db-wal,*.db-shm,*.db-journal— SQLite's WAL / shared-memory / journal sidecars. The*.dbfile already got a consistent snapshot viasqlite3.backup(); shipping the live sidecars alongside it would let a restore see a half-committed state.
-- checkpoints/— per-session trajectory caches. Hash-keyed and regenerated per session; wouldn't port cleanly to another install anyway.
-- Thehermes-agentcode itself (this is a user-data backup, not a repo snapshot).
+- `*.db-wal`، `*.db-shm`، `*.db-journal` — sidecarهای WAL / shared-memory / journal SQLite. فایل `*.db` از قبل اسناپ‌شات سازگاری از طریق `sqlite3.backup()` دریافت کرده؛ ارسال sidecarهای زنده در کنار آن به بازیابی اجازه می‌دهد وضعیت نیمه-تایید شده را ببیند.
+- `checkpoints/` — کش trajectory به ازای هر نشست. هش-کلیدی و بازتولید به ازای هر نشست؛ به هر حال به طور تمیز به نصب دیگر منتقل نمی‌شود.
+- خود کد `hermes-agent` (این نسخه پشتیبان داده کاربر است، نه اسناپ‌شات مخزن).
 
 `*.db-wal`
 `*.db-shm`
@@ -1457,13 +1504,16 @@ What's excluded from the zip:
 `checkpoints/`
 `hermes-agent`
 
-### Examples​
+### مثال‌ها​
 
 ```
-hermes backup                           # Full backup to ~/hermes-backup-*.ziphermes backup -o /tmp/hermes.zip        # Full backup to specific pathhermes backup --quick                   # Quick state-only snapshothermes backup --quick --label "pre-upgrade"  # Quick snapshot with label
+hermes backup                           # Full backup to ~/hermes-backup-*.zip
+hermes backup -o /tmp/hermes.zip        # Full backup to specific path
+hermes backup --quick                   # Quick state-only snapshot
+hermes backup --quick --label "pre-upgrade"  # Quick snapshot with label
 ```
 
-## hermes checkpoints​
+## `hermes checkpoints`​
 
 `hermes checkpoints`
 
@@ -1471,18 +1521,18 @@ hermes backup                           # Full backup to ~/hermes-backup-*.ziphe
 hermes checkpoints [COMMAND]
 ```
 
-Inspect and manage the shadow git store at~/.hermes/checkpoints/— the storage layer behind the in-session/rollbackcommand. Safe to run any time; does not require the agent to be running.
+بررسی و مدیریت فروشگاه git سایه‌ای در `~/.hermes/checkpoints/` — لایه ذخیره‌سازی پشت دستور `/rollback` درون نشست. در هر زمان اجرا ایمن است؛ نیازی نیست agent در حال اجرا باشد.
 
 `~/.hermes/checkpoints/`
 `/rollback`
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| status(default) | Show total size, project count, and per-project breakdown. Barehermes checkpointsis equivalent. |
-| list | Alias forstatus. |
-| prune | Force a cleanup sweep — delete orphan and stale projects, GC the store, enforce the size cap. Ignores the 24h idempotency marker. |
-| clear | Delete the entire checkpoint base. Irreversible; asks for confirmation unless-f. |
-| clear-legacy | Delete only thelegacy-<timestamp>/archives produced by the v1→v2 migration. |
+| `status` (پیش‌فرض) | نمایش اندازه کل، تعداد پروژه‌ها و تفکیک به ازای هر پروژه. معادل `hermes checkpoints` بدون آرگومان. |
+| `list` | نام مستعار `status`. |
+| `prune` | اجرای جاروب پاکسازی اجباری — حذف پروژه‌های یتیم و منقضی، GC فروشگاه، اجرای محدودیت اندازه. نشانگر idempotency ۲۴ ساعته را نادیده می‌گیرد. |
+| `clear` | حذف کل پایه checkpoints. غیرقابل بازگشت؛ مگر `-f` تأیید درخواست می‌کند. |
+| `clear-legacy` | حذف فقط آرشیوهای `legacy-<timestamp>/` تولید شده توسط مهاجرت v1→v2. |
 
 `status`
 `hermes checkpoints`
@@ -1494,15 +1544,15 @@ Inspect and manage the shadow git store at~/.hermes/checkpoints/— the storage 
 `clear-legacy`
 `legacy-<timestamp>/`
 
-### Options​
+### گزینه‌ها​
 
-| Option | Subcommand | Description |
+| گزینه | دستور زیر سطح | توضیح |
 | --- | --- | --- |
-| --limit N | status,list | Max projects to list (default 20). |
-| --retention-days N | prune | Drop projects whoselast_touchis older than N days (default 7). |
-| --max-size-mb N | prune | After the orphan/stale pass, drop the oldest commit per project until total store size ≤ N MB (default 500). |
-| --keep-orphans | prune | Skip deleting projects whose working directory no longer exists. |
-| -f,--force | clear,clear-legacy | Skip the confirmation prompt. |
+| `--limit N` | `status`, `list` | حداکثر پروژه‌ها برای فهرست کردن (پیش‌فرض 20). |
+| `--retention-days N` | `prune` | حذف پروژه‌هایی که `last_touch` قدیمی‌تر از N روز است (پیش‌فرض 7). |
+| `--max-size-mb N` | `prune` | پس از عبور یتیم/منقضی، حذف قدیمی‌ترین commit به ازای هر پروژه تا اندازه کل فروشگاه ≤ N MB (پیش‌فرض 500). |
+| `--keep-orphans` | `prune` | رد کردن حذف پروژه‌هایی که دایرکتوری کاری آنها دیگر وجود ندارد. |
+| `-f`, `--force` | `clear`, `clear-legacy` | رد کردن درخواست تأیید. |
 
 `--limit N`
 `status`
@@ -1519,18 +1569,21 @@ Inspect and manage the shadow git store at~/.hermes/checkpoints/— the storage 
 `clear`
 `clear-legacy`
 
-### Examples​
+### مثال‌ها​
 
 ```
-hermes checkpoints                                  # status overviewhermes checkpoints prune --retention-days 3         # aggressive cleanuphermes checkpoints prune --max-size-mb 200          # tighten size cap oncehermes checkpoints clear-legacy -f                  # drop v1 archive dirshermes checkpoints clear -f                         # wipe everything
+hermes checkpoints                                  # status overview
+hermes checkpoints prune --retention-days 3         # aggressive cleanup
+hermes checkpoints prune --max-size-mb 200          # tighten size cap once
+hermes checkpoints clear-legacy -f                  # drop v1 archive dirs
+hermes checkpoints clear -f                         # wipe everything
 ```
 
-SeeCheckpoints and/rollbackfor the full architecture and the in-session commands.
+برای معماری کامل و دستورات درون نشست به [Checkpoints and `/rollback`](/docs/user-guide/checkpoints-and-rollback) مراجعه کنید.
 
-[Checkpoints and/rollback](/docs/user-guide/checkpoints-and-rollback)
 `/rollback`
 
-## hermes import​
+## `hermes import`​
 
 `hermes import`
 
@@ -1538,26 +1591,27 @@ SeeCheckpoints and/rollbackfor the full architecture and the in-session commands
 hermes import <zipfile> [options]
 ```
 
-Restore a previously created Hermes backup into your Hermes home directory. All files in the archive overwrite existing files in your Hermes home;--forceonly skips the confirmation prompt that fires when the target already has a Hermes installation.
+بازیابی یک نسخه پشتیبان Hermes ایجاد شده قبلی در دایرکتوری Hermes home شما. همه فایل‌ها در آرشیو فایل‌های موجود در Hermes home شما را بازنویسی می‌کنند؛ `--force` فقط درخواست تأییدی را که هنگام وجود نصب Hermes در هدف فعال می‌شود رد می‌کند.
 
 `--force`
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| -f,--force | Skip the existing-installation confirmation prompt. |
+| `-f`, `--force` | رد کردن درخواست تأیید نصب موجود. |
 
 `-f`
 `--force`
 
-Stop the gateway before importing to avoid conflicts with running processes.
+قبل از import، گیت‌وی را متوقف کنید تا از تداخل با فرآیندهای در حال اجرا جلوگیری شود.
 
-### Examples​
+### مثال‌ها​
 
 ```
-hermes import ~/hermes-backup-20260423.zip           # Prompts before overwriting existing confighermes import ~/hermes-backup-20260423.zip --force   # Overwrite without prompting
+hermes import ~/hermes-backup-20260423.zip           # Prompts before overwriting existing config
+hermes import ~/hermes-backup-20260423.zip --force   # Overwrite without prompting
 ```
 
-## hermes logs​
+## `hermes logs`​
 
 `hermes logs`
 
@@ -1565,20 +1619,20 @@ hermes import ~/hermes-backup-20260423.zip           # Prompts before overwritin
 hermes logs [log_name] [options]
 ```
 
-View, tail, and filter Hermes log files. All logs are stored in~/.hermes/logs/(or<profile>/logs/for non-default profiles).
+مشاهده، دنبال کردن و فیلتر کردن فایل‌های لاگ Hermes. همه لاگ‌ها در `~/.hermes/logs/` (یا `<profile>/logs/` برای پروفایل‌های غیرپیش‌فرض) ذخیره می‌شوند.
 
 `~/.hermes/logs/`
 `<profile>/logs/`
 
-### Log files​
+### فایل‌های لاگ​
 
-| Name | File | What it captures |
+| نام | فایل | چه چیزی ثبت می‌کند |
 | --- | --- | --- |
-| agent(default) | agent.log | All agent activity — API calls, tool dispatch, session lifecycle (INFO and above) |
-| errors | errors.log | Warnings and errors only — a filtered subset of agent.log |
-| gateway | gateway.log | Messaging gateway activity — platform connections, message dispatch, webhook events |
-| gui | gui.log | Dashboard / TUI-gateway / PTY-bridge / websocket events |
-| desktop | desktop.log | Electron desktop app — boot, backend spawn output, and recent Python tracebacks |
+| `agent` (پیش‌فرض) | `agent.log` | همه فعالیت‌های agent — فراخوانی‌های API، ارسال ابزار، چرخه حیات نشست (INFO و بالاتر) |
+| `errors` | `errors.log` | فقط هشدارها و خطاها — زیرمجموعه فیلتر شده agent.log |
+| `gateway` | `gateway.log` | فعالیت گیت‌وی پیام‌رسانی — اتصالات پلتفرم، ارسال پیام، رویدادهای webhook |
+| `gui` | `gui.log` | Dashboard / TUI-gateway / PTY-bridge / رویدادهای websocket |
+| `desktop` | `desktop.log` | اپ دسکتاپ Electron — بوت، خروجی ایجاد backend و tracebackهای پایتون اخیر |
 
 `agent`
 `agent.log`
@@ -1591,17 +1645,17 @@ View, tail, and filter Hermes log files. All logs are stored in~/.hermes/logs/(o
 `desktop`
 `desktop.log`
 
-### Options​
+### گزینه‌ها​
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| log_name | Which log to view:agent(default),errors,gateway, orlistto show available files with sizes. |
-| -n,--lines <N> | Number of lines to show (default: 50). |
-| -f,--follow | Follow the log in real time, liketail -f. Press Ctrl+C to stop. |
-| --level <LEVEL> | Minimum log level to show:DEBUG,INFO,WARNING,ERROR,CRITICAL. |
-| --session <ID> | Filter lines containing a session ID substring. |
-| --since <TIME> | Show lines from a relative time ago:30m,1h,2d, etc. Supportss(seconds),m(minutes),h(hours),d(days). |
-| --component <NAME> | Filter by component:gateway,agent,tools,cli,cron. |
+| `log_name` | کدام لاگ را مشاهده کنید: `agent` (پیش‌فرض)، `errors`، `gateway` یا `list` برای نمایش فایل‌های موجود با اندازه‌ها. |
+| `-n`, `--lines <N>` | تعداد خطوط برای نمایش (پیش‌فرض: 50). |
+| `-f`, `--follow` | دنبال کردن لاگ در زمان واقعی، مانند `tail -f`. `Ctrl+C` برای توقف. |
+| `--level <LEVEL>` | حداقل سطح لاگ برای نمایش: `DEBUG`، `INFO`، `WARNING`، `ERROR`، `CRITICAL`. |
+| `--session <ID>` | فیلتر خطوط حاوی زیررشته session ID. |
+| `--since <TIME>` | نمایش خطوط از یک زمان نسبی قبل: `30m`، `1h`، `2d` و غیره. از `s` (ثانیه)، `h` (ساعت)، `d` (روز) پشتیبانی می‌کند. |
+| `--component <NAME>` | فیلتر بر اساس مولفه: `gateway`، `agent`، `tools`، `cli`، `cron`. |
 
 `log_name`
 `agent`
@@ -1635,35 +1689,49 @@ View, tail, and filter Hermes log files. All logs are stored in~/.hermes/logs/(o
 `cli`
 `cron`
 
-### Examples​
+### مثال‌ها​
 
 ```
-# View the last 50 lines of agent.log (default)hermes logs# Follow agent.log in real timehermes logs -f# View the last 100 lines of gateway.loghermes logs gateway -n 100# Show only warnings and errors from the last hourhermes logs --level WARNING --since 1h# Filter by a specific sessionhermes logs --session abc123# Follow errors.log, starting from 30 minutes agohermes logs errors --since 30m -f# List all log files with their sizeshermes logs list
+# View the last 50 lines of agent.log (default)
+hermes logs
+# Follow agent.log in real time
+hermes logs -f
+# View the last 100 lines of gateway.log
+hermes logs gateway -n 100
+# Show only warnings and errors from the last hour
+hermes logs --level WARNING --since 1h
+# Filter by a specific session
+hermes logs --session abc123
+# Follow errors.log, starting from 30 minutes ago
+hermes logs errors --since 30m -f
+# List all log files with their sizes
+hermes logs list
 ```
 
-### Filtering​
+### فیلتر کردن​
 
-Filters can be combined. When multiple filters are active, a log line must passallof them to be shown:
+فیلترها قابل ترکیب هستند. وقتی چند فیلتر فعال باشند، یک خط لاگ باید **همه** آنها را رد کند تا نمایش داده شود:
 
 ```
-# WARNING+ lines from the last 2 hours containing session "tg-12345"hermes logs --level WARNING --since 2h --session tg-12345
+# WARNING+ lines from the last 2 hours containing session "tg-12345"
+hermes logs --level WARNING --since 2h --session tg-12345
 ```
 
-Lines without a parseable timestamp are included when--sinceis active (they may be continuation lines from a multi-line log entry). Lines without a detectable level are included when--levelis active.
+خطوط بدون timestamp قابل تحلیل وقتی `--since` فعال است شامل می‌شوند (ممکن است خطوط ادامه‌دار از یک ورود لاگ چندخطی باشند). خطوط بدون سطح قابل تشخیص وقتی `--level` فعال است شامل می‌شوند.
 
 `--since`
 `--level`
 
-### Log rotation​
+### چرخش لاگ​
 
-Hermes uses Python'sRotatingFileHandler. Old logs are rotated automatically — look foragent.log.1,agent.log.2, etc. Thehermes logs listsubcommand shows all log files including rotated ones.
+Hermes از `RotatingFileHandler` پایتون استفاده می‌کند. لاگ‌های قدیمی به طور خودکار چرخش می‌شوند — به دنبال `agent.log.1`، `agent.log.2` و غیره بگردید. دستور `hermes logs list` همه فایل‌های لاگ شامل چرخش شده‌ها را نشان می‌دهد.
 
 `RotatingFileHandler`
 `agent.log.1`
 `agent.log.2`
 `hermes logs list`
 
-## hermes prompt-size​
+## `hermes prompt-size`​
 
 `hermes prompt-size`
 
@@ -1671,42 +1739,37 @@ Hermes uses Python'sRotatingFileHandler. Old logs are rotated automatically — 
 hermes prompt-size [--platform <name>] [--json]
 ```
 
-Reports the fixed prompt budget for a fresh session — what gets sent on every
-API callbeforeany conversation content. Useful when a downstream adapter or
-proxy has a tighter prompt budget than the model's context window, or when you
-want to see which block (skills index, memory, profile) dominates.
+بودجه prompt ثابت برای یک نشست جدید را گزارش می‌دهد — چه چیزی در هر فراخوانی API **قبل** از هر محتوای مکالمه ارسال می‌شود. مفید وقتی یک آداپتور یا پروکسی downstream بودجه prompt تنگ‌تری از پنجره context مدل دارد، یا وقتی می‌خواهید ببینید کدام بلوک (ایندکس مهارت‌ها، حافظه، پروفایل) غالب است.
 
-It builds the same system prompt the agent would, then breaks it down:
+همان system prompt را می‌سازد که agent می‌ساخت، سپس آن را تفکیک می‌کند:
 
-- System prompt total— full assembled prompt (identity, guidance, skills
-index, context files, memory, profile, timestamp).
-- Skills index— the<available_skills>block. This is often the largest
-single block when many skills are installed.
-- Memoryanduser profile— yourMEMORY.md/USER.mdsnapshots.
-- Prompt tiers— stable / context / volatile, matching how Hermes layers
-the prompt for cache-friendliness.
-- Tool schemas— the JSON for all enabled tools (the other half of the
-fixed per-call payload).
+- **کل system prompt** — prompt کامل مونتاژ شده (هویت، راهنمایی، ایندکس مهارت‌ها، فایل‌های context، حافظه، پروفایل، تمبر زمانی).
+- **ایندکس مهارت‌ها** — بلوک `<available_skills>`. اغلب بزرگ‌ترین بلوک واحد وقتی مهارت‌های زیادی نصب شده.
+- **حافظه و پروفایل کاربر** — اسناپ‌شات `MEMORY.md`/`USER.md` شما.
+- **سطوح prompt** — پایدار / context / متغیر، مطابق نحوه لایه‌بندی prompt توسط Hermes برای سازگاری با کش.
+- **اسکیماهای ابزار** — JSON برای همه ابزارهای فعال (نیمی دیگر از payload ثابت به ازای هر فراخوانی).
 
 `<available_skills>`
 `MEMORY.md`
 `USER.md`
 
-Runs entirely offline — no API call, works with no credentials configured.
+کاملاً آفلاین اجرا می‌شود — بدون فراخوانی API، بدون اعتبارنامه پیکربندی شده کار می‌کند.
 
 ```
-# Human-readable breakdown for the CLI platform (default)hermes prompt-size# Simulate a messaging platform's prompt (different platform hint)hermes prompt-size --platform telegram# Machine-readable output for scriptshermes prompt-size --json
+# Human-readable breakdown for the CLI platform (default)
+hermes prompt-size
+# Simulate a messaging platform's prompt (different platform hint)
+hermes prompt-size --platform telegram
+# Machine-readable output for scripts
+hermes prompt-size --json
 ```
 
-The skills index and tool schemas scale with how many skills and tools you have
-enabled. To shrink the prompt, disable unused toolsets (hermes tools) or
-uninstall skills you don't need (hermes skills). Context files (AGENTS.md,
-.cursorrules) in your current directory also count toward the total.
+ایندکس مهارت‌ها و اسکیماهای ابزار با تعداد مهارت‌ها و ابزارهای فعال شما مقیاس می‌گیرند. برای کوچک کردن prompt، ابزارهای غیرفعال toolset را غیرفعال کنید (`hermes tools`) یا مهارت‌هایی که نیاز ندارید را حذف کنید (`hermes skills`). فایل‌های context (`AGENTS.md`، `.cursorrules`) در دایرکتوری جاری شما نیز به کل محاسبه می‌شوند.
 
 `hermes tools`
 `hermes skills`
 
-## hermes config​
+## `hermes config`​
 
 `hermes config`
 
@@ -1714,17 +1777,17 @@ uninstall skills you don't need (hermes skills). Context files (AGENTS.md,
 hermes config <subcommand>
 ```
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| show | Show current config values. |
-| edit | Openconfig.yamlin your editor. |
-| set <key> <value> | Set a config value. |
-| path | Print the config file path. |
-| env-path | Print the.envfile path. |
-| check | Check for missing or stale config. |
-| migrate | Add newly introduced options interactively. |
+| `show` | نمایش مقادیر پیکربندی فعلی. |
+| `edit` | باز کردن `config.yaml` در ویرایشگر شما. |
+| `set <key> <value>` | تنظیم مقدار پیکربندی. |
+| `path` | چاپ مسیر فایل پیکربندی. |
+| `env-path` | چاپ مسیر فایل `.env`. |
+| `check` | بررسی پیکربندی گم‌شده یا منقضی. |
+| `migrate` | اضافه کردن گزینه‌های جدید به تازگی معرفی شده به صورت تعاملی. |
 
 `show`
 `edit`
@@ -1736,7 +1799,7 @@ Subcommands:
 `check`
 `migrate`
 
-## hermes pairing​
+## `hermes pairing`​
 
 `hermes pairing`
 
@@ -1744,19 +1807,19 @@ Subcommands:
 hermes pairing <list|approve|revoke|clear-pending>
 ```
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list | Show pending and approved users. |
-| approve <platform> <code> | Approve a pairing code. |
-| revoke <platform> <user-id> | Revoke a user's access. |
-| clear-pending | Clear pending pairing codes. |
+| `list` | نمایش کاربران در انتظار و تأیید شده. |
+| `approve <platform> <code>` | تأیید کد جفت‌سازی. |
+| `revoke <platform> <user-id>` | لغو دسترسی کاربر. |
+| `clear-pending` | پاک کردن کدهای جفت‌سازی در انتظار. |
 
 `list`
 `approve <platform> <code>`
 `revoke <platform> <user-id>`
 `clear-pending`
 
-## hermes skills​
+## `hermes skills`​
 
 `hermes skills`
 
@@ -1764,26 +1827,26 @@ hermes pairing <list|approve|revoke|clear-pending>
 hermes skills <subcommand>
 ```
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| browse | Paginated browser for skill registries. |
-| search | Search skill registries. |
-| install | Install a skill. |
-| inspect | Preview a skill without installing it. |
-| list | List installed skills. |
-| check | Check installed hub skills for upstream updates. |
-| update | Reinstall hub skills with upstream changes when available. |
-| audit | Re-scan installed hub skills. |
-| uninstall | Remove a hub-installed skill. |
-| reset | Un-stick a bundled skill flagged asuser_modifiedby clearing its manifest entry. With--restore, also replaces the user copy with the bundled version. |
-| opt-out | Stop bundled skills from being seeded into the active profile. Writes a.no-bundled-skillsmarker so the installer,hermes update, and any sync skip bundled-skill seeding. Safe by default — nothing on disk is touched. With--remove, also deletes already-present bundled skills that areunmodified(user-edited, hub-installed, and hand-written skills are never removed; previews and confirms first,--yesto skip). |
-| opt-in | Undoopt-outby removing the.no-bundled-skillsmarker so bundled skills are seeded again on the nexthermes update. With--sync, re-seed immediately. |
-| publish | Publish a skill to a registry. |
-| snapshot | Export/import skill configurations. |
-| tap | Manage custom skill sources. |
-| config | Interactive enable/disable configuration for skills by platform. |
+| `browse` | مرورگر صفحه‌بندی شده برای رجیستری مهارت‌ها. |
+| `search` | جستجوی رجیستری مهارت‌ها. |
+| `install` | نصب یک مهارت. |
+| `inspect` | پیش‌نمایش یک مهارت بدون نصب. |
+| `list` | فهرست مهارت‌های نصب شده. |
+| `check` | بررسی مهارت‌های hub نصب شده برای به‌روزرسانی upstream. |
+| `update` | نصب مجدد مهارت‌های hub با تغییرات upstream در صورت موجود بودن. |
+| `audit` | اسکن مجدد مهارت‌های hub نصب شده. |
+| `uninstall` | حذف یک مهارت نصب شده توسط hub. |
+| `reset` | لغو چسبندگی یک مهارت bundle علامت‌گذاری شده به عنوان `user_modified` با پاک کردن ورودی manifest آن. با `--restore` همچنین نسخه کاربر را با نسخه bundle جایگزین می‌کند. |
+| `opt-out` | جلوگیری از بذرپاشی مهارت‌های bundle در پروفایل فعال. یک نشانگر `.no-bundled-skills` می‌نویسد تا نصاب، `hermes update` و هر همگام‌سازی بذرپاشی مهارت‌های bundle را رد کنند. به طور پیش‌فرض ایمن — چیزی روی دیسک لمس نمی‌شود. با `--remove` همچنین مهارت‌های bundle از قبل موجود `unmodified` را حذف می‌کند (مهارت‌های ویرایش شده توسط کاربر، نصب شده توسط hub و دست‌نوشته هرگز حذف نمی‌شوند؛ ابتدا پیش‌نمایش و تأیید می‌کند، `--yes` برای رد کردن). |
+| `opt-in` | برگرداندن `opt-out` با حذف نشانگر `.no-bundled-skills` تا مهارت‌های bundle در `hermes update` بعدی دوباره بذرپاشی شوند. با `--sync` بلافاصله دوباره بذرپاشی کنید. |
+| `publish` | انتشار یک مهارت در رجیستری. |
+| `snapshot` | خروجی/ورودی پیکربندی مهارت‌ها. |
+| `tap` | مدیریت منابع مهارت سفارشی. |
+| `config` | فعال/غیرفعال کردن تعاملی پیکربندی مهارت‌ها به ازای هر پلتفرم. |
 
 `browse`
 `search`
@@ -1812,20 +1875,37 @@ Subcommands:
 `tap`
 `config`
 
-Common examples:
+مثال‌های رایج:
 
 ```
-hermes skills browsehermes skills browse --source officialhermes skills search react --source skills-shhermes skills search https://mintlify.com/docs --source well-knownhermes skills inspect official/security/1passwordhermes skills inspect skills-sh/vercel-labs/json-render/json-render-reacthermes skills install official/migration/openclaw-migrationhermes skills install skills-sh/anthropics/skills/pdf --forcehermes skills install https://sharethis.chat/SKILL.md                     # Direct URL (single-file SKILL.md)hermes skills install https://example.com/SKILL.md --name my-skill        # Override name when frontmatter has nonehermes skills checkhermes skills updatehermes skills confighermes skills reset google-workspacehermes skills reset google-workspace --restore --yeshermes skills opt-out                  # stop future bundled-skill seeding (nothing deleted)hermes skills opt-out --remove --yes   # also delete UNMODIFIED bundled skillshermes skills opt-in --sync            # undo: remove marker and re-seed now
+hermes skills browse
+hermes skills browse --source official
+hermes skills search react --source skills-sh
+hermes skills search https://mintlify.com/docs --source well-known
+hermes skills inspect official/security/1password
+hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
+hermes skills install official/migration/openclaw-migration
+hermes skills install skills-sh/anthropics/skills/pdf --force
+hermes skills install https://sharethis.chat/SKILL.md                     # Direct URL (single-file SKILL.md)
+hermes skills install https://example.com/SKILL.md --name my-skill        # Override name when frontmatter has none
+hermes skills check
+hermes skills update
+hermes skills config
+hermes skills reset google-workspace
+hermes skills reset google-workspace --restore --yes
+hermes skills opt-out                  # stop future bundled-skill seeding (nothing deleted)
+hermes skills opt-out --remove --yes   # also delete UNMODIFIED bundled skills
+hermes skills opt-in --sync            # undo: remove marker and re-seed now
 ```
 
-Notes:
+یادداشت‌ها:
 
-- --forcecan override non-dangerous policy blocks for third-party/community skills.
-- --forcedoes not override adangerousscan verdict.
-- --source skills-shsearches the publicskills.shdirectory.
-- --source well-knownlets you point Hermes at a site exposing/.well-known/skills/index.json.
-- --source browse-shsearchesbrowse.sh's catalog of 200+ site-specific browser-automation skills. Identifiers look likebrowse-sh/airbnb.com/search-listings-ddgioa.
-- Passing anhttp(s)://…/*.mdURL installs a single-file SKILL.md directly. When frontmatter has noname:and the URL slug isn't a valid identifier, an interactive terminal prompts for a name; non-interactive surfaces (/skills installinside the TUI, gateway platforms) require--name <x>instead.
+- `--force` می‌تواند بلوک‌های سیاست غیرخطرناک برای مهارت‌های شخص ثالث/جامعه را override کند.
+- `--force` حکم اسکن `dangerous` را override نمی‌کند.
+- `--source skills-sh` فهرست عمومی `skills.sh` را جستجو می‌کند.
+- `--source well-known` به شما اجازه می‌دهد Hermes را به سایتی که `/.well-known/skills/index.json` را نمایان می‌کند اشاره کنید.
+- `--source browse-sh` کاتالوگ ۲۰۰+ مهارت خودکارسازی مرورگر اختصاصی سایت `browse.sh` را جستجو می‌کند. شناسه‌ها شبیه `browse-sh/airbnb.com/search-listings-ddgioa` هستند.
+- ارسال یک URL `http(s)://…/*.md` مستقیماً یک فایل تک SKILL.md نصب می‌کند. وقتی frontmatter `name:` ندارد و slug URL شناسه معتبری نیست، ترمینال تعاملی برای نام درخواست می‌کند؛ سطوح غیرتعاملی (`/skills install` در TUI، پلتفرم‌های گیت‌وی) به `--name <x>` نیاز دارند.
 
 `--force`
 `--force`
@@ -1842,7 +1922,7 @@ Notes:
 `/skills install`
 `--name <x>`
 
-## hermes bundles​
+## `hermes bundles`​
 
 `hermes bundles`
 
@@ -1850,21 +1930,20 @@ Notes:
 hermes bundles <subcommand>
 ```
 
-Skill bundles group several skills under one/<bundle-name>slash command. Invoking the bundle loads every referenced skill into a single combined user message. Storage:~/.hermes/skill-bundles/<slug>.yaml. SeeSkill Bundlesfor the YAML schema and behavior.
+بسته‌های مهارت چندین مهارت را تحت یک دستور اسلش `/<bundle-name>` گروه‌بندی می‌کنند. فراخوانی بسته همه مهارت‌های ارجاع شده را در یک پیام کاربر ترکیبی واحد بارگذاری می‌کند. ذخیره‌سازی: `~/.hermes/skill-bundles/<slug>.yaml`. برای اسکیما YAML و رفتار به [Skill Bundles](/docs/user-guide/features/skills#skill-bundles) مراجعه کنید.
 
 `/<bundle-name>`
 `~/.hermes/skill-bundles/<slug>.yaml`
-[Skill Bundles](/docs/user-guide/features/skills#skill-bundles)
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list | List installed bundles (default when no subcommand given) |
-| show <name> | Show one bundle's name, description, skills, and file path |
-| create <name> | Create a new bundle. Pass--skill <id>(repeat) or omit for interactive entry.--description,--instruction,--forceavailable. |
-| delete <name> | Remove a bundle file |
-| reload | Re-scan~/.hermes/skill-bundles/and report added/removed bundles |
+| `list` | فهرست بسته‌های نصب شده (پیش‌فرض وقتی دستور زیر سطحی داده نشده) |
+| `show <name>` | نمایش نام، توصیف، مهارت‌ها و مسیر فایل یک بسته |
+| `create <name>` | ایجاد بسته جدید. `--skill <id>` (تکرار) ارسال کنید یا برای ورود تعاملی حذف کنید. `--description`، `--instruction`، `--force` موجود. |
+| `delete <name>` | حذف فایل بسته |
+| `reload` | اسکن مجدد `~/.hermes/skill-bundles/` و گزارش بسته‌های اضافه/حذف شده |
 
 `list`
 `show <name>`
@@ -1877,18 +1956,25 @@ Subcommands:
 `reload`
 `~/.hermes/skill-bundles/`
 
-Examples:
+مثال‌ها:
 
 ```
-hermes bundles create backend-dev \  --skill github-code-review \  --skill test-driven-development \  --skill github-pr-workflow \  -d "Backend feature work"hermes bundles listhermes bundles show backend-devhermes bundles delete backend-dev
+hermes bundles create backend-dev \
+  --skill github-code-review \
+  --skill test-driven-development \
+  --skill github-pr-workflow \
+  -d "Backend feature work"
+hermes bundles list
+hermes bundles show backend-dev
+hermes bundles delete backend-dev
 ```
 
-In a chat session,/bundleslists installed bundles and/<bundle-name>loads one.
+در یک نشست چت، `/bundles` بسته‌های نصب شده را فهرست می‌کند و `/<bundle-name>` یکی را بارگذاری می‌کند.
 
 `/bundles`
 `/<bundle-name>`
 
-## hermes curator​
+## `hermes curator`​
 
 `hermes curator`
 
@@ -1896,27 +1982,27 @@ In a chat session,/bundleslists installed bundles and/<bundle-name>loads one.
 hermes curator <subcommand>
 ```
 
-The curator is an auxiliary-model background task that periodically reviews agent-created skills, prunes stale ones, consolidates overlaps, and archives obsolete skills. Bundled and hub-installed skills are never touched. Archives are recoverable; auto-deletion never happens.
+curator یک تسک پس‌زمینه مدل کمکی است که دوره‌ای مهارت‌های ایجاد شده توسط agent را بررسی، مهارت‌های منقضی را هرس، همپوشانی‌ها را ادغام و مهارت‌های منسوخ را آرشیو می‌کند. مهارت‌های bundle و hub نصب شده هرگز لمس نمی‌شوند. آرشیوها قابل بازیابی هستند؛ حذف خودکار هرگز اتفاق نمی‌افتد.
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| status | Show curator status and skill stats |
-| run | Trigger a curator review now (blocks until the LLM pass finishes) |
-| run --background | Start the LLM pass in a background thread and return immediately |
-| run --dry-run | Preview only — produce the review report with no mutations |
-| backup | Take a manual tar.gz snapshot of~/.hermes/skills/(curator also snapshots automatically before every real run) |
-| rollback | Restore~/.hermes/skills/from a snapshot (defaults to newest) |
-| rollback --list | List available snapshots |
-| rollback --id <ts> | Restore a specific snapshot by id |
-| rollback -y | Skip the confirmation prompt |
-| pause | Pause the curator until resumed |
-| resume | Resume a paused curator |
-| pin <skill> | Pin a skill so the curator never auto-transitions it |
-| unpin <skill> | Unpin a skill |
-| restore <skill> | Restore an archived skill |
-| archive <skill> | Archive a skill manually |
-| prune | Manually prune skills the curator would normally clean up |
-| list-archived | List archived skills (recoverable viarestore) |
+| `status` | نمایش وضعیت curator و آمار مهارت‌ها |
+| `run` | فعال کردن بررسی curator اکنون (تا پایان عبور LLM بلاک می‌کند) |
+| `run --background` | شروع عبور LLM در thread پس‌زمینه و برگشت فوری |
+| `run --dry-run` | فقط پیش‌نمایش — تولید گزارش بررسی بدون تغییرات |
+| `backup` | گرفتن اسناپ‌شات دستی tar.gz از `~/.hermes/skills/` (curator همچنین قبل از هر اجرای واقعی به طور خودکار اسناپ‌شات می‌گیرد) |
+| `rollback` | بازیابی `~/.hermes/skills/` از اسناپ‌شات (پیش‌فرض جدیدترین) |
+| `rollback --list` | فهرست اسناپ‌شات‌های موجود |
+| `rollback --id <ts>` | بازیابی یک اسناپ‌شات خاص با id |
+| `rollback -y` | رد کردن درخواست تأیید |
+| `pause` | توقف curator تا از سر گرفته شود |
+| `resume` | از سرگیری curator متوقف شده |
+| `pin <skill>` | ثابت کردن مهارت تا curator هرگز آن را به طور خودکار transition ندهد |
+| `unpin <skill>` | رفع ثبات مهارت |
+| `restore <skill>` | بازیابی یک مهارت آرشیو شده |
+| `archive <skill>` | آرشیو دستی یک مهارت |
+| `prune` | هرس دستی مهارت‌هایی که curator معمولاً پاکسازی می‌کند |
+| `list-archived` | فهرست مهارت‌های آرشیو شده (قابل بازیابی از طریق `restore`) |
 
 `status`
 `run`
@@ -1939,34 +2025,34 @@ The curator is an auxiliary-model background task that periodically reviews agen
 `list-archived`
 `restore`
 
-On a fresh install the first scheduled pass is deferred by one fullinterval_hours(7 days by default) — the gateway will not curate immediately on the first tick afterhermes update. Usehermes curator run --dry-runto preview before that happens.
+در یک نصب جدید، اولین عبور زمان‌بندی شده به اندازه یک `interval_hours` کامل (به طور پیش‌فرض ۷ روز) به تعویق می‌افتد — گیت‌وی بلافاصله پس از اولین تیک پس از `hermes update` ممیزی نمی‌کند. قبل از آن از `hermes curator run --dry-run` برای پیش‌نمایش استفاده کنید.
 
 `interval_hours`
 `hermes update`
 `hermes curator run --dry-run`
 
-SeeCuratorfor behavior and config.
+برای رفتار و پیکربندی به [Curator](/docs/user-guide/features/curator) مراجعه کنید.
 
-[Curator](/docs/user-guide/features/curator)
-
-## hermes moa​
+## `hermes moa`​
 
 `hermes moa`
 
-Configure named Mixture of Agents presets. Presets appear as selectable models under aMixture of Agentsprovider in every model picker;/moa <prompt>runs one prompt through the default preset.
+پیکربندی presetهای نام‌دار Mixture of Agents. presetها به عنوان مدل‌های قابل انتخاب تحت ارائه‌دهنده `Mixture of Agents` در هر انتخابگر مدل ظاهر می‌شوند؛ `/moa <prompt>` یک پرامپت را از طریق preset پیش‌فرض اجرا می‌کند.
 
 `Mixture of Agents`
 `/moa <prompt>`
 
 ```
-hermes moa listhermes moa configure [name]hermes moa delete <name>
+hermes moa list
+hermes moa configure [name]
+hermes moa delete <name>
 ```
 
-hermes moa configurereuses Hermes' provider → model picker for each reference model and the aggregator. A preset is an execution-mode configuration, not a primary model or provider.
+`hermes moa configure` از انتخابگر ارائه‌دهنده → مدل Hermes برای هر مدل مرجع و aggregator استفاده مجدد می‌کند. preset یک پیکربندی حالت اجرا است، نه یک مدل یا ارائه‌دهنده اصلی.
 
 `hermes moa configure`
 
-## hermes fallback​
+## `hermes fallback`​
 
 `hermes fallback`
 
@@ -1974,14 +2060,14 @@ hermes moa configurereuses Hermes' provider → model picker for each reference 
 hermes fallback <subcommand>
 ```
 
-Manage the fallback provider chain. Fallback providers are tried in order when the primary model fails with rate-limit, overload, or connection errors.
+مدیریت زنجیره ارائه‌دهنده fallback. ارائه‌دهندگان fallback به ترتیب وقتی مدل اصلی با خطای rate-limit، overload یا اتصال ناموفق باشد امتحان می‌شوند.
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list(alias:ls) | Show the current fallback chain (default when no subcommand) |
-| add | Pick a provider + model (same picker ashermes model) and append to the chain |
-| remove(alias:rm) | Pick an entry to delete from the chain |
-| clear | Remove all fallback entries |
+| `list` (نام مستعار: `ls`) | نمایش زنجیره fallback فعلی (پیش‌فرض وقتی دستور زیر سطحی نیست) |
+| `add` | انتخاب ارائه‌دهنده + مدل (همان انتخابگر `hermes model`) و اضافه کردن به انتهای زنجیره |
+| `remove` (نام مستعار: `rm`) | انتخاب یک ورودی برای حذف از زنجیره |
+| `clear` | حذف همه ورودی‌های fallback |
 
 `list`
 `ls`
@@ -1991,11 +2077,9 @@ Manage the fallback provider chain. Fallback providers are tried in order when t
 `rm`
 `clear`
 
-SeeFallback Providers.
+به [Fallback Providers](/docs/user-guide/features/fallback-providers) مراجعه کنید.
 
-[Fallback Providers](/docs/user-guide/features/fallback-providers)
-
-## hermes hooks​
+## `hermes hooks`​
 
 `hermes hooks`
 
@@ -2003,17 +2087,17 @@ SeeFallback Providers.
 hermes hooks <subcommand>
 ```
 
-Inspect shell-script hooks declared in~/.hermes/config.yaml, test them against synthetic payloads, and manage the first-use consent allowlist at~/.hermes/shell-hooks-allowlist.json.
+بررسی هوک‌های اسکریپت shell اعلام شده در `~/.hermes/config.yaml`، آزمایش آنها با payloadهای مصنوعی و مدیریت لیست مجاز consent استفاده اول در `~/.hermes/shell-hooks-allowlist.json`.
 
 `~/.hermes/config.yaml`
 `~/.hermes/shell-hooks-allowlist.json`
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list(alias:ls) | List configured hooks with matcher, timeout, and consent status |
-| test <event> | Fire every hook matching<event>against a synthetic payload |
-| revoke(aliases:remove,rm) | Remove a command's allowlist entries (takes effect on next restart) |
-| doctor | Check each configured hook: exec bit, allowlist, mtime drift, JSON validity, and synthetic run timing |
+| `list` (نام مستعار: `ls`) | فهرست هوک‌های پیکربندی شده با matcher، timeout و وضعیت consent |
+| `test <event>` | فعال کردن هر هوک مطابق `<event>` علیه یک payload مصنوعی |
+| `revoke` (نام مستعارها: `remove`, `rm`) | حذف ورودی‌های لیست مجاز یک دستور (در راه‌اندازی مجدد بعدی اعمال می‌شود) |
+| `doctor` | بررسی هر هوک پیکربندی شده: بیت exec، لیست مجاز، انحراف mtime، اعتبار JSON و زمان‌بندی اجرای مصنوعی |
 
 `list`
 `ls`
@@ -2024,11 +2108,9 @@ Inspect shell-script hooks declared in~/.hermes/config.yaml, test them against s
 `rm`
 `doctor`
 
-SeeHooksfor event signatures and payload shapes.
+برای امضاهای رویداد و اشکال payload به [Hooks](/docs/user-guide/features/hooks) مراجعه کنید.
 
-[Hooks](/docs/user-guide/features/hooks)
-
-## hermes memory​
+## `hermes memory`​
 
 `hermes memory`
 
@@ -2036,27 +2118,27 @@ SeeHooksfor event signatures and payload shapes.
 hermes memory <subcommand>
 ```
 
-Set up and manage external memory provider plugins. Available providers: honcho, openviking, mem0, hindsight, holographic, retaindb, byterover, supermemory. Only one external provider can be active at a time. Built-in memory (MEMORY.md/USER.md) is always active.
+راه‌اندازی و مدیریت pluginهای ارائه‌دهنده حافظه خارجی. ارائه‌دهندگان موجود: honcho، openviking، mem0، hindsight، holographic، retaindb، byterover، supermemory. فقط یک ارائه‌دهنده خارجی می‌تواند در یک زمان فعال باشد. حافظه داخلی (`MEMORY.md`/`USER.md`) همیشه فعال است.
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| setup | Interactive provider selection and configuration. |
-| status | Show current memory provider config. |
-| off | Disable external provider (built-in only). |
+| `setup` | انتخاب و پیکربندی تعاملی ارائه‌دهنده. |
+| `status` | نمایش پیکربندی ارائه‌دهنده حافظه فعلی. |
+| `off` | غیرفعال کردن ارائه‌دهنده خارجی (فقط داخلی). |
 
 `setup`
 `status`
 `off`
 
-When an external memory provider is active, it may register its own top-levelhermes <provider>command for provider-specific management (e.g.hermes honchowhen Honcho is active). Inactive providers do not expose their subcommands. Runhermes --helpto see what's currently wired in.
+وقتی یک ارائه‌دهنده حافظه خارجی فعال باشد، ممکن است دستور سطح بالای اختصاصی خود `hermes <provider>` را برای مدیریت اختصاصی ارائه‌دهنده ثبت کند (مثلاً `hermes honcho` وقتی Honcho فعال است). ارائه‌دهندگان غیرفعال دستورات زیر سطح خود را نمایان نمی‌کنند. `hermes --help` را اجرا کنید تا ببینید چه چیزی اکنون متصل است.
 
 `hermes <provider>`
 `hermes honcho`
 `hermes --help`
 
-## hermes acp​
+## `hermes acp`​
 
 `hermes acp`
 
@@ -2064,26 +2146,24 @@ When an external memory provider is active, it may register its own top-levelher
 hermes acp
 ```
 
-Starts Hermes as an ACP (Agent Client Protocol) stdio server for editor integration.
+Hermes را به عنوان سرور stdio ACP (Agent Client Protocol) برای ادغام ویرایشگر شروع می‌کند.
 
-Related entrypoints:
+نقاط ورود مرتبط:
 
 ```
-hermes-acppython -m acp_adapter
+hermes-acp
+python -m acp_adapter
 ```
 
-Install support first:
+ابتدا پشتیبانی نصب کنید:
 
 ```
 cd ~/.hermes/hermes-agent && uv pip install -e '.[acp]'
 ```
 
-SeeACP Editor IntegrationandACP Internals.
+به [ACP Editor Integration](/docs/user-guide/features/acp) و [ACP Internals](/docs/developer-guide/acp-internals) مراجعه کنید.
 
-[ACP Editor Integration](/docs/user-guide/features/acp)
-[ACP Internals](/docs/developer-guide/acp-internals)
-
-## hermes mcp​
+## `hermes mcp`​
 
 `hermes mcp`
 
@@ -2091,20 +2171,20 @@ SeeACP Editor IntegrationandACP Internals.
 hermes mcp <subcommand>
 ```
 
-Manage MCP (Model Context Protocol) server configurations and run Hermes as an MCP server.
+مدیریت پیکربندی سرورهای MCP (Model Context Protocol) و اجرای Hermes به عنوان یک سرور MCP.
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| (none)orpicker | Interactive catalog picker — browse Nous-approved MCPs and install/enable/disable. |
-| catalog | List Nous-approved MCPs (plain text, scriptable). |
-| install <name> | Install a catalog entry (e.g.hermes mcp install n8n). |
-| serve [-v|--verbose] | Run Hermes as an MCP server — expose conversations to other agents. |
-| add <name> [--url URL] [--command CMD] [--auth oauth|header] [--args ...] | Add a custom MCP server with automatic tool discovery.--argspasses the remaining argv to the stdio command, so put it last. |
-| remove <name>(alias:rm) | Remove an MCP server from config. |
-| list(alias:ls) | List configured MCP servers. |
-| test <name> | Test connection to an MCP server. |
-| configure <name>(alias:config) | Toggle tool selection for a server. |
-| login <name> | Force re-authentication for an OAuth-based MCP server. |
+| (هیچ) یا `picker` | انتخابگر تعاملی کاتالوگ — مرور MCPهای تأیید شده توسط Nous و نصب/فعال/غیرفعال. |
+| `catalog` | فهرست MCPهای تأیید شده توسط Nous (متن ساده، قابل اسکریپت‌نویسی). |
+| `install <name>` | نصب یک ورودی کاتالوگ (مثلاً `hermes mcp install n8n`). |
+| `serve [-v\|--verbose]` | اجرای Hermes به عنوان سرور MCP — نمایان کردن مکالمات برای agentهای دیگر. |
+| `add <name> [--url URL] [--command CMD] [--auth oauth\|header] [--args ...]` | اضافه کردن سرور MCP سفارشی با کشف خودکار ابزار. `--args` باقی argv را به دستور stdio ارسال می‌کند، بنابراین آن را آخر قرار دهید. |
+| `remove <name>` (نام مستعار: `rm`) | حذف سرور MCP از پیکربندی. |
+| `list` (نام مستعار: `ls`) | فهرست سرورهای MCP پیکربندی شده. |
+| `test <name>` | آزمایش اتصال به یک سرور MCP. |
+| `configure <name>` (نام مستعار: `config`) | جابجایی انتخاب ابزار برای یک سرور. |
+| `login <name>` | اجبار به احراز هویت مجدد برای سرور MCP مبتنی بر OAuth. |
 
 `picker`
 `catalog`
@@ -2122,13 +2202,9 @@ Manage MCP (Model Context Protocol) server configurations and run Hermes as an M
 `config`
 `login <name>`
 
-SeeMCP Config Reference,Use MCP with Hermes, andMCP Server Mode.
+به [MCP Config Reference](/docs/reference/mcp-config-reference)، [Use MCP with Hermes](/docs/guides/use-mcp-with-hermes) و [MCP Server Mode](/docs/user-guide/features/mcp#running-hermes-as-an-mcp-server) مراجعه کنید.
 
-[MCP Config Reference](/docs/reference/mcp-config-reference)
-[Use MCP with Hermes](/docs/guides/use-mcp-with-hermes)
-[MCP Server Mode](/docs/user-guide/features/mcp#running-hermes-as-an-mcp-server)
-
-## hermes plugins​
+## `hermes plugins`​
 
 `hermes plugins`
 
@@ -2136,21 +2212,22 @@ SeeMCP Config Reference,Use MCP with Hermes, andMCP Server Mode.
 hermes plugins [subcommand]
 ```
 
-Unified plugin management — general plugins, memory providers, and context engines in one place. Runninghermes pluginswith no subcommand opens a composite interactive screen with two sections:
+مدیریت یکپارچه plugin — pluginهای عمومی، ارائه‌دهندگان حافظه و موتورهای context در یک مکان. اجرای `hermes plugins` بدون دستور زیر سطح یک صفحه تعاملی ترکیبی با دو بخش باز می‌کند:
 
 `hermes plugins`
-- General Plugins— multi-select checkboxes to enable/disable installed plugins
-- Provider Plugins— single-select configuration for Memory Provider and Context Engine. Press ENTER on a category to open a radio picker.
 
-| Subcommand | Description |
+- **Pluginهای عمومی** — چک‌باکسهای انتخاب چندگانه برای فعال/غیرفعال کردن pluginهای نصب شده
+- **Pluginهای ارائه‌دهنده** — پیکربندی تک انتخابی برای ارائه‌دهنده حافظه و موتور context. ENTER را روی یک دسته فشار دهید تا انتخابگر رادیویی باز شود.
+
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| (none) | Composite interactive UI — general plugin toggles + provider plugin configuration. |
-| install <identifier> [--force] | Install a plugin from a Git URL orowner/repo. |
-| update <name> | Pull latest changes for an installed plugin. |
-| remove <name>(aliases:rm,uninstall) | Remove an installed plugin. |
-| enable <name> | Enable a disabled plugin. |
-| disable <name> | Disable a plugin without removing it. |
-| list(alias:ls) | List installed plugins with enabled/disabled status. |
+| (هیچ) | UI تعاملی ترکیبی — کلیدهای toggle plugin عمومی + پیکربندی plugin ارائه‌دهنده. |
+| `install <identifier> [--force]` | نصب plugin از یک URL Git یا `owner/repo`. |
+| `update <name>` | کشیدن آخرین تغییرات برای plugin نصب شده. |
+| `remove <name>` (نام مستعارها: `rm`, `uninstall`) | حذف plugin نصب شده. |
+| `enable <name>` | فعال کردن plugin غیرفعال. |
+| `disable <name>` | غیرفعال کردن plugin بدون حذف آن. |
+| `list` (نام مستعار: `ls`) | فهرست pluginهای نصب شده با وضعیت فعال/غیرفعال. |
 
 `install <identifier> [--force]`
 `owner/repo`
@@ -2163,27 +2240,25 @@ Unified plugin management — general plugins, memory providers, and context eng
 `list`
 `ls`
 
-Provider plugin selections are saved toconfig.yaml:
+انتخاب‌های plugin ارائه‌دهنده در `config.yaml` ذخیره می‌شوند:
 
 `config.yaml`
-- memory.provider— active memory provider (empty = built-in only)
-- context.engine— active context engine ("compressor"= built-in default)
+
+- `memory.provider` — ارائه‌دهنده حافظه فعال (خالی = فقط داخلی)
+- `context.engine` — موتور context فعال (`"compressor"` = پیش‌فرض داخلی)
 
 `memory.provider`
 `context.engine`
 `"compressor"`
 
-General plugin disabled list is stored inconfig.yamlunderplugins.disabled.
+لیست غیرفعال plugin عمومی در `config.yaml` تحت `plugins.disabled` ذخیره می‌شود.
 
 `config.yaml`
 `plugins.disabled`
 
-SeePluginsandBuild a Hermes Plugin.
+به [Plugins](/docs/user-guide/features/plugins) و [Build a Hermes Plugin](/docs/developer-guide/plugins) مراجعه کنید.
 
-[Plugins](/docs/user-guide/features/plugins)
-[Build a Hermes Plugin](/docs/developer-guide/plugins)
-
-## hermes tools​
+## `hermes tools`​
 
 `hermes tools`
 
@@ -2191,17 +2266,15 @@ SeePluginsandBuild a Hermes Plugin.
 hermes tools [--summary]
 ```
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --summary | Print the current enabled-tools summary and exit. |
+| `--summary` | چاپ خلاصه ابزارهای فعال فعلی و خروج. |
 
 `--summary`
 
-Without--summary, this launches the interactive per-platform tool configuration UI.
+بدون `--summary`، این UI پیکربندی ابزار به ازای هر پلتفرم تعاملی را راه‌اندازی می‌کند.
 
-`--summary`
-
-## hermes computer-use​
+## `hermes computer-use`​
 
 `hermes computer-use`
 
@@ -2209,13 +2282,13 @@ Without--summary, this launches the interactive per-platform tool configuration 
 hermes computer-use <subcommand>
 ```
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| install | Run the upstream cua-driver installer (macOS, Windows, and Linux). |
-| install --upgrade | Re-run the installer even if cua-driver is already on PATH. The upstream script always pulls the latest release, so this performs an in-place upgrade. |
-| status | Print whethercua-driveris on$PATHand which version is installed. |
+| `install` | اجرای نصاب upstream cua-driver (macOS، Windows و Linux). |
+| `install --upgrade` | اجرای مجدد نصاب حتی اگر cua-driver از قبل در PATH باشد. اسکریپت upstream همیشه آخرین انتشار را می‌کشد، بنابراین این ارتقای در جا انجام می‌دهد. |
+| `status` | چاپ اینکه آیا cua-driver در `$PATH` است و کدام نسخه نصب شده. |
 
 `install`
 `install --upgrade`
@@ -2223,24 +2296,19 @@ Subcommands:
 `cua-driver`
 `$PATH`
 
-hermes computer-use installis the stable entry point for installing thecua-driverbinary used by thecomputer_usetoolset. It runs the same upstream installer thathermes toolsinvokes when you first enable Computer Use, so it's safe
-to use for re-running the install if the toolset toggle didn't trigger
-it (for example, on returning-user setups).
+`hermes computer-use install` نقطه ورود پایدار برای نصب باینری `cua-driver` که توسط ابزار `computer_use` استفاده می‌شود. همان نصاب upstream را اجرا می‌کند که `hermes tools` هنگام اولین فعال کردن Computer Use فراخوانی می‌کند، بنابراین برای اجرای مجدد نصب در صورتی که toggle ابزار آن را فعال نکرده (مثلاً در راه‌اندازی‌های کاربر بازگشتی) ایمن است.
 
 `hermes computer-use install`
 [cua-driver](https://github.com/trycua/cua)
 `computer_use`
 `hermes tools`
 
-hermes updateautomatically re-runs the upstream installer at the end
-of the update if cua-driver is on PATH, so most users will not need to
-call--upgrademanually. Use it when upstream ships a fix you want
-right now without waiting for the next Hermes update.
+`hermes update` به طور خودکار در پایان به‌روزرسانی نصب upstream را مجدداً اجرا می‌کند اگر `cua-driver` در PATH باشد، بنابراین اکثر کاربران نیازی به فراخوانی دستی `--upgrade` نخواهند داشت. از آن استفاده کنید وقتی upstream رفع خطایی را منتشر می‌کند که همین الان می‌خواهید بدون انتظار برای به‌روزرسانی بعدی Hermes.
 
 `hermes update`
 `--upgrade`
 
-## hermes pets​
+## `hermes pets`​
 
 `hermes pets`
 
@@ -2248,20 +2316,18 @@ right now without waiting for the next Hermes update.
 hermes pets <list|install|select|show|off|scale|remove|doctor>
 ```
 
-Petdexis a public gallery of animated sprite pets for coding agents. Install one and Hermes shows it reacting to agent activity across the CLI, TUI, and desktop app.
+[Petdex](https://github.com/crafter-ststation/petdex) یک گالری عمومی از حیوانات خانگی اسپرایت متحرک برای agentهای کدنویسی است. یکی را نصب کنید و Hermes آن را واکنش نشان داده به فعالیت agent در CLI، TUI و اپ دسکتاپ نمایش می‌دهد.
 
-[Petdex](https://github.com/crafter-station/petdex)
-
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list | Browse the petdex gallery. |
-| install | Install a pet from the gallery. |
-| select | Set the active pet (writesdisplay.pet.*). |
-| show | Animate the active pet in the terminal. |
-| off | Disable the pet display. |
-| scale | Resize the pet everywhere (display.pet.scale). |
-| remove | Delete an installed pet. |
-| doctor | Check pet setup + terminal graphics support. |
+| `list` | مرور گالری petdex. |
+| `install` | نصب حیوان خانگی از گالری. |
+| `select` | تنظیم حیوان خانگی فعال (در `display.pet.*` می‌نویسد). |
+| `show` | متحرک کردن حیوان خانگی فعال در ترمینال. |
+| `off` | غیرفعال کردن نمایش حیوان خانگی. |
+| `scale` | تغییر اندازه حیوان خانگی در همه جا (`display.pet.scale`). |
+| `remove` | حذف حیوان خانگی نصب شده. |
+| `doctor` | بررسی راه‌اندازی حیوان خانگی + پشتیبانی گرافیک ترمینال. |
 
 `list`
 `install`
@@ -2274,12 +2340,11 @@ Petdexis a public gallery of animated sprite pets for coding agents. Install one
 `remove`
 `doctor`
 
-You can also generate a brand-new pet from a text description with the/hatchslash command. SeePets.
+همچنین می‌توانید یک حیوان خانگی کاملاً جدید از یک توصیف متنی با دستور اسلش `/hatch` تولید کنید. به [Pets](/docs/user-guide/features/pets) مراجعه کنید.
 
 `/hatch`
-[Pets](/docs/user-guide/features/pets)
 
-## hermes sessions​
+## `hermes sessions`​
 
 `hermes sessions`
 
@@ -2287,18 +2352,18 @@ You can also generate a brand-new pet from a text description with the/hatchslas
 hermes sessions <subcommand>
 ```
 
-Subcommands:
+دستورات زیر سطح:
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list | List recent sessions. |
-| browse | Interactive session picker with search and resume. |
-| export <output> [--session-id ID] | Export sessions to JSONL. |
-| delete <session-id> | Delete one session. |
-| prune | Delete sessions matching filters: time bounds--older-than/--newer-than/--before/--after(durations like5h/2d, bare days, or ISO timestamps); attributes--source,--title,--model,--provider,--branch,--end-reason,--user,--chat-id,--chat-type,--cwd; numeric bounds--min/--max-messages,--min/--max-tokens,--min/--max-cost,--min/--max-tool-calls; plus--include-archived,--dry-run,--yes. Default: older than 90 days. |
-| archive | Bulk-archive (soft-hide, no deletion) sessions matching the same filters asprune. Requires at least one filter. |
-| stats | Show session-store statistics. |
-| rename <session-id> <title> | Set or change a session title. |
+| `list` | فهرست نشست‌های اخیر. |
+| `browse` | انتخابگر تعاملی نشست با جستجو و از سرگیری. |
+| `export <output> [--session-id ID]` | خروجی نشست‌ها به JSONL. |
+| `delete <session-id>` | حذف یک نشست. |
+| `prune` | حذف نشست‌های مطابق فیلترها: محدودیت‌های زمانی `--older-than`/`--newer-than`/`--before`/`--after` (مانند `5h`/`2d`، روزهای ساده یا تمبرهای ISO)؛ ویژگی‌ها `--source`، `--title`، `--model`، `--provider`، `--branch`، `--end-reason`، `--user`، `--chat-id`، `--chat-type`، `--cwd`؛ محدودیت‌های عددی `--min`/`--max-messages`، `--min`/`--max-tokens`، `--min`/`--max-cost`، `--min`/`--max-tool-calls`؛ به علاوه `--include-archived`، `--dry-run`، `--yes`. پیش‌فرض: قدیمی‌تر از ۹۰ روز. |
+| `archive` | آرشیو انبوه (مخفی کردن نرم، بدون حذف) نشست‌های مطابق همان فیلترهای `prune`. حداقل یک فیلتر نیاز دارد. |
+| `stats` | نمایش آمار فروشگاه نشست. |
+| `rename <session-id> <title>` | تنظیم یا تغییر عنوان نشست. |
 
 `list`
 `browse`
@@ -2333,7 +2398,7 @@ Subcommands:
 `stats`
 `rename <session-id> <title>`
 
-## hermes insights​
+## `hermes insights`​
 
 `hermes insights`
 
@@ -2341,10 +2406,10 @@ Subcommands:
 hermes insights [--days N] [--source platform]
 ```
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --days <n> | Analyze the lastndays (default: 30). |
-| --source <platform> | Filter by source such ascli,telegram, ordiscord. |
+| `--days <n>` | تحلیل n روز اخیر (پیش‌فرض: 30). |
+| `--source <platform>` | فیلتر بر اساس منبع مانند `cli`، `telegram` یا `discord`. |
 
 `--days <n>`
 `n`
@@ -2353,7 +2418,7 @@ hermes insights [--days N] [--source platform]
 `telegram`
 `discord`
 
-## hermes claw​
+## `hermes claw`​
 
 `hermes claw`
 
@@ -2361,7 +2426,7 @@ hermes insights [--days N] [--source platform]
 hermes claw migrate [options]
 ```
 
-Migrate your OpenClaw setup to Hermes. Reads from~/.openclaw(or a custom path) and writes to~/.hermes. Automatically detects legacy directory names (~/.clawdbot,~/.moltbot) and config filenames (clawdbot.json,moltbot.json).
+راه‌اندازی OpenClaw خود را به Hermes مهاجرت دهید. از `~/.openclaw` (یا مسیر سفارشی) می‌خواند و در `~/.hermes` می‌نویسد. به طور خودکار نام‌های دایرکتوری قدیمی (`~/.clawdbot`، `~/.moltbot`) و نام‌های فایل پیکربندی (`clawdbot.json`، `moltbot.json`) را تشخیص می‌دهد.
 
 `~/.openclaw`
 `~/.hermes`
@@ -2370,17 +2435,17 @@ Migrate your OpenClaw setup to Hermes. Reads from~/.openclaw(or a custom path) a
 `clawdbot.json`
 `moltbot.json`
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --dry-run | Preview what would be migrated without writing anything. |
-| --preset <name> | Migration preset:full(all compatible settings) oruser-data(excludes infrastructure config). Neither preset imports secrets — pass--migrate-secretsexplicitly. |
-| --overwrite | Overwrite existing Hermes files on conflicts (default: refuse to apply when the plan has conflicts). |
-| --migrate-secrets | Include API keys in migration. Required even under--preset full. |
-| --no-backup | Skip the pre-migration zip snapshot of~/.hermes/(by default a single restore-point archive is written to~/.hermes/backups/pre-migration-*.zipbefore apply; restorable withhermes import). |
-| --source <path> | Custom OpenClaw directory (default:~/.openclaw). |
-| --workspace-target <path> | Target directory for workspace instructions (AGENTS.md). |
-| --skill-conflict <mode> | Handle skill name collisions:skip(default),overwrite, orrename. |
-| --yes | Skip the confirmation prompt. |
+| `--dry-run` | پیش‌نمایش آنچه مهاجرت می‌شود بدون نوشتن چیزی. |
+| `--preset <name>` | preset مهاجرت: `full` (همه تنظیمات سازگار) یا `user-data` (پیکربندی زیرساخت را حذف می‌کند). هیچ preset ای secret وارد نمی‌کند — `--migrate-secrets` را به صراحت ارسال کنید. |
+| `--overwrite` | بازنویسی فایل‌های Hermes موجود در تعارضات (پیش‌فرض: رد کردن اعمال وقتی برنامه تعارض دارد). |
+| `--migrate-secrets` | شامل کردن کلیدهای API در مهاجرت. حتی تحت `--preset full` مورد نیاز. |
+| `--no-backup` | رد کردن اسناپ‌شات zip قبل از مهاجرت `~/.hermes/` (به طور پیش‌فرض یک آرشیو نقطه بازیابی واحد قبل از apply در `~/.hermes/backups/pre-migration-*.zip` نوشته می‌شود؛ قابل بازیابی با `hermes import`). |
+| `--source <path>` | دایرکتوری OpenClaw سفارشی (پیش‌فرض: `~/.openclaw`). |
+| `--workspace-target <path>` | دایرکتوری هدف برای دستورالعمل‌های فضای کاری (`AGENTS.md`). |
+| `--skill-conflict <mode>` | مدیریت تداخل نام مهارت: `skip` (پیش‌فرض)، `overwrite` یا `rename`. |
+| `--yes` | رد کردن درخواست تأیید. |
 
 `--dry-run`
 `--preset <name>`
@@ -2403,31 +2468,38 @@ Migrate your OpenClaw setup to Hermes. Reads from~/.openclaw(or a custom path) a
 `rename`
 `--yes`
 
-### What gets migrated​
+### چه چیزی مهاجرت می‌شود​
 
-The migration covers 30+ categories across persona, memory, skills, model providers, messaging platforms, agent behavior, session policies, MCP servers, TTS, and more. Items are eitherdirectly importedinto Hermes equivalents orarchivedfor manual review.
+مهاجرت بیش از ۳۰ دسته در شخصیت، حافظه، مهارت‌ها، ارائه‌دهندگان مدل، پلتفرم‌های پیام‌رسانی، رفتار agent، سیاست‌های نشست، سرورهای MCP، TTS و موارد دیگر را پوشش می‌دهد. آیتم‌ها یا مستقیماً به معادل‌های Hermes وارد می‌شوند یا برای بررسی دستی آرشیو می‌شوند.
 
-Directly imported:SOUL.md, MEMORY.md, USER.md, AGENTS.md, skills (4 source directories), default model, custom providers, MCP servers, messaging platform tokens and allowlists (Telegram, Discord, Slack, WhatsApp, Signal, Matrix, Mattermost), agent defaults (reasoning effort, compression, human delay, timezone, sandbox), session reset policies, approval rules, TTS config, browser settings, tool settings, exec timeout, command allowlist, gateway config, and API keys from 3 sources.
+**وارد شده مستقیماً:** `SOUL.md`، `MEMORY.md`، `USER.md`، `AGENTS.md`، مهارت‌ها (۴ دایرکتوری منبع)، مدل پیش‌فرض، ارائه‌دهندگان سفارشی، سرورهای MCP، توکن‌ها و لیست‌های مجاز پلتفرم پیام‌رسانی (Telegram، Discord، Slack، WhatsApp، Signal، Matrix، Mattermost)، پیش‌فرض‌های agent (تلاش استدلال، فشرده‌سازی، تأخیر انسان، منطقه زمانی، sandbox)، سیاست‌های بازنشانی نشست، قوانین تأیید، پیکربندی TTS، تنظیمات مرورگر، تنظیمات ابزار، timeout اجرا، لیست مجاز دستور، پیکربندی گیت‌وی و کلیدهای API از ۳ منبع.
 
-Archived for manual review:Cron jobs, plugins, hooks/webhooks, memory backend (QMD), skills registry config, UI/identity, logging, multi-agent setup, channel bindings, IDENTITY.md, TOOLS.md, HEARTBEAT.md, BOOTSTRAP.md.
+**آرشیو شده برای بررسی دستی:** تسک‌های cron، pluginها، هوک‌ها/webhookها، backend حافظه (QMD)، پیکربندی رجیستری مهارت‌ها، UI/هویت، لاگ‌گیری، راه‌اندازی چندagent، اتصالات کانال، `IDENTITY.md`، `TOOLS.md`، `HEARTBEAT.md`، `BOOTSTRAP.md`.
 
-API key resolutionchecks three sources in priority order: config values →~/.openclaw/.env→auth-profiles.json. All token fields handle plain strings, env templates (${VAR}), and SecretRef objects.
+** resolvesion کلید API** سه منبع را به ترتیب اولویت بررسی می‌کند: مقادیر پیکربندی → `~/.openclaw/.env` → `auth-profiles.json`. همه فیلدهای توکن رشته‌های ساده، الگوهای env (`${VAR}`) و اشیاء SecretRef را مدیریت می‌کنند.
 
 `~/.openclaw/.env`
 `auth-profiles.json`
 `${VAR}`
 
-For the complete config key mapping, SecretRef handling details, and post-migration checklist, see thefull migration guide.
+برای نگاشت کامل کلید پیکربندی، جزئیات مدیریت SecretRef و چک‌لیست پس از مهاجرت، به [راهنمای کامل مهاجرت](/docs/guides/migrate-from-openclaw) مراجعه کنید.
 
-[full migration guide](/docs/guides/migrate-from-openclaw)
-
-### Examples​
+### مثال‌ها​
 
 ```
-# Preview what would be migratedhermes claw migrate --dry-run# Full migration (all compatible settings, no secrets)hermes claw migrate --preset full# Full migration including API keyshermes claw migrate --preset full --migrate-secrets# Migrate user data only (no secrets), overwrite conflictshermes claw migrate --preset user-data --overwrite# Migrate from a custom OpenClaw pathhermes claw migrate --source /home/user/old-openclaw
+# Preview what would be migrated
+hermes claw migrate --dry-run
+# Full migration (all compatible settings, no secrets)
+hermes claw migrate --preset full
+# Full migration including API keys
+hermes claw migrate --preset full --migrate-secrets
+# Migrate user data only (no secrets), overwrite conflicts
+hermes claw migrate --preset user-data --overwrite
+# Migrate from a custom OpenClaw path
+hermes claw migrate --source /home/user/old-openclaw
 ```
 
-## hermes serve​
+## `hermes serve`​
 
 `hermes serve`
 
@@ -2435,22 +2507,12 @@ For the complete config key mapping, SecretRef handling details, and post-migrat
 hermes serve [options]
 ```
 
-Start the Hermesbackend server— the JSON-RPC/WebSocket gateway thedesktop appand remote clients connect to. It is the same serverhermes dashboardruns, butheadless: it never opens a browser UI. The desktop app launches its ownhermes servebackend; use this command directly when you want a headless backend on a remote host. Accepts the same--host/--port/--insecure/--skip-build/--stop/--statusoptions ashermes dashboardbelow (a non-loopback bind engages the same auth gate). Requires the[web]extra; the embedded Chat socket additionally needs[pty]on a POSIX host.
+سرور backend Hermes را شروع می‌کند — دروازه JSON-RPC/WebSocket که [اپ دسکتاپ](/docs/user-guide/desktop) و کلاینت‌های راه دور به آن متصل می‌شوند. همان سروری است که `hermes dashboard` اجرا می‌کند اما **headless**: هرگز UI مرورگر را باز نمی‌کند. اپ دسکتاپ backend خود `hermes serve` را راه‌اندازی می‌کند؛ مستقیماً از این دستور استفاده کنید وقتی یک backend headless روی هاست راه دور می‌خواهید. همان گزینه‌های `--host`/`--port`/`--insecure`/`--skip-build`/`--stop`/`--status` را می‌پذیرد که `hermes dashboard` پایین (غیرloopback bind همان دروازه auth را فعال می‌کند). به extra `[web]` نیاز دارد؛ socket Chat تعبیه شده علاوه بر آن به `[pty]` در یک هاست POSIX نیاز دارد.
 
-[desktop app](/docs/user-guide/desktop)
 `hermes dashboard`
 `hermes serve`
-`--host`
-`--port`
-`--insecure`
-`--skip-build`
-`--stop`
-`--status`
-`hermes dashboard`
-`[web]`
-`[pty]`
 
-## hermes dashboard​
+## `hermes dashboard`​
 
 `hermes dashboard`
 
@@ -2458,24 +2520,23 @@ Start the Hermesbackend server— the JSON-RPC/WebSocket gateway thedesktop appa
 hermes dashboard [options]
 ```
 
-Launch the web dashboard — a browser-based UI for managing configuration, API keys, and monitoring sessions. (For a headless backend with no browser UI — e.g. what the desktop app spawns — usehermes serveabove.) Requirescd ~/.hermes/hermes-agent && uv pip install -e ".[web]"(FastAPI + Uvicorn). The embedded browser Chat tab is always available and additionally needs theptyextra (cd ~/.hermes/hermes-agent && uv pip install -e ".[web,pty]") plus a POSIX PTY environment such as Linux, macOS, or WSL2. SeeWeb Dashboardfor full documentation.
+داشبورد وب را راه‌اندازی می‌کند — UI مبتنی بر مرورگر برای مدیریت پیکربندی، کلیدهای API و نظارت نشست‌ها. (برای backend headless بدون UI مرورگر — مثلاً آنچه اپ دسکتاپ ایجاد می‌کند — از `hermes serve` بالا استفاده کنید.) به `cd ~/.hermes/hermes-agent && uv pip install -e ".[web]"` (FastAPI + Uvicorn) نیاز دارد. تب Chat مرورگر تعبیه شده همیشه موجود است و علاوه بر آن به extra `pty` نیاز دارد (`cd ~/.hermes/hermes-agent && uv pip install -e ".[web,pty]"`) به علاوه محیط POSIX PTY مانند Linux، macOS یا WSL2. برای مستندات کامل به [Web Dashboard](/docs/user-guide/features/web-dashboard) مراجعه کنید.
 
 `hermes serve`
 `cd ~/.hermes/hermes-agent && uv pip install -e ".[web]"`
 `pty`
 `cd ~/.hermes/hermes-agent && uv pip install -e ".[web,pty]"`
-[Web Dashboard](/docs/user-guide/features/web-dashboard)
 
-| Option | Default | Description |
+| گزینه | پیش‌فرض | توضیح |
 | --- | --- | --- |
-| --port | 9119 | Port to run the web server on |
-| --host | 127.0.0.1 | Bind address |
-| --no-open | — | Don't auto-open the browser |
-| --insecure | off | Deprecated / no-op.Formerly bypassed auth on a non-loopback bind. Since the June 2026 hardening a public bindalwaysrequires an auth provider (password or OAuth). Bind127.0.0.1and tunnel to keep it local. |
-| --skip-build | off | Skip the web UI build step and serve the existingdistdirectly. Useful for non-interactive contexts (Windows Scheduled Tasks, CI) where npm isn't available. Pre-build withcd web && npm run build. |
-| --isolated | off | When launched from a named profile (worker dashboard), run a dedicated per-profile server instead of routing to the machine dashboard. |
-| --stop | — | Stop runninghermes dashboardprocesses and exit. |
-| --status | — | List runninghermes dashboardprocesses and exit. |
+| `--port` | 9119 | پورت برای اجرای سرور وب |
+| `--host` | 127.0.0.1 | آدرس bind |
+| `--no-open` | — | باز نکردن خودکار مرورگر |
+| `--insecure` | off | منسوخ / بی‌اثر. قبلاً auth را در یک bind غیرloopback دور می‌زد. از ژوئن ۲۰۲۶ bind عمومی **همیشه** به یک ارائه‌دهنده auth (رمز عبور یا OAuth) نیاز دارد. `127.0.0.1` bind کنید و tunnel برای محلی نگه داشتن. |
+| `--skip-build` | off | رد کردن مرحله ساخت UI وب و سرو کردن `dist` موجود مستقیماً. مفید برای زمینه‌های غیرتعاملی (Windows Scheduled Tasks، CI) که npm موجود نیست. از قبل با `cd web && npm run build` بسازید. |
+| `--isolated` | off | وقتی از یک پروفایل نام‌دار راه‌اندازی می‌شود (dashboard کارگر)، یک سرور اختصاصی به ازای هر پروفایل به جای مسیریابی به dashboard ماشین اجرا کنید. |
+| `--stop` | — | متوقف کردن فرآیندهای `hermes dashboard` در حال اجرا و خروج. |
+| `--status` | — | فهرست فرآیندهای `hermes dashboard` در حال اجرا و خروج. |
 
 `--port`
 `9119`
@@ -2494,21 +2555,21 @@ Launch the web dashboard — a browser-based UI for managing configuration, API 
 `--status`
 `hermes dashboard`
 
-### hermes dashboard register​
+### `hermes dashboard register`​
 
 `hermes dashboard register`
 
-Register this install as a self-hosted dashboard with your Nous Portal account. Creates an OAuth client, writesHERMES_DASHBOARD_OAUTH_CLIENT_IDinto~/.hermes/.env, and prints how to engage the login gate. Requires being logged in (hermes setup).
+این نصب را به عنوان dashboard خودمیزبان با حساب Nous Portal شما ثبت می‌کند. یک کلاینت OAuth ایجاد می‌کند، `HERMES_DASHBOARD_OAUTH_CLIENT_ID` را در `~/.hermes/.env` می‌نویسد و نحوه فعال کردن دروازه ورود را چاپ می‌کند. نیاز به ورود بودن (`hermes setup`) دارد.
 
 `HERMES_DASHBOARD_OAUTH_CLIENT_ID`
 `~/.hermes/.env`
 `hermes setup`
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --name | Human-readable label for the dashboard (default: auto-generated). |
-| --redirect-uri | Public HTTPS OAuth redirect URI (e.g.https://hermes.example.com/auth/callback). Omit for localhost-only use. |
-| --portal-url | Override the Nous Portal base URL for registration (default: the portal you logged into). Also settable viaHERMES_DASHBOARD_PORTAL_URL. |
+| `--name` | برچسب خوانا توسط انسان برای dashboard (پیش‌فرض: به طور خودکار تولید شده). |
+| `--redirect-uri` | URI بازگشت OAuth HTTPS عمومی (مثلاً `https://hermes.example.com/auth/callback`). برای استفاده localhost-only حذف کنید. |
+| `--portal-url` | Override کردن base URL Nous Portal برای ثبت (پیش‌فرض: پورتالی که وارد شده‌اید). همچنین از طریق `HERMES_DASHBOARD_PORTAL_URL` قابل تنظیم. |
 
 `--name`
 `--redirect-uri`
@@ -2517,10 +2578,16 @@ Register this install as a self-hosted dashboard with your Nous Portal account. 
 `HERMES_DASHBOARD_PORTAL_URL`
 
 ```
-# Default — opens browser to http://127.0.0.1:9119hermes dashboard# Custom port, no browserhermes dashboard --port 8080 --no-open# From a profile alias — routes to the machine dashboard with the# profile preselected in the sidebar switcher (attach if running)worker dashboard
+# Default — opens browser to http://127.0.0.1:9119
+hermes dashboard
+# Custom port, no browser
+hermes dashboard --port 8080 --no-open
+# From a profile alias — routes to the machine dashboard with the
+# profile preselected in the sidebar switcher (attach if running)
+worker dashboard
 ```
 
-## hermes profile​
+## `hermes profile`​
 
 `hermes profile`
 
@@ -2528,22 +2595,22 @@ Register this install as a self-hosted dashboard with your Nous Portal account. 
 hermes profile <subcommand>
 ```
 
-Manage profiles — multiple isolated Hermes instances, each with its own config, sessions, skills, and home directory.
+مدیریت پروفایل‌ها — نمونه‌های ایزوله متعدد Hermes، هر کدام با پیکربندی، نشست‌ها، مهارت‌ها و دایرکتوری خانه خود.
 
-| Subcommand | Description |
+| دستور زیر سطح | توضیح |
 | --- | --- |
-| list | List all profiles. |
-| use <name> | Set a sticky default profile. |
-| create <name> [--clone] [--clone-all] [--clone-from <source>] [--no-alias] | Create a new profile.--clonecopies config,.env,SOUL.md, and skills from the active profile.--clone-allcopies all state.--clone-fromspecifies a source profile and implies config clone unless paired with--clone-all. |
-| delete <name> [-y] | Delete a profile. |
-| show <name> | Show profile details (home directory, config, etc.). |
-| alias <name> [--remove] [--name NAME] | Manage wrapper scripts for quick profile access. |
-| rename <old> <new> | Rename a profile. |
-| export <name> [-o FILE] | Export a profile to a.tar.gzarchive (local backup). |
-| import <archive> [--name NAME] | Import a profile from a.tar.gzarchive (local restore). |
-| install <source> [--name N] [--alias] [--force] [-y] | Install a profile distribution from a git URL or local directory. |
-| update <name> [--force-config] [-y] | Re-pull a distribution; preserves user data (memories, sessions, auth). |
-| info <name> | Show a profile's distribution manifest (version, requirements, source). |
+| `list` | فهرست همه پروفایل‌ها. |
+| `use <name>` | تنظیم پروفایل پیش‌فرض چسبناک. |
+| `create <name> [--clone] [--clone-all] [--clone-from <source>] [--no-alias]` | ایجاد پروفایل جدید. `--clone` پیکربندی، `.env`، `SOUL.md` و مهارت‌ها را از پروفایل فعال کپی می‌کند. `--clone-all` همه وضعیت را کپی می‌کند. `--clone-from` یک پروفایل منبع مشخص می‌کند و clone پیکربندی را شامل می‌مگر اینکه با `--clone-all` جفت شود. |
+| `delete <name> [-y]` | حذف پروفایل. |
+| `show <name>` | نمایش جزئیات پروفایل (دایرکتوری خانه، پیکربندی و غیره). |
+| `alias <name> [--remove] [--name NAME]` | مدیریت اسکریپت‌های wrapper برای دسترسی سریع پروفایل. |
+| `rename <old> <new>` | تغییر نام پروفایل. |
+| `export <name> [-o FILE]` | خروجی پروفایل به آرشیو `.tar.gz` (نسخه پشتیبان محلی). |
+| `import <archive> [--name NAME]` | وارد کردن پروفایل از آرشیو `.tar.gz` (بازیابی محلی). |
+| `install <source> [--name N] [--alias] [--force] [-y]` | نصب توزیع پروفایل از URL Git یا دایرکتوری محلی. |
+| `update <name> [--force-config] [-y]` | کشیدن مجدد توزیع؛ داده‌های کاربر (حافظه‌ها، نشست‌ها، auth) حفظ می‌شوند. |
+| `info <name>` | نمایش manifest توزیع پروفایل (نسخه، وابستگی‌ها، منبع). |
 
 `list`
 `use <name>`
@@ -2566,13 +2633,21 @@ Manage profiles — multiple isolated Hermes instances, each with its own config
 `update <name> [--force-config] [-y]`
 `info <name>`
 
-Examples:
+مثال‌ها:
 
 ```
-hermes profile listhermes profile create work --clonehermes profile use workhermes profile alias work --name h-workhermes profile export work -o work-backup.tar.gzhermes profile import work-backup.tar.gz --name restoredhermes profile install github.com/user/my-distro --aliashermes profile update workhermes -p work chat -q "Hello from work profile"
+hermes profile list
+hermes profile create work --clone
+hermes profile use work
+hermes profile alias work --name h-work
+hermes profile export work -o work-backup.tar.gz
+hermes profile import work-backup.tar.gz --name restored
+hermes profile install github.com/user/my-distro --alias
+hermes profile update work
+hermes -p work chat -q "Hello from work profile"
 ```
 
-## hermes completion​
+## `hermes completion`​
 
 `hermes completion`
 
@@ -2580,15 +2655,20 @@ hermes profile listhermes profile create work --clonehermes profile use workherm
 hermes completion [bash|zsh|fish]
 ```
 
-Print a shell completion script to stdout. Source the output in your shell profile for tab-completion of Hermes commands, subcommands, and profile names.
+یک اسکریپت تکمیل shell در stdout چاپ می‌کند. خروجی را در profile shell خود source کنید برای تکمیل tab دستورات Hermes، دستورات زیر سطح و نام‌های پروفایل.
 
-Examples:
+مثال‌ها:
 
 ```
-# Bashhermes completion bash >> ~/.bashrc# Zshhermes completion zsh >> ~/.zshrc# Fishhermes completion fish > ~/.config/fish/completions/hermes.fish
+# Bash
+hermes completion bash >> ~/.bashrc
+# Zsh
+hermes completion zsh >> ~/.zshrc
+# Fish
+hermes completion fish > ~/.config/fish/completions/hermes.fish
 ```
 
-## hermes update​
+## `hermes update`​
 
 `hermes update`
 
@@ -2596,24 +2676,24 @@ Examples:
 hermes update [--gateway] [--check] [--no-backup] [--backup] [--yes]
 ```
 
-Pulls the latesthermes-agentcode and reinstalls dependencies in the managed venv, then re-runs the post-install hooks (MCP servers, skills sync, completion install). Safe to run on a live install. Use--checkto see whether your checkout is behindorigin/mainwithout installing.
+آخرین کد `hermes-agent` را می‌کشد و وابستگی‌ها را در venv مدیریت شده مجدداً نصب می‌کند، سپس هوک‌های پس از نصب را مجدداً اجرا می‌کند (سرورهای MCP، همگام‌سازی مهارت‌ها، نصب تکمیل). در یک نصب زنده اجرا ایمن است. از `--check` برای بررسی اینکه آیا checkout شما از `origin/main` عقب است بدون نصب استفاده کنید.
 
 `hermes-agent`
 `--check`
 `origin/main`
 
-hermes updatepulls the configured update branch (default:main). If your checkout is on another branch, Hermes may check out the update branch before pulling. Commit branch work before updating when you want to keep it outside the update autostash flow.
+`hermes update` شاخه به‌روزرسانی پیکربندی شده را می‌کشد (پیش‌فرض: `main`). اگر checkout شما روی شاخه دیگری است، Hermes ممکن است قبل از کشیدن شاخه به‌روزرسانی را checkout کند. کار شاخه را قبل از به‌روزرسانی commit کنید وقتی می‌خواهید آن را خارج از جریان autostash به‌روزرسانی نگه دارید.
 
 `hermes update`
 `main`
 
-| Option | Description |
+| گزینه | توضیح |
 | --- | --- |
-| --gateway | Internal mode used by the messaging/updatecommand. Uses file-based IPC for prompts and progress streaming instead of reading from terminal stdin. Not a gateway restart flag. |
-| --check | Check whether an update is available without pulling, installing dependencies, or restarting anything. |
-| --no-backup | Skip the pre-update backup for this run, even ifupdates.pre_update_backupis enabled inconfig.yaml. |
-| --backup | Create a labeled pre-update snapshot ofHERMES_HOME(config, auth, sessions, skills, pairing data) before pulling. Default isoff— the previous always-backup behavior was adding minutes to every update on large homes. Flip it on permanently viaupdates.pre_update_backup: trueinconfig.yaml. |
-| --yes,-y | Assume yes for interactive prompts such as config migration and stash restore. API-key entry is skipped; runhermes config migrateseparately for those. |
+| `--gateway` | حالت داخلی استفاده شده توسط دستور پیام‌رسانی/`/update`. از IPC مبتنی فایل برای درخواست‌ها و پخش پیشرفت به جای خواندن از stdin ترمینال استفاده می‌کند. پرچم راه‌اندازی مجدد گیت‌وی نیست. |
+| `--check` | بررسی اینکه آیا به‌روزرسانی موجود است بدون کشیدن، نصب وابستگی‌ها یا راه‌اندازی مجدد چیزی. |
+| `--no-backup` | رد کردن نسخه پشتیبان قبل از به‌روزرسانی برای این اجرا، حتی اگر `updates.pre_update_backup` در `config.yaml` فعال باشد. |
+| `--backup` | ایجاد یک اسناپ‌شات برچسب‌دار قبل از به‌روزرسانی از `HERMES_HOME` (پیکربندی، auth، نشست‌ها، مهارت‌ها، داده‌های جفت‌سازی) قبل از کشیدن. پیش‌فرض `off` است — رفتار همیشه-پشتیبان قبلی دقایقی به هر به‌روزرسانی در خانه‌های بزرگ اضافه می‌کرد. آن را به طور دائمی از طریق `updates.pre_update_backup: true` در `config.yaml` فعال کنید. |
+| `--yes`, `-y` | فرض بله برای درخواست‌های تعاملی مانند مهاجرت پیکربندی و بازیابی stash. ورود کلید API رد می‌شود؛ `hermes config migrate` را جداگانه برای آنها اجرا کنید. |
 
 `--gateway`
 `/update`
@@ -2629,14 +2709,14 @@ hermes updatepulls the configured update branch (default:main). If your checkout
 `-y`
 `hermes config migrate`
 
-Additional behavior:
+رفتار اضافی:
 
-- Gateway restart.After a successful update, Hermes attempts to restart all running gateway profiles automatically so they pick up the new code. Usehermes gateway restartwhen you want to restart a gateway without applying an update.
-- Local source changes.For git installs, dirty tracked files and untracked files are auto-stashed before branch checkout or pull (git stash push --include-untracked). Interactive terminal updates ask before restoring the stash. Non-interactive updates restore it by default; setupdates.non_interactive_local_changes: discardonly on managed installs where local source edits should be thrown away after a successful pull. If stash restore conflicts or the pull fails, the stash is left in place for manual recovery.
-- npm lockfile churn.Before stashing or switching branches, Hermes makes a best-effort cleanup of trackedpackage-lock.jsondiffs produced by npm install/build steps. Commit or manually stash intentional lockfile edits before runninghermes update.
-- Pairing data snapshot.Even when--backupis off,hermes updatetakes a lightweight snapshot of~/.hermes/pairing/and the Feishu comment rules beforegit pull. You can roll it back withhermes backup restore --state pre-updateif a pull rewrites a file you were editing.
-- Legacyhermes.servicewarning.If Hermes detects a pre-renamehermes.servicesystemd unit (instead of the currenthermes-gateway.service), it prints a one-time migration hint so you can avoid flap-loop issues.
-- Exit codes.0on success,1on pull/install/post-install errors,2on unexpected working-tree changes that blockgit pull.
+- **راه‌اندازی مجدد گیت‌وی.** پس از به‌روزرسانی موفق، Hermes تلاش می‌کند همه پروفایل‌های گیت‌وی در حال اجرا را به طور خودکار راه‌اندازی مجدد کند تا کد جدید را انتخاب کنند. از `hermes gateway restart` استفاده کنید وقتی می‌خواهید گیت‌وی را بدون اعمال به‌روزرسانی راه‌اندازی مجدد کنید.
+- **تغییرات منبع محلی.** برای نصب‌های git، فایل‌های ردیابی شده کثیف و فایل‌های ردیابی نشده قبل از checkout یا pull شاخه به طور خودکار stash می‌شوند (`git stash push --include-untracked`). به‌روزرسانی‌های ترمینال تعاملی قبل از بازیابی stash سؤال می‌پرسند. به‌روزرسانی‌های غیرتعاملی به طور پیش‌فرض آن را بازمی‌گردانند؛ `updates.non_interactive_local_changes: discard` را فقط روی نصب‌های مدیریت شده تنظیم کنید که ویرایشهای منبع محلی باید پس از pull موفق دور ریخته شوند. اگر تعارض بازیابی stash یا pull ناموفق باشد، stash برای بازیابی دستی در جا باقی می‌ماند.
+- **نوسان lockfile npm.** قبل از stash یا تعویض شاخه، Hermes تلاش بهینه برای پاک کردن تفاوت‌های `package-lock.json` ردیابی شده تولید شده توسط مراحل `npm install`/`build` انجام می‌دهد. ویرایشهای عمدی lockfile را قبل از اجرای `hermes update` commit یا stash دستی کنید.
+- **اسناپ‌شات داده جفت‌سازی.** حتی وقتی `--backup` خاموش است، `hermes update` یک اسناپ‌شات سبک از `~/.hermes/pairing/` و قوانین نظر Feishu قبل از `git pull` می‌گیرد. می‌توانید آن را با `hermes backup restore --state pre-update` بازگردانید اگر pull فایلی را که در حال ویرایش آن بودید بازنویسی کند.
+- **هشدار `hermes.service` قدیمی.** اگر Hermes واحد systemd `hermes.service` قدیمی را تشخیص دهد (به جای `hermes-gateway.service` فعلی)، یک نکته مهاجرت یکباره چاپ می‌کند تا از مشکلات حلقه نوسان جلوگیری کنید.
+- **کدهای خروج.** `0` در موفقیت، `1` در خطاهای pull/install/post-install، `2` در تغییرات غیرمنتظره worktree که `git pull` را مسدود می‌کنند.
 
 `hermes gateway restart`
 `git stash push --include-untracked`
@@ -2656,14 +2736,14 @@ Additional behavior:
 `2`
 `git pull`
 
-## Maintenance commands​
+## دستورات نگهداری​
 
-| Command | Description |
+| دستور | توضیح |
 | --- | --- |
-| hermes version | Print version information. |
-| hermes update | Pull latest changes and reinstall dependencies. |
-| hermes postinstall | Internal bootstrap. Runs once after the install script provisions Hermes (or afterhermes update) to install non-Python dependencies that pip cannot provide — Node.js runtime, headless browser, ripgrep, ffmpeg — and then triggerhermes setupif the profile has not been configured yet. Safe to re-run idempotently. |
-| hermes uninstall [--full] [--gui] [--yes] | Remove Hermes, optionally deleting all config/data.--guiremoves only the desktop Chat GUI, leaving the agent intact;--fullalso deletes config/data;--yesskips prompts. |
+| `hermes version` | چاپ اطلاعات نسخه. |
+| `hermes update` | کشیدن آخرین تغییرات و نصب مجدد وابستگی‌ها. |
+| `hermes postinstall` | راه‌اندازی داخلی. یک بار پس از اجرای اسکریپت نصب یا پس از `hermes update` اجرا می‌شود تا وابستگی‌های غیرپایتونی را که pip نمی‌تواند ارائه دهد نصب کند — runtime Node.js، مرورگر headless، ripgrep، ffmpeg — و سپس اگر پروفایل هنوز پیکربندی نشده `hermes setup` را فعال کند. اجرای مجدد idempotent ایمن است. |
+| `hermes uninstall [--full] [--gui] [--yes]` | حذف Hermes، اختیاری حذف همه پیکربندی/داده. `--gui` فقط Chat GUI دسکتاپ را حذف می‌کند و agent را دست نخورده نگه می‌دارد؛ `--full` همچنین پیکربندی/داده را حذف می‌کند؛ `--yes` درخواستها را رد می‌کند. |
 
 `hermes version`
 `hermes update`
@@ -2675,7 +2755,7 @@ Additional behavior:
 `--full`
 `--yes`
 
-## See also​
+## همچنین ببینید​
 
 - Slash Commands Reference
 - CLI Interface
@@ -2688,4 +2768,4 @@ Additional behavior:
 [Sessions](/docs/user-guide/sessions)
 [Skills System](/docs/user-guide/features/skills)
 [Skins & Themes](/docs/user-guide/features/skins)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/reference/cli-commands.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/reference/cli-commands.md)

@@ -1,82 +1,82 @@
 ---
 layout: docs
 title: "توزیع پروفایل‌ها"
-permalink: /user-guide/profile-distributions/
+permalink: /docs/user-guide/profile-distributions/
 ---
 
 - 
-- Using Hermes
-- Profile Distributions: Share a Whole Agent
+- استفاده از Hermes
+- توزیع پروفایل‌ها: به اشتراک گذاشتن یک Agent کامل
 
-# Profile Distributions: Share a Whole Agent
+# توزیع پروفایل‌ها: به اشتراک گذاشتن یک Agent کامل
 
-Aprofile distributionpackages a complete Hermes agent — personality, skills, cron jobs, MCP connections, config — as a git repository. Anyone with access to the repo can install the whole agent with one command, update it in place, and keep their own memories, sessions, and API keys untouched.
+یک **توزیع پروفایل** یک agent کامل Hermes را بسته‌بندی می‌کند — شخصیت، skillها، cron jobها، اتصالات MCP، پیکربندی — به عنوان یک مخزن git. هر کسی که به مخزن دسترسی دارد می‌تواند کل agent را با یک فرمان نصب کند، به طور محلی به‌روزرسانی کند و حافظه‌ها، sessionها و کلیدهای API خود را دست‌نخورده نگه دارد.
 
-If aprofileis a local agent, a distribution is that agent made shareable.
+اگر **profile** یک agent محلی است، **distribution** آن agent قابل اشتراک‌گذاری شده است.
 
 [profile](/docs/user-guide/profiles)
 
-## What this means​
+## این یعنی چه​
 
-Before distributions, sharing a Hermes agent meant sending someone:
+قبل از distributionها، به اشتراک گذاشتن یک agent Hermes به معنای فرستادن چیزی به کسی بود:
 
-1. Your SOUL.md
-2. A list of skills to install
-3. Your config.yaml, minus the secrets
-4. A description of which MCP servers you wired up
-5. Any cron jobs you scheduled
-6. Instructions for which env vars to set
+1. SOUL.md شما
+2. لیست skillهایی که نصب کنید
+3. config.yaml شما، به جز رازها
+4. توضیح اینکه کدام سرورهای MCP را وصل کرده‌اید
+5. هر cron jobی که زمان‌بندی کرده‌اید
+6. دستورالعمل‌هایی برای تنظیم متغیرهای env
 
-…and hoping they assembled it correctly. Every version bump or bug fix meant repeating the handoff.
+...و امیدوار بودند که آن را به درستی مونتاژ کنند. هر افزایش نسخه یا رفع باگ به معنای تکرار تحویل بود.
 
-With distributions, all of that lives in one git repo:
+با distributionها، همه اینها در یک مخزن git زندگی می‌کند:
 
 ```
 my-research-agent/├── distribution.yaml    # manifest: name, version, env-var requirements├── SOUL.md              # the agent's personality / system prompt├── config.yaml          # model, temperature, reasoning, tool defaults├── skills/              # bundled skills that come with the agent├── cron/                # scheduled tasks the agent runs└── mcp.json             # MCP servers the agent connects to
 ```
 
-Recipients run:
+گیرندگان اجرا می‌کنند:
 
 ```
 hermes profile install github.com/you/my-research-agent --alias
 ```
 
-…and they now have the whole agent. They fill in their own API keys (.env.EXAMPLE→.env), and they can runmy-research-agent chator address it through Telegram / Discord / Slack / any gateway platform. When you push a new version, they runhermes profile update my-research-agentand pull your changes — their memories and sessions stay put.
+...و اکنون کل agent را دارند. کلیدهای API خود را پر می‌کنند (`.env.EXAMPLE` → `.env`) و می‌توانند `my-research-agent chat` اجرا کنند یا از طریق Telegram / Discord / Slack / هر پلتفرم gateway به آن پاسخ دهند. وقتی نسخه جدید push می‌کنید، `hermes profile update my-research-agent` اجرا می‌کنند و تغییرات شما را pull می‌کنند — حافظه‌ها و sessionهای آن‌ها در جای خود باقی می‌ماند.
 
 `.env.EXAMPLE`
 `.env`
 `my-research-agent chat`
 `hermes profile update my-research-agent`
 
-## Why git?​
+## چرا git؟​
 
-We considered tarballs, HTTP archives, a custom format. None of them beat git:
+tarballها، آرشیوهای HTTP، فرمت سفارشی را در نظر گرفتیم. هیچ‌کدام برتر از git نیستند:
 
-- Zero build step for authors.Push to GitHub; consumers install. There's no "pack this, upload that, update the index" loop.
-- Tags, branches, and commits are already the versioning system.A tag push does for us what "pack + upload a release" does for other tools.
-- Updates are a fetch.Not a re-download of the whole archive.
-- Transparent.Users can browse the repo, read diffs between versions, open issues against it, fork it to customize.
-- Private repos work for free.SSH keys,git credentialhelpers, GitHub CLI stored credentials — whatever auth your terminal is already set up for applies transparently.
-- Reproducibility is a commit SHA.The same thing pip and npm record.
+- **بدون مرحله build برای نویسندگان.** به GitHub push کنید؛ مصرف‌کنندگان نصب می‌کنند. حلقه "این را pack کنید، آن را upload کنید، index را به‌روزرسانی کنید" وجود ندارد.
+- **Tagها، branchها و commitها از قبل سیستم versioning هستند.** push یک tag برای ما همان کاری را می‌کند که "pack + upload یک release" برای ابزارهای دیگر انجام می‌دهد.
+- **به‌روزرسانی‌ها یک fetch هستند.** نه دانلود مجدد کل آرشیو.
+- **شفاف.** کاربران می‌توانند مخزن را مرور کنند، diffهای بین نسخه‌ها را بخوانند، issue علیه آن باز کنند، آن را برای سفارشی‌سازی fork کنند.
+- **مخازن خصوصی رایگان کار می‌کنند.** کلیدهای SSH، credential helperهای `git`، اعتبارنامه‌های ذخیره‌شده GitHub CLI — هر احراز هویتی که ترمinal شما از قبل تنظیم کرده به طور شفاف اعمال می‌شود.
+- **تکرارپذیری یک commit SHA است.** همان چیزی که pip و npm ثبت می‌کنند.
 
 `git credential`
 
-The tradeoff: recipients need git installed. On any machine running Hermes in 2026, that's already true.
+**معامله:** گیرندگان به git نصب‌شده نیاز دارند. در هر ماشینی که Hermes را در ۲۰۲۶ اجرا می‌کند، این از قبل صادق است.
 
-## When should you use a distribution?​
+## چه زمانی باید از distribution استفاده کنید؟​
 
-Good fits:
+**مناسب:**
 
-- You're sharing a specialized agent— a compliance monitor, a code reviewer, a research assistant, a customer-support bot — with a team or with the community.
-- You're deploying the same agent to multiple machinesand don't want to copy files manually each time.
-- You're iterating on an agentand want recipients to pick up new versions with one command.
-- You're building an agent as a product— opinionated defaults, curated skills, tuned prompts — that other people should use as a starting point.
+- **در حال به اشتراک گذاشتن یک agent تخصصی هستید** — ناظر انطباق، بازبین کد، دستیار تحقیق، بات پشتیبانی مشتری — با یک تیم یا با جامعه.
+- **در حال استقرار یک agent در چندین ماشین هستید** و نمی‌خواهید هر بار فایل‌ها را دستی کپی کنید.
+- **در حال تکرار یک agent هستید** و می‌خواهید گیرندگان نسخه‌های جدید را با یک فرمان دریافت کنید.
+- **در حال ساخت یک agent به عنوان محصول هستید** — پیش‌فرض‌های قاطع، skillهای گلچین‌شده، promptهای تنظیم‌شده — که دیگران باید به عنوان نقطه شروع استفاده کنند.
 
-Not a fit:
+**مناسب نیست:**
 
-- You just want to back up a profile on your own machine.Usehermes profile export/import— that's what those are for.
-- You want to share API keys alongside the agent.auth.jsonand.envare deliberately excluded from distributions. Each installer brings their own credentials.
-- You want to share memories / sessions / conversation history.Those are user data, not distribution content. Never shipped.
+- فقط می‌خواهید یک profile را در ماشین خود پشتیبان بگیرید. از `hermes profile export/import` استفاده کنید — برای همین هستند.
+- می‌خواهید کلیدهای API را همراه agent به اشتراک بگذارید. `auth.json` و `.env` عمداً از distributionها حذف شده‌اند. هر نصب‌کننده اعتبارنامه‌های خود را می‌آورد.
+- می‌خواهید حافظه‌ها / sessionها / تاریخچه مکالمه را به اشتراک بگذارید. آن‌ها داده کاربر هستند، نه محتوای distribution. هرگز ارسال نمی‌شوند.
 
 [hermes profile export/import](/docs/reference/profile-commands#hermes-profile-export)
 `hermes profile export`
@@ -84,32 +84,32 @@ Not a fit:
 `auth.json`
 `.env`
 
-Hermes does not control git.The file exclusions described on this page are applied by theinstallerwhen someone runshermes profile installorhermes profile update. They arenotapplied when you rungit addorgit commit.
+**Hermes git را کنترل نمی‌کند.** حذف‌های فایل توصیف‌شده در این صفحه توسط **نصب‌کننده** اعمال می‌شوند وقتی کسی `hermes profile install` یا `hermes profile update` اجرا می‌کند. هنگام اجرای `git add` یا `git commit` اعمال **نمی‌شوند**.
 
 `hermes profile install`
 `hermes profile update`
 `git add`
 `git commit`
 
-## The lifecycle: author to installer to update​
+## چرخه حیات: نویسنده تا نصب‌کننده تا به‌روزرسانی​
 
-Below is the full end-to-end flow. Pick the side you care about.
+در زیر کل جریان end-to-end است. طرفی را که به آن اهمیت می‌دهید انتخاب کنید.
 
-## For authors: publishing a distribution​
+## برای نویسندگان: انتشار یک distribution​
 
-### Step 1 — Start from a working profile​
+### مرحله ۱ — شروع از یک profile کارکردی​
 
-Build and refine the agent like any other profile:
+Agent را مانند هر profile دیگری بسازید و ظریف کنید:
 
 ```
 hermes profile create research-botresearch-bot setup                    # configure model, API keys# Edit ~/.hermes/profiles/research-bot/SOUL.md# Install skills, wire up MCP servers, schedule cron jobs, etc.research-bot chat                     # dogfood until it feels right
 ```
 
-### Step 2 — Add adistribution.yaml​
+### مرحله ۲ — اضافه کردن `distribution.yaml`​
 
 `distribution.yaml`
 
-Create~/.hermes/profiles/research-bot/distribution.yaml:
+`~/.hermes/profiles/research-bot/distribution.yaml` را ایجاد کنید:
 
 `~/.hermes/profiles/research-bot/distribution.yaml`
 
@@ -117,15 +117,15 @@ Create~/.hermes/profiles/research-bot/distribution.yaml:
 name: research-botversion: 1.0.0description: "Autonomous research assistant with arXiv and web tools"hermes_requires: ">=0.12.0"author: "Your Name"license: "MIT"# Tell installers which env vars the agent needs. These are checked against# the installer's shell and existing .env file so they don't get nagged# about keys they already have configured.env_requires:  - name: OPENAI_API_KEY    description: "OpenAI API key (for model access)"    required: true  - name: SERPAPI_KEY    description: "SerpAPI key for web search"    required: false    default: ""
 ```
 
-That's the whole manifest. Every field exceptnamehas a sensible default.
+این کل manifest است. هر فیلد به جز `name` پیش‌فرض معقولی دارد.
 
 `name`
 
-### Step 3 — Create a.gitignorebefore the first commit​
+### مرحله ۳ — ایجاد `.gitignore` قبل از اولین commit​
 
 `.gitignore`
 
-Do thisbeforerunninggit initorgit add. If you have already chatted with the profile, run setup, or otherwise used it, the directory now contains files you must not ship:.env,auth.json,memories/,sessions/,state.db*,logs/, and more.
+**قبل** از اجرای `git init` یا `git add` این کار را انجام دهید. اگر قبلاً با profile چت کرده‌اید، setup اجرا کرده‌اید یا به هر نحو دیگری از آن استفاده کرده‌اید، دایرکتوری اکنون حاوی فایل‌هایی است که نباید ارسال کنید: `.env`، `auth.json`، `memories/`، `sessions/`، `state.db*`، `logs/` و غیره.
 
 `git init`
 `git add`
@@ -136,7 +136,7 @@ Do thisbeforerunninggit initorgit add. If you have already chatted with the prof
 `state.db*`
 `logs/`
 
-Create~/.hermes/profiles/research-bot/.gitignorewith at minimum:
+`~/.hermes/profiles/research-bot/.gitignore` را با حداقل این‌ها ایجاد کنید:
 
 `~/.hermes/profiles/research-bot/.gitignore`
 
@@ -144,47 +144,47 @@ Create~/.hermes/profiles/research-bot/.gitignorewith at minimum:
 # Credentials & secrets — NEVER commitauth.json.env.env.EXAMPLE    # generated by install, not authorship domain# Runtime databases & statestate.dbstate.db-shmstate.db-walhermes_state.dbresponse_store.dbresponse_store.db-shmresponse_store.db-walgateway.pidgateway_state.jsonprocesses.jsonauth.lockactive_profile.update_check# User data — NEVER commitmemories/sessions/logs/plans/workspace/home/# Caches & generated artifactsimage_cache/audio_cache/document_cache/browser_screenshots/cache/# Infrastructure (should not be in profile dir, but safe to exclude)hermes-agent/.worktrees/profiles/bin/node_modules/# User customization namespace — your local overrideslocal/# Checkpoints & backups (can be huge)checkpoints/sandboxes/backups/# Logserrors.log.hermes_history
 ```
 
-This mirrors thehard-excluded pathsthat the installer strips on its end. Anything else you want to keep out of the repo (scratch files, large assets, local-only skills) should also go in here.
+این بازتاب مسیرهای **hard-excluded** است که نصب‌کننده در انتهای خود حذف می‌کند. هر چیز دیگری که می‌خواهید از مخزن خارج نگه دارید (فایل‌های موقت، دارایی‌های بزرگ، skillهای فقط محلی) باید اینجا نیز قرار بگیرد.
 
-### Step 4 — Push to a git repo​
+### مرحله ۴ — Push به یک مخزن git​
 
 ```
 cd ~/.hermes/profiles/research-botgit initgit add .git commit -m "v1.0.0"git remote add origin git@github.com:you/research-bot.gitgit tag v1.0.0git push -u origin main --tags
 ```
 
-The repo is now a distribution. Anyone with access can install it.
+مخزن اکنون یک distribution است. هر کسی که دسترسی دارد می‌تواند آن را نصب کند.
 
-The installer will additionally strip thehard-excluded pathseven if an author somehow ships them — but that only protects installers, not the author.
+نصب‌کننده علاوه بر این مسیرهای hard-excluded را حتی اگر نویسنده به نحوی آن‌ها را ارسال کند حذف می‌کند — اما این فقط نصب‌کنندگان را محافظت می‌کند، نه نویسنده را.
 
-### Step 5 — Tag versioned releases​
+### مرحله ۵ — Tag نسخه‌های versioned​
 
-Every time the agent reaches a stable point, bump the version and tag:
+هر بار که agent به یک نقطه پایدار می‌رسد، نسخه را افزایش و tag کنید:
 
 ```
 # Edit distribution.yaml: version: 1.1.0git add distribution.yaml SOUL.md skills/git commit -m "v1.1.0: tighter research SOUL, add arxiv skill"git tag v1.1.0git push --tags
 ```
 
-Recipients who runhermes profile update research-botwill pull the latest.
+گیرندگانی که `hermes profile update research-bot` اجرا می‌کنند آخرین نسخه را pull خواهند کرد.
 
 `hermes profile update research-bot`
 
-### What the repo looks like​
+### ظاهر مخزن​
 
-A complete authored distribution:
+یک distribution نوشته‌شده کامل:
 
 ```
 research-bot/├── .gitignore                   # excludes secrets & user data (see Step 3)├── distribution.yaml            # required├── SOUL.md                      # strongly recommended├── config.yaml                  # model, provider, tool defaults├── mcp.json                     # MCP server connections├── skills/│   ├── arxiv-search/SKILL.md│   ├── paper-summarization/SKILL.md│   └── citation-lookup/SKILL.md├── cron/│   └── weekly-digest.json       # scheduled tasks└── README.md                    # human-facing description (optional)
 ```
 
-### Distribution-owned vs user-owned​
+### Distribution-owned در مقابل User-owned​
 
-When an installer updates to a new version, some things get replaced (author's domain) and some things stay put (installer's domain). Defaults:
+وقتی نصب‌کننده به نسخه جدید به‌روزرسانی می‌کند، برخی چیزها جایگزین می‌شوند (دامنه نویسنده) و برخی در جای خود باقی می‌مانند (دامنه نصب‌کننده). پیش‌فرض‌ها:
 
-| Category | Paths | On update |
+| دسته | مسیرها | هنگام به‌روزرسانی |
 | --- | --- | --- |
-| Distribution-owned | SOUL.md,config.yaml,mcp.json,skills/,cron/,distribution.yaml | Replaced from the new clone |
-| Config override | config.yaml | Actually preserved by default — the installer may have tuned model or provider. Pass--force-configon update to reset. |
-| User-owned | memories/,sessions/,state.db*,auth.json,.env,logs/,workspace/,plans/,home/,*_cache/,local/ | Never touched |
+| Distribution-owned | `SOUL.md`، `config.yaml`، `mcp.json`، `skills/`، `cron/`، `distribution.yaml` | از clone جدید جایگزین می‌شوند |
+| Config override | `config.yaml` | در واقع به طور پیش‌فرض حفظ می‌شود — نصب‌کننده ممکن است مدل یا provider را تنظیم کرده باشد. هنگام به‌روزرسانی `--force-config` برای بازنشانی پاس دهید. |
+| User-owned | `memories/`، `sessions/`، `state.db*`، `auth.json`، `.env`، `logs/`، `workspace/`، `plans/`، `home/`، `*_cache/`، `local/` | هرگز دست‌کاری نمی‌شوند |
 
 `SOUL.md`
 `config.yaml`
@@ -206,31 +206,31 @@ When an installer updates to a new version, some things get replaced (author's d
 `*_cache/`
 `local/`
 
-You can override the distribution-owned list in the manifest:
+می‌توانید لیست distribution-owned را در manifest override کنید:
 
 ```
 distribution_owned:  - SOUL.md  - skills/research/            # only my research skills; other installed skills stay  - cron/digest.json
 ```
 
-When omitted, the defaults above apply — which is what most distributions want.
+وقتی حذف می‌شود، پیش‌فرض‌های بالا اعمال می‌شوند — که همان چیزی است که بیشتر distributionها می‌خواهند.
 
-## For installers: using a distribution​
+## برای نصب‌کنندگان: استفاده از یک distribution​
 
-### Install​
+### نصب​
 
 ```
 hermes profile install github.com/you/research-bot --alias
 ```
 
-What happens:
+**چه اتفاقی می‌افتد:**
 
-1. Clones the repo into a temporary directory.
-2. Readsdistribution.yaml, shows you the manifest (name, version, description, author, required env vars).
-3. Checks each required env var against your shell environment and the target profile's existing.env. Marks each as✓ setorneeds settingso you know exactly what to configure.
-4. Asks for confirmation. Pass-y/--yesto skip.
-5. Copies distribution-owned files into~/.hermes/profiles/research-bot/(or wherever the manifest'snameresolves). Thehard-excluded pathsare stripped during this copy, even if the author accidentally left them in the repo.
-6. Writes.env.EXAMPLEwith the required keys commented out — copy to.envand fill in.
-7. With--alias, creates a wrapper so you can runresearch-bot chatdirectly.
+1. مخزن را در یک دایرکتوری موقت clone می‌کند.
+2. `distribution.yaml` را می‌خواند، manifest را (نام، نسخه، توضیحات، نویسنده، متغیرهای env مورد نیاز) نشان می‌دهد.
+3. هر متغیر env مورد نیاز را با محیط shell شما و `.env` موجود profile هدف بررسی می‌کند. هر کدام را به عنوان `✓ set` یا `needs setting` علامت‌گذاری می‌کند تا دقیقاً بدانید چه چیزی پیکربندی کنید.
+4. درخواست تأیید می‌کند. `-y`/`--yes` برای رد کردن پاس دهید.
+5. فایل‌های distribution-owned را به `~/.hermes/profiles/research-bot/` (یا هر جا که `name` manifest حل می‌شود) کپی می‌کند. مسیرهای **hard-excluded** در حین این کپی حذف می‌شوند، حتی اگر نویسنده به طور تصادفی آن‌ها را در مخزن باقی گذاشته باشد.
+6. `.env.EXAMPLE` با کلیدهای مورد نیاز کامنت‌شده می‌نویسد — به `.env` کپی کرده و پر کنید.
+7. با `--alias`، یک wrapper ایجاد می‌کند تا بتوانید `research-bot chat` را مستقیماً اجرا کنید.
 
 `distribution.yaml`
 `.env`
@@ -245,25 +245,25 @@ What happens:
 `--alias`
 `research-bot chat`
 
-### Source types​
+### انواع منبع​
 
-Any git URL works:
+هر git URL کار می‌کند:
 
 ```
 # GitHub shorthandhermes profile install github.com/you/research-bot# Full HTTPShermes profile install https://github.com/you/research-bot.git# SSHhermes profile install git@github.com:you/research-bot.git# Self-hosted, GitLab, Gitea, Forgejo — any Git hosthermes profile install https://git.example.com/team/research-bot.git# Private repo using your configured git authhermes profile install git@github.com:your-org/internal-bot.git# Local directory during development (no git push needed)hermes profile install ~/my-profile-in-progress/
 ```
 
-### Override the profile name​
+### Override نام profile​
 
-Two users wanting the same distribution under different profile names:
+دو کاربر که می‌خواهند همان distribution را با نام‌های profile مختلف داشته باشند:
 
 ```
 # Alicehermes profile install github.com/acme/support-bot --name support-us --alias# Bob (same distribution, different local name)hermes profile install github.com/acme/support-bot --name support-eu --alias
 ```
 
-### Fill in env vars​
+### پر کردن متغیرهای env​
 
-After install, the agent's profile contains a.env.EXAMPLE:
+پس از نصب، profile agent حاوی یک `.env.EXAMPLE`:
 
 `.env.EXAMPLE`
 
@@ -271,32 +271,32 @@ After install, the agent's profile contains a.env.EXAMPLE:
 # Environment variables required by this Hermes distribution.# Copy to `.env` and fill in your own values before running.# OpenAI API key (for model access)# (required)OPENAI_API_KEY=# SerpAPI key for web search# (optional)# SERPAPI_KEY=
 ```
 
-Copy it:
+آن را کپی کنید:
 
 ```
 cp ~/.hermes/profiles/research-bot/.env.EXAMPLE ~/.hermes/profiles/research-bot/.env# Edit .env, paste your real keys
 ```
 
-Required keys that were already in your shell environment (e.g.OPENAI_API_KEYexported in your~/.zshrc) are marked✓ setduring install — you don't need to duplicate them in.env.
+کلیدهای مورد نیاز که قبلاً در محیط shell شما بودند (مثلاً `OPENAI_API_KEY` export شده در `~/.zshrc` شما) هنگام نصب به عنوان `✓ set` علامت‌گذاری می‌شوند — نیازی به تکرار آن‌ها در `.env` نیست.
 
 `OPENAI_API_KEY`
 `~/.zshrc`
 `✓ set`
 `.env`
 
-### Check what you installed​
+### بررسی چه نصب کرده‌اید​
 
 ```
 hermes profile info research-bot
 ```
 
-Shows:
+**نمایش می‌دهد:**
 
 ```
 Distribution: research-botVersion:      1.0.0Description:  Autonomous research assistant with arXiv and web toolsAuthor:       Your NameRequires:     Hermes >=0.12.0Source:       https://github.com/you/research-botInstalled:    2026-05-08T17:04:32+00:00Environment variables:  OPENAI_API_KEY (required) — OpenAI API key (for model access)  SERPAPI_KEY (optional) — SerpAPI key for web search
 ```
 
-hermes profile listalso shows aDistributioncolumn so at a glance you can see which of your profiles came from repos and which you hand-built:
+`hermes profile list` همچنین ستون `Distribution` نشان می‌دهد تا یک نگاه سریع ببینید کدام profileهای شما از مخازن آمده و کدام را دستی ساخته‌اید:
 
 `hermes profile list`
 `Distribution`
@@ -305,117 +305,117 @@ hermes profile listalso shows aDistributioncolumn so at a glance you can see whi
  Profile          Model                        Gateway      Alias        Distribution ───────────────    ───────────────────────────    ───────────    ───────────    ──────────────────── ◆default         claude-sonnet-4              stopped      —            —  coder           gpt-5                        stopped      coder        —  research-bot    claude-opus-4                stopped      research-bot research-bot@1.0.0  telemetry       claude-sonnet-4              running      telemetry    telemetry@2.3.1
 ```
 
-### Update​
+### به‌روزرسانی​
 
 ```
 hermes profile update research-bot
 ```
 
-What happens:
+**چه اتفاقی می‌افتد:**
 
-1. Re-clones the repo from the recorded source URL.
-2. Replaces distribution-owned files (SOUL, skills, cron, mcp.json).
-3. Preservesyourconfig.yaml— you may have tuned the model, temperature, or other settings. Pass--force-configto overwrite.
-4. Never touchesuser data: memories, sessions, auth,.env, logs, state.
+1. مخزن را از URL منبع ضبط‌شده دوباره clone می‌کند.
+2. فایل‌های distribution-owned (SOUL، skillها، cron، `mcp.json`) را جایگزین می‌کند.
+3. `config.yaml` **شما** را حفظ می‌کند — ممکن است مدل، temperature یا تنظیمات دیگر را تنظیم کرده باشید. `--force-config` برای بازنویسی پاس دهید.
+4. **هرگز** به داده‌های کاربر دست نمی‌زند: حافظه‌ها، sessionها، احراز هویت، `.env`، لاگ‌ها، state.
 
 `config.yaml`
 `--force-config`
 `.env`
 
-No re-downloading the whole archive. No stomping your local changes to config. No deleting your conversation history.
+**بدون دانلود مجدد کل آرشیو. بدون لگد زدن تغییرات محلی شما به config. بدون حذف تاریخچه مکالمه شما.**
 
-### Remove​
+### حذف​
 
 ```
 hermes profile delete research-bot
 ```
 
-The delete prompt surfaces distribution info before asking you to confirm:
+پرامپت حذف اطلاعات distribution را قبل از درخواست تأیید نمایش می‌دهد:
 
 ```
 Profile: research-botPath:    ~/.hermes/profiles/research-botModel:   claude-opus-4 (anthropic)Skills:  12Distribution: research-bot@1.0.0Installed from: https://github.com/you/research-botThis will permanently delete:  • All config, API keys, memories, sessions, skills, cron jobs  • Command alias (~/.local/bin/research-bot)Type 'research-bot' to confirm:
 ```
 
-So you never accidentally delete an agent without knowing where it came from or being able to re-install it.
+بنابراین هرگز تصادفاً agent را بدون دانستن اینکه از کجا آمده یا توانایی نصب مجدد حذف نمی‌کنید.
 
-## Use cases and patterns​
+## موارد استفاده و الگوها​
 
-### Personal: sync one agent across machines​
+### شخصی: همگام‌سازی یک agent بین ماشین‌ها​
 
-You built a research assistant on your laptop. You want the same agent on your workstation.
+یک دستیار تحقیق روی لپ‌تاپ خود ساخته‌اید. همان agent را روی workstation خود می‌خواهید.
 
 ```
 # Laptop — create .gitignore first (see "For authors" Step 3), then:cd ~/.hermes/profiles/research-botgit init && git add . && git status   # confirm no secrets stagedgit commit -m "initial"git remote add origin git@github.com:you/research-bot.gitgit push -u origin main# Workstationhermes profile install github.com/you/research-bot --alias# Fill in .env. Done.
 ```
 
-Any iteration on the laptop (git commit && push) pulls onto the workstation withhermes profile update research-bot. Memories stay per-machine — the laptop remembers its own conversations, the workstation remembers its own, they don't collide.
+هر تکرار روی لپ‌تاپ (`git commit && push`) روی workstation با `hermes profile update research-bot` pull می‌شود. حافظه‌ها به ازای هر ماشین باقی می‌مانند — لپ‌تاپ مکالمات خود را به یاد می‌آورد، workstation خودش را، تداخل ندارند.
 
 `git commit && push`
 `hermes profile update research-bot`
 
-### Team: ship a reviewed internal agent​
+### تیم: ارسال یک agent داخلی بازبینی‌شده​
 
-Your engineering team wants a shared PR-review bot with a specific SOUL, specific skills, and a cron that runs every PR through it.
+تیم مهندسی شما یک بات بازبینی PR مشترک با SOUL خاص، skillهای خاص و cron می‌خواهد که هر PR را از طریق آن اجرا کند.
 
 ```
 # Engineering lead — create .gitignore first (see "For authors" Step 3), then:cd ~/.hermes/profiles/pr-reviewer# ... build and tune ...git init && git add . && git status   # confirm no secrets stagedgit commit -m "v1.0 PR reviewer"git tag v1.0.0git push -u origin main --tags    # push to your company's internal Git host# Each engineerhermes profile install git@github.com:your-org/pr-reviewer.git --alias# Fill in .env with their own API key (billed to them), .env.EXAMPLE points at what's requiredpr-reviewer chat
 ```
 
-When the lead ships v1.1 (better SOUL, new skill), engineers runhermes profile update pr-reviewerand everyone's on the new version within minutes.
+وقتی lead نسخه ۱.۱ (SOUL بهتر، skill جدید) ارسال می‌کند، مهندسان `hermes profile update pr-reviewer` اجرا می‌کنند و همه ظرف چند دقیقه روی نسخه جدید هستند.
 
 `hermes profile update pr-reviewer`
 
-### Community: publish a public agent​
+### جامعه: انتشار یک agent عمومی​
 
-You built something novel — maybe a "Polymarket trader" or an "academic paper summarizer" or a "Minecraft server ops assistant." You want to share it.
+چیز نوآورانه‌ای ساخته‌اید — شاید یک "معامله‌گر Polymarket" یا "خلاصه‌ساز مقاله آکادمیک" یا "دستیار عملیات سرور Minecraft". می‌خواهید آن را به اشتراک بگذارید.
 
 ```
 # You — create .gitignore first (see "For authors" Step 3), then:cd ~/.hermes/profiles/polymarket-trader# Write a solid README.md at the repo root — GitHub shows it on the repo pagegit init && git add . && git status   # confirm no secrets stagedgit commit -m "v1.0"git tag v1.0.0# Publish to a public GitHub repogit remote add origin https://github.com/you/hermes-polymarket-trader.gitgit push -u origin main --tags# Anyonehermes profile install github.com/you/hermes-polymarket-trader --alias
 ```
 
-Tweet the install command. People who try it send you issues and PRs. If someone wants to customize, they fork — same git workflow everyone already knows.
+دستور نصب را توییت کنید. افرادی که آن را امتحان می‌کنند issue و PR برای شما ارسال می‌کنند. اگر کسی بخواهد سفارشی کند، fork می‌کند — همان گردش کار git که همه از قبل می‌شناسند.
 
-### Product: ship an opinionated agent​
+### محصول: ارسال یک agent قاطع​
 
-You built Hermes-on-top — maybe a compliance-monitoring harness, a customer-support stack, a domain-specific research platform. You want to distribute it as a product.
+Hermes-on-top ساخته‌اید — شاید یک framework نظارت انطباق، یک stack پشتیبانی مشتری، یک پلتفرم تحقیق تخصصی. می‌خواهید آن را به عنوان محصول توزیع کنید.
 
 ```
 # distribution.yamlname: telemetry-harnessversion: 2.3.1description: "Compliance telemetry harness — monitors and reviews regulated workflows"hermes_requires: ">=0.13.0"author: "Acme Compliance Inc."license: "Commercial"env_requires:  - name: ACME_API_KEY    description: "Your Acme Compliance license key (email support@acme.com)"    required: true  - name: OPENAI_API_KEY    description: "OpenAI API key for model access"    required: true  - name: GRAPHITI_MCP_URL    description: "URL for your Graphiti knowledge graph instance"    required: false    default: "http://127.0.0.1:8000/sse"
 ```
 
-Your customers install via a single command; the install preview tells them exactly which keys to have ready; updates roll out the moment you tag a new release; their compliance data (memories/,sessions/) never leaves their machine.
+مشتریان شما با یک فرمان واحد نصب می‌کنند؛ پیش‌نمایش نصب دقیقاً به آن‌ها می‌گوید چه کلیدهایی آماده داشته باشند؛ به‌روزرسانی‌ها لحظه‌ای که نسخه جدید tag می‌کنید ارسال می‌شوند؛ داده‌های انطباق (`memories/`، `sessions/`) هرگز ماشین آن‌ها را ترک نمی‌کند.
 
 `memories/`
 `sessions/`
 
-### Ephemeral: one-off scripts on shared infra​
+### موقت: اسکریپت‌های یک‌باره روی زیرساخت مشترک​
 
-You're the ops lead. You want a temporary agent that diagnoses a production incident — a canned SOUL with the right tools and MCP connections — and runs on three on-call engineers' laptops for the next week.
+شما سرپرست ops هستید. یک agent موقت می‌خواهید که یک حادثه production را تشخیص دهد — SOUL آماده با ابزارها و اتصالات MCP مناسب — و روی لپ‌تاپ‌های سه مهندس on-call برای هفته آینده اجرا شود.
 
 ```
 # You — create .gitignore first (see "For authors" Step 3), then:# Build the profile, commit, push a private repogit push -u origin main# Each on-callhermes profile install git@github.com:your-org/incident-2026-q2.git --alias# Incident resolved — tear it downhermes profile delete incident-2026-q2
 ```
 
-The install-delete cycle is cheap enough to be disposable.
+چرخه نصب-حذف به اندازه کافی ارزان است که یکبار مصرف باشد.
 
-## Recipes​
+## دستورالعمل‌ها​
 
-### Pin to a specific version​
+### ثابت کردن به یک نسخه مشخص​
 
-Git ref pinning (#v1.2.0) is planned but not in the initial release — install currently tracks the default branch. Track your installed version viahermes profile info <name>and hold off on updates until you're ready.
+Git ref pinning (`#v1.2.0`) برنامه‌ریزی شده اما در انتشار اولیه موجود نیست — نصب در حال حاضر branch پیش‌فرض را ردیابی می‌کند. نسخه نصب‌شده را از طریق `hermes profile info <name>` ردیابی کنید و تا آماده شوید از به‌روزرسانی‌ها خودداری کنید.
 
 `#v1.2.0`
 `hermes profile info <name>`
 
-### Check what version you're on vs. latest​
+### بررسی نسخه فعلی در مقابل آخرین​
 
 ```
 # Your installed versionhermes profile info research-bot | grep Version# Latest upstream (without installing)git ls-remote --tags https://github.com/you/research-bot | tail -5
 ```
 
-### Keep local config customizations through updates​
+### حفظ سفارشی‌سازی‌های config محلی در به‌روزرسانی‌ها​
 
-The default update behavior already does this:config.yamlis preserved. To be safe, write your local tweaks to a file the distribution doesn't own:
+رفتار به‌روزرسانی پیش‌فرض این کار را انجام می‌دهد: `config.yaml` حفظ می‌شود. برای ایمنی، تنظیمات محلی خود را در فایلی بنویسید که distribution مالک آن نیست:
 
 `config.yaml`
 
@@ -423,47 +423,47 @@ The default update behavior already does this:config.yamlis preserved. To be saf
 # ~/.hermes/profiles/research-bot/local/my-overrides.yaml# (distribution never touches local/)
 ```
 
-…and reference it fromconfig.yamlor your SOUL as needed.
+...و در صورت نیاز از `config.yaml` یا SOUL خود به آن ارجاع دهید.
 
 `config.yaml`
 
-### Force a clean re-install​
+### اجبار یک نصب تمیز مجدد​
 
 ```
 # Nuke and re-install from scratch (loses memories/sessions too)hermes profile delete research-bot --yeshermes profile install github.com/you/research-bot --alias# Update to current main but reset config.yaml to the distribution's defaulthermes profile update research-bot --force-config --yes
 ```
 
-### Fork and customize​
+### Fork و سفارشی‌سازی​
 
-The standard git workflow — distributions are just repos:
+گردش کار استاندارد git — distributionها فقط مخزن هستند:
 
 ```
 # Fork the repo on GitHub, then install your forkhermes profile install github.com/yourname/forked-research-bot --alias# Iterate locally in ~/.hermes/profiles/forked-research-bot/# Edit SOUL.md, commit, push to your fork# Upstream changes: pull them into your fork the usual way
 ```
 
-### Test a distribution before pushing​
+### تست یک distribution قبل از push​
 
-From the author's machine:
+از ماشین نویسنده:
 
 ```
 # Install from a local directory (no git push needed)hermes profile install ~/.hermes/profiles/research-bot --name research-bot-test --alias# Tweak, delete, re-install until it's righthermes profile delete research-bot-test --yeshermes profile install ~/.hermes/profiles/research-bot --name research-bot-test
 ```
 
-## What's NOT in a distribution (ever)​
+## چه چیزی در distribution نیست (هرگز)​
 
-The installer hard-excludes these paths even if an author accidentally ships them. No config option lets you override this — the safety guard is a regression-tested invariant:
+نصب‌کننده این مسیرها را **hard-exclude** می‌کند حتی اگر نویسنده به طور تصادفی آن‌ها را ارسال کند. هیچ گزینه پیکربندی اجازه override نمی‌دهد — محافظ ایمنی یک invariant با regression test است:
 
-- auth.json— OAuth tokens, platform credentials
-- .env— API keys, secrets
-- memories/— conversation memory
-- sessions/— conversation history
-- state.db,state.db-shm,state.db-wal— session metadata
-- logs/— agent and error logs
-- workspace/— generated working files
-- plans/— scratch plans
-- home/— user's home mount in Docker backends
-- *_cache/— image / audio / document caches
-- local/— user-reserved customization namespace
+- `auth.json` — توکن‌های OAuth، اعتبارنامه‌های پلتفرم
+- `.env` — کلیدهای API، رازها
+- `memories/` — حافظه مکالمه
+- `sessions/` — تاریخچه مکالمه
+- `state.db`، `state.db-shm`، `state.db-wal` — metadata session
+- `logs/` — لاگ‌های agent و خطا
+- `workspace/` — فایل‌های کاری تولیدشده
+- `plans/` — planهای موقت
+- `home/` — mount خانه کاربر در backendهای Docker
+- `*_cache/` — کش تصویر / صوت / سند
+- `local/` — فضای نام سفارشی‌سازی رزرو شده توسط کاربر
 
 `auth.json`
 `.env`
@@ -479,43 +479,45 @@ The installer hard-excludes these paths even if an author accidentally ships the
 `*_cache/`
 `local/`
 
-When you clone a distribution as an installer, these simply aren't copied into your profile directory. When you update, your copies stay put. If you installed the same distribution on five machines, you have five isolated sets of this data — one per machine.
+وقتی distribution را به عنوان نصب‌کننده clone می‌کنید، اینها به طور ساده به دایرکتوری profile شما کپی **نمی‌شوند**. هنگام به‌روزرسانی، کپی‌های شما در جای خود باقی می‌مانند. اگر همان distribution را روی پنج ماشین نصب کرده باشید، پنج مجموعه ایزوله از این داده دارید — یکی به ازای هر ماشین.
 
-This exclusion runs atinstall / update time on the installer's machine. It doesnotprevent an author from commiting sensitive/unnecessary files. Authors must use a.gitignoreto keep secrets out of the repo.
+این حذف در **زمان نصب / به‌روزرسانی** روی ماشین نصب‌کننده اجرا می‌شود. **جلوی نویسنده را از commit فایل‌های حساس/غیرضروری نمی‌گیرد.** نویسندگان باید از `.gitignore` برای خارج نگه داشتن رازها از مخزن استفاده کنند.
 
 `.gitignore`
 
-## Security and trust​
+## امنیت و اعتماد​
 
-Profile distributions are unsigned by default. You're trusting:
+Profile distributions به طور پیش‌فرض unsigned هستند. به این‌ها اعتماد می‌کنید:
 
-- The git host(GitHub / GitLab / wherever) to serve the bytes the author pushed.
-- The authorto not ship a malicious SOUL, skills, or cron jobs.
+- **میزبان git** (GitHub / GitLab / هر جا) برای سرو بایت‌هایی که نویسنده push کرده.
+- **نویسنده** برای ارسال نکردن SOUL، skillها یا cron jobهای مخرب.
 
-Cron jobs from a distribution arenot auto-scheduled— the installer printshermes -p <name> cron listand you enable them explicitly. SOUL.md and skills ARE active as soon as you start chatting with the profile, so read them before your first run if you're installing from someone you don't know.
+Cron jobهای از یک distribution **به طور خودکار زمان‌بندی نمی‌شوند** — نصب‌کننده `hermes -p <name> cron list` چاپ می‌کند و شما صریحاً آن‌ها را فعال می‌کنید. SOUL.md و skillها **محرک** هستند به محض شروع چت با profile، بنابراین قبل از اولین اجرا آن‌ها را بخوانید اگر از کسی که نمی‌شناسید نصب می‌کنید.
 
 `hermes -p <name> cron list`
 
-Rough analogy: installing a distribution is like installing a browser extension or a VS Code extension. Low friction, high power, trust the source. For internal company distributions, use a private repo and your normal git auth — nothing new to configure.
+**تشبیه تقریبی:** نصب یک distribution مانند نصب یک افزونه مرورگر یا افزونه VS Code است. اصطکاک کم، قدرت بالا، به منبع اعتماد کنید. برای distributionهای داخلی شرکت، از مخزن خصوصی و احراز هویت git عادی خود استفاده کنید — چیز جدیدی برای پیکربندی نیست.
 
-Future versions may add signing, a lockfile (.distribution-lock.yaml) with a resolved commit SHA, and a--dry-runflag that prints the diff before applying an update. None of those are shipping yet.
+## آینده​
+
+نسخه‌های آینده ممکن است امضا، lockfile (`.distribution-lock.yaml`) با یک commit SHA حل‌شده و flag `--dry-run` که diff را قبل از اعمال به‌روزرسانی چاپ می‌کند اضافه کنند. هیچ‌کدام هنوز ارسال نشده‌اند.
 
 `.distribution-lock.yaml`
 `--dry-run`
 
-## Under the hood​
+## زیر پوشش​
 
-For implementation details, precise CLI behavior, and all flags, see theProfile Commands reference.
+برای جزئیات پیاده‌سازی، رفتار دقیق CLI و همه flagها، [مرجع Profile Commands](/docs/reference/profile-commands#distribution-commands) را ببینید.
 
-[Profile Commands reference](/docs/reference/profile-commands#distribution-commands)
+[مرجع Profile Commands](/docs/reference/profile-commands#distribution-commands)
 
-The short version:
+نسخه کوتاه:
 
-- install,update,infolive insidehermes profile— not a parallel command tree.
-- The manifest format is YAML with a tiny required schema (nameonly).
-- The installer uses your localgitbinary for cloning, so any auth your shell already handles (SSH keys, credential helpers) works transparently.
-- After clone,.git/is stripped — the installed profile isn't itself a git checkout, avoiding "oh my, I accidentally committed my.envto the distribution's git history" traps.
-- Reserved profile names (hermes,test,tmp,root,sudo) are rejected at install time to avoid collisions with common binaries.
+- `install`، `update`، `info` داخل `hermes profile` زندگی می‌کنند — نه یک درخت دستور موازی.
+- فرمت manifest YAML با یک اسکوپا کوچک مورد نیاز است (فقط `name`).
+- نصب‌کننده `git` محلی شما را برای clone استفاده می‌کند، بنابراین هر احراز هویتی که shell شما از قبل مدیریت می‌کند به طور شفاف کار می‌کند.
+- پس از clone، `.git/` حذف می‌شود — profile نصب‌شده خودش یک git checkout نیست، از دام‌های "اوه، من تصادفاً `.env` خود را به تاریخچه git distribution commit کردم" جلوگیری می‌کند.
+- نام‌های profile رزرو شده (`hermes`، `test`، `tmp`، `root`، `sudo`) هنگام نصب رد می‌شوند تا از تداخل با باینری‌های رایج جلوگیری شود.
 
 `install`
 `update`
@@ -531,21 +533,21 @@ The short version:
 `root`
 `sudo`
 
-## See also​
+## همچنین ببینید​
 
-- Profiles: Running Multiple Agents— the base concept
-- Profile Commands reference— every flag, every option
-- hermes profile export/import— local backup / restore (not distribution)
-- Using SOUL with Hermes— authoring personalities
-- Personality & SOUL— how SOUL fits into the agent
-- Skills catalog— skills you can bundle
+- [Profileها: اجرای چندین Agent](/docs/user-guide/profiles) — مفهوم پایه
+- [مرجع Profile Commands](/docs/reference/profile-commands) — هر flag، هر گزینه
+- [hermes profile export/import](/docs/reference/profile-commands#hermes-profile-export) — پشتیبان / بازیابی محلی (نه distribution)
+- [استفاده از SOUL با Hermes](/docs/guides/use-soul-with-hermes) — نوشتن شخصیت‌ها
+- [شخصیت و SOUL](/docs/user-guide/features/personality) — چگونه SOUL در agent جا می‌شود
+- [کاتالوگ Skillها](/docs/reference/skills-catalog) — skillهایی که می‌توانید بسته‌بندی کنید
 
-[Profiles: Running Multiple Agents](/docs/user-guide/profiles)
-[Profile Commands reference](/docs/reference/profile-commands)
+[Profileها: اجرای چندین Agent](/docs/user-guide/profiles)
+[مرجع Profile Commands](/docs/reference/profile-commands)
 [hermes profile export/import](/docs/reference/profile-commands#hermes-profile-export)
 `hermes profile export`
 `import`
-[Using SOUL with Hermes](/docs/guides/use-soul-with-hermes)
-[Personality & SOUL](/docs/user-guide/features/personality)
-[Skills catalog](/docs/reference/skills-catalog)
+[استفاده از SOUL با Hermes](/docs/guides/use-soul-with-hermes)
+[شخصیت و SOUL](/docs/user-guide/features/personality)
+[کاتالوگ Skillها](/docs/reference/skills-catalog)
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/profile-distributions.md)

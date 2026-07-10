@@ -1,0 +1,101 @@
+- title: شروع سریع
+  items:
+    - title: راهنمای شروع سریع
+      url: /docs/getting-started/quickstart/
+    - title: نصب
+      url: /docs/getting-started/installation/
+    - title: پشتیبانی از پلتفرم‌ها
+      url: /docs/getting-started/platform-support/
+    - title: اندروید / Termux
+      url: /docs/getting-started/termux/
+    - title: تنظیم Nix و NixOS
+      url: /docs/getting-started/nix-setup/
+    - title: به‌روزرسانی و حذف
+      url: /docs/getting-started/updating/
+    - title: مسیر یادگیری
+      url: /docs/getting-started/learning-path/
+
+- title: راهنمای کاربر
+  items:
+    - title: رابط خط فرمان (CLI)
+      url: /docs/user-guide/cli/
+    - title: رابط متنی (TUI)
+      url: /docs/user-guide/tui/
+    - title: اپلیکیشن دسکتاپ
+      url: /docs/user-guide/desktop/
+    - title: ویندوز (بومی)
+      url: /docs/user-guide/windows-native/
+    - title: ویندوز (WSL2)
+      url: /docs/user-guide/windows-wsl-quickstart/
+    - title: پیکربندی
+      url: /docs/user-guide/configuration/
+    - title: دامنه مدیریت‌شده
+      url: /docs/user-guide/managed-scope/
+    - title: پیکربندی مدل‌ها
+      url: /docs/user-guide/configuring-models/
+    - title: جلسات
+      url: /docs/user-guide/sessions/
+    - title: پروفایل‌ها
+      url: /docs/user-guide/profiles/
+    - title: توزیع پروفایل‌ها
+      url: /docs/user-guide/profile-distributions/
+    - title: گیت‌وی‌های چند پروفایلی
+      url: /docs/user-guide/multi-profile-gateways/
+    - title: Git Worktrees
+      url: /docs/user-guide/git-worktrees/
+    - title: Docker
+      url: /docs/user-guide/docker/
+    - title: امنیت
+      url: /docs/user-guide/security/
+    - title: نقاط بازیابی
+      url: /docs/user-guide/checkpoints-and-rollback/
+
+- title: امکانات
+  items:
+    - title: فایل‌های زمینه
+      url: /docs/user-guide/features/context-files/
+    - title: MCP
+      url: /docs/user-guide/features/mcp/
+    - title: حافظه
+      url: /docs/user-guide/features/memory/
+    - title: شخصیت
+      url: /docs/user-guide/features/personality/
+    - title: مهارت‌ها
+      url: /docs/user-guide/features/skills/
+    - title: ابزارها
+      url: /docs/user-guide/features/tools/
+    - title: حالت صوتی
+      url: /docs/user-guide/features/voice-mode/
+
+- title: پلتفرم‌های پیام‌رسان
+  items:
+    - title: پیام‌رسانی
+      url: /docs/user-guide/messaging/
+
+- title: یکپارچه‌سازی‌ها
+  items:
+    - title: Nous Portal
+      url: /docs/integrations/nous-portal/
+
+- title: راهنماها
+  items:
+    - title: نکات و ترفندها
+      url: /docs/guides/tips/
+    - title: استفاده از MCP
+      url: /docs/guides/use-mcp-with-hermes/
+    - title: استفاده از حالت صوتی
+      url: /docs/guides/use-voice-mode-with-hermes/
+
+- title: راهنمای توسعه‌دهنده
+  items:
+    - title: معماری
+      url: /docs/developer-guide/architecture/
+
+- title: مرجع
+  items:
+    - title: دستورات CLI
+      url: /docs/reference/cli-commands/
+    - title: سؤالات متداول
+      url: /docs/reference/faq/
+    - title: مهارت‌ها
+      url: /docs/skills/

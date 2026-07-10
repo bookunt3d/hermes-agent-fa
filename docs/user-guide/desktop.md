@@ -5,430 +5,337 @@ permalink: /user-guide/desktop/
 ---
 
 - 
-- Using Hermes
-- Desktop App
+- استفاده از Hermes
+- اپلیکیشن دسکتاپ
 
-# Desktop App
+# اپلیکیشن دسکتاپ
 
-The Hermes desktop app is a native app built around thesameagent you get from the CLI and the gateway — same config, same API keys, same sessions, same skills, same memory. It is not a separate product or a lightweight clone; it uses the same Hermes Agent core and settings, and drives it through a modern & thoughtfully designed UI. If you have usedhermesin a terminal, everything you set up there is already here, and anything you do here shows up there.
+اپلیکیشن دسکتاپ Hermes یک اپلیکیشن بومی ساخته شده حول همان عاملی است که از CLI و gateway دریافت می‌کنید — همان پیکربندی، همان کلیدهای API، همان نشست‌ها، همان مهارت‌ها، همان حافظه. یک محصول جداگانه یا کلون سبک نیست؛ از هسته Hermes Agent و تنظیمات یکسان استفاده می‌کند و آن را از طریق یک رابط کاربری مدرن و با دقت طراحی شده هدایت می‌کند. اگر از `hermes` در ترمینال استفاده کرده‌اید، هر چیزی که در آنجا تنظیم کرده‌اید اینجا از قبل موجود است و هر کاری که اینجا انجام می‌دهید در آنجا نمایش داده می‌شود.
 
 `hermes`
 
-It runs onmacOS, Windows, and Linux.
+روی macOS، Windows و Linux اجرا می‌شود.
 
-Hermes has several front ends that all talk to the same agent:
+Hermes چندین رابط کاربری دارد که همگی با همان عامل ارتباط برقرار می‌کنند:
 
-- Desktop App(this page) — a native application with a purpose-built UI for chat, configuration, and management.
-- CLI(hermes) andTUI(hermes --tui) — terminal interfaces.
-- Web Dashboard(hermes dashboard) — a browser admin panel; its optionalChattab embeds the TUI through a pseudo-terminal.
+- اپلیکیشن دسکتاپ (این صفحه) — یک اپلیکیشن بومی با رابط کاربری اختصاصی برای چت، پیکربندی و مدیریت.
+- CLI (`hermes`) و TUI (`hermes --tui`) — رابط‌های ترمینالی.
+- رابط وب داشبورد (`hermes dashboard`) — پنل مدیریت مرورگر؛ تب اختیاری Chat آن TUI را از طریق یک pseudo-terminal تعبیه می‌کند.
 
 `hermes`
 [TUI](/docs/user-guide/tui)
 `hermes --tui`
-[Web Dashboard](/docs/user-guide/features/web-dashboard)
+[رابط وب داشبورد](/docs/user-guide/features/web-dashboard)
 `hermes dashboard`
 
-Pick whichever fits the moment. They share state, so you can start a session in one and resume it in another.
+هر کدام که مناسب لحظه است انتخاب کنید. وضعیت را به اشتراک می‌گذارند، بنابراین می‌توانید یک نشست را در یکی شروع کنید و در دیگری ادامه دهید.
 
-## Install​
+## نصب
 
-Follow theinstallation instructions for Hermes Desktop.
+دستورالعمل‌های نصب Hermes Desktop را دنبال کنید.
 
-[installation instructions for Hermes Desktop](/docs/getting-started/installation)
+[دستورالعمل‌های نصب Hermes Desktop](/docs/getting-started/installation)
 
-If you already have Hermes installed, simply run
+اگر قبلاً Hermes نصب دارید، کافی است اجرا کنید
 
 ```
 hermes desktop
 ```
 
-That uses your current config, keys, sessions, and skills.
+از پیکربندی، کلیدها، نشست‌ها و مهارت‌های فعلی شما استفاده می‌کند.
 
-## What's in the app​
+## محتوای اپلیکیشن
 
-The desktop app is organized as a chat-first window with a left sidebar for navigation. It's built to allow managing multiple simultaneous agent conversations, configuring messaging providers, creating artifacts, browsing projects' folder structures, and working on multiple projects at once.
+اپلیکیشن دسکتاپ به صورت یک پنجره چت‌محور با یک نوار کناری چپ برای ناوبری سازماندهی شده است. برای اجازه دادن به مدیریت مکالمات متعدد همزمان عامل، پیکربندی ارائه‌دهندگان پیام‌رسانی، ایجاد artifacts، مرور ساختار پوشه پروژه‌ها و کار روی چندین پروژه به طور همزمان ساخته شده است.
 
-### Chat​
+### چت
 
-The center of the app. You get:
+مرکز اپلیکیشن. دریافت می‌کنید:
 
-- Streaming responseswith live tool activity and structured tool-call summaries as the agent works.
-- The same conversation historyas every other Hermes surface — sessions started here resume in the CLI/TUI and vice versa.
-- Drag-and-drop filesanywhere in the chat area to attach them to your next message.
-- A right-hand preview rail— render web pages, files, and tool outputs side by side while you keep chatting.
-- Composer history and queue editing— press the up/down arrow keys in an empty composer to recall and reuse previous prompts, and edit messages you've queued up before they're sent.
+- پاسخ‌های پخش با فعالیت ابزار زنده و خلاصه‌های ساختاریافته فراخوانی ابزار در حین کار عامل.
+- همان تاریخچه مکالمه با هر سطح دیگر Hermes — نشست‌های شروع شده در اینجا در CLI/TUI ادامه می‌یابند و بالعکس.
+- کشیدن و رها کردن فایل‌ها در هر جای ناحیه چت برای پیوست کردن آن‌ها به پیام بعدی.
+- نوار پیش‌نمایش سمت راست — صفحات وب، فایل‌ها و خروجی‌های ابزار را در کنار هم رندر کنید در حالی که به چت کردن ادامه می‌دهید.
+- تاریخچه آهنگساز و ویرایش صف — کلیدهای بالا/پایین را در آهنگساز خالی فشار دهید تا درخواست‌های قبلی را بازیابی و استفاده مجدد کنید و پیام‌هایی را که در صف قرار داده‌اید قبل از ارسال ویرایش کنید.
 
-#### Status bar​
+#### خط وضعیت
 
-The bar along the bottom of the chat shows live session state and exposes quick controls without opening Settings:
+نوار در انتهای چت وضعیت نشست زنده را نشان می‌دهد و کنترل‌های سریع را بدون باز کردن تنظیمات در معرض نمایش قرار می‌دهد:
 
-- Per-session YOLO toggle— flip YOLO on or off for just this session (matching the TUI). YOLO bypasses the dangerous-command approval prompts, so know what you're turning off — seeSecurity → YOLO Mode.
+- تغییر YOLO به ازای هر نشست — YOLO را فقط برای این نشست فعال یا غیرفعال کنید (مطابق TUI). YOLO درخواست‌های تأیید دستورات خطرناک را دور می‌زند، بنابراین بدانید چه چیزی را غیرفعال می‌کنید — امنیت → حالت YOLO را ببینید.
 
-[Security → YOLO Mode](/docs/user-guide/security#yolo-mode)
+[امنیت → حالت YOLO](/docs/user-guide/security#yolo-mode)
 
-Chatting against a Hermes instance on another machine instead of the bundled local backend? SeeConnecting to a remote backendbelow — and for the full picture of how the remote-hosted dashboard connection works (the auth gate, the/api/wschat socket, and WebSocket close-code triage), seeWeb Dashboard → Connecting Hermes Desktop to a remote backend.
+با یک نمونه Hermes روی ماشین دیگری به جای backend محلی bundled چت می‌کنید؟ اتصال به backend از راه دور را در زیر ببینید — و برای تصویر کامل نحوه کار اتصال داشبورد از راه دور (دروازه احراز هویت، سوکت `/api/ws` چت، و تشخیص کد بسته شدن WebSocket)، رابط وب داشبورد → اتصال Hermes Desktop به backend از راه دور را ببینید.
 
-`/api/ws`
-[Web Dashboard → Connecting Hermes Desktop to a remote backend](/docs/user-guide/features/web-dashboard#connecting-hermes-desktop-to-a-remote-backend)
+[رابط وب داشبورد → اتصال Hermes Desktop به backend از راه دور](/docs/user-guide/features/web-dashboard#connecting-hermes-desktop-to-a-remote-backend)
 
-#### Choosing a model​
+#### انتخاب مدل
 
-The model picker lives in thecomposer, just left of the microphone. Click it to switch the model, reasoning effort, and fast mode from one dropdown.
+انتخابگر مدل در آهنگساز، درست سمت چپ میکروفون قرار دارد. روی آن کلیک کنید تا مدل، تلاش استدلال و حالت سریع را از یک لیست کشویی تغییر دهید.
 
-- The composer picker is sticky UI state and never touches your default.It's remembered locally (per device) andfollowsacross new chats and restarts instead of snapping back to the default — pick a model once and the nextCmd/Ctrl+Nopens on it. With a live chat, switching models scopes the change to thatcurrent chat; either way the selection rides along when the session is created/switched and isneverwritten to the profile default. (Switchingprofilesreseeds to that profile's own default.)
-- Set the default in Settings → Model.That "main" model is yourper-profile global default— it's what new chats, crons, subagents, and auxiliary tasks start from, and it's the only place that writes it. Eachprofilekeeps its own default.
-- Per-model effort/fast presets.Each model remembers its own reasoning effort and fast-mode choice in the desktop app, re-applied to the session whenever you pick that model. These presets are a desktop convenience and don't change crons or subagents.
-- Mid-chat switches reset the prompt cache.Switching the model inside a live chat means the next message re-reads the whole conversation at full input price (provider prompt caches are keyed to the model). Fine occasionally; on a long chat, a fresh chat on the new model is often cheaper than bouncing back and forth.
+- انتخابگر آهنگساز یک حالت UI چسبناک است و هرگز پیش‌فرض شما را لمس نمی‌کند. به طور محلی (به ازای هر دستگاه) به خاطر سپرده می‌شود و در چت‌های جدید و راه‌اندازی مجدد دنبال می‌شود به جای اینکه به پیش‌فرض برگردد — یک بار مدلی انتخاب کنید و `Cmd/Ctrl+N` بعدی روی آن باز می‌شود. با یک چت زنده، تعویض مدل تغییر را به همان چت فعلی محدود می‌کند؛ در هر صورت انتخاب هنگام ایجاد/تعویض نشست همراه می‌شود و هرگز به پیش‌فرض پروفایل نوشته نمی‌شود. (تعویض پروفایل‌ها به پیش‌فرض خود آن پروفایل بازمی‌گرداند.)
+- پیش‌فرض را در تنظیمات → مدل تنظیم کنید. آن مدل "اصلی" پیش‌فرض سراسری به ازای هر پروفایل شماست — چیزی که چت‌های جدید، cron‌ها، زیرعاملان و وظایف کمکی از آن شروع می‌شوند، و تنها جایی است که آن را می‌نویسد. هر پروفایل پیش‌فرض خود را حفظ می‌کند.
+- پیش‌preset تلاش/سریع به ازای هر مدل. هر مدل تلاش استدلال و انتخاب حالت سریع خود را در اپلیکیشن دسکتاپ به خاطر می‌سپارد و هر بار که آن مدل را انتخاب می‌کنید دوباره اعمال می‌شود. این پیش‌preset‌ها یک راحتی دسکتاپ هستند و cron‌ها یا زیرعاملان را تغییر نمی‌دهند.
+- تعویض در حین چت کش پیش‌فرض را بازنشانی می‌کند. تعویض مدل در داخل یک چت زنده به این معنی است که پیام بعدی کل مکالمه را با قیمت کامل ورودی دوباره می‌خواند (کش‌های prompt ارائه‌دهنده بر اساس مدل کلیدگذاری می‌شوند). گاهی اوقات خوب است؛ در یک چت طولانی، یک چت جدید در مدل جدید اغلب ارزان‌تر از رفت و برگشت است.
 
 `Cmd/Ctrl+N`
 
-### File browser​
+### مرورگر فایل
 
-Explore and preview the working directory without leaving the app — useful for following along as the agent reads, writes, and edits files. Set the initial project directory withhermes desktop --cwd <path>(or theHERMES_DESKTOP_CWDenvironment variable).
+بدون ترک اپلیکیشن دایرکتوری کاری را کاوش و پیش‌نمایش کنید — مفید برای دنبال کردن در حین خواندن، نوشتن و ویرایش فایل‌ها توسط عامل. دایرکتوری اولیه پروژه را با `hermes desktop --cwd <path>` (یا متغیر محیطی `HERMES_DESKTOP_CWD`) تنظیم کنید.
 
 `hermes desktop --cwd <path>`
 `HERMES_DESKTOP_CWD`
 
-### Voice​
+### صدا
 
-Talk to Hermes and hear it back, the samevoice modeavailable elsewhere. On macOS the OS will prompt once for microphone access.
+با Hermes صحبت کنید و پاسخ آن را بشنوید، همان حالت صدای موجود در جاهای دیگر. در macOS سیستم‌عامل یک بار برای دسترسی به میکروفون درخواست می‌دهد.
 
-[voice mode](/docs/user-guide/features/voice-mode)
+[حالت صدا](/docs/user-guide/features/voice-mode)
 
-### Settings & onboarding​
+### تنظیمات و onboarding
 
-Manage providers, models, tools, and credentials from a real UI instead of editing YAML. First-run onboarding gets you to your first message in seconds. The settings panes cover providers/keys, model selection, toolset configuration, MCP servers, the gateway, and session management.
+ارائه‌دهندگان، مدل‌ها، ابزارها و اعتبارنامه‌ها را از یک رابط کاربری واقعی به جای ویرایش YAML مدیریت کنید. onboarding اجرای اول شما را در چند ثانیه به اولین پیام می‌رساند. پنل‌های تنظیمات شامل ارائه‌دهندگان/کلیدها، انتخاب مدل، پیکربندی مجموعه ابزارها، سرورهای MCP، gateway و مدیریت نشست هستند.
 
-- Providers settings pane— a dedicated place to manage inference providers, with an Accounts / API-keys UX for signing in and storing credentials per provider.
-- Every provider and model in the menus— the GUI surfaces the full provider list and every model thathermes modelknows about, so you pick from the same catalog the CLI sees rather than a curated subset.
-- xAI Grok OAuth— Grok is a first-class OAuth provider in the launcher; sign in through the browser flow like the other OAuth providers.
-- Tool-backend installs from the GUI— run a tool backend's post-setup install steps directly from the app instead of dropping to a terminal.
-- Auxiliary-model warning— if you switch the main model to a new provider while auxiliary tasks (titling, summarization, and similar helpers) are still pinned to another provider, the app warns you so you don't unknowingly split work across two providers.
+- پنل تنظیمات ارائه‌دهندگان — مکان اختصاصی برای مدیریت ارائه‌دهندگان استنتاج، با تجربه کاربری Accounts/API-keys برای ورود و ذخیره اعتبارنامه‌ها به ازای هر ارائه‌دهنده.
+- هر ارائه‌دهنده و مدل در منوها — GUI لیست کامل ارائه‌دهندگان و هر مدلی که `hermes model` می‌شناسد را نمایش می‌دهد، بنابراین از همان کاتالوگی که CLI می‌بیند انتخاب می‌کنید نه یک زیرمجموعه گزینش شده.
+- OAuth xAI Grok — Grok یک ارائه‌دهنده OAuth درجه یک در راه‌انداز است؛ از طریق جریان مرورگر مانند سایر ارائه‌دهندگان OAuth وارد شوید.
+- نصب backend ابزار از GUI — مراحل نصب پس از راه‌اندازی یک backend ابزار را مستقیماً از اپلیکیشن اجرا کنید به جای رفتن به ترمینال.
+- هشدار مدل کمکی — اگر مدل اصلی را به ارائه‌دهنده جدیدی تغییر دهید در حالی که وظایف کمکی (عنوان‌گذاری، خلاصه‌سازی و کمک‌کارهای مشابه) هنوز به ارائه‌دهنده دیگری ثابت هستند، اپلیکیشن به شما هشدار می‌دهد تا ناخواسته کار را بین دو ارائه‌دهنده تقسیم نکنید.
 
 `hermes model`
 
-First-run onboarding has been redesigned on a unified overlay design system, and you can pickChoose provider laterto skip provider setup and get into the app first.
+onboarding اجرای اول بر روی یک سیستم طراحی overlay یکپارچه بازطراحی شده است و می‌توانید "Choose provider later" را انتخاب کنید تا راه‌اندازی ارائه‌دهنده را رد کنید و ابتدا وارد اپلیکیشن شوید.
 
-### Management panes​
+### پنل‌های مدیریت
 
-The app also surfaces the broader Hermes management surface so you don't have to drop to a terminal:
+اپلیکیشن همچنین سطح گسترده‌تر مدیریت Hermes را نمایش می‌دهد تا مجبور نباشید به ترمینال بروید:
 
-- Skills— browse, install, and manageskills.
-- Cron— view and managescheduled jobs.
-- Profiles— switch betweenHermes profiles(isolated config/skills/sessions).
-- Messaging— set up gateway channels.
-- AgentsandCommand Center— orchestration surfaces for multi-agent work.
+- مهارت‌ها — مهارت‌ها را مرور، نصب و مدیریت کنید.
+- Cron — کارهای زمان‌بندی شده را مشاهده و مدیریت کنید.
+- پروفایل‌ها — بین پروفایل‌ه Hermes (پیکربندی/مهارت‌های/نشست‌های جداگانه) تعویض کنید.
+- پیام‌رسانی — کانال‌های gateway را راه‌اندازی کنید.
+- عاملان و مرکز فرماندهی — سطوح ارکستراسیون برای کار چندعاملی.
 
-[skills](/docs/user-guide/features/skills)
-[scheduled jobs](/docs/reference/cli-commands#hermes-cron)
-[Hermes profiles](/docs/user-guide/profiles)
+[مهارت‌ها](/docs/user-guide/features/skills)
+[کارهای زمان‌بندی شده](/docs/reference/cli-commands#hermes-cron)
+[پروفایل‌های Hermes](/docs/user-guide/profiles)
 
-### Keyboard & navigation​
+### صفحه‌کلید و ناوبری
 
-- Command palette— pressCmd+K(Ctrl+K on Windows/Linux) to jump to actions and navigate the app from the keyboard.
-- Rebindable shortcuts— a shortcuts panel in Settings lets you remap the app's keyboard shortcuts to your own keys.
-- Custom zoom shortcuts— zoom the interface in half-step increments for finer control over text size.
-- UI language switcher— change the app's interface language in-app, including Simplified Chinese (zh-Hans).
+- تابلو دستورات — `Cmd+K` (`Ctrl+K` در Windows/Linux) را فشار دهید تا به عملیات بپرید و با صفحه‌کلید در اپلیکیشن ناوبری کنید.
+- میانبرهای قابل بازتعریف — پنل میانبرها در تنظیمات به شما اجازه می‌دهد میانبرهای صفحه‌کلید اپلیکیشن را به کلیدهای خودتان بازتعریف کنید.
+- میانبرهای زوم سفارشی — رابط کاربری را با افزایش‌های نیم‌قدم زوم کنید تا کنترل دقیق‌تری روی اندازه متن داشته باشید.
+- تغییردهنده زبان رابط کاربری — زبان رابط کاربری اپلیکیشن را درون اپلیکیشن تغییر دهید، شامل چینی ساده شده (zh-Hans).
 
-### Sessions & profiles​
+### نشست‌ها و پروفایل‌ها
 
-- Session-list overhaul— a reworked session list with archiving and general session hygiene to keep the list manageable as it grows.
-- Search sessions by id— find a specific session directly by its id.
-- Concurrent multi-profile sessions— run sessions across multipleprofilesat the same time, and reference a session in another profile with cross-profile@sessionlinks.
+- بازطراحی لیست نشست‌ها — یک لیست نشست بازطراحی شده با آرشیو و بهداشت عمومی نشست برای حفظ لیست قابل مدیریت در حین رشد.
+- جستجوی نشست‌ها بر اساس id — یک نشست خاص را مستقیماً بر اساس id آن پیدا کنید.
+- نشست‌های چندپروفایلی همزمان — نشست‌ها را در چندین پروفایل همزمان اجرا کنید و به یک نشست در پروفایل دیگر با پیوندهای cross-profile `@session` ارجاع دهید.
 
-[profiles](/docs/user-guide/profiles)
+[پروفایل‌ها](/docs/user-guide/profiles)
 `@session`
 
-## Updating​
+## به‌روزرسانی
 
-The app checks for updates in the background and offers a one-click update when one is ready.
+اپلیکیشن به طور خودکار به‌روزرسانی‌ها را بررسی می‌کند و هنگام آماده بودن یک به‌روزرسانی یک‌کلیکی ارائه می‌دهد.
 
-Themanual update processalso works with the GUI.
+فرآیند به‌روزرسانی دستی نیز با GUI کار می‌کند.
 
-[manual update process](https://hermes-agent.nousresearch.com/docs/getting-started/updating)
+[فرآیند به‌روزرسانی دستی](https://hermes-agent.nousresearch.com/docs/getting-started/updating)
 
-## Uninstalling​
+## حذف
 
-OpenSettings → About → Danger zoneand pick how much to remove:
+Settings → About → Danger zone را باز کنید و میزان حذف را انتخاب کنید:
 
-- Uninstall Chat GUI only— removes the desktop app and its data; the Hermes agent, your config, and your chats stay. (Same ashermes uninstall --gui.)
-- Uninstall GUI + agent, keep my data— removes the app and the agent but keeps config, chats, and secrets for a future reinstall. (Same ashermes uninstall.)
-- Uninstall everything— removes the app, the agent, and all user data. (Same ashermes uninstall --full.)
+- حذف فقط چت GUI — اپلیکیشن دسکتاپ و داده‌های آن را حذف می‌کند؛ عامل Hermes، پیکربندی و چت‌های شما باقی می‌مانند. (مشابه `hermes uninstall --gui`.)
+- حذف GUI + عامل، حفظ داده‌هایم — اپلیکیشن و عامل را حذف می‌کند اما پیکربندی، چت‌ها و رمزها را برای نصب مجدد آینده حفظ می‌کند. (مشابه `hermes uninstall`.)
+- حذف همه — اپلیکیشن، عامل و تمام داده‌های کاربر را حذف می‌کند. (مشابه `hermes uninstall --full`.)
 
-`hermes uninstall --gui`
-`hermes uninstall`
-`hermes uninstall --full`
+اپلیکیشن برای تکمیل کار بسته می‌شود (پاکسازی پس از خروج اجرا می‌شود تا بسته اپلیکیشن در حال اجرا و venv خودش را حذف کند). گزینه‌های حذف عامل وقتی عامل محلی نصب نشده باشد (مثلاً یک کلاینت "lite" GUI-only متصل به backend از راه دور) به طور خودکار پنهان می‌شوند.
 
-The app closes to finish the job (the cleanup runs after it exits so it can remove the running app bundle and its own venv). The agent-removing options are hidden automatically when no local agent is installed (for example, a GUI-only "lite" client connected to a remote backend).
+می‌توانید همین کار را از ترمینال انجام دهید — `hermes uninstall --gui` برای فقط GUI، یا `hermes uninstall` / `hermes uninstall --full` برای عامل نیز.
 
-You can do the same from the terminal —hermes uninstall --guifor the GUI alone, orhermes uninstall/hermes uninstall --fullfor the agent too.
+```
+hermes uninstall --gui
+hermes uninstall
+hermes uninstall --full
+```
 
-`hermes uninstall --gui`
-`hermes uninstall`
-`hermes uninstall --full`
+اجرای `hermes uninstall --gui` از یک source checkout (یک ساخت `hermes desktop` dev) همچنین `node_modules` workspace و خروجی‌های ساخت `apps/desktop/{dist,release}` را حذف می‌کند، زیرا آن‌ها artifacts ساخت GUI هستند. آن‌ها با `hermes desktop` (یا `npm install` + بازساخت) قابل بازیابی هستند — اما اگر فعالانه روی اپلیکیشن دسکتاپ کار می‌کنید، انتظار نصب مجدد وابستگی‌ها را داشته باشید.
 
-Runninghermes uninstall --guifrom asource checkout(ahermes desktopdev build) also removes the workspacenode_modulesandapps/desktop/{dist,release}build output, since those are GUI build artifacts. They're recoverable withhermes desktop(ornpm install+ a rebuild) — but if you're actively hacking on the desktop app, expect to reinstall dependencies afterward.
+## مرجع CLI: `hermes desktop`
 
-`hermes uninstall --gui`
-`hermes desktop`
-`node_modules`
-`apps/desktop/{dist,release}`
-`hermes desktop`
-`npm install`
+برای راه‌اندازی از CLI، کافی است `hermes desktop` را اجرا کنید. به طور پیش‌فرض وابستگی‌های Node workspace را نصب می‌کند، اپلیکیشن unpacked Electron سیستم‌عامل فعلی را می‌سازد و سپس آن artifact بسته‌بندی شده را راه‌اندازی می‌کند.
 
-## CLI reference:hermes desktop​
-
-`hermes desktop`
-
-To launch via the CLI, simply runhermes desktop. By default it installs workspace Node dependencies, builds the current OS's unpacked Electron app, then launches that packaged artifact.
-
-`hermes desktop`
-
-| Flag | Description |
+| پرچم | توضیح |
 | --- | --- |
-| --skip-build | Skip npm install/package and launch the existing unpacked app fromapps/desktop/release |
-| --force-build | Force a full rebuild even if the content stamp matches |
-| --build-only | Build the desktop app but do not launch it (used byhermes update) |
-| --source | Launch viaelectron .againstapps/desktop/distinstead of the packaged app |
-| --cwd PATH | Initial project directory for desktop chat sessions (setsHERMES_DESKTOP_CWD) |
-| --hermes-root PATH | Override the Hermes source root the app uses (setsHERMES_DESKTOP_HERMES_ROOT) |
-| --ignore-existing | Force the app to ignore anyhermesCLI already onPATHduring backend resolution |
-| --fake-boot | Enable deterministic boot delays for validating the startup UI |
+| --skip-build | npm install/package را رد کنید و اپلیکیشن unpacked موجود از `apps/desktop/release` را راه‌اندازی کنید |
+| --force-build | حتی اگر مهر زمانی محتوا مطابقت داشته باشد بازساخت کامل را اجبار کنید |
+| --build-only | اپلیکیشن دسکتاپ را بسازید اما راه‌اندازی نکنید (توسط `hermes update` استفاده می‌شود) |
+| --source | از طریق `electron .` روی `apps/desktop/dist` به جای اپلیکیشن بسته‌بندی شده راه‌اندازی کنید |
+| --cwd PATH | دایرکتوری اولیه پروژه برای نشست‌های چت دسکتاپ (`HERMES_DESKTOP_CWD` را تنظیم می‌کند) |
+| --hermes-root PATH | ریشه سورس Hermes که اپلیکیشن استفاده می‌کند را override کنید (`HERMES_DESKTOP_HERMES_ROOT` را تنظیم می‌کند) |
+| --ignore-existing | اپلیکیشن را مجبور کنید هر `hermes` CLI موجود در `PATH` را هنگام حل backend نادیده بگیرد |
+| --fake-boot | تأخیرهای راه‌اندازی قطعی را برای اعتبارسنجی رابط کاربری راه‌اندازی فعال کنید |
 
-`--skip-build`
-`apps/desktop/release`
-`--force-build`
-`--build-only`
-`hermes update`
-`--source`
-`electron .`
-`apps/desktop/dist`
-`--cwd PATH`
-`HERMES_DESKTOP_CWD`
-`--hermes-root PATH`
-`HERMES_DESKTOP_HERMES_ROOT`
-`--ignore-existing`
-`hermes`
-`PATH`
-`--fake-boot`
+## نحوه عملکرد
 
-## How it works​
+اپلیکیشن بسته‌بندی شده شامل پوسته Electron و یک سطح چت React بومی است. در اولین راه‌اندازی می‌تواند Runtime Hermes Agent را در `HERMES_HOME` (`~/.hermes`، یا `%LOCALAPPDATA%\hermes` در Windows) نصب کند — همان لایه‌بندی که نصب CLI استفاده می‌کند، به همین دلیل هر دو قابل تعویض هستند. حل backend ابتدا `HERMES_DESKTOP_HERMES_ROOT` را رعایت می‌کند، سپس یک نصب مدیریت شده تکمیل شده، سپس یک `hermes` کاوش شده در `PATH` (مگر اینکه `--ignore-existing` / `HERMES_DESKTOP_IGNORE_EXISTING=1` تنظیم شده باشد)، و در نهایت یک override صریح `HERMES_DESKTOP_HERMES` برای بسته‌بندی‌کنندگانی مانند Nix. رندرر React با یک backend بدون رابط که اپلیکیشن برای شما راه‌اندازی می‌کند ارتباط برقرار می‌کند — یک فرآیند `hermes serve` که API JSON-RPC/WebSocket `tui_gateway` را سرویس می‌دهد — و Runtime عامل را دوباره استفاده می‌کند به جای تعبیه `hermes --tui`. اپلیکیشن دسکتاپ خودکفا است: backend `hermes serve` خودش را اجرا می‌کند و هرگز رابط وب داشبورد را باز یا نیاز نمی‌کند. (Runtime‌های قدیمی‌تر از دستور `serve` به طور خودکار به `dashboard --no-open` بدون رابط بازمی‌گردند، بنابراین به‌روزرسانی اپلیکیشن هرگز از backend خود جلوتر نمی‌افتد.) منطق نصب، حل backend و به‌روزرسانی خودکار در فرآیند اصلی Electron زندگی می‌کند.
 
-The packaged app ships the Electron shell and a native React chat surface. On first launch it can install the Hermes Agent runtime intoHERMES_HOME(~/.hermes, or%LOCALAPPDATA%\hermeson Windows) —the same layout a CLI install uses, which is why the two are interchangeable. Backend resolution first honoursHERMES_DESKTOP_HERMES_ROOT, then a completed managed install, then a probedhermesonPATH(unless--ignore-existing/HERMES_DESKTOP_IGNORE_EXISTING=1is set), and finally an explicitHERMES_DESKTOP_HERMEScommand override for packagers such as Nix. The React renderer talks to a headless backend the app launches for you — ahermes serveprocess that serves thetui_gatewayJSON-RPC/WebSocket API — and reuses the agent runtime rather than embeddinghermes --tui. The desktop app isself-contained: it runs its ownhermes servebackend and never opens or requires theweb dashboard. (Runtimes older than theservecommand fall back to a headlessdashboard --no-openautomatically, so an app update never outruns its backend.) Install, backend-resolution, and self-update logic live in the Electron main process.
+## اتصال به backend از راه دور
 
-`HERMES_HOME`
-`~/.hermes`
-`%LOCALAPPDATA%\hermes`
-`HERMES_DESKTOP_HERMES_ROOT`
-`hermes`
-`PATH`
-`--ignore-existing`
-`HERMES_DESKTOP_IGNORE_EXISTING=1`
-`HERMES_DESKTOP_HERMES`
-`hermes serve`
-`tui_gateway`
-`hermes --tui`
-`hermes serve`
-[web dashboard](/docs/user-guide/features/web-dashboard)
-`serve`
-`dashboard --no-open`
+به طور پیش‌فرض اپلیکیشن backend محلی خودش را شروع و مدیریت می‌کند. می‌توانید به جای آن آن را به یک backend Hermes که روی ماشین دیگری اجرا می‌شود اشاره دهید — یک VPS، یک سرور خانگی، یا یک Mini پشت Tailscale.
 
-## Connecting to a remote backend​
+"Backend از راه دور" به معنی یک سرور `hermes serve` در حال اجرا روی ماشین از راه دور است — آن فرآیندی است که اپلیکیشن دسکتاپ به آن متصل می‌شود. هیچ چیزی در این بخش کار نمی‌کند مگر اینکه آن backend واقعاً بالا و قابل دسترس باشد. اپلیکیشن دسکتاپ آن را برای شما راه‌اندازی نمی‌کند؛ شما (یا یک سرویس `systemd`) `hermes serve` را روی میزبان از راه دور نگه می‌دارید و اپلیکیشن به آن متصل می‌شود. اگر از کانال‌های پیام‌رسانی (Telegram، Discord و غیره) نیز استفاده می‌کنید، gateway یک فرآیند جداگانه بلندمدت است که به طور مستقل شروع می‌کنید — یادداشت پس از مراحل راه‌اندازی را ببینید.
 
-By default the app starts and manages its ownlocalbackend. You can instead point it at a Hermes backend running on another machine — a VPS, a home server, or a Mini behind Tailscale.
+اتصال دو نیمه دارد: در backend آن را با یک ارائه‌دهنده احراز هویت محافظت می‌کنید و در اپلیکیشن URL backend را وارد کرده و وارد می‌شوید. اتصال backend به یک آدرس غیر-loopback دروازه احراز هویت آن را به طور خودکار فعال می‌کند و ارائه‌دهنده‌ای که پیکربندی می‌کنید همان چیزی است که به اپلیکیشن دسکتاپ اجازه عبور می‌دهد.
 
-`hermes serve`
+ارائه‌دهنده را بر اساس محل زندگی backend انتخاب کنید:
 
-"Remote backend" means ahermes serveserver running on the remote machine — that is the process the desktop app connects to. Nothing in this section works unless that backend is actually up and reachable. The desktop app does not start it for you; you (or asystemdservice) keephermes serverunning on the remote host, and the app attaches to it. If you also use messaging channels (Telegram, Discord, etc.), thegatewayis aseparatelong-running process you start independently — see the note after the setup steps.
+- OAuth (Nous Portal) — ترجیحی برای هر چیزی که فراتر از ماشین خودتان قابل دسترس است. ورودها با حساب Nous شما تأیید می‌شوند، بنابراین این گزینه مناسب برای VPS، یک میزبان عمومی، یا هر backend از راه دور است. داشبورد را با `hermes dashboard register` (یا صفحه Portal/local-dashboards) ثبت کنید تا OAuth client آن فراهم شود، سپس از اپلیکیشن با "Sign in with Nous Research" وارد شوید. یک ارائه‌دهنده OIDC میزبانی شده خودی به همان شکل کار می‌کند اگر ارائه‌دهنده هویت خودتان را اجرا کنید.
+- نام کاربری/رمز عبور — فقط برای استفاده محلی/شبکه مورد اعتماد. ساده‌ترین گزینه وقتی backend در همان LAN مورد اعتماد یا فقط از طریق VPN قابل دسترس است (مثلاً Tailscale). یک credential مشترک را با یک ارائه‌دهنده هویت خارجی محافظت می‌کند، بنابراین از آن برای داشبوردی که در اینترنت عمومی در معرض دید است استفاده نکنید — در آنجا به جای آن به سراغ OAuth بروید.
 
-`hermes serve`
-`systemd`
-`hermes serve`
+### در backend (ماشین از راه دور)
 
-The connection has two halves: on the backend you protect it with anauth provider, and in the app you enter the backend's URL and sign in. Binding the backend to a non-loopback address automatically engages its auth gate, and the provider you configure is what lets the desktop app through.
-
-Pick a provider based on where the backend lives:
-
-- OAuth (Nous Portal) — preferred for anything reachable beyond your own machine.Logins are verified against your Nous account, so this is the option suitable for a VPS, a public host, or any remote backend. Register the dashboard withhermes dashboard register(or the Portal/local-dashboardspage) to provision its OAuth client, then sign in from the app withSign in with Nous Research. A self-hosted OIDC provider works the same way if you run your own identity provider.
-- Username/password — local / trusted-network use only.The simplest option when the backend is on the same trusted LAN or reachable only over a VPN (e.g. Tailscale). It protects a single shared credential with no external identity provider, sodo not use it for a dashboard exposed to the public internet— reach for OAuth there instead.
-
-`hermes dashboard register`
-[/local-dashboards](https://portal.nousresearch.com/local-dashboards)
-`/local-dashboards`
-
-The rest of this section shows the username/password path because it's the quickest to stand up on a trusted network; for the OAuth path seeWeb Dashboard → Default provider: Nous Research.
-
-[Web Dashboard → Default provider: Nous Research](/docs/user-guide/features/web-dashboard#default-provider-nous-research)
-
-### On the backend (the remote machine)​
-
-Set a username and password, then start the backend bound to a reachable address. The credentials live in~/.hermes/.env(the secrets file, mode 0600):
-
-`~/.hermes/.env`
+یک نام کاربری و رمز عبور تنظیم کنید، سپس backend را به یک آدرس قابل دسترس متصل کنید. اعتبارنامه‌ها در `~/.hermes/.env` (فایل رمزها، حالت 0600) زندگی می‌کنند:
 
 ```
-# 1. Set the dashboard login credentials.cat >> ~/.hermes/.env <<'EOF'HERMES_DASHBOARD_BASIC_AUTH_USERNAME=adminHERMES_DASHBOARD_BASIC_AUTH_PASSWORD=choose-a-strong-password# Recommended: a stable signing secret so sessions survive restarts.# Without it a random key is generated per boot and you'll be logged out# on every restart.HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -base64 32)EOFchmod 600 ~/.hermes/.env# 2. Run the backend bound to a reachable address. The non-loopback bind#    engages the auth gate; the username/password provider handles login.hermes serve --host 0.0.0.0 --port 9119
+# 1. تنظیم اعتبارنامه‌های ورود به داشبورد.
+cat >> ~/.hermes/.env <<'EOF'
+HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin
+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=choose-a-strong-password
+# توصیه شده: یک secret امضای پایدار تا نشست‌ها راه‌اندازی مجدد را تحمل کنند.
+# بدون آن یک کلید تصادفی در هر راه‌اندازی تولید می‌شود و در هر
+# راه‌اندازی مجدد از سیستم خارج می‌شوید.
+HERMES_DASHBOARD_BASIC_AUTH_SECRET=$(openssl rand -base64 32)
+EOF
+chmod 600 ~/.hermes/.env
+# 2. اجرای backend متصل به یک آدرس قابل دسترس. اتصال غیر-loopback
+#    دروازه احراز هویت را فعال می‌کند؛ ارائه‌دهنده نام کاربری/رمز عبور
+#    ورود را مدیریت می‌کند.
+hermes serve --host 0.0.0.0 --port 9119
 ```
 
-Keep thathermes serveprocess running for as long as you want the desktop app to be able to connect — if it stops, the app can no longer reach the backend. Run it undersystemd,tmux, or your process manager of choice so it survives logout and reboots.
+آن فرآیند `hermes serve` را تا زمانی که می‌خواهید اپلیکیشن دسکتاپ بتواند متصل شود نگه دارید — اگر متوقف شود، اپلیکیشن دیگر نمی‌تواند به backend دسترسی داشته باشد. آن را تحت `systemd`، `tmux` یا مدیر فرآیند انتخابی خود اجرا کنید تا خروج از سیستم و راه‌اندازی مجدد را تحمل کند.
 
-`hermes serve`
-`systemd`
-`tmux`
+جداگانه، مطمئن شوید که اگر به کانال‌های پیام‌رسانی تکیه می‌کنید gateway در میزبان از راه دور در حال اجرا است — backend `hermes serve` چیزی است که اپلیکیشن دسکتاپ با آن ارتباط برقرار می‌کند، اما نشست‌های gateway Telegram/Discord/Slack شما فرآیندی جداگانه هستند که به طور مستقل شروع و نگه می‌دارید. راه‌اندازی gateway را در Messaging ببینید.
 
-Separately, make sure thegateway is runningon the remote host if you rely on messaging channels — thehermes servebackend is what the desktop app talks to, but your Telegram/Discord/Slack gateway sessions are a different process that you start and keep running on their own. SeeMessagingfor gateway setup.
+[پیام‌رسانی](/docs/user-guide/messaging/)
 
-`hermes serve`
-[Messaging](/docs/user-guide/messaging/)
+ترجیح می‌دهید رمز عبور متن ساده را در حالت ذخیره نگه ندارید؟ به جای آن `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH` را روی یک هش scrypt تنظیم کنید — آن را با `python -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('PW'))"` محاسبه کنید. سطح کامل پیکربندی (کلیدهای config.yaml، هر متغیر محیطی، محدودکننده نرخ): رابط وب داشبورد → ارائه‌دهنده نام کاربری/رمز عبور.
 
-Prefer not to keep a plaintext password at rest? SetHERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASHto a scrypt hash instead — compute it withpython -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('PW'))". Full configuration surface (config.yaml keys, every env var, the rate limiter):Web Dashboard → Username/password provider.
+backend را به عنوان سرویس `systemd` اجرا می‌کنید؟ به unit `EnvironmentFile=%h/.hermes/.env` بدهید تا اعتبارنامه‌ها در محیط در راه‌اندازی باشند.
 
-`HERMES_DASHBOARD_BASIC_AUTH_PASSWORD_HASH`
-`python -c "from plugins.dashboard_auth.basic import hash_password; print(hash_password('PW'))"`
-[Web Dashboard → Username/password provider](/docs/user-guide/features/web-dashboard#usernamepassword-provider-no-oauth-idp)
+backend فایل `.env` (کلیدهای API، رمزها) شما را می‌خواند و می‌نویسد و می‌تواند دستورات عامل را اجرا کند. راه‌اندازی نام کاربری/رمز عبور نشان داده شده در بالا برای یک شبکه مورد اعتماد است — هرگز یک backend محافظت شده با رمز عبور را مستقیماً در اینترنت باز در معرض دید قرار ندهید؛ آن را پشت VPN قرار دهید. Tailscale گزینه تمیز است: به آدرس tailscale ماشین متصل شوید (`--host <tailscale-ip>`) و `http://<tailscale-ip>:9119` را به عنوان URL از راه دور استفاده کنید تا فقط tailnet شما بتواند به آن دسترسی داشته باشد. برای دسترسی به backend از اینترنت عمومی، به جای آن ارائه‌دهنده OAuth (Nous Portal) را استفاده کنید.
 
-Running the backend as a systemd service? Give the unitEnvironmentFile=%h/.hermes/.envso the credentials are in the environment at boot.
-
-`EnvironmentFile=%h/.hermes/.env`
-
-The backend reads and writes your.env(API keys, secrets) and can run agent commands. Theusername/passwordsetup shown above is for a trusted network — never expose a password-protected backend directly to the open internet; put it behind a VPN.Tailscaleis the clean option: bind to the machine's tailscale IP (--host <tailscale-ip>) and usehttp://<tailscale-ip>:9119as the Remote URL so only your tailnet can reach it. To reach a backend over the public internet, use theOAuth (Nous Portal)provider instead.
-
-`.env`
-[Tailscale](https://tailscale.com/)
-`--host <tailscale-ip>`
-`http://<tailscale-ip>:9119`
-
-### In the app​
+### در اپلیکیشن
 
 Settings → Gateway → Remote gateway:
 
-1. Remote URL—http://<backend-host>:9119(path prefixes like/hermeswork if you front it with a reverse proxy)
-2. Sign in— the app detects which provider the backend advertises and adapts the button. For a username/password backend it shows aSign inbutton that opens a credential form (enter the credentials from step 1). For an OAuth backend it showsSign in with<provider>(e.g.Sign in with Nous Research), which runs the provider's browser sign-in. Either way the app ends up with an authenticated session against the backend.
-3. Save and reconnect— switches the desktop shell onto the remote backend. The session refreshes automatically; you stay signed in across restarts whenHERMES_DASHBOARD_BASIC_AUTH_SECRETis set.
+1. URL از راه دور — `http://<backend-host>:9119` (پیشوندهای مسیر مانند `/hermes` کار می‌کنند اگر آن را با یک reverse proxy جلوی آن قرار دهید)
+2. ورود — اپلیکیشن تشخیص می‌دهد کدام ارائه‌دهنده backend تبلیغ می‌کند و دکمه را تطبیق می‌دهد. برای backend نام کاربری/رمز عبور یک دکمه "Sign in" نشان می‌دهد که فرم credential را باز می‌کند (اعتبارنامه‌های مرحله 1 را وارد کنید). برای backend OAuth "Sign in with <provider>" نشان می‌دهد (مثلاً "Sign in with Nous Research") که ورود مرورگر ارائه‌دهنده را اجرا می‌کند. در هر صورت اپلیکیشن یک نشست احراز هویت شده با backend دریافت می‌کند.
+3. ذخیره و اتصال مجدد — پوسته دسکتاپ را به backend از راه دور تعویض می‌کند. نشست به طور خودکار تازه‌سازی می‌شود؛ وقتی `HERMES_DASHBOARD_BASIC_AUTH_SECRET` تنظیم شده باشد در راه‌اندازی مجدد وارد می‌مانید.
 
-`http://<backend-host>:9119`
-`/hermes`
-`<provider>`
-`HERMES_DASHBOARD_BASIC_AUTH_SECRET`
+همچنین می‌توانید URL backend را بدون GUI از طریق متغیر محیطی `HERMES_DESKTOP_REMOTE_URL` قبل از راه‌اندازی اپلیکیشن تنظیم کنید (آن تنظیمات درون اپلیکیشن را override می‌کند)؛ همچنان از پنل تنظیمات Gateway وارد می‌شوید.
 
-You can also set the backend URL without the UI via theHERMES_DESKTOP_REMOTE_URLenvironment variable before launching the app (it overrides the in-app setting); you still sign in from the Gateway settings panel.
+gateway از راه دور به ازای هر پروفایل پیکربندی می‌شود، بنابراین هر پروفایل می‌تواند به backend از راه دور خود اشاره کند (یا در محلی خود باقی بماند). تعویض پروفایل‌ها تعویض می‌دهد کدام میزبان از راه دور اپلیکیشن به آن متصل می‌شود.
 
-`HERMES_DESKTOP_REMOTE_URL`
+[پروفایل](/docs/user-guide/profiles)
 
-The remote gateway host is configured perprofile, so each profile can point at its own remote backend (or stay on its local one). Switching profiles switches which remote host the app connects to.
+### عیب‌یابی
 
-[profile](/docs/user-guide/profiles)
+- ورود با خطا 401 / "Invalid credentials" شکست می‌خورد — نام کاربری یا رمز عبور با `HERMES_DASHBOARD_BASIC_AUTH_USERNAME` / `HERMES_DASHBOARD_BASIC_AUTH_PASSWORD` backend مطابقت ندارد. Backend همان خطای عمومی را برای کاربر ناشناخته و رمز عبور اشتباه برمی‌گرداند (بدون oracle شمارش)، بنابراین هر دو را دوباره بررسی کنید. دروازه را با `curl -s http://<host>:9119/api/status | jq '.auth_required, .auth_providers' تأیید کنید — باید `true` گزارش کند و شامل `"basic"` باشد.
+- دکمه "Sign in" وجود ندارد — به جای آن یک نشانه نشست درخواست می‌کند — ارائه‌دهنده نام کاربری/رمز عبور backend فعال نیست. `/api/status` `"basic"` را در `auth_providers` فهرست نمی‌کند. مطمئن شوید هم نام کاربری و هم رمز عبور (یا هش رمز عبور) در `~/.hermes/.env` تنظیم شده و فرآیند داشبورد واقعاً آن‌ها را بارگذاری کرده است.
+- در هر راه‌اندازی مجدد از سیستم خارج می‌شوید — `HERMES_DASHBOARD_BASIC_AUTH_SECRET` را روی یک مقدار پایدار تنظیم کنید. بدون آن کلید امضای نشانه در هر راه‌اندازی دوباره تولید می‌شود و تمام نشست‌ها را نامعتبر می‌کند.
+- اتصال رد شده / انقضای زمان — backend به `127.0.0.1` (پیش‌فرض) متصل شده یا فایروال/VPN پورت را مسدود می‌کند. به `0.0.0.0` یا آدرس tailscale متصل شوید و پورت را برای شبکه مورد اعتماد خود باز کنید.
 
-### Troubleshooting​
+برای همان راه‌اندازی از زاویه رابط وب داشبورد، رابط وب داشبورد → اتصال Hermes Desktop به backend از راه دور را ببینید؛ متغیرهای محیطی در Environment Variables → Web Dashboard & Hermes Desktop فهرست شده‌اند.
 
-- Sign-in fails with 401 / "Invalid credentials"— the username or password doesn't match the backend'sHERMES_DASHBOARD_BASIC_AUTH_USERNAME/HERMES_DASHBOARD_BASIC_AUTH_PASSWORD. The backend returns the same generic error for an unknown user and a wrong password (no enumeration oracle), so double-check both. Confirm the gate is on withcurl -s http://<host>:9119/api/status | jq '.auth_required, .auth_providers'— it should reporttrueand include"basic".
-- No "Sign in" button — it asks for a session token instead— the backend's username/password provider isn't active./api/statuswon't list"basic"inauth_providers. Make sure both the username and a password (or password hash) are set in~/.hermes/.envand that the dashboard process actually loaded them.
-- Signed out on every restart— setHERMES_DASHBOARD_BASIC_AUTH_SECRETto a stable value. Without it the token-signing key is regenerated per boot, invalidating all sessions.
-- Connection refused / times out— the backend bound to127.0.0.1(the default) or a firewall/VPN is blocking the port. Bind to0.0.0.0or the tailscale IP and open the port to your trusted network.
+[رابط وب داشبورد → اتصال Hermes Desktop به backend از راه دور](/docs/user-guide/features/web-dashboard#connecting-hermes-desktop-to-a-remote-backend)
+[متغیرهای محیطی → رابط وب داشبورد و Hermes Desktop](/docs/reference/environment-variables#web-dashboard--hermes-desktop)
 
-`HERMES_DASHBOARD_BASIC_AUTH_USERNAME`
-`HERMES_DASHBOARD_BASIC_AUTH_PASSWORD`
-`curl -s http://<host>:9119/api/status | jq '.auth_required, .auth_providers'`
-`true`
-`"basic"`
-`/api/status`
-`"basic"`
-`auth_providers`
-`~/.hermes/.env`
-`HERMES_DASHBOARD_BASIC_AUTH_SECRET`
-`127.0.0.1`
-`0.0.0.0`
+## عیب‌یابی
 
-For the same setup from the web-dashboard angle, seeWeb Dashboard → Connecting Hermes Desktop to a remote backend; the env vars are catalogued underEnvironment Variables → Web Dashboard & Hermes Desktop.
-
-[Web Dashboard → Connecting Hermes Desktop to a remote backend](/docs/user-guide/features/web-dashboard#connecting-hermes-desktop-to-a-remote-backend)
-[Environment Variables → Web Dashboard & Hermes Desktop](/docs/reference/environment-variables#web-dashboard--hermes-desktop)
-
-## Troubleshooting​
-
-Boot logs land inHERMES_HOME/logs/desktop.log(it includes backend output and recent Python tracebacks) — check it first if the app reports a boot failure. You can also tail it from the CLI:
-
-`HERMES_HOME/logs/desktop.log`
+لاگ‌های راه‌اندازی در `HERMES_HOME/logs/desktop.log` (شامل خروجی backend و traceback‌های اخیر پایتون) قرار دارند — اگر اپلیکیشن خطای راه‌اندازی گزارش کند ابتدا آن را بررسی کنید. همچنین می‌توانید آن را از CLI دنبال کنید:
 
 ```
 hermes logs gui -f
 ```
 
-Common resets:
+بازنشانی‌های رایج:
 
 ```
-# Force a clean first-launch setup (macOS/Linux)rm "$HOME/.hermes/hermes-agent/.hermes-bootstrap-complete"# Rebuild a broken Python venv (macOS/Linux)rm -rf "$HOME/.hermes/hermes-agent/venv"# Reset a stuck macOS microphone prompttccutil reset Microphone com.nousresearch.hermes
+# اجبار راه‌اندازی اول تمیز (macOS/Linux)
+rm "$HOME/.hermes/hermes-agent/.hermes-bootstrap-complete"
+# بازساخت venv پایتون خراب (macOS/Linux)
+rm -rf "$HOME/.hermes/hermes-agent/venv"
+# بازنشانی درخواست میکروفون گیر کرده macOS
+tccutil reset Microphone com.nousresearch.hermes
 ```
 
-### "Build desktop app" stuck on Electron download​
+### "Build desktop app" روی دانلود Electron گیر کرده
 
-The build downloads the Electron runtime (~114 MB) fromgithub.com/electron/electron/releases. If the installer hangs on theBuild desktop appstep with the live output repeatingretrying attempt=…, GitHub is being blocked or throttled on your network (firewall, proxy, or region).
+ساخت، Runtime Electron (~114 MB) را از `github.com/electron/electron/releases` دانلود می‌کند. اگر نصب‌کننده در مرحله "Build desktop app" با خروجی زنده `retrying attempt=…` آویزان شود، GitHub در شبکه شما مسدود یا محدود شده (فایروال، پروکسی یا منطقه).
 
-`github.com/electron/electron/releases`
-`retrying attempt=…`
+نصب‌کننده این را به طور خودکار ترمیم می‌کند: در یک ساخت ناموفق (1) یک فایل zip Electron خراب کش شده را پاک می‌کند و دوباره تلاش می‌کند، سپس (2) اگر همچنان ناموفق باشد و `ELECTRON_MIRROR` را تنظیم نکرده باشید، یک بار دیگر از طریق `npmmirror.com`، آینه رسمی جامعه Electron، تلاش می‌کند. `@electron/get` دانلود را SHASUM بررسی می‌کند، اما checksums از همان آینه می‌آیند — این دانلود خراب یا ناقص را تشخیص می‌دهد، نه یک آینه به خطر افتاده. اگر ترجیح می‌دهید به یک میزبان第三方 اعتماد نکنید، `ELECTRON_MIRROR` خودتان را ثابت کنید (در زیر)؛ ساخت هرگز آنچه را تنظیم کرده‌اید override نمی‌کند.
 
-The installer self-heals this automatically: on a failed build it (1) clears a corrupt cached Electron zip and retries, then (2) if it still fails and you haven't setELECTRON_MIRROR, retries once more throughnpmmirror.com, the de-facto Electron community mirror.@electron/getSHASUM-checks the download, but the checksums come from the same mirror — that catches a corrupt or partial download, not a compromised mirror. If you'd rather not trust a third-party host, pin your ownELECTRON_MIRROR(below); the build never overrides one you've set.
-
-`ELECTRON_MIRROR`
-`npmmirror.com`
-`@electron/get`
-`ELECTRON_MIRROR`
-
-Tochoose your own mirror(e.g. a corporate/trusted one), setELECTRON_MIRRORbefore installing or rebuild manually — the build honors it and won't override it:
-
-`ELECTRON_MIRROR`
+برای انتخاب آینه خودتان (مثلاً یک آینه سازمانی/مورد اعتماد)، `ELECTRON_MIRROR` را قبل از نصب تنظیم کنید یا دستی بازسازی کنید — ساخت آن را رعایت می‌کند و override نمی‌کند:
 
 ```
-ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ \  bash -c 'cd "$HOME/.hermes/hermes-agent/apps/desktop" && CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack'
+ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ \
+  bash -c 'cd "$HOME/.hermes/hermes-agent/apps/desktop" && CSC_IDENTITY_AUTO_DISCOVERY=false npm run pack'
 ```
 
-To clear a corrupt cached zip by hand:
+برای پاک کردن دستی یک فایل zip خراب کش شده:
 
 ```
-rm -f "$HOME/Library/Caches/electron"/electron-*.zip   # macOSrm -f "$HOME/.cache/electron"/electron-*.zip            # Linux
+rm -f "$HOME/Library/Caches/electron"/electron-*.zip   # macOS
+rm -f "$HOME/.cache/electron"/electron-*.zip            # Linux
 ```
 
-## Building from source​
+## ساخت از سورس
 
-If you want to hack on the app itself, install workspace deps from the repo root once, then run the dev server fromapps/desktop:
-
-`apps/desktop`
+اگر می‌خواهید روی خود اپلیکیشن کار کنید، وابستگی‌های workspace را یک بار از ریشه مخزن نصب کنید، سپد سرور توسعه را از `apps/desktop` اجرا کنید:
 
 ```
-npm install          # from repo root — links apps/desktop, web, apps/sharedcd apps/desktopnpm run dev          # Vite renderer + Electron, which boots the Python backend
+npm install          # از ریشه مخزن — apps/desktop، web، apps/shared را لینک می‌کند
+cd apps/desktop
+npm run dev          # رندرر Vite + Electron که backend پایتونی را راه‌اندازی می‌کند
 ```
 
-Point the app at a specific checkout, or sandbox it from your real config:
+اپلیکیشن را به یک checkout خاص اشاره دهید، یا آن را از پیکربندی واقعی خود جدا کنید:
 
 ```
-HERMES_DESKTOP_HERMES_ROOT=/path/to/clone npm run devHERMES_HOME=/tmp/throwaway npm run devnpm run dev:fake-boot   # exercise the startup overlay with deterministic delays
+HERMES_DESKTOP_HERMES_ROOT=/path/to/clone npm run dev
+HERMES_HOME=/tmp/throwaway npm run dev
+npm run dev:fake-boot   # رابط کاربری راه‌اندازی را با تأخیرهای قطعی تمرین کنید
 ```
 
-Build installers:
+ساخت نصب‌کننده‌ها:
 
 ```
-npm run dist:mac     # DMG + zipnpm run dist:win     # NSIS + MSInpm run dist:linux   # AppImage + deb + rpmnpm run pack         # unpacked app under release/ (no installer)
+npm run dist:mac     # DMG + zip
+npm run dist:win     # NSIS + MSI
+npm run dist:linux   # AppImage + deb + rpm
+npm run pack         # اپلیکیشن unpacked در release/ (بدون نصب‌کننده)
 ```
 
-macOS/Windows signing and notarization run automatically when the relevant credentials are present in the environment (CSC_LINK/CSC_KEY_PASSWORD/APPLE_*for macOS,WIN_CSC_*for Windows).
+امضا و notarization macOS/Windows وقتی credentialهای مربوطه در محیط موجود باشند به طور خودکار اجرا می‌شوند (`CSC_LINK`/`CSC_KEY_PASSWORD`/`APPLE_*` برای macOS، `WIN_CSC_*` برای Windows).
 
-`CSC_LINK`
-`CSC_KEY_PASSWORD`
-`APPLE_*`
-`WIN_CSC_*`
+## همچنین ببینید
 
-## See also​
+- راهنمای CLI — رابط ترمینال
+- TUI — رابط کاربری مدرن ترمینال که توسط `hermes --tui` و تب چت داشبورد استفاده می‌شود
+- رابط وب داشبورد — پنل مدیریت مرورگر با تب چت تعبیه شده
+- پیکربندی — پیکربندی که اپلیکیشن دسکتاپ می‌خواند و می‌نویسد
+- Windows (بومی) — مسیر نصب بومی Windows
 
-- CLI Guide— the terminal interface
-- TUI— the modern terminal UI used byhermes --tuiand the dashboard chat tab
-- Web Dashboard— browser admin panel with an embedded chat tab
-- Configuration— config that the desktop app reads and writes
-- Windows (Native)— native Windows install path
-
-[CLI Guide](/docs/user-guide/cli)
+[راهنمای CLI](/docs/user-guide/cli)
 [TUI](/docs/user-guide/tui)
-`hermes --tui`
-[Web Dashboard](/docs/user-guide/features/web-dashboard)
-[Configuration](/docs/user-guide/configuration)
-[Windows (Native)](/docs/user-guide/windows-native)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/desktop.md)
+[رابط وب داشبورد](/docs/user-guide/features/web-dashboard)
+[پیکربندی](/docs/user-guide/configuration)
+[Windows (بومی)](/docs/user-guide/windows-native)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/desktop.md)

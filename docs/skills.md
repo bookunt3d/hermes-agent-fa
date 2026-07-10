@@ -1,9 +1,9 @@
 ---
 layout: docs
 title: "مهارت‌ها"
-permalink: /skills/
+permalink: /docs/skills/
 ---
 
-### Loading the catalog…
+### بارگذاری کاتالوگ...
 
-Fetching 88k+ skills across every registry. One moment.
+در حال دریافت بیش از ۸۸ هزار مهارت از تمامی ثبت‌نام‌ها. لطفاً صبر کنید.

@@ -1,105 +1,105 @@
 ---
 layout: docs
 title: "نکات و ترفندها"
-permalink: /guides/tips/
+permalink: /docs/guides/tips/
 ---
 
 - 
 - Guides & Tutorials
 - Tips & Best Practices
 
-# Tips & Best Practices
+# نکات و بهترین شیوه‌ها
 
-A quick-wins collection of practical tips that make you immediately more effective with Hermes Agent. Each section targets a different aspect — scan the headers and jump to what's relevant.
+مجموعه‌ای از نکات عملی سریع که به شما کمک می‌کند بلافاصله با Hermes Agent مؤثرتر شوید. هر بخش به یک جنبه مختلف می‌پردازد — عنوان‌ها را اسکن کنید و به مورد مرتبط بپردازید.
 
-Runhermes setup --portal— you get 300+ models including Claude, GPT-5, and Gemini under one subscription. SeeNous Portal.
+`hermes setup --portal` را اجرا کنید — بیش از ۳۰۰ مدل از جمله Claude، GPT-5 و Gemini زیر یک اشتراک دریافت می‌کنید. به Nous Portal مراجعه کنید.
 
 `hermes setup --portal`
 [Nous Portal](/docs/integrations/nous-portal)
 
-## Getting the Best Results​
+## بهترین نتایج را بگیرید
 
-### Be Specific About What You Want​
+### درباره آنچه می‌خواهید دقیق باشید
 
-Vague prompts produce vague results. Instead of "fix the code," say "fix the TypeError inapi/handlers.pyon line 47 — theprocess_request()function receivesNonefromparse_body()." The more context you give, the fewer iterations you need.
+پرامپت‌های مبهم نتایج مبهم تولید می‌کنند. به جای «کد را تعمیر کن»، بگویید «خطای TypeError در `api/handlers.py` خط ۴۷ را تعمیر کن — تابع `process_request()` مقدار `None` از `parse_body()` دریافت می‌کند.» هرچه context بیشتری بدهید، به تکرار کمتری نیاز دارید.
 
 `api/handlers.py`
 `process_request()`
 `None`
 `parse_body()`
 
-### Provide Context Up Front​
+### جزئیات مرتبط را از ابتدا ارائه دهید
 
-Front-load your request with the relevant details: file paths, error messages, expected behavior. One well-crafted message beats three rounds of clarification. Paste error tracebacks directly — the agent can parse them.
+درخواست خود را با جزئیات مرتبط پیش‌بارگذاری کنید: مسیرهای فایل، پیام‌های خطا، رفتار مورد انتظار. یک پیام خوب بهتر از سه دور شفاف‌سازی است. traceback خطاهای را مستقیماً جایگذاری کنید — agent می‌تواند آنها را تجزیه کند.
 
-### Use Context Files for Recurring Instructions​
+### برای دستورالعمل‌های تکراری از فایل‌های Context استفاده کنید
 
-If you find yourself repeating the same instructions ("use tabs not spaces," "we use pytest," "the API is at/api/v2"), put them in anAGENTS.mdfile. The agent reads it automatically every session — zero effort after setup.
+اگر متوجه می‌شوید که همان دستورالعمل‌ها را تکرار می‌کنید («از tab به جای space استفاده کن»، «ما از pytest استفاده می‌کنیم»، «API در `/api/v2` است»)، آنها را در یک فایل `AGENTS.md` قرار دهید. agent در هر نشست به صورت خودکار آن را می‌خواند — پس از راه‌اندازی بدون هیچ زحمتی.
 
 `/api/v2`
 `AGENTS.md`
 
-### Let the Agent Use Its Tools​
+### بگذارید agent از ابزارهایش استفاده کند
 
-Don't try to hand-hold every step. Say "find and fix the failing test" rather than "opentests/test_foo.py, look at line 42, then..." The agent has file search, terminal access, and code execution — let it explore and iterate.
+سعی نکنید هر مرحله را دستی هدایت کنید. بگویید «تست ناموفق را پیدا و تعمیر کن» به جای «فایل `tests/test_foo.py` را باز کن، خط ۴۲ را ببین، سپس...» agent جستجوی فایل، دسترسی ترمینال و اجرای کد دارد — بگذارید کاوش و تکرار کند.
 
 `tests/test_foo.py`
 
-### Use Skills for Complex Workflows​
+### برای workflowهای پیچیده از مهارت‌ها استفاده کنید
 
-Before writing a long prompt explaining how to do something, check if there's already a skill for it. Type/skillsto browse available skills, or just invoke one directly like/axolotlor/github-pr-workflow.
+قبل از نوشتن یک پرامپت طولانی که توضیح می‌دهد چگونه کاری انجام شود، بررسی کنید آیا از قبل مهارتی برای آن وجود دارد. `/skills` را تایپ کنید تا مهارت‌های موجود را مرور کنید، یا مستقیماً یکی را فراخوانی کنید مانند `/axolotl` یا `/github-pr-workflow`.
 
 `/skills`
 `/axolotl`
 `/github-pr-workflow`
 
-## CLI Power User Tips​
+## نکات کاربر قدرتمند CLI
 
-### Multi-Line Input​
+### ورودی چندخطی
 
-PressAlt+Enter,Ctrl+J, orShift+Enterto insert a newline without sending.Shift+Enteronly works when the terminal sends it as a distinct keystroke (Kitty / foot / WezTerm / Ghostty by default; iTerm2 / Alacritty / VS Code terminal once the Kitty keyboard protocol is enabled). The other two work in every terminal.
+`Alt+Enter`، `Ctrl+J` یا `Shift+Enter` را فشار دهید تا بدون ارسال، یک خط جدید درج شود. `Shift+Enter` فقط زمانی کار می‌کند که ترمینال آن را به عنوان یک ضربه کلید مجزا ارسال کند (Kitty / foot / WezTerm / Ghostty به طور پیش‌فرض؛ iTerm2 / Alacritty / ترمینال VS Code وقتی پروتکل کلید Kitty فعال شده باشد). دو مورد دیگر در هر ترمینالی کار می‌کنند.
 
 `Shift+Enter`
 
-### Paste Detection​
+### تشخیص جایگذاری
 
-The CLI auto-detects multi-line pastes. Just paste a code block or error traceback directly — it won't send each line as a separate message. The paste is buffered and sent as one message.
+CLI به طور خودکار جایگذاری‌های چندخطی را تشخیص می‌دهد. کافی است یک بلوک کد یا traceback خطا را مستقیماً جایگذاری کنید — هر خط را به عنوان یک پیام جداگانه ارسال نمی‌کند. جایگذاری بافر شده و به عنوان یک پیام ارسال می‌شود.
 
-### Interrupt and Redirect​
+### وقف و هدایت مجدد
 
-PressCtrl+Conce to interrupt the agent mid-response. You can then type a new message to redirect it. Double-press Ctrl+C within 2 seconds to force exit. This is invaluable when the agent starts going down the wrong path.
+`Ctrl+C` را فشار دهید تا agent را در حین پاسخ قطع کنید. سپس می‌توانید یک پیام جدید تایپ کنید تا آن را هدایت مجدد کنید. `Ctrl+C` را دو بار در عرض ۲ ثانیه فشار دهید تا خروج اجباری شود. این زمانی که agent شروع به رفتن در مسیر اشتباه می‌کند بی‌ارزش است.
 
-### Resume Sessions with-c​
+### از سرگیری نشست‌ها با `-c`
 
 `-c`
 
-Forgot something from your last session? Runhermes -cto resume exactly where you left off, with full conversation history restored. You can also resume by title:hermes -r "my research project".
+چیزی از نشست قبلی خود فراموش کرده‌اید؟ `hermes -c` را اجرا کنید تا دقیقاً از جایی که متوقف شده‌اید ادامه دهید، با تاریخچه مکالمه کامل بازیابی‌شده. همچنین می‌توانید با عنوان از سر بگیرید: `hermes -r "my research project"`.
 
 `hermes -c`
 `hermes -r "my research project"`
 
-### Clipboard Image Paste​
+### جایگذاری تصویر از کلیپ‌بورد
 
-PressCtrl+Vto paste an image from your clipboard directly into the chat. The agent uses vision to analyze screenshots, diagrams, error popups, or UI mockups — no need to save to a file first.
+`Ctrl+V` را فشار دهید تا یک تصویر از کلیپ‌بورد را مستقیماً در چت جایگذاری کنید. agent از بینایی برای تحلیل اسکرین‌شات‌ها، نمودارها، پنجره‌های خطا یا نمونه‌های اولیه رابط کاربری استفاده می‌کند — نیازی به ذخیره در فایل اول نیست.
 
-### Slash Command Autocomplete​
+### تکمیل خودکار دستور اسلش
 
-Type/and pressTabto see all available commands. This includes built-in commands (/compress,/model,/title) and every installed skill. You don't need to memorize anything — Tab completion has you covered.
+`/` را تایپ کنید و `Tab` را فشار دهید تا تمام دستورات موجود را ببینید. این شامل دستورات داخلی (`/compress`، `/model`، `/title`) و هر مهارت نصب‌شده است. نیازی به حفظ کردن چیزی ندارید — تکمیل Tab همه چیز را پوشش می‌دهد.
 
 `/`
 `/compress`
 `/model`
 `/title`
 
-Use/verboseto cycle through tool output display modes:off → new → all → verbose. The "all" mode is great for watching what the agent does; "off" is cleanest for simple Q&A.
+از `/verbose` برای چرخیدن بین حالت‌های نمایش خروجی ابزار استفاده کنید: `off → new → all → verbose`. حالت «all» عالی برای تماشای کارهای agent است؛ «off» برای سؤال و پاسخ ساده تمیزتر است.
 
 `/verbose`
 
-## Context Files​
+## فایل‌های Context
 
-### AGENTS.md: Your Project's Brain​
+### AGENTS.md: مغز پروژه شما
 
-Create anAGENTS.mdin your project root with architecture decisions, coding conventions, and project-specific instructions. This is automatically injected into every session, so the agent always knows your project's rules.
+یک `AGENTS.md` در ریشه پروژه خود با تصمیمات معماری، قراردادهای کدنویسی و دستورالعمل‌های مختص پروژه ایجاد کنید. این به طور خودکار در هر نشست تزریق می‌شود، بنابراین agent همیشه قوانین پروژه شما را می‌داند.
 
 `AGENTS.md`
 
@@ -107,202 +107,203 @@ Create anAGENTS.mdin your project root with architecture decisions, coding conve
 # Project Context- This is a FastAPI backend with SQLAlchemy ORM- Always use async/await for database operations- Tests go in tests/ and use pytest-asyncio- Never commit .env files
 ```
 
-### SOUL.md: Customize Personality​
+### SOUL.md: سفارشی‌سازی شخصیت
 
-Want Hermes to have a stable default voice? Edit~/.hermes/SOUL.md(or$HERMES_HOME/SOUL.mdif you use a custom Hermes home). Hermes now seeds a starter SOUL automatically and uses that global file as the instance-wide personality source.
+می‌خواهید Hermes یک صدای پیش‌فرض پایدار داشته باشد؟ `~/.hermes/SOUL.md` (یا `$HERMES_HOME/SOUL.md` اگر Hermes home سفارشی استفاده می‌کنید) را ویرایش کنید. Hermes در حال حاضر یک SOUL شروع به صورت خودکار ایجاد می‌کند و از آن فایل جهانی به عنوان منبع شخصیت در سطح نمونه استفاده می‌کند.
 
 `~/.hermes/SOUL.md`
 `$HERMES_HOME/SOUL.md`
 
-For a full walkthrough, seeUse SOUL.md with Hermes.
+برای راهنمای کامل، به استفاده از SOUL.md با Hermes مراجعه کنید.
 
-[Use SOUL.md with Hermes](/docs/guides/use-soul-with-hermes)
+[استفاده از SOUL.md با Hermes](/docs/guides/use-soul-with-hermes)
 
 ```
 # SoulYou are a senior backend engineer. Be terse and direct.Skip explanations unless asked. Prefer one-liners over verbose solutions.Always consider error handling and edge cases.
 ```
 
-UseSOUL.mdfor durable personality. UseAGENTS.mdfor project-specific instructions.
+از `SOUL.md` برای شخصیت پایدار استفاده کنید. از `AGENTS.md` برای دستورالعمل‌های مختص پروژه استفاده کنید.
 
 `SOUL.md`
 `AGENTS.md`
 
-### .cursorrules Compatibility​
+### سازگاری .cursorrules
 
-Already have a.cursorrulesor.cursor/rules/*.mdcfile? Hermes reads those too. No need to duplicate your coding conventions — they're loaded automatically from the working directory.
+از قبل یک `.cursorrules` یا `.cursor/rules/*.mdc` دارید؟ Hermes آنها را هم می‌خواند. نیازی به تکرار قراردادهای کدنویسی خود ندارید — آنها به طور خودکار از دایرکتوری کاری بارگذاری می‌شوند.
 
 `.cursorrules`
 `.cursor/rules/*.mdc`
 
-### Discovery​
+### کشف
 
-Hermes loads the top-levelAGENTS.mdfrom the current working directory at session start. SubdirectoryAGENTS.mdfiles are discovered lazily during tool calls (viasubdirectory_hints.py) and injected into tool results — they are not loaded upfront into the system prompt.
+Hermes در شروع نشست `AGENTS.md` سطح بالای دایرکتوری کاری جاری را بارگذاری می‌کند. فایل‌های `AGENTS.md` زیردایرکتوری به طور تنبل در حین فراخوانی‌های ابزار (از طریق `subdirectory_hints.py`) کشف شده و در نتایج ابزار تزریق می‌شوند — آنها از قبل در system prompt بارگذاری نمی‌شوند.
 
 `AGENTS.md`
 `AGENTS.md`
 `subdirectory_hints.py`
 
-Keep context files focused and concise. Every character counts against your token budget since they're injected into every single message.
+فایل‌های context را متمرکز و مختصر نگه دارید. هر کاراکتر به بودجه توکن شما اضافه می‌شود زیرا آنها در هر پیام تزریق می‌شوند.
 
-## Memory & Skills​
+## حافظه و مهارت‌ها
 
-### Memory vs. Skills: What Goes Where​
+### حافظه در مقابل مهارت‌ها: چه چیزی کجا برود
 
-Memoryis for facts: your environment, preferences, project locations, and things the agent has learned about you.Skillsare for procedures: multi-step workflows, tool-specific instructions, and reusable recipes. Use memory for "what," skills for "how."
+**حافظه** برای حقایق است: محیط شما، ترجیحات، مکان‌های پروژه و چیزهایی که agent درباره شما یاد گرفته است. **مهارت‌ها** برای رویه‌ها هستند: workflowهای چندمرحله‌ای، دستورالعمل‌های مختص ابزار و دستور العمل‌های قابل استفاده مجدد. از حافظه برای «چه چیزی» و از مهارت‌ها برای «چگونه» استفاده کنید.
 
-### When to Create Skills​
+### چه زمانی مهارت ایجاد کنید
 
-If you find a task that takes 5+ steps and you'll do it again, ask the agent to create a skill for it. Say "save what you just did as a skill calleddeploy-staging." Next time, just type/deploy-stagingand the agent loads the full procedure.
+اگر تسکی پیدا کردید که ۵+ مرحله طول می‌کشد و دوباره آن را انجام خواهید داد، از agent بخواهید برای آن یک مهارت ایجاد کند. بگویید «آنچه را که فقط انجام دادی به عنوان مهارتی به نام `deploy-staging` ذخیره کن.» دفعه بعد، فقط `/deploy-staging` را تایپ کنید و agent کل رویه را بارگذاری می‌کند.
 
 `deploy-staging`
 `/deploy-staging`
 
-### Managing Memory Capacity​
+### مدیریت ظرفیت حافظه
 
-Memory is intentionally bounded (~2,200 chars for MEMORY.md, ~1,375 chars for USER.md). When it fills up, the agent consolidates entries. You can help by saying "clean up your memory" or "replace the old Python 3.9 note — we're on 3.12 now."
+حافظه عمداً محدود است (حدود ۲۲۰۰ کاراکتر برای `MEMORY.md`، حدود ۱۳۷۵ کاراکتر برای `USER.md`). وقتی پر شود، agent ورودی‌ها را تلفیق می‌کند. می‌توانید با گفتن «حافظه‌ات را مرتب کن» یا «یادداشت قدیمی Python 3.9 را جایگزین کن — ما الان روی 3.12 هستیم» کمک کنید.
 
-### Let the Agent Remember​
+### بگذارید agent به یاد بیاورد
 
-After a productive session, say "remember this for next time" and the agent will save the key takeaways. You can also be specific: "save to memory that our CI uses GitHub Actions with thedeploy.ymlworkflow."
+پس از یک نشست مفید، بگویید «این را برای دفعه بعد به خاطر بسپار» و agent نکات کلیدی را ذخیره می‌کند. همچنین می‌توانید دقیق باشید: «به حافظه ذخیره کن که CI ما از GitHub Actions با workflow `deploy.yml` استفاده می‌کند.»
 
 `deploy.yml`
 
-Memory is a frozen snapshot — changes made during a session don't appear in the system prompt until the next session starts. The agent writes to disk immediately, but the prompt cache isn't invalidated mid-session.
+حافظه یک اسناپ‌شات منجمد است — تغییرات انجام‌شده در یک نشست تا شروع نشست بعدی در system prompt ظاهر نمی‌شوند. agent بلافاصله روی دیسک می‌نویسد، اما کش prompt در وسط نشست منقضی نمی‌شود.
 
-## Performance & Cost​
+## عملکرد و هزینه
 
-### Don't Break the Prompt Cache​
+### کش prompt را خراب نکنید
 
-Most LLM providers cache the conversation prefix (system prompt + history). If you keep your system prompt stable (same context files, same memory), subsequent messages in a session getcache hitsthat are significantly cheaper. The cache is keyed to the model and account — so an explicit/modelswitch, anautomatic provider fallback, or acredential-pool rotationall force the next turn to re-read the entire conversation at full input price. Occasional switches are fine; frequent switching in a long session multiplies your cost.
+اکثر ارائه‌دهندگان LLM پیشوند مکالمه (system prompt + تاریخچه) را کش می‌کنند. اگر system prompt خود را پایدار نگه دارید (همان فایل‌های context، همان حافظه)، پیام‌های بعدی در یک نشست `cache hit`هایی دریافت می‌کنند که به طور قابل توجهی ارزان‌تر هستند. کش بر اساس مدل و حساب کلید می‌خورد — بنابراین سوئیچ صریح `/model`، بازگشت خودکار ارائه‌دهنده یا چرخش استخر اعتبارنامه همه فراخوانی بعدی را مجبور می‌کنند کل مکالمه را با قیمت ورودی کامل دوباره بخواند. سوئیچ‌های موردی خوب هستند؛ سوئیچ مکرر در یک نشست طولانی هزینه شما را ضرب می‌کند.
 
 `/model`
-[automatic provider fallback](/docs/user-guide/features/fallback-providers)
-[credential-pool rotation](/docs/user-guide/features/credential-pools)
+[بازگشت خودکار ارائه‌دهنده](/docs/user-guide/features/fallback-providers)
+[چرخش استخر اعتبارنامه](/docs/user-guide/features/credential-pools)
 
-### Use /compress Before Hitting Limits​
+### قبل از رسیدن به محدودیت‌ها از `/compress` استفاده کنید
 
-Long sessions accumulate tokens. When you notice responses slowing down or getting truncated, run/compress. This summarizes the conversation history, preserving key context while dramatically reducing token count. Use/usageto check where you stand.
+نشست‌های طولانی توکن‌ها را جمع می‌کنند. وقتی متوجه می‌شوید پاسخ‌ها کند می‌شوند یا برش می‌خورند، `/compress` را اجرا کنید. این تاریخچه مکالمه را خلاصه می‌کند و ضمن حفظ context کلیدی، تعداد توکن را به طور چشمگیری کاهش می‌دهد. از `/usage` برای بررسی وضعیت خود استفاده کنید.
 
 `/compress`
 `/usage`
 
-### Delegate for Parallel Work​
+### برای کار موازی واگذاری کنید
 
-Need to research three topics at once? Ask the agent to usedelegate_taskwith parallel subtasks. Each subagent runs independently with its own context, and only the final summaries come back — massively reducing your main conversation's token usage.
+نیاز دارید همزمان سه موضوع را تحقیق کنید؟ از agent بخواهید از `delegate_task` با زیرتسک‌های موازی استفاده کند. هر subagent به طور مستقل با context خود اجرا می‌شود و فقط خلاصه‌های نهایی برمی‌گردند — استفاده از توکن مکالمه اصلی شما به طور چشمگیری کاهش می‌یابد.
 
 `delegate_task`
 
-### Use execute_code for Batch Operations​
+### برای عملیات دسته‌ای از `execute_code` استفاده کنید
 
-Instead of running terminal commands one at a time, ask the agent to write a script that does everything at once. "Write a Python script to rename all.jpegfiles to.jpgand run it" is cheaper and faster than renaming files individually.
+به جای اجرای دستورات ترمینال یکی یکی، از agent بخواهید یک اسکریپت بنویسد که همه چیز را همزمان انجام دهد. «یک اسکریپت Python بنویس که تمام فایل‌های `.jpeg` را به `.jpg` تغییر نام دهد و آن را اجرا کن» ارزان‌تر و سریع‌تر از تغییر نام فایل‌ها به صورت تکی است.
 
 `.jpeg`
 `.jpg`
 
-### Choose the Right Model​
+### مدل مناسب را انتخاب کنید
 
-Use/modelto switch models mid-session. Use a frontier model (Claude Sonnet/Opus, GPT-4o) for complex reasoning and architecture decisions. Switch to a faster model for simple tasks like formatting, renaming, or boilerplate generation. Keep in mind each switch resets the prompt cache (see above), so on long sessions it's often cheaper to start a fresh session on the other model than to bounce back and forth.
+از `/model` برای سوئیچ مدل‌ها در وسط نشست استفاده کنید. از یک مدل پیشرو (Claude Sonnet/Opus، GPT-4o) برای استدلال پیچیده و تصمیمات معماری استفاده کنید. به یک مدل سریع‌تر برای تسک‌های ساده مانند قالب‌بندی، تغییر نام یا تولید کد نمونه سوئیچ کنید. به خاطر داشته باشید که هر سوئیچ کش prompt را بازنشانی می‌کند (بالا را ببینید)، بنابراین در نشست‌های طولانی اغلب ارزان‌تر است یک نشست تازه در مدل دیگر شروع کنید تا اینکه بین آنها بپرید.
 
 `/model`
 
-Run/usageperiodically to see your token consumption. Run/insightsfor a broader view of usage patterns over the last 30 days.
+`/usage` را به طور دوره‌ای اجرا کنید تا مصرف توکن خود را ببینید. `/insights` را برای دید گسترده‌تری از الگوهای استفاده در ۳۰ روز گذشته اجرا کنید.
 
 `/usage`
 `/insights`
 
-## Messaging Tips​
+## نکات پیام‌رسانی
 
-### Set a Home Channel​
+### یک کانال خانه تنظیم کنید
 
-Use/sethomein your preferred Telegram or Discord chat to designate it as the home channel. Cron job results and scheduled task outputs are delivered here. Without it, the agent has nowhere to send proactive messages.
+`/sethome` را در چت Telegram یا Discord مورد علاقه خود استفاده کنید تا آن را به عنوان کانال خانه تعیین کنید. نتایج وظایف cron و خروجی وظایف زمان‌بندی‌شده در اینجا تحویل داده می‌شوند. بدون آن، agent جایی برای ارسال پیام‌های پیشگیرانه ندارد.
 
 `/sethome`
 
-### Use /title to Organize Sessions​
+### از `/title` برای سازماندهی نشست‌ها استفاده کنید
 
-Name your sessions with/title auth-refactoror/title research-llm-quantization. Named sessions are easy to find withhermes sessions listand resume withhermes -r "auth-refactor". Unnamed sessions pile up and become impossible to distinguish.
+نشست‌های خود را با `/title auth-refactor` یا `/title research-llm-quantization` نام‌گذاری کنید. نشست‌های نام‌دار به راحتی با `hermes sessions list` پیدا می‌شوند و با `hermes -r "auth-refactor"` از سر گرفته می‌شوند. نشست‌های بدون نام انباشته شده و غیرقابل تشخیص می‌شوند.
 
 `/title auth-refactor`
 `/title research-llm-quantization`
 `hermes sessions list`
 `hermes -r "auth-refactor"`
 
-### DM Pairing for Team Access​
+### جفت‌سازی DM برای دسترسی تیمی
 
-Instead of manually collecting user IDs for allowlists, enable DM pairing. When a teammate DMs the bot, they get a one-time pairing code. You approve it withhermes pairing approve telegram XKGH5N7P— simple and secure.
+به جای جمع‌آوری دستی شناسه‌های کاربر برای لیست‌های مجاز، جفت‌سازی DM را فعال کنید. وقتی یک همکار DM می‌زند، یک کد جفت‌سازی یکبار مصرف دریافت می‌کنید. آن را با `hermes pairing approve telegram XKGH5N7P` تأیید می‌کنید — ساده و ایمن.
 
 `hermes pairing approve telegram XKGH5N7P`
 
-### Tool Progress Display Modes​
+### حالت‌های نمایش پیشرفت ابزار
 
-Use/verboseto control how much tool activity you see. In messaging platforms, less is usually more — keep it on "new" to see just new tool calls. In the CLI, "all" gives you a satisfying live view of everything the agent does.
+از `/verbose` برای کنترل میزان فعالیت ابزار قابل مشاهده استفاده کنید. در پلتفرم‌های پیام‌رسانی، کمتر معمولاً بهتر است — آن را روی «new» نگه دارید تا فقط فراخوانی‌های جدید ابزار را ببینید. در CLI، «all» دید زنده رضایت‌بخشی از همه کارهای agent به شما می‌دهد.
 
 `/verbose`
 
-By default, messaging sessions never auto-reset — context lives until you/resetor compression kicks in. If you want sessions to reset automatically (after idle time or daily at a fixed hour), opt in via thesession_resetsection in~/.hermes/config.yaml.
+به طور پیش‌فرض، نشست‌های پیام‌رسانی هرگز بازنشانی خودکار نمی‌شوند — context تا زمانی که شما `/reset` کنید یا فشرده‌سازی شروع شود زنده می‌ماند. اگر می‌خواهید نشست‌ها به طور خودکار بازنشانی شوند (پس از زمان بیکاری یا روزانه در ساعت ثابت)، از طریق بخش `session_reset` در `~/.hermes/config.yaml` فعال کنید.
 
 `/reset`
 `session_reset`
 `~/.hermes/config.yaml`
 
-## Security​
+## امنیت
 
-### Use Docker for Untrusted Code​
+### برای کد غیرقابل اعتماد از Docker استفاده کنید
 
-When working with untrusted repositories or running unfamiliar code, use Docker or Daytona as your terminal backend. SetTERMINAL_BACKEND=dockerin your.env. Destructive commands inside a container can't harm your host system.
+هنگام کار با مخازن غیرقابل اعتماد یا اجرای کد ناآشنا، از Docker یا Daytona به عنوان پشتیبان ترمینال استفاده کنید. `TERMINAL_BACKEND=docker` را در فایل `.env` خود تنظیم کنید. دستورات مخرب داخل کانتینر نمی‌توانند به سیستم میزبان شما آسیب برسانند.
 
 `TERMINAL_BACKEND=docker`
 `.env`
 
 ```
-# In your .env:TERMINAL_BACKEND=dockerTERMINAL_DOCKER_IMAGE=hermes-sandbox:latest
+# در فایل .env شما:TERMINAL_BACKEND=dockerTERMINAL_DOCKER_IMAGE=hermes-sandbox:latest
 ```
 
-### Avoid Windows Encoding Pitfalls​
+### از دام‌های رمزگذاری ویندوز اجتناب کنید
 
-On Windows, some default encodings (such ascp125x) cannot represent all Unicode characters, which can causeUnicodeEncodeErrorwhen writing files in tests or scripts.
+در ویندوز، برخی رمزگذاری‌های پیش‌فرض (مانند `cp125x`) نمی‌توانند تمام کاراکترهای Unicode را نشان دهند، که می‌تواند `UnicodeEncodeError` هنگام نوشتن فایل‌ها در تست‌ها یا اسکریپت‌ها ایجاد کند.
 
 `cp125x`
 `UnicodeEncodeError`
-- Prefer opening files with an explicit UTF-8 encoding:
+
+- ترجیح دهید فایل‌ها را با رمزگذاری صریح UTF-8 باز کنید:
 
 ```
 with open("results.txt", "w", encoding="utf-8") as f:    f.write("✓ All good\n")
 ```
 
-- In PowerShell, you can also switch the current session to UTF-8 for console and native command output:
+- در PowerShell، می‌توانید نشست فعلی را نیز به UTF-8 برای خروجی کنسول و دستور بومی تغییر دهید:
 
 ```
 $OutputEncoding = [Console]::OutputEncoding = [Text.UTF8Encoding]::new($false)
 ```
 
-This keeps PowerShell and child processes on UTF-8 and helps avoid Windows-only failures.
+این کار PowerShell و پروسه‌های فرزند را روی UTF-8 نگه می‌دارد و به جلوگیری از خرابی‌های فقط ویندوزی کمک می‌کند.
 
-### Review Before Choosing "Always"​
+### قبل از انتخاب «Always» بررسی کنید
 
-When the agent triggers a dangerous command approval (rm -rf,DROP TABLE, etc.), you get four options:once,session,always,deny. Think carefully before choosing "always" — it permanently allowlists that pattern. Start with "session" until you're comfortable.
+وقتی agent یک تأیید دستور خطرناک را فعال می‌کند (`rm -rf`، `DROP TABLE` و غیره)، چهار گزینه دارید: `once`، `session`، `always`، `deny`. قبل از انتخاب «always» با دقت فکر کنید — این الگو را به طور دائمی در لیست مجاز قرار می‌دهد. تا زمانی که راحت شوید با «session» شروع کنید.
 
 `rm -rf`
 `DROP TABLE`
 
-### Command Approval Is Your Safety Net​
+### تأیید دستور شبکه ایمنی شماست
 
-Hermes checks every command against a curated list of dangerous patterns before execution. This includes recursive deletes, SQL drops, piping curl to shell, and more. Don't disable this in production — it exists for good reasons.
+Hermes هر دستور را قبل از اجرا با یک لیست گزینش‌شده از الگوهای خطرناک بررسی می‌کند. این شامل حذف‌های بازگشتی، حذف‌های SQL، لوله کردن curl به shell و موارد دیگر است. این را در تولید غیرفعال نکنید — به دلایل خوبی وجود دارد.
 
-When running in a container backend (Docker, Singularity, Modal, Daytona), dangerous command checks areskippedbecause the container is the security boundary. Make sure your container images are properly locked down.
+هنگام اجرا در پشتیبان کانتینر (Docker، Singularity، Modal، Daytona)، بررسی‌های دستور خطرناک رد می‌شوند زیرا کانتینر مرز امنیتی است. مطمئن شوید تصاویر کانتینر شما به درستی قفل شده‌اند.
 
-### Use Allowlists for Messaging Bots​
+### برای ربات‌های پیام‌رسانی از لیست‌های مجاز استفاده کنید
 
-Never setGATEWAY_ALLOW_ALL_USERS=trueon a bot with terminal access. Always use platform-specific allowlists (TELEGRAM_ALLOWED_USERS,DISCORD_ALLOWED_USERS) or DM pairing to control who can interact with your agent.
+هرگز `GATEWAY_ALLOW_ALL_USERS=true` را روی یک ربات با دسترسی ترمینال تنظیم نکنید. همیشه از لیست‌های مجاز خاص پلتفرم (`TELEGRAM_ALLOWED_USERS`، `DISCORD_ALLOWED_USERS`) یا جفت‌سازی DM برای کنترل اینکه چه کسی می‌تواند با agent شما تعامل کند استفاده کنید.
 
 `GATEWAY_ALLOW_ALL_USERS=true`
 `TELEGRAM_ALLOWED_USERS`
 `DISCORD_ALLOWED_USERS`
 
 ```
-# Recommended: explicit allowlists per platformTELEGRAM_ALLOWED_USERS=123456789,987654321DISCORD_ALLOWED_USERS=123456789012345678# Or use cross-platform allowlistGATEWAY_ALLOWED_USERS=123456789,987654321
+# توصیه شده: لیست‌های مجاز صریح به ازای هر پلتفرمTELEGRAM_ALLOWED_USERS=123456789,987654321DISCORD_ALLOWED_USERS=123456789012345678# یا از لیست مجاز بین پلتفرمی استفاده کنیدGATEWAY_ALLOWED_USERS=123456789,987654321
 ```
 
-Have a tip that should be on this page? Open an issue or PR — community contributions are welcome.
+نکته‌ای دارید که باید در این صفحه باشد؟ یک issue یا PR باز کنید — مشارکت‌های جامعه خوشآمد است.
 
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/tips.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/tips.md)

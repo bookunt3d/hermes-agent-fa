@@ -1,259 +1,170 @@
 ---
 layout: docs
 title: "راهنمای شروع سریع"
-permalink: /getting-started/quickstart/
+permalink: /docs/getting-started/quickstart/
 ---
 
 - 
 - Getting Started
 - Quickstart
 
-# Quickstart
+# شروع سریع
 
-This guide gets you from zero to a working Hermes setup that survives real use. Install, choose a provider, verify a working chat, and know exactly what to do when something breaks.
+این راهنما شما را از صفر به یک نصب کاربردی Hermes می‌رساند که در استفاده واقعی دوام می‌آورد. نصب کنید، یک ارائه‌دهنده انتخاب کنید، یک چت کاربردی را تأیید کنید و دقیقاً بدانید وقتی چیزی خراب می‌شود چه کاری انجام دهید.
 
-## Prefer to watch?​
+## ترجیح می‌دهید تماشا کنید؟
 
-Onchain AI Garageput together a Masterclass walkthrough of installation, setup, and basic commands — a good companion to this page if you'd rather follow along on video. For more, see the fullHermes Agent Tutorials & Use Casesplaylist.
+Onchain AI Garage یک walkthrough جامع از نصب، تنظیم و فرمان‌های پایه تهیه کرده — یک همراه خوب برای این صفحه اگر ترجیح می‌دهید با ویدیو دنبال کنید. برای بیشتر، [پلی‌لیست آموزش‌ها و موارد استفاده Hermes Agent](https://www.youtube.com/playlist?list=PLmpUb_PWAkDxewld5ZYyKifuHxgIbiq2d) را ببینید.
 
-[Hermes Agent Tutorials & Use Cases](https://www.youtube.com/playlist?list=PLmpUb_PWAkDxewld5ZYyKifuHxgIbiq2d)
+## برای چه کسی است
 
-## Who this is for​
+- کاملاً جدید هستید و کوتاه‌ترین مسیر به یک نصب کاربردی می‌خواهید
+- ارائه‌دهنده را عوض می‌کنید و نمی‌خواهید با اشتباهات پیکربندی وقت از دست دهید
+- Hermes را برای یک تیم، ربات یا جریان کاری همیشه‌فعال راه‌اندازی می‌کنید
+- از «نصب شد، ولی هنوز هیچ کاری نمی‌کند» خسته شده‌اید
 
-- Brand new and want the shortest path to a working setup
-- Switching providers and don't want to lose time to config mistakes
-- Setting up Hermes for a team, bot, or always-on workflow
-- Tired of "it installed, but it still does nothing"
+## سریع‌ترین مسیر
 
-## The fastest path​
+ ردیفی که با هدف شما مطابقت دارد را انتخاب کنید:
 
-Pick the row that matches your goal:
-
-| Goal | Do this first | Then do this |
+| هدف | اول این کار را انجام دهید | سپس این کار را انجام دهید |
 | --- | --- | --- |
-| I just want Hermes working on my machine | hermes setup | Run a real chat and verify it responds |
-| I already know my provider | hermes model | Save the config, then start chatting |
-| I want a bot or always-on setup | hermes gateway setupafter CLI works | Connect Telegram, Discord, Slack, or another platform |
-| I want a local or self-hosted model | hermes model→ custom endpoint | Verify the endpoint, model name, and context length |
-| I want multi-provider fallback | hermes modelfirst | Add routing and fallback only after the base chat works |
+| فقط می‌خواهم Hermes روی ماشین من کار کند | `hermes setup` | یک چت واقعی اجرا کنید و تأیید کنید پاسخ می‌دهد |
+| ارائه‌دهنده خود را می‌دانم | `hermes model` | پیکربندی را ذخیره کنید، سپس شروع به چت کنید |
+| یک ربات یا نصب همیشه‌فعال می‌خواهم | `hermes gateway setup` بعد از کار CLI | Telegram، Discord، Slack یا پلتفرم دیگری را وصل کنید |
+| یک مدل محلی یا self-hosted می‌خواهم | `hermes model` → custom endpoint | endpoint، نام مدل و طول context را تأیید کنید |
+| fallback چند ارائه‌دهنده می‌خواهم | `hermes model` اول | مسیریابی و fallback فقط بعد از کار چت پایه اضافه کنید |
 
-`hermes setup`
-`hermes model`
-`hermes gateway setup`
-`hermes model`
-`hermes model`
+قانون کلی: اگر Hermes نمی‌تواند یک چت عادی را تکمیل کند، هنوز ویژگی‌های بیشتری اضافه نکنید. ابتدا یک مکالمه تمیز را کار کنید، سپس gateway، cron، skillها، صدا یا مسیریابی را لایه‌بندی کنید.
 
-Rule of thumb:if Hermes cannot complete a normal chat, do not add more features yet. Get one clean conversation working first, then layer on gateway, cron, skills, voice, or routing.
+## ۱. نصب Hermes Agent
 
-## 1. Install Hermes Agent​
+### با نصب‌کننده Hermes Desktop در macOS یا Windows (توصیه‌شده)
 
-### With the Hermes Desktop installer on macOS or Windows (recommended)​
+برای نصب آسان اپلیکیشن‌های خط فرمان و دسکتاپ، [نصب‌کننده Hermes Desktop](https://hermes-agent.nousresearch.com/) را از وب‌سایت ما دانلود و اجرا کنید.
 
-To easily install the command-line and desktop applications,download the Hermes Desktop installerfrom our website and run it.
+### بدون Hermes Desktop:
 
-[download the Hermes Desktop installer](https://hermes-agent.nousresearch.com/)
+برای نصب فقط خط فرمان بدون Hermes Desktop، دستور زیر را اجرا کنید:
 
-### Without Hermes Desktop:​
-
-For a command-line only install without Hermes Desktop, run:
-
-#### Linux / macOS / WSL2 / Android (Termux)​
+#### Linux / macOS / WSL2 / Android (Termux)
 
 ```
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 ```
 
-#### Windows (native)​
+#### Windows (بومی)
 
-Run in powershell:
+در powershell اجرا کنید:
 
 ```
 iex (irm https://hermes-agent.nousresearch.com/install.ps1) 
 ```
 
-If you're installing on a phone, see the dedicatedTermux guidefor the tested manual path, supported extras, and current Android-specific limitations.
+اگر روی گوشی نصب می‌کنید، [راهنمای Termux](/docs/getting-started/termux) را برای مسیر دستی تست‌شده، اکستراهای پشتیبانی‌شده و محدودیت‌های فعلی مختص اندروید ببینید.
 
-[Termux guide](/docs/getting-started/termux)
+بعد از اتمام، shell خود را مجدداً بارگذاری کنید:
 
-After it finishes, reload your shell:
-
-```
-source ~/.bashrc   # or source ~/.zshrc
+```bash
+source ~/.bashrc   # یا source ~/.zshrc
 ```
 
-For detailed installation options, prerequisites, and troubleshooting, see theInstallation guide.
+برای گزینه‌های نصب دقیق، پیش‌نیازها و عیب‌یابی، [راهنمای نصب](/docs/getting-started/installation) را ببینید.
 
-[Installation guide](/docs/getting-started/installation)
+## ۲. انتخاب یک ارائه‌دهنده
 
-## 2. Choose a Provider​
-
-The single most important setup step. Usehermes modelto walk through the choice interactively:
-
-`hermes model`
+مهم‌ترین قدم تنظیم. از `hermes model` برای راهنمایی تعاملی انتخاب استفاده کنید:
 
 ```
 hermes model
 ```
 
-One subscription covers 300+ models plus theTool Gateway(web search, image generation, TTS, cloud browser). On a fresh install:
+یک اشتیاق ۳۰۰+ مدل به علاوه [Tool Gateway](/docs/user-guide/features/tool-gateway) (جستجوی وب، تولید تصویر، TTS، مرورگر ابری) را پوشش می‌دهد. در یک نصب جدید:
 
-[Tool Gateway](/docs/user-guide/features/tool-gateway)
-
-```
+```bash
 hermes setup --portal
 ```
 
-That logs you in, sets Nous as your provider, and turns on the Tool Gateway in one command.
+شما را وارد می‌کند، Nous را به عنوان ارائه‌دهنده شما تنظیم می‌کند و Tool Gateway را با یک فرمان فعال می‌کند.
 
-On a fresh install,hermes setupoffers three modes:
+در یک نصب جدید، `hermes setup` سه حالت ارائه می‌دهد:
 
-`hermes setup`
-- Quick Setup (Nous Portal)— free OAuth login, no API keys; sets up a model plus the Tool Gateway tools. The recommended fast path.
-- Full Setup— walk through every provider, tool, and option yourself (bring your own keys).
-- Blank Slate— everything startsoffexcept the bare minimum needed to run an agent:provider & model, the File Operations toolset, and the Terminal toolset. No web, browser, code execution, vision, memory, delegation, cron, skills, plugins, or MCP servers — and compression, checkpoints, smart routing, and memory capture are all disabled. After the minimal baseline is applied, you choose one of two paths:start with everything disabled(finish now with the minimal agent), orwalk through all configurations(opt in to tools, skills, plugins, MCP, and messaging). Pick this when you want a minimal, fully-controlled agent and intend to enable only exactly what you need.
+- **Quick Setup (Nous Portal)** — ورود OAuth رایگان، بدون کلید API؛ یک مدل به علاوه ابزارهای Tool Gateway را تنظیم می‌کند. مسیر سریع توصیه‌شده.
+- **Full Setup** — هر ارائه‌دهنده، ابزار و گزینه را خودتان طی کنید (کلیدهای خودتان را بیاورید).
+- **Blank Slate** — همه چیز خاموش است به جز حداقل مورد نیاز برای اجرای یک agent: ارائه‌دهنده و مدل، مجموعه ابزار File Operations و مجموعه ابزار Terminal. بدون وب، مرورگر، اجرای کد، بینایی، حافظه، تفویض، cron، skillها، پلاگین‌ها یا سرورهای MCP — و فشرده‌سازی، checkpointها، مسیریابی هوشمند و ثبت حافظه همه غیرفعال هستند. بعد از اعمال حداقل پایه، یکی از دو مسیر را انتخاب می‌کنید: شروع با همه چیز غیرفعال (اکنون با agent حداقل تمام کنید) یا طی تمام پیکربندی‌ها (ابزارها، skillها، پلاگین‌ها، MCP و پیام‌رسانی را انتخاب کنید). این را وقتی انتخاب کنید که یک agent حداقلی و کاملاً کنترل‌شده می‌خواهید و فقط دقیقاً آنچه نیاز دارید را فعال می‌کنید.
 
-Blank Slate writes an explicitplatform_toolsets.clilist plusagent.disabled_toolsets, so nothing you didn't choose ever loads — not even afterhermes update. Re-enable anything later withhermes tools, seed skills withhermes skills opt-in --sync, or tune settings withhermes setup agent.
+### پیش‌فرض‌های خوب:
 
-`platform_toolsets.cli`
-`agent.disabled_toolsets`
-`hermes update`
-`hermes tools`
-`hermes skills opt-in --sync`
-`hermes setup agent`
-
-Good defaults:
-
-| Provider | What it is | How to set up |
+| ارائه‌دهنده | چیست | نحوه تنظیم |
 | --- | --- | --- |
-| Nous Portal | Subscription-based, zero-config | OAuth login viahermes model |
-| OpenAI Codex | ChatGPT OAuth, uses Codex models | Device code auth viahermes model |
-| Anthropic | Claude models directly — Max plan + extra usage credits (OAuth), or API key for pay-per-token | hermes model→ OAuth login (requires Max + extra credits), or an Anthropic API key |
-| OpenRouter | Multi-provider routing across many models | Enter your API key |
-| Z.AI | GLM / Zhipu-hosted models | SetGLM_API_KEY/ZAI_API_KEY(also acceptsZ_AI_API_KEY) |
-| Kimi / Moonshot | Moonshot-hosted coding and chat models | SetKIMI_API_KEY(or the Kimi-Coding-specificKIMI_CODING_API_KEY) |
-| Kimi / Moonshot China | China-region Moonshot endpoint | SetKIMI_CN_API_KEY |
-| Arcee AI | Trinity models | SetARCEEAI_API_KEY |
-| GMI Cloud | Multi-model direct API | SetGMI_API_KEY |
-| MiniMax (OAuth) | MiniMax frontier model via browser OAuth — no API key needed (model name inhermes_cli/models.pymay change between releases) | hermes model→ MiniMax (OAuth) |
-| MiniMax | International MiniMax endpoint | SetMINIMAX_API_KEY |
-| MiniMax China | China-region MiniMax endpoint | SetMINIMAX_CN_API_KEY |
-| Alibaba Cloud | Qwen models via DashScope | SetDASHSCOPE_API_KEY(Qwen Coding Plan also acceptsALIBABA_CODING_PLAN_API_KEY) |
-| Hugging Face | 20+ open models via unified router (Qwen, DeepSeek, Kimi, etc.) | SetHF_TOKEN |
-| AWS Bedrock | Claude, Nova, Llama, DeepSeek via native Converse API | IAM role oraws configure(guide) |
-| Azure Foundry | Azure AI Foundry-hosted models | SetAZURE_FOUNDRY_API_KEY+AZURE_FOUNDRY_BASE_URL |
-| Google AI Studio | Gemini models via direct API | SetGOOGLE_API_KEY/GEMINI_API_KEY |
-| xAI | Grok models via direct API | SetXAI_API_KEY |
-| xAI Grok OAuth | SuperGrok / Premium+ subscription, no API key needed | hermes model→ xAI Grok OAuth |
-| NovitaAI | Multi-model API gateway | SetNOVITA_API_KEY |
-| StepFun | Step Plan models | SetSTEPFUN_API_KEY |
-| Xiaomi MiMo | Xiaomi-hosted models | SetXIAOMI_API_KEY |
-| Tencent TokenHub | Tencent-hosted models | SetTOKENHUB_API_KEY |
-| Ollama Cloud | Managed Ollama-hosted models | SetOLLAMA_API_KEY |
-| LM Studio | Local desktop app exposing an OpenAI-compatible API | SetLM_API_KEY(andLM_BASE_URLif non-default) |
-| Qwen OAuth | Qwen Portal browser OAuth — no API key needed | hermes model→ Qwen OAuth |
-| Kilo Code | KiloCode-hosted models | SetKILOCODE_API_KEY |
-| OpenCode Zen | Pay-as-you-go access to curated models | SetOPENCODE_ZEN_API_KEY |
-| OpenCode Go | $10/month subscription for open models | SetOPENCODE_GO_API_KEY |
-| DeepSeek | Direct DeepSeek API access | SetDEEPSEEK_API_KEY |
-| NVIDIA NIM | Nemotron models via build.nvidia.com or local NIM | SetNVIDIA_API_KEY(optional:NVIDIA_BASE_URL) |
-| GitHub Copilot | GitHub Copilot subscription (GPT-5.x, Claude, Gemini, etc.) | OAuth viahermes model, orCOPILOT_GITHUB_TOKEN/GH_TOKEN |
-| GitHub Copilot ACP | Copilot ACP agent backend (spawns localcopilotCLI) | hermes model(requirescopilotCLI +copilot login) |
-| Custom Endpoint | VLLM, SGLang, Ollama, or any OpenAI-compatible API | Set base URL + API key |
+| Nous Portal | مبتنی بر اشتراک، بدون پیکربندی | ورود OAuth از طریق `hermes model` |
+| OpenAI Codex | ChatGPT OAuth، از مدل‌های Codex استفاده می‌کند | احراز هویت device code از طریق `hermes model` |
+| Anthropic | مدل‌های Claude مستقیماً — طرح Max + اعتبارات استفاده اضافی (OAuth) یا کلید API برای پرداخت به ازای توکن | `hermes model` → ورود OAuth (نیاز به Max + اعتبارات اضافی) یا کلید API Anthropic |
+| OpenRouter | مسیریابی چند ارائه‌دهنده در مدل‌های متعدد | کلید API خود را وارد کنید |
+| Z.AI | مدل‌های GLM / Zhipu-hosted | `GLM_API_KEY`/`ZAI_API_KEY` را تنظیم کنید (همچنین `Z_AI_API_KEY` را می‌پذیرد) |
+| Kimi / Moonshot | مدل‌های کدنویسی و چت Moonshot-hosted | `KIMI_API_KEY` را تنظیم کنید |
+| Kimi / Moonshot China | endpoint منطقه چین Moonshot | `KIMI_CN_API_KEY` را تنظیم کنید |
+| Arcee AI | مدل‌های Trinity | `ARCEEAI_API_KEY` را تنظیم کنید |
+| GMI Cloud | API مستقیم چند مدلی | `GMI_API_KEY` را تنظیم کنید |
+| MiniMax (OAuth) | مدل پیشگام MiniMax از طریق OAuth مرورگر — نیاز به کلید API نیست | `hermes model` → MiniMax (OAuth) |
+| MiniMax | endpoint بین‌المللی MiniMax | `MINIMAX_API_KEY` را تنظیم کنید |
+| MiniMax China | endpoint منطقه چین MiniMax | `MINIMAX_CN_API_KEY` را تنظیم کنید |
+| Alibaba Cloud | مدل‌های Qwen از طریق DashScope | `DASHSCOPE_API_KEY` را تنظیم کنید |
+| Hugging Face | ۲۰+ مدل باز از طریق روتر یکپارچه | `HF_TOKEN` را تنظیم کنید |
+| AWS Bedrock | Claude، Nova، Llama، DeepSeek از طریق API بومی Converse | نقش IAM یا `aws configure` |
+| Azure Foundry | مدل‌های Azure AI Foundry-hosted | `AZURE_FOUNDRY_API_KEY` + `AZURE_FOUNDRY_BASE_URL` را تنظیم کنید |
+| Google AI Studio | مدل‌های Gemini از طریق API مستقیم | `GOOGLE_API_KEY`/`GEMINI_API_KEY` را تنظیم کنید |
+| xAI | مدل‌های Grok از طریق API مستقیم | `XAI_API_KEY` را تنظیم کنید |
+| xAI Grok OAuth | اشتراک SuperGrok / Premium+، نیاز به کلید API نیست | `hermes model` → xAI Grok OAuth |
+| NovitaAI | دروازه API چند مدلی | `NOVITA_API_KEY` را تنظیم کنید |
+| StepFun | مدل‌های Step Plan | `STEPFUN_API_KEY` را تنظیم کنید |
+| Xiaomi MiMo | مدل‌های Xiaomi-hosted | `XIAOMI_API_KEY` را تنظیم کنید |
+| Tencent TokenHub | مدل‌های Tencent-hosted | `TOKENHUB_API_KEY` را تنظیم کنید |
+| Ollama Cloud | مدل‌های Managed Ollama-hosted | `OLLAMA_API_KEY` را تنظیم کنید |
+| LM Studio | اپلیکیشن دسکتاپ محلی با API سازگار با OpenAI | `LM_API_KEY` را تنظیم کنید (و `LM_BASE_URL` اگر پیش‌فرض نیست) |
+| Qwen OAuth | ورود OAuth مرورگر Qwen Portal — نیاز به کلید API نیست | `hermes model` → Qwen OAuth |
+| Kilo Code | مدل‌های KiloCode-hosted | `KILOCODE_API_KEY` را تنظیم کنید |
+| OpenCode Zen | دسترسی پرداخت به ازای استفاده به مدل‌های گلچین | `OPENCODE_ZEN_API_KEY` را تنظیم کنید |
+| OpenCode Go | اشتراک ۱۰ دلار در ماه برای مدل‌های باز | `OPENCODE_GO_API_KEY` را تنظیم کنید |
+| DeepSeek | دسترسی مستقیم به API DeepSeek | `DEEPSEEK_API_KEY` را تنظیم کنید |
+| NVIDIA NIM | مدل‌های Nemotron از طریق build.nvidia.com یا NIM محلی | `NVIDIA_API_KEY` را تنظیم کنید (اختیاری: `NVIDIA_BASE_URL`) |
+| GitHub Copilot | اشتراک GitHub Copilot (GPT-5.x، Claude، Gemini و غیره) | OAuth از طریق `hermes model` یا `COPILOT_GITHUB_TOKEN`/`GH_TOKEN` |
+| GitHub Copilot ACP | بک‌اند agent Copilot ACP (کپیتال CLI محلی) | `hermes model` (نیاز به `copilotCLI` + `copilot login`) |
+| Custom Endpoint | VLLM، SGLang، Ollama یا هر API سازگار با OpenAI | آدرس URL پایه + کلید API را تنظیم کنید |
 
-`hermes model`
-`hermes model`
-`hermes model`
-`GLM_API_KEY`
-`ZAI_API_KEY`
-`Z_AI_API_KEY`
-`KIMI_API_KEY`
-`KIMI_CODING_API_KEY`
-`KIMI_CN_API_KEY`
-`ARCEEAI_API_KEY`
-`GMI_API_KEY`
-`hermes_cli/models.py`
-`hermes model`
-`MINIMAX_API_KEY`
-`MINIMAX_CN_API_KEY`
-`DASHSCOPE_API_KEY`
-`ALIBABA_CODING_PLAN_API_KEY`
-`HF_TOKEN`
-`aws configure`
-[guide](/docs/guides/aws-bedrock)
-`AZURE_FOUNDRY_API_KEY`
-`AZURE_FOUNDRY_BASE_URL`
-`GOOGLE_API_KEY`
-`GEMINI_API_KEY`
-`XAI_API_KEY`
-`hermes model`
-`NOVITA_API_KEY`
-`STEPFUN_API_KEY`
-`XIAOMI_API_KEY`
-`TOKENHUB_API_KEY`
-`OLLAMA_API_KEY`
-`LM_API_KEY`
-`LM_BASE_URL`
-`hermes model`
-`KILOCODE_API_KEY`
-`OPENCODE_ZEN_API_KEY`
-`OPENCODE_GO_API_KEY`
-`DEEPSEEK_API_KEY`
-`NVIDIA_API_KEY`
-`NVIDIA_BASE_URL`
-`hermes model`
-`COPILOT_GITHUB_TOKEN`
-`GH_TOKEN`
-`copilot`
-`hermes model`
-`copilot`
-`copilot login`
+برای بیشتر کاربران اولین بار: یک ارائه‌دهنده انتخاب کنید، مقادیر پیش‌فرض را بپذیرید مگر اینکه بدانید چرا آن‌ها را تغییر می‌دهید. فهرست کامل ارائه‌دهندگان با متغیرهای محیطی و مراحل تنظیم در صفحه [ارائه‌دهندگان AI](/docs/integrations/providers) است.
 
-For most first-time users: choose a provider, accept the defaults unless you know why you're changing them. The full provider catalog with env vars and setup steps lives on theProviderspage.
+Hermes Agent به یک مدل با حداقل ۶۴,۰۰۰ توکن context نیاز دارد. مدل‌هایی با پنجره کوچکتر نمی‌توانند حافظه کاری کافی برای گردش‌های کاری فراخوانی ابزار چندمرحله‌ای حفظ کنند و در شروع رد خواهند شد. بیشتر مدل‌های میزبانی‌شده (Claude، GPT، Gemini، Qwen، DeepSeek) به راحتی این را برآورده می‌کنند. اگر یک مدل محلی اجرا می‌کنید، اندازه context آن را حداقل ۶۴K تنظیم کنید (مثلاً `--ctx-size 65536` برای llama.cpp یا `-c 65536` برای Ollama).
 
-[Providers](/docs/integrations/providers)
+می‌توانید هر زمان با `hermes model` ارائه‌دهنده را عوض کنید — بدون قفل شدن. برای فهرست کامل همه ارائه‌دهندگان پشتیبانی‌شده و جزئیات تنظیم، [ارائه‌دهندگان AI](/docs/integrations/providers) را ببینید.
 
-Hermes Agent requires a model with at least64,000 tokensof context. Models with smaller windows cannot maintain enough working memory for multi-step tool-calling workflows and will be rejected at startup. Most hosted models (Claude, GPT, Gemini, Qwen, DeepSeek) meet this easily. If you're running a local model, set its context size to at least 64K (e.g.--ctx-size 65536for llama.cpp or-c 65536for Ollama).
+### نحوه ذخیره تنظیمات
 
-`--ctx-size 65536`
-`-c 65536`
+Hermes رمزها را از پیکربندی عادی جدا می‌کند:
 
-You can switch providers at any time withhermes model— no lock-in. For a full list of all supported providers and setup details, seeAI Providers.
+- رمزها و توکن‌ها → `~/.hermes/.env`
+- تنظیمات غیر رمز → `~/.hermes/config.yaml`
 
-`hermes model`
-[AI Providers](/docs/integrations/providers)
-
-### How settings are stored​
-
-Hermes separates secrets from normal config:
-
-- Secrets and tokens→~/.hermes/.env
-- Non-secret settings→~/.hermes/config.yaml
-
-`~/.hermes/.env`
-`~/.hermes/config.yaml`
-
-The easiest way to set values correctly is through the CLI:
+ساده‌ترین راه برای تنظیم مقادیر به طور صحیح از طریق CLI است:
 
 ```
-hermes config set model anthropic/claude-opus-4.6hermes config set terminal.backend dockerhermes config set OPENROUTER_API_KEY sk-or-...
+hermes config set model anthropic/claude-opus-4.6
+hermes config set terminal.backend docker
+hermes config set OPENROUTER_API_KEY sk-or-...
 ```
 
-The right value goes to the right file automatically.
+مقدار صحیح به طور خودکار به فایل صحیح هدایت می‌شود.
 
-## 3. Run Your First Chat​
+## ۳. اولین چت خود را اجرا کنید
 
+```bash
+hermes            # CLI کلاسیک
+hermes --tui      # TUI مدرن (توصیه‌شده)
 ```
-hermes            # classic CLIhermes --tui      # modern TUI (recommended)
-```
 
-You'll see a welcome banner with your model, available tools, and skills. Use a prompt that's specific and easy to verify:
+یک بنر خوش‌آمدگویی با مدل، ابزارهای موجود و skillهای خود خواهید دید. از یک پرامپت خاص و آسان برای تأیید استفاده کنید:
 
-Hermes ships with two terminal interfaces: the classicprompt_toolkitCLI and a newerTUIwith modal overlays, mouse selection, and non-blocking input. Both share the same sessions, slash commands, and config — try each withhermesvshermes --tui.
-
-`prompt_toolkit`
-[TUI](/docs/user-guide/tui)
-`hermes`
-`hermes --tui`
+Hermes با دو رابط ترمینال ارائه می‌شود: CLI `prompt_toolkit` کلاسیک و یک TUI جدیدتر با overlayهای modal، انتخاب با ماوس و ورودی non-blocking. هر دو sessionها، فرمان‌های اسلش و پیکربندی مشترکی دارند — هر کدام را با `hermes` در مقابل `hermes --tui` امتحان کنید.
 
 ```
 Summarize this repo in 5 bullets and tell me what the main entrypoint is.
@@ -267,259 +178,191 @@ Check my current directory and tell me what looks like the main project file.
 Help me set up a clean GitHub PR workflow for this codebase.
 ```
 
-What success looks like:
+چه چیزی موفقیت است:
 
-- The banner shows your chosen model/provider
-- Hermes replies without error
-- It can use a tool if needed (terminal, file read, web search)
-- The conversation continues normally for more than one turn
+- بنر مدل/ارائه‌دهنده انتخابی شما را نشان می‌دهد
+- Hermes بدون خطا پاسخ می‌دهد
+- می‌تواند در صورت نیاز از یک ابزار استفاده کند (ترمینال، خواندن فایل، جستجوی وب)
+- مکالمه به طور عادی بیش از یک نوبت ادامه می‌یابد
 
-If that works, you're past the hardest part.
+اگر این کار کرد، از سخت‌ترین قسمت عبور کرده‌اید.
 
-## 4. Verify Sessions Work​
+## ۴. تأیید کار Sessionها
 
-Before moving on, make sure resume works:
+قبل از ادامه، مطمئن شوید از سرگیری کار می‌کند:
 
+```bash
+hermes --continue    # از سرگیری آخرین session
+hermes -c            # فرم کوتاه
 ```
-hermes --continue    # Resume the most recent sessionhermes -c            # Short form
-```
 
-That should bring you back to the session you just had. If it doesn't, check whether you're in the same profile and whether the session actually saved. This matters later when you're juggling multiple setups or machines.
+باید شما را به sessionی که تازه داشتید برگرداند. اگر این کار را نمی‌کند، بررسی کنید آیا در همان پروفایل هستید و آیا session واقعاً ذخیره شده. این بعداً وقتی چندین نصب یا ماشین را مدیریت می‌کنید مهم است.
 
-## 5. Try Key Features​
+## ۵. ویژگی‌های کلیدی را امتحان کنید
 
-### Use the terminal​
+### استفاده از ترمینال
 
 ```
 ❯ What's my disk usage? Show the top 5 largest directories.
 ```
 
-The agent runs terminal commands on your behalf and shows results.
+agent به نیابت شما فرمان‌های ترمینال را اجرا می‌کند و نتایج را نشان می‌دهد.
 
-### Slash commands​
+### فرمان‌های اسلش
 
-Type/to see an autocomplete dropdown of all commands:
+`/` را تایپ کنید تا کشویی autocomplete تمام فرمان‌ها را ببینید:
 
-`/`
-
-| Command | What it does |
+| فرمان | چه کاری انجام می‌دهد |
 | --- | --- |
-| /help | Show all available commands |
-| /tools | List available tools |
-| /model | Switch models interactively |
-| /personality pirate | Try a fun personality |
-| /save | Save the conversation |
+| /help | نمایش تمام فرمان‌های موجود |
+| /tools | فهرست ابزارهای موجود |
+| /model | تعاملی عوض کردن مدل |
+| /personality pirate | امتحان یک شخصیت سرگرم‌کننده |
+| /save | ذخیره مکالمه |
 
-`/help`
-`/tools`
-`/model`
-`/personality pirate`
-`/save`
+### ورودی چند خطی
 
-### Multi-line input​
+`Alt+Enter`، `Ctrl+J` یا `Shift+Enter` را فشار دهید تا یک خط جدید اضافه شود. `Shift+Enter` نیاز به ترمینالی دارد که آن را به عنوان توالی متمایز ارسال کند (Kitty / foot / WezTerm / Ghostty به طور پیش‌فرض؛ iTerm2 / Alacritty / ترمینال VS Code وقتی پروتکل کیبورد Kitty فعال باشد). `Alt+Enter` و `Ctrl+J` در هر ترمینالی کار می‌کنند.
 
-PressAlt+Enter,Ctrl+J, orShift+Enterto add a new line.Shift+Enterrequires a terminal that sends it as a distinct sequence (Kitty / foot / WezTerm / Ghostty by default; iTerm2 / Alacritty / VS Code terminal once the Kitty keyboard protocol is enabled).Alt+EnterandCtrl+Jwork in every terminal.
+### متوقف کردن agent
 
-`Alt+Enter`
-`Ctrl+J`
-`Shift+Enter`
-`Shift+Enter`
-`Alt+Enter`
-`Ctrl+J`
+اگر agent خیلی طول می‌کشد، یک پیام جدید تایپ کنید و Enter را فشار دهید — وظیفه فعلی را قطع می‌کند و به دستورالعمل‌های جدید شما سوئیچ می‌کند. `Ctrl+C` هم کار می‌کند.
 
-### Interrupt the agent​
+## ۶. لایه بعدی را اضافه کنید
 
-If the agent is taking too long, type a new message and press Enter — it interrupts the current task and switches to your new instructions.Ctrl+Calso works.
+فقط بعد از کار چت پایه. آنچه نیاز دارید را انتخاب کنید:
 
-`Ctrl+C`
+### ربات یا دستیار مشترک
 
-## 6. Add the Next Layer​
-
-Only after the base chat works. Pick what you need:
-
-### Bot or shared assistant​
-
-```
-hermes gateway setup    # Interactive platform configuration
+```bash
+hermes gateway setup    # پیکربندی تعاملی پلتفرم
 ```
 
-ConnectTelegram,Discord,Slack,WhatsApp,Signal,Email, orHome Assistant, orMicrosoft Teams.
+[Telegram](/docs/user-guide/messaging/telegram)، [Discord](/docs/user-guide/messaging/discord)، [Slack](/docs/user-guide/messaging/slack)، [WhatsApp](/docs/user-guide/messaging/whatsapp)، [Signal](/docs/user-guide/messaging/signal)، [Email](/docs/user-guide/messaging/email)، [Home Assistant](/docs/user-guide/messaging/homeassistant) یا [Microsoft Teams](/docs/user-guide/messaging/teams) را وصل کنید.
 
-[Telegram](/docs/user-guide/messaging/telegram)
-[Discord](/docs/user-guide/messaging/discord)
-[Slack](/docs/user-guide/messaging/slack)
-[WhatsApp](/docs/user-guide/messaging/whatsapp)
-[Signal](/docs/user-guide/messaging/signal)
-[Email](/docs/user-guide/messaging/email)
-[Home Assistant](/docs/user-guide/messaging/homeassistant)
-[Microsoft Teams](/docs/user-guide/messaging/teams)
+### اتوماسیون و ابزارها
 
-### Automation and tools​
+- `hermes tools` — دسترسی ابزار را به ازای هر پلتفرم تنظیم کنید
+- `hermes skills` — workflowهای قابل استفاده مجدد را مرور و نصب کنید
+- Cron — فقط بعد از پایداری نصب ربات یا CLI شما
 
-- hermes tools— tune tool access per platform
-- hermes skills— browse and install reusable workflows
-- Cron — only after your bot or CLI setup is stable
+### ترمینال sandboxed
 
-`hermes tools`
-`hermes skills`
+برای ایمنی، agent را در یک کانتینر Docker یا روی یک سرور راه‌دور اجرا کنید:
 
-### Sandboxed terminal​
-
-For safety, run the agent in a Docker container or on a remote server:
-
-```
-hermes config set terminal.backend docker    # Docker isolationhermes config set terminal.backend ssh       # Remote server
+```bash
+hermes config set terminal.backend docker    # ایزولاسیون Docker
+hermes config set terminal.backend ssh       # سرور راه‌دور
 ```
 
-### Voice mode​
+### حالت صوتی
 
-```
-# From the Hermes install directory (the curl installer placed it at# ~/.hermes/hermes-agent on Linux/macOS or %LOCALAPPDATA%\hermes\hermes-agent on Windows):cd ~/.hermes/hermes-agentuv pip install -e ".[voice]"# Includes faster-whisper for free local speech-to-text
-```
-
-Then in the CLI:/voice on. PressCtrl+Bto record. SeeVoice Mode.
-
-`/voice on`
-`Ctrl+B`
-[Voice Mode](/docs/user-guide/features/voice-mode)
-
-### Skills​
-
-Skills are on-demand instruction documents that teach Hermes how to do a specific task — deploy to Kubernetes, open a GitHub PR, fine-tune a model, search for GIFs. Each is aSKILL.mdfile with a name, a description, and a step-by-step procedure. The agent reads the short descriptions for free and only loads a skill's full content when a task actually calls for it, so adding skills doesn't bloat every request.
-
-`SKILL.md`
-
-Hermes ships with a catalog of bundled skills already installed in~/.hermes/skills/. You can add more from the Skills Hub, or write your own.
-
-`~/.hermes/skills/`
-
-Browse and install from the hub:
-
-```
-hermes skills browse                      # list everything availablehermes skills search kubernetes           # find skills by keywordhermes skills install openai/skills/k8s   # install one (runs a security scan first)
+```bash
+# از دایرکتوری نصب Hermes (نصب‌کننده curl آن را در
+# ~/.hermes/hermes-agent در Linux/macOS یا %LOCALAPPDATA%\hermes\hermes-agent در Windows قرار داده):
+cd ~/.hermes/hermes-agent
+uv pip install -e ".[voice]"
+# شامل faster-whisper برای تبدیل رایگان گفتار به متن محلی
 ```
 
-The install argument is asource/pathslug from the hub —openai/skills/k8smeans thek8sskill from OpenAI's catalog.hermes skills browseshows the exact slugs to use.
+سپس در CLI: `/voice on`. `Ctrl+B` را برای ضبط فشار دهید. [حالت صوتی](/docs/user-guide/features/voice-mode) را ببینید.
 
-`source/path`
-`openai/skills/k8s`
-`k8s`
-`hermes skills browse`
+### Skillها
 
-Use a skill— every installed skill becomes a slash command automatically:
+Skillها اسناد دستورالعمل on-demand هستند که به Hermes یاد می‌دهند چگونه یک کار خاص را انجام دهد — استقرار در Kubernetes، باز کردن یک PR GitHub، تنظیم دقیق مدل، جستجوی GIF. هر کدام یک فایل `SKILL.md` با نام، توضیح و روش گام‌به‌گام هستند. agent توضیحات کوتاه را به طور رایگان می‌خواند و فقط محتوای کامل skill را وقتی بارگذاری می‌کند که واقعاً یک کار به آن نیاز دارد، بنابراین اضافه کردن skillها هر درخواست را حجیم نمی‌کند.
 
-```
-/k8s deploy the staging manifest          # run the skill with a request/k8s                                       # load it and let Hermes ask what you need
-```
+Hermes با فهرستی از skillهای بسته‌بندی‌شده که قبلاً در `~/.hermes/skills/` نصب شده‌اند ارائه می‌شود. می‌توانید از Skills Hub بیشتر اضافه کنید یا خودتان بنویسید.
 
-This works in the CLI and in any connected messaging platform. You don't have to install everything up front — the agent picks the right bundled skill on its own during normal conversation when a task matches one.
+از hub مرور و نصب کنید:
 
-SeeSkills Systemfor writing your own, external skill directories, and the full hub source list.
-
-[Skills System](/docs/user-guide/features/skills)
-
-### MCP servers​
-
-```
-# Add to ~/.hermes/config.yamlmcp_servers:  github:    command: npx    args: ["-y", "@modelcontextprotocol/server-github"]    env:      GITHUB_PERSONAL_ACCESS_TOKEN: "ghp_xxx"
+```bash
+hermes skills browse                      # لیست همه موجود
+hermes skills search kubernetes           # جستجوی skillها با کلمه کلیدی
+hermes skills install openai/skills/k8s   # نصب یکی (ابتدا اسکن امنیتی اجرا می‌کند)
 ```
 
-### Editor integration (ACP)​
+هر skill نصب‌شده به طور خودکار به عنوان یک فرمان اسلش تبدیل می‌شود:
 
-ACP support ships with the standard[all]extras, so the curl installer already includes it. Just run:
+```bash
+/k8s deploy the staging manifest          # اجرای skill با یک درخواست
+/k8s                                       # بارگذاری آن و اجازه دهید Hermes بپرسد چه نیاز دارید
+```
 
-`[all]`
+این در CLI و هر پلتفرم پیام‌رسانی متصل کار می‌کند. لازم نیست همه چیز را از قبل نصب کنید — agent در حین مکالمه عادی skill بسته‌بندی‌شده صحیح را وقتی یک کار با آن مطابقت دارد به طور خودکار انتخاب می‌کند.
+
+[سیستم Skillها](/docs/user-guide/features/skills) را برای نوشتن skillهای خود، دایرکتوری‌های skill خارجی و فهرست کامل منابع hub ببینید.
+
+### سرورهای MCP
+
+```yaml
+# به ~/.hermes/config.yaml اضافه کنید
+mcp_servers:
+  github:
+    command: npx
+    args: ["-y", "@modelcontextprotocol/server-github"]
+    env:
+      GITHUB_PERSONAL_ACCESS_TOKEN: "ghp_xxx"
+```
+
+### ادغام ویرایشگر (ACP)
+
+پشتیبانی ACP با اکستراهای استاندارد `[all]` ارائه می‌شود، بنابراین نصب‌کننده curl آن را از قبل شامل می‌شود. فقط اجرا کنید:
 
 ```
 hermes acp
 ```
 
-(If you installed without[all], runcd ~/.hermes/hermes-agent && uv pip install -e ".[acp]"first.)
+(اگر بدون `[all]` نصب کرده‌اید، ابتدا `cd ~/.hermes/hermes-agent && uv pip install -e ".[acp]"` را اجرا کنید.)
 
-`[all]`
-`cd ~/.hermes/hermes-agent && uv pip install -e ".[acp]"`
+[ادغام ویرایشگر ACP](/docs/user-guide/features/acp) را ببینید.
 
-SeeACP Editor Integration.
+## حالت‌های خرابی رایج
 
-[ACP Editor Integration](/docs/user-guide/features/acp)
+این مشکلاتی هستند که بیشترین وقت را هدر می‌دهند:
 
-## Common Failure Modes​
-
-These are the problems that waste the most time:
-
-| Symptom | Likely cause | Fix |
+| علت | علت احتمالی | راه‌حل |
 | --- | --- | --- |
-| Hermes opens but gives empty or broken replies | Provider auth or model selection is wrong | Runhermes modelagain and confirm provider, model, and auth |
-| Custom endpoint "works" but returns garbage | Wrong base URL, model name, or not actually OpenAI-compatible | Verify the endpoint in a separate client first |
-| Gateway starts but nobody can message it | Bot token, allowlist, or platform setup is incomplete | Re-runhermes gateway setupand checkhermes gateway status |
-| hermes --continuecan't find old session | Switched profiles or session never saved | Checkhermes sessions listand confirm you're in the right profile |
-| Model unavailable or odd fallback behavior | Provider routing or fallback settings are too aggressive | Keep routing off until the base provider is stable |
-| hermes doctorflags config problems | Config values are missing or stale | Fix the config, retest a plain chat before adding features |
+| Hermes باز می‌شود ولی پاسخ‌های خالی یا خراب می‌دهد | احراز هویت ارائه‌دهنده یا انتخاب مدل اشتباه است | `hermes model` را دوباره اجرا کنید و ارائه‌دهنده، مدل و احراز هویت را تأیید کنید |
+| Custom endpoint «کار می‌کند» ولی خروجی بی‌معنی برمی‌گرداند | آدرس URL پایه، نام مدل یا واقعاً سازگار با OpenAI نیست | endpoint را ابتدا در یک کلاینت جداگانه تأیید کنید |
+| Gateway شروع می‌شود ولی کسی نمی‌تواند به آن پیام دهد | توکن ربات، allowlist یا تنظیم پلتفرم ناقص است | `hermes gateway setup` را دوباره اجرا کنید و `hermes gateway status` را بررسی کنید |
+| `hermes --continue` نمی‌تواند session قدیمی را پیدا کند | پروفایل‌ها را عوض کرده یا session هرگز ذخیره نشده | `hermes sessions list` را بررسی کنید و تأیید کنید در پروفایل صحیح هستید |
+| مدل ناموجود یا رفتار عجیب fallback | مسیریابی یا تنظیمات fallback ارائه‌دهنده بیش از حد تهاجمی هستند | تا پایداری ارائه‌دهنده پایه، مسیریابی را خاموش نگه دارید |
+| `hermes doctor` مشکلات پیکربندی را پیدا می‌کند | مقادیر پیکربندی موجود نیستند یا قدیمی هستند | پیکربندی را تعمیر کنید، قبل از اضافه کردن ویژگی‌ها یک چت ساده را دوباره تست کنید |
 
-`hermes model`
-`hermes gateway setup`
-`hermes gateway status`
-`hermes --continue`
-`hermes sessions list`
-`hermes doctor`
+## کیت بازیابی
 
-## Recovery Toolkit​
+وقتی چیزی اشتباه به نظر می‌رسد، از این ترتیب استفاده کنید:
 
-When something feels off, use this order:
+1. `hermes doctor`
+2. `hermes model`
+3. `hermes setup`
+4. `hermes sessions list`
+5. `hermes --continue`
+6. `hermes gateway status`
 
-1. hermes doctor
-2. hermes model
-3. hermes setup
-4. hermes sessions list
-5. hermes --continue
-6. hermes gateway status
+آن ترتیب شما را از «حس خرابی» به یک وضعیت شناخته‌شده سریع برمی‌گرداند.
 
-`hermes doctor`
-`hermes model`
-`hermes setup`
-`hermes sessions list`
-`hermes --continue`
-`hermes gateway status`
+## مرجع سریع
 
-That sequence gets you from "broken vibes" back to a known state fast.
-
-## Quick Reference​
-
-| Command | Description |
+| فرمان | توضیح |
 | --- | --- |
-| hermes | Start chatting |
-| hermes model | Choose your LLM provider and model |
-| hermes tools | Configure which tools are enabled per platform |
-| hermes setup | Full setup wizard (configures everything at once) |
-| hermes doctor | Diagnose issues |
-| hermes update | Update to latest version |
-| hermes gateway | Start the messaging gateway |
-| hermes --continue | Resume last session |
+| `hermes` | شروع چت |
+| `hermes model` | انتخاب ارائه‌دهنده و مدل LLM |
+| `hermes tools` | پیکربندی ابزارهای فعال به ازای هر پلتفرم |
+| `hermes setup` | جادوگر پیکربندی کامل (همه چیز را یکجا پیکربندی می‌کند) |
+| `hermes doctor` | تشخیص مشکلات |
+| `hermes update` | به‌روزرسانی به آخرین نسخه |
+| `hermes gateway` | شروع gateway پیام‌رسانی |
+| `hermes --continue` | از سرگیری آخرین session |
 
-`hermes`
-`hermes model`
-`hermes tools`
-`hermes setup`
-`hermes doctor`
-`hermes update`
-`hermes gateway`
-`hermes --continue`
+## قدم‌های بعدی
 
-## Next Steps​
+- [راهنمای CLI](/docs/user-guide/cli) — تسلط بر رابط ترمینال
+- [پیکربندی](/docs/user-guide/configuration) — سفارشی‌سازی تنظیمات
+- [Gateway پیام‌رسانی](/docs/user-guide/messaging/) — اتصال Telegram، Discord، Slack، WhatsApp، Signal، Email، Home Assistant، Teams و بیشتر
+- [ابزارها و مجموعه ابزارها](/docs/user-guide/features/tools) — کاوش قابلیت‌های موجود
+- [ارائه‌دهندگان AI](/docs/integrations/providers) — فهرست کامل ارائه‌دهندگان و جزئیات تنظیم
+- [سیستم Skillها](/docs/user-guide/features/skills) — workflowها و دانش قابل استفاده مجدد
+- [نکات و بهترین شیوه‌ها](/docs/guides/tips) — نکات کاربر حرفه‌ای
 
-- CLI Guide— Master the terminal interface
-- Configuration— Customize your setup
-- Messaging Gateway— Connect Telegram, Discord, Slack, WhatsApp, Signal, Email, Home Assistant, Teams, and more
-- Tools & Toolsets— Explore available capabilities
-- AI Providers— Full provider list and setup details
-- Skills System— Reusable workflows and knowledge
-- Tips & Best Practices— Power user tips
-
-[CLI Guide](/docs/user-guide/cli)
-[Configuration](/docs/user-guide/configuration)
-[Messaging Gateway](/docs/user-guide/messaging/)
-[Tools & Toolsets](/docs/user-guide/features/tools)
-[AI Providers](/docs/integrations/providers)
-[Skills System](/docs/user-guide/features/skills)
-[Tips & Best Practices](/docs/guides/tips)
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/getting-started/quickstart.md)

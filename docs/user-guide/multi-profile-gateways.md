@@ -5,154 +5,144 @@ permalink: /user-guide/multi-profile-gateways/
 ---
 
 - 
-- Using Hermes
-- Running Many Gateways at Once
+- استفاده از Hermes
+- اجرای همزمان چندین Gateway
 
-# Running Many Gateways at Once
+# اجرای همزمان چندین Gateway
 
-Operate multipleprofiles— each with its own bot tokens,
-sessions, and memory — as managed services on a single machine. This page
-covers the operational concerns: starting them all together, viewing logs
-across profiles, preventing the host from sleeping, and recovering from common
-launchd/systemd quirks.
+چندین **پروفایل** — هر کدام با توکن bot، جلسات و حافظه خود — را به عنوان سرویس‌های مدیریت‌شده روی یک ماشین واحد اجرا کنید. این صفحه نگرانی‌های عملیاتی را پوشش می‌دهد: شروع همه آن‌ها با هم، مشاهده لاگ‌ها در پروفایل‌ها، جلوگیری از خواب رفتن host و بازیابی از مشکلات رایج launchd/systemd.
 
-[profiles](/docs/user-guide/profiles)
+[prefixes](/docs/user-guide/profiles)
 
-If you only run one Hermes agent, you don't need this page — seeProfilesfor the basics.
+اگر فقط یک عامل Hermes اجرا می‌کنید، به این صفحه نیاز ندارید — به [پروفایل‌ها](/docs/user-guide/profiles) برای مبانی مراجعه کنید.
 
-[Profiles](/docs/user-guide/profiles)
+[پروفایل‌ها](/docs/user-guide/profiles)
 
-## When to use this​
+## چه زمانی از این استفاده کنیم
 
-You want this setup when you have two or more Hermes agents that should all
-be online at the same time. Common reasons:
+وقتی دو یا چند عامل Hermes دارید که همه باید همزمان آنلاین باشند به این تنظیم نیاز دارید. دلایل رایج:
 
-- A personal assistant on one Telegram bot and a coding agent on another
-- One agent per family member or one per Slack workspace
-- Sandbox + production instances of the same configuration
-- A research agent + a writing agent + a cron-driven bot — each with isolated
-memory and skills
+- یک دستیار شخصی روی یک bot Telegram و یک عامل کدنویسی روی دیگری
+- یک عامل به ازای هر عضو خانواده یا یکی به ازای هر workspace Slack
+- نمونه‌های sandbox + production از همان پیکربندی
+- یک عامل تحقیقاتی + یک عامل نویسندگی + یک bot مبتنی بر cron — هر کدام با حافظه و مهارت‌های ایزوله
 
-Every profile already gets its own per-platform LaunchAgent
-(ai.hermes.gateway-<name>.plist) or systemd user service
-(hermes-gateway-<name>.service). This guide adds the patterns for managing
-them collectively.
+هر پروفایل در حال حاضر LaunchAgent به ازای هر پلتفرم (`ai.hermes.gateway-<name>.plist`) یا سرویس کاربر systemd (`hermes-gateway-<name>.service`) خود را دارد. این راهنما الگوهای مدیریت جمعی آن‌ها را اضافه می‌کند.
 
 `ai.hermes.gateway-<name>.plist`
 `hermes-gateway-<name>.service`
 
-## Quick start​
+## شروع سریع
 
 ```
-# Create profiles (once)hermes profile create coderhermes profile create personal-bothermes profile create research# Configure eachcoder setuppersonal-bot setupresearch setup# Install each gateway as a managed servicecoder gateway installpersonal-bot gateway installresearch gateway install# Start them allcoder gateway startpersonal-bot gateway startresearch gateway start
+# Create profiles (once)
+hermes profile create coder
+hermes profile create personal-bot
+hermes profile create research
+
+# Configure each
+coder setup
+personal-bot setup
+research setup
+
+# Install each gateway as a managed service
+coder gateway install
+personal-bot gateway install
+research gateway install
+
+# Start them all
+coder gateway start
+personal-bot gateway start
+research gateway start
 ```
 
-That's it — three independent agents, each on its own process, restarting
-automatically on crash and on user login.
+همین است — سه عامل مستقل، هر کدام در فرایند خود، با ری‌استارت خودکار در صورت خرابی و ورود کاربر.
 
-## Alternative: one gateway for all profiles (multiplexing)​
+## جایگزین: یک gateway برای همه پروفایل‌ها (multiplexing)
 
-The model above runsone process per profile. That is the default and is
-the right choice for most setups. But on a host with many profiles — or a
-container deployment where one process per profile is operationally heavy — you
-can instead run asingle multiplexing gateway: the default profile's gateway
-becomes the sole inbound process and serves messages foreveryprofile on the
-box.
+مدل بالا **یک فرایند به ازای هر پروفایل** اجرا می‌کند. این پیش‌فرض است و برای بیشتر تنظیمات انتخاب درست است. اما روی host با پروفایل‌های زیاد — یا استقرار کانتینری که یک فرایند به ازای پروفایل از نظر عملیاتی سنگین است — می‌توانید به جای آن **یک gateway multiplexing واحد** اجرا کنید: gateway پروفایل پیش‌فرض به عنوان تنها فرایند ورودی تبدیل می‌شود و پیام‌ها را برای **هر** پروفایل روی ماشین سرویس می‌دهد.
 
-This isopt-inandoff by default. When it's off, nothing on this page
-changes — every behavior below is inert.
+این **اختیاری** و به طور پیش‌فرض **خاموش** است. وقتی خاموش است، هیچ چیز در این صفحه تغییر نمی‌کند — همه رفتارهای زیر غیرفعال هستند.
 
-### When to prefer multiplexing​
+### چه زمانی multiplexing را ترجیح دهیم
 
-- A container/VPS deployment where N supervisor units, N ports, and N PID files
-are a burden.
-- Many low-traffic profiles that don't each justify a full process.
-- You want a single thing to start, monitor, and restart.
+- استقرار container/VPS که N واحد ناظر، N پورت و N فایل PID بار است.
+- پروفایل‌های کم‌ترافیک زیاد که هر کدام یک فرایند کامل را توجیه نمی‌کنند.
+- می‌خواهید یک چیز واحد برای شروع، نظارت و ری‌استارت داشته باشید.
 
-Stick with one-process-per-profile when you want hard process-level isolation
-between profiles (separate memory footprints, independent crash domains, the
-ability to restart one profile without touching the others).
+وقتی ایزوله سخت سطح-فرایند بین پروفایل‌ها می‌خواهید ( ردپاهای حافظه جداگانه، دامنه‌های خرابی مستقل، توانایی ری‌استارت یک پروفایل بدون لمس دیگران) به یک فرایند-به-ازای-پروفایل بچسبید.
 
-### How to opt in​
+### نحوه فعال کردن
 
-Set the flag on thedefault profile(it owns the multiplexer) and restart
-its gateway:
+پرچم را روی **پروفایل پیش‌فرض** تنظیم کنید (مالک multiplexer) و gateway آن را ری‌استارت کنید:
 
 ```
-hermes config set gateway.multiplex_profiles truehermes gateway restart
+hermes config set gateway.multiplex_profiles true
+hermes gateway restart
 ```
 
-Equivalently, in the default profile's~/.hermes/config.yaml:
+یا معادل آن، در `~/.hermes/config.yaml` پروفایل پیش‌فرض:
 
 `~/.hermes/config.yaml`
 
 ```
-gateway:  multiplex_profiles: true
+gateway:
+  multiplex_profiles: true
 ```
 
-(The flag is also accepted as a top-levelmultiplex_profiles: truefor
-convenience.) On the next start the default gateway enumerates every profile,
-brings up each profile's enabled platforms under that profile's own
-credentials, and routes each inbound message to the profile it belongs to. Each
-turn resolves the routed profile's config, skills, memory, SOUL,and provider
-keys— credentials are never shared across profiles.
+(پرچم همچنین به عنوان `multiplex_profiles: true` سطح بالا برای راحتی پذیرفته می‌شود.) در شروع بعدی، gateway پیش‌فرض هر پروفایل را شمارش می‌کند، هر پلتفرم فعال هر پروفایل را با اعتبارات خود آن پروفایل بالا می‌آورد و هر پیام ورودی را به پروفایلی که به آن تعلق دارد مسیریابی می‌کند. هر نوبت پیکربندی، مهارت‌ها، حافظه، SOUL و کلیدهای ارائه‌دهنده پروفایل مسیریابی‌شده را حل می‌کند — اعتبارات هرگز بین پروفایل‌ها به اشتراک گذاشته نمی‌شوند.
 
 `multiplex_profiles: true`
 
-You donotrunhermes gateway startfor the secondary profiles — the
-default gateway serves them. See the contract changes below.
+شما `hermes gateway start` را برای پروفایل‌های فرعی **اجرا نمی‌کنید** — gateway پیش‌فرض آن‌ها را سرویس می‌دهد. به تغییرات قراردادی زیر مراجعه کنید.
 
 `hermes gateway start`
 
-### What changes when multiplexing is on​
+### چه چیزی وقتی multiplexing فعال است تغییر می‌کند
 
-Enabling the flag changes how a few things behave. All of these revert the
-moment the flag is off.
+فعال کردن پرچم نحوه رفتار چند چیز را تغییر می‌دهد. همه آن‌ها لحظه‌ای که پرچم خاموش شود بازمی‌گردند.
 
-#### 1. Secondary profiles must not start their own gateway​
+#### 1. پروفایل‌های فرعی نباید gateway خود را شروع کنند
 
-With a multiplexer running, a named-profilehermes gateway start/runis ahard error, pointing you back at the multiplexer:
+با multiplexer در حال اجرا، `hermes gateway start/run` یک پروفایل نام‌گذاری‌شده **خطای سخت** است و شما را به multiplexer بازمی‌گرداند:
 
 `hermes gateway start`
 `run`
 
 ```
-The default gateway is running as a profile multiplexer and already servesprofile 'coder'. ...
+The default gateway is running as a profile multiplexer and already serves
+profile 'coder'. ...
 ```
 
-The multiplexer is the single inbound process; a second profile gateway would
-double-bind that profile's platforms. Pass--forceonly if you deliberately
-want a separate process for that profile (not recommended while the multiplexer
-is running). The cross-profile lifecycle wrapper script earlier on this page is
-thereforenotused in multiplex mode — you only manage the default gateway.
+multiplexer تنها فرایند ورودی است؛ یک دومین gateway پروفایل آن پلتفرم‌های آن پروفایل را bind مضاعف می‌کند. فقط در صورتی `--force` عبور دهید که عمداً یک فرایند جداگانه برای آن پروفایل می‌خواهید (توصیه نمی‌شود در حالی که multiplexer در حال اجراست). بنابراین اسکریپت wrapper چرخه حیات بین-پروفایلی در بالای این صفحه در حالت multiplex **استفاده نمی‌شود** — فقط gateway پیش‌efault را مدیریت می‌کنید.
 
 `--force`
 
-#### 2. HTTP-inbound platforms are reached via a/p/<profile>/URL prefix​
+#### 2. پلتفرم‌های HTTP-ورودی از طریق پیشوند URL `/p/<profile>/` قابل دسترسی هستند
 
 `/p/<profile>/`
 
-Webhook (and other HTTP-inbound) traffic for a secondary profile arrives on the
-default listener under a profile prefix,nota second port:
+ترافیک webhook (و سایر HTTP-ورودی) برای یک پروفایل فرعی روی listener پیش‌فرض تحت یک پیشوند پروفایل وارد می‌شود، **نه** یک پورت دوم:
 
 ```
-# default profilePOST http://host:8644/webhooks/<route># the "coder" profile, same listenerPOST http://host:8644/p/coder/webhooks/<route>
+# default profile
+POST http://host:8644/webhooks/<route>
+
+# the "coder" profile, same listener
+POST http://host:8644/p/coder/webhooks/<route>
 ```
 
-An unknown or unconfigured profile in the prefix returns404. Because the one
-shared listener already serves every profile this way, asecondary profile
-must not enable a port-binding platform itself— doing so is a config error
-and the gateway refuses to start, naming the profile and platform:
+یک پروفایل ناشناخته یا پیکربندی‌نشده در پیشوند `404` برمی‌گرداند. چون یک listener مشترک واحد از این طریق هر پروفایل را سرویس می‌دهد، یک **پروفایل فرعی نباید پلتفرم bind-پورتی خود را فعال کند** — انجام این کار خطای پیکربندی است و gateway از شروع امتناع می‌کند و پروفایل و پلتفرم را نام می‌برد:
 
 `404`
 
 ```
-Profile 'coder' enables the port-binding platform 'webhook', butgateway.multiplex_profiles is on. ... Remove platforms.webhook from profile'coder's config.yaml (configure it only on the default profile).
+Profile 'coder' enables the port-binding platform 'webhook', but
+gateway.multiplex_profiles is on. ... Remove platforms.webhook from profile
+'coder's config.yaml (configure it only on the default profile).
 ```
 
-Port-binding platforms covered by this rule:webhook,api_server,msgraph_webhook,feishu,wecom_callback,bluebubbles,sms. Configure
-any of theseonly on the default profile; every profile is reachable through
-its/p/<profile>/prefix.
+پلتفرم‌های bind-پورتی تحت این قانون: `webhook`، `api_server`، `msgraph_webhook`، `feishu`، `wecom_callback`، `bluebubbles`، `sms`. هر کدام از این‌ها را **فقط روی پروفایل پیش‌فرض** پیکربندی کنید؛ هر پروفایل از طریق پیشوند `/p/<profile>/` خود قابل دسترسی است.
 
 `webhook`
 `api_server`
@@ -163,188 +153,222 @@ its/p/<profile>/prefix.
 `sms`
 `/p/<profile>/`
 
-#### 3. Per-credential platforms still need their own token per profile​
+#### 3. پلتفرم‌های به ازای اعتبار همچنان به توکن جداگانه به ازای هر پروفایل نیاز دارند
 
-Polling/connection platforms (Telegram, Discord, Slack, Matrix, Signal, …) work
-fine multiplexed, but each profile that enables one must supply itsownbot
-token — the same token cannot be polled by two profiles at once. If two profiles
-configure the same(platform, token), startup fails fast naming both profiles
-(seeToken-conflict safety— the rule is unchanged,
-it's just enforced inside the one process now).
+پلتفرم‌های polling/اتصال (Telegram, Discord, Slack, Matrix, Signal و ...) به صورت multiplexed خوب کار می‌کنند، اما هر پروفایلی که یکی را فعال می‌کند باید توکن bot **خود** را ارائه دهد — همان توکن نمی‌تواند توسط دو پروفایل همزمان polling شود. اگر دو پروفایل همان `(platform, token)` را پیکربندی کنند، شروع با سرعت بالا شکست می‌خورد و هر دو پروفایل را نام می‌برد (به [ایمنی تداخل توکن](#token-conflict-safety) مراجعه کنید — قانون تغییر نکرده، فقط اکنون داخل یک فرایند اجرا می‌شود).
 
 `(platform, token)`
 
-#### 4. Session keys are namespaced by profile​
+#### 4. کلیدهای جلسه بر اساس پروفایل namespace دارند
 
-Each profile's sessions live under anagent:<profile>:…namespace so two
-profiles on the same platform/chat never collide in the shared session store.
-Thedefaultprofile keeps the historicalagent:main:…namespace
-byte-for-byte, so existing default-profile sessions are unaffected — no
-migration, no orphaned history.
+جلسات هر پروفایل تحت namespace `agent:<profile>:…` زندگی می‌کنند بنابراین دو پروفایل روی همان پلتفرم/چت هرگز در فروشگاه جلسه مشترک تداخل نمی‌کنند. پروفایل **پیش‌فرض** namespace تاریخی `agent:main:…` را byte-for-byte حفظ می‌کند، بنابراین جلسات پروفایل پیش‌فرض موجود تحت تأثیر قرار نمی‌گیرند — بدون مهاجرت، بدون تاریخچه یتیم.
 
 `agent:<profile>:…`
 `agent:main:…`
 
-#### 5. One PID/lock and one status surface​
+#### 5. یک PID/lock و یک سطح وضعیت واحد
 
-There is a single process-level PID and lock (the multiplexer, under the default
-home).hermes statusreports the multiplexer and the profiles it serves;hermes status -p <name>slices to one profile. Each profile still writes its
-ownruntime_status.jsonunder its own home, so existing per-profile readers
-keep working.
+یک PID و lock سطح-فرایند واحد وجود دارد (multiplexer، تحت خانه پیش‌فرض). `hermes status` multiplexer و پروفایل‌هایی که سرویس می‌دهد را گزارش می‌دهد؛ `hermes status -p <name>` روی یک پروفایل برش می‌زند. هر پروفایل همچنان `runtime_status.json` خود را تحت خانه خود می‌نویسد، بنابراین خوانندگان به ازای پروفایل موجود همچنان کار می‌کنند.
 
 `hermes status`
 `hermes status -p <name>`
 `runtime_status.json`
 
-#### What doesnotchange​
+#### چه چیزی **تغییر نمی‌کند**
 
-Per-profile.envcredential isolation is preserved and, if anything,
-stricter: a profile's keys are resolved from its own scope and are never unioned
-into a shared environment (this also means subprocesses like MCP servers and
-Kanban workers only ever see their own profile's secrets). Kanban,
-profile-scoped skills/memory/SOUL, and model routing all behave per-profile
-exactly as they do with separate gateways.
+ایزوله اعتبار `.env` به ازای پروفایل حفظ شده و در واقع **دقیق‌تر** است: کلیدهای یک پروفایل از دامنه خود حل می‌شوند و هرگونه unioned به محیط مشترک نمی‌شوند (این همچنین به این معنی است که فرایندهای فرعی مانند سرورهای MCP و کارگران Kanban فقط رمزهای عبور پروفایل خود را می‌بینند). Kanban، مهارت‌ها/حافظه/SOUL به ازای پروفایل و مسیریابی مدل همگی دقیقاً به ازای پروفایل رفتار می‌کنند مانند gateway‌های جداگانه.
 
 `.env`
 
-## Start, stop, or restart all gateways at once​
+## شروع، توقف یا ری‌استارت همزمان همه gateway‌ها
 
-The CLI ships with single-profile lifecycle commands. To act across every
-profile, wrap them in a shell loop. Put the snippet below in~/.local/bin/hermes-gatewaysandchmod +xit:
+CLI با دستورات چرخه حیات به ازای پروفایل واحد عرضه می‌شود. برای عمل در هر پروفایل، آن‌ها را در یک حلقه shell بپیچید. قطعه زیر را در `~/.local/bin/hermes-gateways` قرار دهید و `chmod +x` کنید:
 
 `~/.local/bin/hermes-gateways`
 `chmod +x`
 
 ```
-#!/bin/shset -eu# Add or remove profile names here as you create / delete profiles.profiles="default coder personal-bot research"usage() {  echo "Usage: hermes-gateways {start|stop|restart|status|list}"}run_for_profile() {  profile="$1"  action="$2"  if [ "$profile" = "default" ]; then    hermes gateway "$action"  else    hermes -p "$profile" gateway "$action"  fi}action="${1:-}"case "$action" in  start|stop|restart|status)    for profile in $profiles; do      echo "==> $action $profile"      run_for_profile "$profile" "$action"    done    ;;  list)    hermes gateway list    ;;  *)    usage    exit 2    ;;esac
+#!/bin/sh
+set -eu
+# Add or remove profile names here as you create / delete profiles.
+profiles="default coder personal-bot research"
+usage() {  echo "Usage: hermes-gateways {start|stop|restart|status|list}"}
+run_for_profile() {  profile="$1"  action="$2"
+  if [ "$profile" = "default" ]; then
+    hermes gateway "$action"
+  else
+    hermes -p "$profile" gateway "$action"
+  fi
+}
+action="${1:-}"
+case "$action" in
+  start|stop|restart|status)
+    for profile in $profiles; do
+      echo "==> $action $profile"
+      run_for_profile "$profile" "$action"
+    done
+    ;;
+  list)    hermes gateway list    ;;
+  *)    usage    exit 2    ;;
+esac
 ```
 
-Then:
+سپس:
 
 ```
-hermes-gateways start      # start every configured profilehermes-gateways stop       # stop every configured profilehermes-gateways restart    # restart allhermes-gateways status     # status across allhermes-gateways list       # delegates to `hermes gateway list`
+hermes-gateways start      # start every configured profile
+hermes-gateways stop       # stop every configured profile
+hermes-gateways restart    # restart all
+hermes-gateways status     # status across all
+hermes-gateways list       # delegates to `hermes gateway list`
 ```
 
-Thedefaultprofile is targeted withhermes gateway <action>(no-p),
-nothermes -p default gateway <action>. The wrapper above handles both forms.
+پروفایل **پیش‌فرض** با `hermes gateway <action>` (بدون `-p`) هدف گرفته می‌شود، **نه** `hermes -p default gateway <action>`. wrapper بالا هر دو فرم را مدیریت می‌کند.
 
 `default`
 `hermes gateway <action>`
 `-p`
 `hermes -p default gateway <action>`
 
-## Manage one profile​
+## مدیریت یک پروفایل
 
-The shortcut commands every profile installs:
+دستورات میانبری که هر پروفایل نصب می‌کند:
 
 ```
-coder gateway run        # foreground (Ctrl-C to stop)coder gateway start      # start the managed servicecoder gateway stop       # stop the managed servicecoder gateway restart    # restartcoder gateway status     # statuscoder gateway install    # create the LaunchAgent / systemd unitcoder gateway uninstall  # remove the service file
+coder gateway run        # foreground (Ctrl-C to stop)
+coder gateway start      # start the managed service
+coder gateway stop       # stop the managed service
+coder gateway restart    # restart
+coder gateway status     # status
+coder gateway install    # create the LaunchAgent / systemd unit
+coder gateway uninstall  # remove the service file
 ```
 
-These are equivalent tohermes -p coder gateway <action>— useful if a
-profile alias is not onPATHor if you target profiles dynamically from a
-script.
+این‌ها معادل `hermes -p coder gateway <action>` هستند — مفید وقتی نام مستعار پروفایل در `PATH` نیست یا پروفایل‌ها را به طور پویا از یک اسکریپت هدف می‌دهید.
 
 `hermes -p coder gateway <action>`
 `PATH`
 
-## Service files​
+## فایل‌های سرویس
 
-Each profile installs its own service with a unique name, so installations
-never clash:
+هر پروفایل سرویس خود را با نام یکتا نصب می‌کند، بنابراین نصب‌ها هرگز تداخل ندارند:
 
-| Platform | Path |
+| پلتفرم | مسیر |
 | --- | --- |
-| macOS | ~/Library/LaunchAgents/ai.hermes.gateway-<profile>.plist |
-| Linux | ~/.config/systemd/user/hermes-gateway-<profile>.service |
+| macOS | `~/Library/LaunchAgents/ai.hermes.gateway-<profile>.plist` |
+| Linux | `~/.config/systemd/user/hermes-gateway-<profile>.service` |
 
 `~/Library/LaunchAgents/ai.hermes.gateway-<profile>.plist`
 `~/.config/systemd/user/hermes-gateway-<profile>.service`
 
-The default profile keeps the historical names:ai.hermes.gateway.plist/hermes-gateway.service.
+پروفایل پیش‌فرض نام‌های تاریخی را حفظ می‌کند: `ai.hermes.gateway.plist` / `hermes-gateway.service`.
 
 `ai.hermes.gateway.plist`
 `hermes-gateway.service`
 
-## Viewing logs​
+## مشاهده لاگ‌ها
 
-Each profile writes to its own log files:
+هر پروفایل در فایل‌های لاگ خود می‌نویسد:
 
 ```
-# Default profiletail -f ~/.hermes/logs/gateway.logtail -f ~/.hermes/logs/gateway.error.log# Named profiletail -f ~/.hermes/profiles/<name>/logs/gateway.logtail -f ~/.hermes/profiles/<name>/logs/gateway.error.log
+# Default profile
+tail -f ~/.hermes/logs/gateway.log
+tail -f ~/.hermes/logs/gateway.error.log
+
+# Named profile
+tail -f ~/.hermes/profiles/<name>/logs/gateway.log
+tail -f ~/.hermes/profiles/<name>/logs/gateway.error.log
 ```
 
-Stream every profile's log simultaneously:
+لاگ هر پروفایل را همزمان استریم کنید:
 
 ```
 tail -f ~/.hermes/logs/gateway.log ~/.hermes/profiles/*/logs/gateway.log
 ```
 
-The CLI also has a structured log viewer:
+CLI همچنین یک مشاهده‌گر لاگ ساختاریافته دارد:
 
 ```
-hermes logs -f                  # follow default profilehermes -p coder logs -f         # follow one profilehermes logs --help              # filters, levels, JSON output
+hermes logs -f                  # follow default profile
+hermes -p coder logs -f         # follow one profile
+hermes logs --help              # filters, levels, JSON output
 ```
 
-## Identify what's actually running​
+## شناسایی آنچه واقعاً در حال اجراست
 
 ```
-hermes profile list             # profiles + model + gateway statehermes-gateways status          # full status across every profilelaunchctl list | grep hermes    # macOS — PIDs and labelssystemctl --user list-units 'hermes-gateway-*'   # Linux — units
+hermes profile list             # profiles + model + gateway state
+hermes-gateways status          # full status across every profile
+launchctl list | grep hermes    # macOS — PIDs and labels
+systemctl --user list-units 'hermes-gateway-*'   # Linux — units
 ```
 
-## Editing configuration​
+## ویرایش پیکربندی
 
-Every profile keeps its config inside its own directory:
+هر پروفایل پیکربندی خود را در دایرکتوری خود نگه می‌دارد:
 
 ```
-~/.hermes/profiles/<name>/├── .env              # API keys, bot tokens (chmod 600)├── config.yaml       # model, provider, toolsets, gateway settings└── SOUL.md           # personality / system prompt
+~/.hermes/profiles/<name>/
+├── .env              # API keys, bot tokens (chmod 600)
+├── config.yaml       # model, provider, toolsets, gateway settings
+└── SOUL.md           # personality / system prompt
 ```
 
-The default profile uses~/.hermes/directly with the same three files.
+پروفایل پیش‌فرض مستقیماً از `~/.hermes/` با همان سه فایل استفاده می‌کند.
 
 `~/.hermes/`
 
-Edit them with any editor or via the CLI:
+آن‌ها را با هر ویرایشگر یا از طریق CLI ویرایش کنید:
 
 ```
-hermes config set model.model anthropic/claude-sonnet-4    # default profilecoder config set model.model openai/gpt-5                  # named profile
+hermes config set model.model anthropic/claude-sonnet-4    # default profile
+coder config set model.model openai/gpt-5                  # named profile
 ```
 
-After editing.envorconfig.yaml, restart the affected gateway:
+پس از ویرایش `.env` یا `config.yaml`، gateway تحت تأثیر را ری‌استارت کنید:
 
 `.env`
 `config.yaml`
 
 ```
-coder gateway restart# or, for everything:hermes-gateways restart
+coder gateway restart
+# or, for everything:
+hermes-gateways restart
 ```
 
-## Keeping the host awake​
+## بیدار نگه داشتن host
 
-The gateway process can run all day, but the operating system will still try
-to sleep when idle. Two patterns:
+فرایند gateway می‌تواند تمام روز اجرا شود، اما سیستم‌عامل همچنان سعی می‌کند در حالت بیکاری بخوابد. دو الگو:
 
-### macOS —caffeinate​
+### macOS — `caffeinate`
 
 `caffeinate`
 
-caffeinateis built into macOS and prevents sleep while it runs. No install.
+`caffeinate` در macOS داخلی است و در حال اجرا از خواب جلوگیری می‌کند. نیازی به نصب نیست.
 
 `caffeinate`
 
 ```
-caffeinate -dis                    # block display, idle, and system sleepcaffeinate -dis -t 28800           # same, auto-exit after 8 hourscaffeinate -i -w $(cat ~/.hermes/gateway.pid) &   # awake while default gateway runs# Persistent: run in background and forgetnohup caffeinate -dis >/dev/null 2>&1 &disown# Inspect / stoppmset -g assertions | grep -iE 'caffeinate|prevent|user is active'pkill caffeinate
+caffeinate -dis                    # block display, idle, and system sleep
+caffeinate -dis -t 28800           # same, auto-exit after 8 hours
+caffeinate -i -w $(cat ~/.hermes/gateway.pid) &   # awake while default gateway runs
+# Persistent: run in background and forget
+nohup caffeinate -dis >/dev/null 2>&1 &
+disown
+# Inspect / stop
+pmset -g assertions | grep -iE 'caffeinate|prevent|user is active'
+pkill caffeinate
 ```
 
-| Flag | Effect |
+| پرچم | اثر |
 | --- | --- |
-| -d | block display sleep |
-| -i | block idle system sleep (default) |
-| -m | block disk sleep |
-| -s | block system sleep (AC-powered Macs only) |
-| -u | simulate user activity (prevents screen lock) |
-| -t N | auto-exit afterNseconds |
-| -w P | exit when PIDPexits |
+| `-d` | مسدود کردن خواب نمایشگر |
+| `-i` | مسدود کردن خواب بیکار سیستم (پیش‌فرض) |
+| `-m` | مسدود کردن خواب دیسک |
+| `-s` | مسدود کردن خواب سیستم (فقط Macهای AC-powered) |
+| `-u` | شبیه‌سازی فعالیت کاربر (از قفل صفحه جلوگیری می‌کند) |
+| `-t N` | خروج خودکار پس از N ثانیه |
+| `-w P` | خروج وقتی PID P خارج شود |
 
 `-d`
 `-i`
@@ -356,59 +380,57 @@ caffeinate -dis                    # block display, idle, and system sleepcaffei
 `-w P`
 `P`
 
-caffeinatecannot override the hardware-driven lid-close sleep on MacBooks.
-For lid-closed operation, change your Energy Saver / Battery preferences or
-use a third-party tool.
+`caffeinate` نمی‌تواند خواب بستن درب سخت‌افزاری را در MacBooks باطل کند. برای عملکرد با درب بسته، تنظیمات Energy Saver / Battery خود را تغییر دهید یا از ابزار شخص ثالث استفاده کنید.
 
 `caffeinate`
 
-### Linux —systemd-inhibitorloginctl​
+### Linux — `systemd-inhibit` / `loginctl`
 
 `systemd-inhibit`
 `loginctl`
 
 ```
-# Inhibit suspend while a command runssystemd-inhibit --what=idle:sleep --who=hermes --why="gateways running" \  sleep infinity &# Allow user services to keep running after logout (recommended)sudo loginctl enable-linger "$USER"
+# Inhibit suspend while a command runs
+systemd-inhibit --what=idle:sleep --who=hermes --why="gateways running" \
+  sleep infinity &
+
+# Allow user services to keep running after logout (recommended)
+sudo loginctl enable-linger "$USER"
 ```
 
-After enabling lingering, your systemd user units (includinghermes-gateway-<profile>.service) continue running across SSH disconnects
-and reboots.
+پس از فعال کردن lingering، واحدهای کاربر systemd شما (از جمله `hermes-gateway-<profile>.service`) در قطع اتصال SSH و ری‌استارت‌ها به اجرا ادامه می‌دهند.
 
 `hermes-gateway-<profile>.service`
 
-## Token-conflict safety​
+## ایمنی تداخل توکن
 
-Each profile must use unique bot tokens for each platform. If two profiles
-share a Telegram, Discord, Slack, WhatsApp, or Signal token, the second
-gateway refuses to start with an error naming the conflicting profile.
+هر پروفایل باید توکن‌های bot یکتا برای هر پلتفرم استفاده کند. اگر دو پروفایل توکن Telegram، Discord، Slack، WhatsApp یا Signal را به اشتراک بگذارند، دومین gateway با خطایی که پروفایل متعارض را نام می‌برد از شروع امتناع می‌کند.
 
-To audit:
+برای ممیزی:
 
 ```
-grep -H 'TELEGRAM_BOT_TOKEN\|DISCORD_BOT_TOKEN' \     ~/.hermes/.env ~/.hermes/profiles/*/.env
+grep -H 'TELEGRAM_BOT_TOKEN\|DISCORD_BOT_TOKEN' \
+     ~/.hermes/.env ~/.hermes/profiles/*/.env
 ```
 
-## Updating the code​
+## به‌روزرسانی کد
 
-hermes updatepulls the latest code once and syncs new bundled skills into
-every profile:
+`hermes update` آخرین کد را یک بار دریافت می‌کند و مهارت‌های بسته‌شده جدید را به هر پروفایل همگام‌سازی می‌کند:
 
 `hermes update`
 
 ```
-hermes updatehermes-gateways restart
+hermes update
+hermes-gateways restart
 ```
 
-User-modified skills are never overwritten.
+مهارت‌های تغییریافته توسط کاربر هرگز بازنویسی نمی‌شوند.
 
-## Troubleshooting​
+## عیب‌یابی
 
-### "Could not find service in domain for user gui: 501"​
+### «Could not find service in domain for user gui: 501»
 
-You ranhermes gateway startafter a previoushermes gateway stop. The
-CLI'sstopdoes a fulllaunchctl unload, which removes the service from
-launchd's registry. The CLI catches this specific error onstartand
-automatically re-loads the plist (↻ launchd job was unloaded; reloading service definition). The service starts normally. Nothing to fix.
+`hermes gateway start` را پس از `hermes gateway stop` قبلی اجرا کرده‌اید. `stop` CLI یک `launchctl unload` کامل انجام می‌دهد که سرویس را از رجیستری launchd حذف می‌کند. CLI این خطای خاص را در `start` می‌گیرد و به طور خودکار plist را دوباره بارگذاری می‌کند (↻ launchd job was unloaded; reloading service definition). سرویس به طور عادی شروع می‌شود. چیزی برای رفع نیست.
 
 `hermes gateway start`
 `hermes gateway stop`
@@ -417,26 +439,36 @@ automatically re-loads the plist (↻ launchd job was unloaded; reloading servic
 `start`
 `↻ launchd job was unloaded; reloading service definition`
 
-### Stale PID after a crash​
+### PID قدیمی پس از خرابی
 
-If a profile's gateway showsnot runningbut a process is still alive:
+اگر gateway پروفایلی `not running` نشان دهد اما فرایند هنوز زنده باشد:
 
 `not running`
 
 ```
-ps -ef | grep "hermes_cli.*-p <profile>"cat ~/.hermes/profiles/<profile>/gateway.pidkill -TERM <pid>          # gracefulkill -KILL <pid>          # if that fails after a few seconds<profile> gateway start
+ps -ef | grep "hermes_cli.*-p <profile>"
+cat ~/.hermes/profiles/<profile>/gateway.pid
+kill -TERM <pid>          # graceful
+kill -KILL <pid>          # if that fails after a few seconds
+<profile> gateway start
 ```
 
-### Forcing a hard reset of one service​
+### اجبار ریست سخت یک سرویس
 
 ```
-# macOSlaunchctl unload ~/Library/LaunchAgents/ai.hermes.gateway-<profile>.plistlaunchctl load   ~/Library/LaunchAgents/ai.hermes.gateway-<profile>.plist# Linuxsystemctl --user restart hermes-gateway-<profile>.service
+# macOS
+launchctl unload ~/Library/LaunchAgents/ai.hermes.gateway-<profile>.plist
+launchctl load   ~/Library/LaunchAgents/ai.hermes.gateway-<profile>.plist
+
+# Linux
+systemctl --user restart hermes-gateway-<profile>.service
 ```
 
-### Health check​
+### بررسی سلامت
 
 ```
-hermes doctor                  # default profilehermes -p <profile> doctor     # one profile
+hermes doctor                  # default profile
+hermes -p <profile> doctor     # one profile
 ```
 
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/multi-profile-gateways.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/multi-profile-gateways.md)

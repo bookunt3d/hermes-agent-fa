@@ -1,41 +1,41 @@
 ---
 layout: docs
 title: "مهارت‌ها"
-permalink: /user-guide/features/skills/
+permalink: /docs/user-guide/features/skills/
 ---
 
 - 
-- Features
-- Core
-- Skills System
+- امکانات
+- هسته
+- سیستم مهارت‌ها
 
-# Skills System
+# سیستم مهارت‌ها
 
-Skills are on-demand knowledge documents the agent can load when needed. They follow aprogressive disclosurepattern to minimize token usage and are compatible with theagentskills.ioopen standard.
+مهارت‌ها اسناد دانشی هستند که agent می‌تواند در صورت نیاز بارگذاری کند. آنها از الگوی افشای تدریجی (progressive disclosure) پیروی می‌کنند تا مصرف توکن را به حداقل برسانند و با استاندارد باز agentskills.io سازگار هستند.
 
 [agentskills.io](https://agentskills.io/specification)
 
-All skills live in~/.hermes/skills/— the primary directory and source of truth. On fresh install, bundled skills are copied from the repo. Hub-installed and agent-created skills also go here. The agent can modify or delete any skill.
+همه مهارت‌ها در `~/.hermes/skills/` زندگی می‌کنند — دایرکتوری اصلی و منبع حقیقت. در نصب تازه، مهارت‌های bundled از مخزن کپی می‌شوند. مهارت‌های نصب‌شده از Hub و مهارت‌های ایجادشده توسط agent نیز اینجا قرار می‌گیرند. agent می‌تواند هر مهارتی را تغییر دهد یا حذف کند.
 
 `~/.hermes/skills/`
 
-You can also point Hermes atexternal skill directories— additional folders scanned alongside the local one. SeeExternal Skill Directoriesbelow.
+همچنین می‌توانید Hermes را به **دایرکتوری‌های مهارت خارجی** اشاره دهید — پوشه‌های اضافی که در کنار پوشه محلی اسکن می‌شوند. بخش «دایرکتوری‌های مهارت خارجی» در زیر را ببینید.
 
-See also:
+همچنین ببینید:
 
-- Bundled Skills Catalog
-- Official Optional Skills Catalog
+- فهرست مهارت‌های Bundled
+- فهرست رسمی مهارت‌های اختیاری
 
-[Bundled Skills Catalog](/docs/reference/skills-catalog)
-[Official Optional Skills Catalog](/docs/reference/optional-skills-catalog)
+[فهرست مهارت‌های Bundled](/docs/reference/skills-catalog)
+[فهرست رسمی مهارت‌های اختیاری](/docs/reference/optional-skills-catalog)
 
-## Starting with a blank slate​
+## شروع از صفحه خالی
 
-By default every profile is seeded with the bundled skill catalog, and eachhermes updateadds any newly bundled skills. If you want a profile withno bundled skills— and that stays empty across updates — you have two paths:
+به طور پیش‌فرض هر پروفایل با فهرست مهارت‌های bundled کاشته می‌شود و هر `hermes update` مهارت‌های bundled جدید را اضافه می‌کند. اگر می‌خواهید پروفایلی **بدون مهارت‌های bundled** داشته باشید — و در به‌روزرسانی‌ها خالی بماند — دو مسیر دارید:
 
 `hermes update`
 
-At install time(applies to the default~/.hermesprofile):
+در زمان نصب (اعمال به پروفایل پیش‌فرض `~/.hermes`):
 
 `~/.hermes`
 
@@ -43,42 +43,49 @@ At install time(applies to the default~/.hermesprofile):
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --no-skills
 ```
 
-At profile-create time(named profiles):
+در زمان ایجاد پروفایل (پروفایل‌های نام‌گذاری‌شده):
 
 ```
 hermes profile create research --no-skills
 ```
 
-On an already-installed profile(default or named), toggle it at runtime:
+روی یک پروفایل از قبل نصب‌شده (پیش‌فرض یا نام‌گذاری‌شده)، در زمان اجرا تغییر دهید:
 
 ```
-hermes skills opt-out            # stop future seeding — nothing on disk is touchedhermes skills opt-out --remove   # also delete UNMODIFIED bundled skills (confirms first)hermes skills opt-in --sync      # undo: remove the marker and re-seed now
+hermes skills opt-out            # stop future seeding — nothing on disk is touched
+hermes skills opt-out --remove   # also delete UNMODIFIED bundled skills (confirms first)
+hermes skills opt-in --sync      # undo: remove the marker and re-seed now
 ```
 
-All three paths write a.no-bundled-skillsmarker into the profile directory. While the marker is present, the installer,hermes update, and any skill sync all skip bundled-skill seeding for that profile. Delete the marker (or runhermes skills opt-in) to re-enable.
+هر سه مسیر یک نشانگر `.no-bundled-skills` در دایرکتوری پروفایل می‌نویسند. تا زمانی که این نشانگر وجود دارد، نصب‌کننده، `hermes update` و هر همگام‌سازی مهارت، کاشت مهارت‌های bundled را برای آن پروفایل رد می‌کنند. نشانگر را حذف کنید (یا `hermes skills opt-in` اجرا کنید) تا دوباره فعال شود.
 
 `.no-bundled-skills`
 `hermes update`
 `hermes skills opt-in`
 
-hermes skills opt-outonly stopsfutureseeding — it never deletes anything already on disk. The optional--removeflag deletes bundled skillsonlywhen they are unmodified (byte-identical to the version Hermes installed). Skills you have edited, skills installed from the hub, and skills you wrote yourself are always kept.
+`hermes skills opt-out` فقط کاشت **آینده** را متوقف می‌کند — هیچ چیز موجود روی دیسک را حذف نمی‌کند. پرچم اختیاری `--remove` فقط مهارت‌های bundled **تغییر نیافته** (بایت‌به‌بایت یکسان با نسخه‌ای که Hermes نصب کرده) را حذف می‌کند. مهارت‌هایی که ویرایش کرده‌اید، مهارت‌های نصب‌شده از Hub و مهارت‌هایی که خودتان نوشته‌اید همیشه حفظ می‌شوند.
 
 `hermes skills opt-out`
 `--remove`
 
-## Using Skills​
+## استفاده از مهارت‌ها
 
-Every installed skill is automatically available as a slash command:
+هر مهارت نصب‌شده به طور خودکار به عنوان یک دستور slash در دسترس است:
 
 ```
-# In the CLI or any messaging platform:/gif-search funny cats/axolotl help me fine-tune Llama 3 on my dataset/github-pr-workflow create a PR for the auth refactor/plan design a rollout for migrating our auth provider# Just the skill name loads it and lets the agent ask what you need:/excalidraw
+# In the CLI or any messaging platform:
+/gif-search funny cats
+/axolotl help me fine-tune Llama 3 on my dataset
+/github-pr-workflow create a PR for the auth refactor
+/plan design a rollout for migrating our auth provider
+
+# Just the skill name loads it and lets the agent ask what you need:
+/excalidraw
 ```
 
-### Stacking multiple skills in one command​
+### انباشتن چندین مهارت در یک دستور
 
-You can invoke several skills in a single message by chaining slash commands
-at the start — every leading/skilltoken (up to 5) is loaded, and the rest
-becomes your instruction:
+می‌توانید چندین مهارت را در یک پیام با زنجیره کردن دستورات slash در ابتدای آن فراخوانی کنید — هر توکن `/skill` پیشرو (حداکثر ۵ عدد) بارگذاری می‌شود و بقیه به عنوان دستورالعمل شما عمل می‌کند:
 
 `/skill`
 
@@ -86,8 +93,7 @@ becomes your instruction:
 /github-pr-workflow /test-driven-development fix issue #123 and open a PR
 ```
 
-Parsing stops at the first token that isn't an installed skill, so arguments
-that happen to start with/(like file paths) are never swallowed:
+تحلیل در اولین توکنی که مهارت نصب‌شده نیست متوقف می‌شود، بنابراین آرگومان‌هایی که اتفاقی با `/` شروع می‌شوند (مانند مسیر فایل) هرگز بلعیده نمی‌شوند:
 
 `/`
 
@@ -95,76 +101,110 @@ that happen to start with/(like file paths) are never swallowed:
 /ocr-and-documents /tmp/scan.pdf extract the tables   # loads one skill; /tmp/scan.pdf is the argument
 ```
 
-For combinations you use repeatedly, prefer askill bundle—
-same effect under one short command.
+برای ترکیب‌هایی که مکرراً استفاده می‌کنید، یک **بسته مهارت (skill bundle)** ترجیح دهید —
+همان اثر را با یک دستور کوتاه‌تر دارد.
 
-The bundledplanskill is a good example. Running/plan [request]loads the skill's instructions, telling Hermes to inspect context if needed, write a markdown implementation plan instead of executing the task, and save the result under.hermes/plans/relative to the active workspace/backend working directory.
+مهارت bundled `plan` مثال خوبی است. اجرای `/plan [request]` دستورالعمل‌های مهارت را بارگذاری می‌کند و به Hermes می‌گوید در صورت نیاز زمینه را بررسی کند، به جای اجرای وظیفه یک طرح اجرایی markdown بنویسد و نتیجه را در `.hermes/plans/` نسبت به دایرکتوری کاری فعال/backend ذخیره کند.
 
 `plan`
 `/plan [request]`
 `.hermes/plans/`
 
-You can also interact with skills through natural conversation:
+همچنین می‌توانید از طریق مکالمه طبیعی با مهارت‌ها تعامل کنید:
 
 ```
-hermes chat --toolsets skills -q "What skills do you have?"hermes chat --toolsets skills -q "Show me the axolotl skill"
+hermes chat --toolsets skills -q "What skills do you have?"
+hermes chat --toolsets skills -q "Show me the axolotl skill"
 ```
 
-## Learning a skill from sources (/learn)​
+## یادگیری یک مهارت از منابع (/learn)
 
 `/learn`
 
-/learnis the fast way to turn something you already know — or a pile of
-reference material — into a reusable skill, without hand-writing theSKILL.md. It is open-ended: point it atanything you can describeand the
-agent gathers the material with the tools it already has, then authors a skill
-that follows thehouse authoring standards(≤60-char
-description, the standard section order, Hermes-tool framing, no invented
-commands).
+`/learn` سریع‌ترین راه برای تبدیل چیزی که از قبل می‌دانید — یا انبوهی از مواد مرجع — به یک مهارت قابل استفاده مجدد، بدون نوشتن دستی `SKILL.md` است. این ابزار بی‌پایان است: هر چیزی که بتوانید توصیف کنید را به آن نشان دهید و agent مواد را با ابزارهایی که از قبل دارد جمع‌آوری می‌کند، سپس مهارتی می‌نویسد که از **استانداردهای تألیف خانگی** پیروی می‌کند (توصیف ≤۶۰ کاراکتر، ترتیب استاندارد بخش‌ها، چارچوب‌بندی ابزارهای Hermes، بدون دستورات اختراعی).
 
 `/learn`
 `SKILL.md`
 
 ```
-# A local SDK or doc directory — read with read_file / search_files/learn the REST client in ~/projects/acme-sdk, focus on auth + pagination# An online doc page — fetched with web_extract/learn https://docs.example.com/api/quickstart# The workflow you just walked the agent through in this conversation/learn how I just deployed the staging server# Pasted notes / a described procedure/learn filing an expense: open the portal, New > Expense, attach the receipt, submit
+# A local SDK or doc directory — read with read_file / search_files
+/learn the REST client in ~/projects/acme-sdk, focus on auth + pagination
+
+# An online doc page — fetched with web_extract
+/learn https://docs.example.com/api/quickstart
+
+# The workflow you just walked the agent through in this conversation
+/learn how I just deployed the staging server
+
+# Pasted notes / a described procedure
+/learn filing an expense: open the portal, New > Expense, attach the receipt, submit
 ```
 
-Because the live agent does the sourcing,/learnworks the same in the CLI,
-the messaging gateway, the TUI, and the dashboard — and on any terminal backend
-(local, Docker, remote), since there is no separate ingestion engine. In thedashboard, the Skills page has aLearn a skillbutton that opens a panel
-with a directory field, a URL field, and an open-ended text box; it composes a/learnrequest and runs it in chat.
+از آنجا که agent زنده خود منبع‌یابی را انجام می‌دهد، `/learn` به یک شکل در CLI، دروازه پیام‌رسانی، TUI و داشبورد کار می‌کند — و روی هر backend ترمینالی (محلی، Docker، راه دور)، زیرا موتور ingestion جداگانه‌ای وجود ندارد. در داشبورد، صفحه Skills دکمه‌ای «یادگیری یک مهارت» دارد که پنلی با فیلد دایرکتوری، فیلد URL و جعبه متن بی‌پایان باز می‌کند؛ درخواست `/learn` را ترکیب کرده و در چت اجرا می‌کند.
 
 `/learn`
 `/learn`
 
-There is no model-tool footprint:/learnbuilds a standards-guided prompt and
-hands it to the agent as a normal turn. The agent saves the result with theskill_managetool, so thewrite-approval gateapplies if you have it on.
+هیچ ردپای ابزار-مدلی وجود ندارد: `/learn` یک پرامپت راهنمای استاندارد می‌سازد و آن را به عنوان یک نوبت عادی به agent تحویل می‌دهد. agent نتیجه را با ابزار `skill_manage` ذخیره می‌کند، بنابراین **دروازه تأیید نوشتن** اعمال می‌شود اگر آن را فعال کرده باشید.
 
 `/learn`
 `skill_manage`
 
-## Progressive Disclosure​
+## افشای تدریجی (Progressive Disclosure)
 
-Skills use a token-efficient loading pattern:
-
-```
-Level 0: skills_list()           → [{name, description, category}, ...]   (~3k tokens)Level 1: skill_view(name)        → Full content + metadata       (varies)Level 2: skill_view(name, path)  → Specific reference file       (varies)
-```
-
-The agent only loads the full skill content when it actually needs it.
-
-## SKILL.md Format​
+مهارت‌ها از الگوی بارگذاری کارآمد توکن استفاده می‌کنند:
 
 ```
----name: my-skilldescription: Brief description of what this skill doesversion: 1.0.0platforms: [macos, linux]     # Optional — restrict to specific OS platformsmetadata:  hermes:    tags: [python, automation]    category: devops    fallback_for_toolsets: [web]    # Optional — conditional activation (see below)    requires_toolsets: [terminal]   # Optional — conditional activation (see below)    config:                          # Optional — config.yaml settings      - key: my.setting        description: "What this controls"        default: "value"        prompt: "Prompt for setup"---# Skill Title## When to UseTrigger conditions for this skill.## Procedure1. Step one2. Step two## Pitfalls- Known failure modes and fixes## VerificationHow to confirm it worked.
+Level 0: skills_list()           → [{name, description, category}, ...]   (~3k tokens)
+Level 1: skill_view(name)        → Full content + metadata       (varies)
+Level 2: skill_view(name, path)  → Specific reference file       (varies)
 ```
 
-### Platform-Specific Skills​
+agent فقط محتوای کامل مهارت را زمانی بارگذاری می‌کند که واقعاً به آن نیاز داشته باشد.
 
-Skills can restrict themselves to specific operating systems using theplatformsfield:
+## فرمت SKILL.md
+
+```
+---
+name: my-skill
+description: Brief description of what this skill does
+version: 1.0.0
+platforms: [macos, linux]     # Optional — restrict to specific OS platforms
+metadata:
+  hermes:
+    tags: [python, automation]
+    category: devops
+    fallback_for_toolsets: [web]    # Optional — conditional activation (see below)
+    requires_toolsets: [terminal]   # Optional — conditional activation (see below)
+    config:                          # Optional — config.yaml settings
+      - key: my.setting
+        description: "What this controls"
+        default: "value"
+        prompt: "Prompt for setup"
+---
+# Skill Title
+
+## When to Use
+Trigger conditions for this skill.
+
+## Procedure
+1. Step one
+2. Step two
+
+## Pitfalls
+- Known failure modes and fixes
+
+## Verification
+How to confirm it worked.
+```
+
+### مهارت‌های خاص پلتفرم
+
+مهارت‌ها می‌توانند خود را به سیستم‌عامل‌های خاصی محدود کنند با استفاده از فیلد `platforms`:
 
 `platforms`
 
-| Value | Matches |
+| مقدار | مطابقت |
 | --- | --- |
 | macos | macOS (Darwin) |
 | linux | Linux |
@@ -175,157 +215,197 @@ Skills can restrict themselves to specific operating systems using theplatformsf
 `windows`
 
 ```
-platforms: [macos]            # macOS only (e.g., iMessage, Apple Reminders, FindMy)platforms: [macos, linux]     # macOS and Linux
+platforms: [macos]            # macOS only (e.g., iMessage, Apple Reminders, FindMy)
+platforms: [macos, linux]     # macOS and Linux
 ```
 
-When set, the skill is automatically hidden from the system prompt,skills_list(), and slash commands on incompatible platforms. If omitted, the skill loads on all platforms.
+هنگام تنظیم، مهارت به طور خودکار از پرامپت سیستم، `skills_list()` و دستورات slash در پلتفرم‌های ناسازگار پنهان می‌شود. اگر حذف شود، مهارت روی همه پلتفرم‌ها بارگذاری می‌شود.
 
 `skills_list()`
 
-## Skill output and media delivery​
+## خروجی مهارت و تحویل رسانه
 
-When a skill response (or any agent response) includes a bare absolute path to a media file — for example/home/user/screenshots/diagram.png— the gateway auto-detects it, strips it from the visible text, and delivers the file natively to the user's chat (Telegram photo, Discord attachment, etc.) instead of leaving the raw path in the message.
+هنگامی که پاسخ یک مهارت (یا هر پاسخ agent) یک مسیر مطلق رسانه خام را شامل می‌شود — برای مثال `/home/user/screenshots/digraph.png` — دروازه آن را به طور خودکار تشخیص می‌دهد، از متن قابل مشاهده حذف می‌کند و فایل را به صورت بومی به چت کاربر تحویل می‌دهد (عکس Telegram، پیوست Discord و غیره) به جای گذاشتن مسیر خام در پیام.
 
-`/home/user/screenshots/diagram.png`
+`/home/user/screenshots/digraph.png`
 
-For audio specifically, the[[audio_as_voice]]directive promotes audio files to native voice-message bubbles on platforms that support them (Telegram, WhatsApp).
+به طور خاص برای صدا، دستورالعمل `[[audio_as_voice]]` فایل‌های صوتی را به حباب‌های پیام صوتی بومی در پلتفرم‌هایی که از آن پشتیبانی می‌کنند (Telegram، WhatsApp) ارتقا می‌دهد.
 
 `[[audio_as_voice]]`
 
-### Forcing document-style delivery:[[as_document]]​
+### اجبار تحویل سند-مانند: [[as_document]]
 
 `[[as_document]]`
 
-Sometimes you want theoppositeof inline preview: you want the file delivered as a downloadable attachment, not a re-compressed image bubble. The classic example is a high-resolution screenshot or chart — Telegram'ssendPhotorecompresses it to ~200 KB at 1280 px, destroying readability. A 1-2 MB PNG sent viasendDocumentkeeps the original bytes intact.
+گاهی اوقات می‌خواهید **عکس** پیش‌نمایش درون‌خطی باشد: فایل به جای حباب تصویری فشرده‌شده مجدد به عنوان یک پیوست قابل دانلود تحویل داده شود. مثال کلاسیک یک اسکرین‌شات یا نمودار با وضوح بالا است — `sendPhoto` در Telegram آن را به ~200 KB در 1280 px فشرده می‌کند و خوانایی را نابود می‌کند. یک PNG با حجم ۱-۲ MB که از طریق `sendDocument` ارسال شود بایت‌های اصلی را سالم نگه می‌دارد.
 
 `sendPhoto`
 `sendDocument`
 
-If a response (or any text inside it — typically the last line) contains the literal directive[[as_document]], every media path extracted from that response is delivered as a document/file attachment rather than an image bubble:
+اگر پاسخ (یا هر متنی درون آن — معمولاً آخرین خط) دستورالعمل تحت‌اللفظی `[[as_document]]` را شامل شود، هر مسیر رسانه استخراج‌شده از آن پاسخ به جای حباب تصویری به عنوان یک پیوست سند/فایل تحویل داده می‌شود:
 
 `[[as_document]]`
 
 ```
-Here is your rendered chart:/home/user/.hermes/cache/chart-q4-2025.png[[as_document]]
+Here is your rendered chart:
+/home/user/.hermes/cache/chart-q4-2025.png
+[[as_document]]
 ```
 
-The directive is stripped before delivery, so users never see it. Granularity is intentionally all-or-nothing per response: emit[[as_document]]once and every image path in the same response is delivered as a document. This mirrors the scope of[[audio_as_voice]].
+دستورالعمل قبل از تحویل حذف می‌شود، بنابراین کاربران هرگز آن را نمی‌بینند. جزئیات عمداً برای هر پاسخ یا همه‌یا-هیچ است: یک‌بار `[[as_document]]` صادر کنید و هر مسیر تصویری در همان پاسخ به عنوان سند تحویل داده می‌شود. این دقیقاً مانند دامنه `[[audio_as_voice]]` است.
 
 `[[as_document]]`
 `[[audio_as_voice]]`
 
-Use it from a skill when:
+از آن در یک مهارت استفاده کنید وقتی:
 
-- You produce screenshots or charts the user needs as files (for editing in another tool, archiving, sharing intact).
-- The default lossy preview would obscure detail (small text, pixel-accurate diagrams, color-sensitive renders).
+- اسکرین‌شات‌ها یا نمودارهایی تولید می‌کنید که کاربر به فایل نیاز دارد (برای ویرایش در ابزار دیگر، بایگانی، اشتراک‌گذاری سالم).
+- پیش‌نمایش پیش‌فرض تخریب‌کننده جزئیات را پنهان می‌کند (متن ریز، نمودارهای پیکسل-دقیق، رندرهای حساس به رنگ).
 
-Platforms without a separate document path (e.g. SMS) fall back to whatever attachment mechanism they have.
+پلتفرم‌های بدون مسیر سند جداگانه (مثلاً SMS) به هر مکانیزم پیوستی که دارند بازمی‌گردند.
 
-### Conditional Activation (Fallback Skills)​
+### فعال‌سازی شرطی (مهارت‌های Fallback)
 
-Skills can automatically show or hide themselves based on which tools are available in the current session. This is most useful forfallback skills— free or local alternatives that should only appear when a premium tool is unavailable.
+مهارت‌ها می‌توانند بر اساس ابزارهای موجود در نشست جاری به طور خودکار خود را نشان یا پنهان کنند. این بیشتر برای **مهارت‌های fallback** مفید است — جایگزین‌های رایگان یا محلی که فقط وقتی یک ابزار پولی در دسترس نیست باید ظاهر شوند.
 
 ```
-metadata:  hermes:    fallback_for_toolsets: [web]      # Show ONLY when these toolsets are unavailable    requires_toolsets: [terminal]     # Show ONLY when these toolsets are available    fallback_for_tools: [web_search]  # Show ONLY when these specific tools are unavailable    requires_tools: [terminal]        # Show ONLY when these specific tools are available
+metadata:
+  hermes:
+    fallback_for_toolsets: [web]      # Show ONLY when these toolsets are unavailable
+    requires_toolsets: [terminal]     # Show ONLY when these toolsets are available
+    fallback_for_tools: [web_search]  # Show ONLY when these specific tools are unavailable
+    requires_tools: [terminal]        # Show ONLY when these specific tools are available
 ```
 
-| Field | Behavior |
+| فیلد | رفتار |
 | --- | --- |
-| fallback_for_toolsets | Skill ishiddenwhen the listed toolsets are available. Shown when they're missing. |
-| fallback_for_tools | Same, but checks individual tools instead of toolsets. |
-| requires_toolsets | Skill ishiddenwhen the listed toolsets are unavailable. Shown when they're present. |
-| requires_tools | Same, but checks individual tools. |
+| fallback_for_toolsets | مهارت **پنهان** است وقتی مجموعه ابزارهای فهرست‌شده موجود باشند. وقتی غایب باشند نشان داده می‌شود. |
+| fallback_for_tools | همان، اما ابزارهای منفرد به جای مجموعه ابزارها را بررسی می‌کند. |
+| requires_toolsets | مهارت **پنهان** است وقتی مجموعه ابزارهای فهرست‌شده موجود نباشند. وقتی حاضر باشند نشان داده می‌شود. |
+| requires_tools | همان، اما ابزارهای منفرد را بررسی می‌کند. |
 
 `fallback_for_toolsets`
 `fallback_for_tools`
 `requires_toolsets`
 `requires_tools`
 
-Example:The built-induckduckgo-searchskill usesfallback_for_toolsets: [web]. When you haveFIRECRAWL_API_KEYset, the web toolset is available and the agent usesweb_search— the DuckDuckGo skill stays hidden. If the API key is missing, the web toolset is unavailable and the DuckDuckGo skill automatically appears as a fallback.
+**مثال:** مهارت داخلی `duckduckgo-search` از `fallback_for_toolsets: [web]` استفاده می‌کند. وقتی `FIRECRAWL_API_KEY` تنظیم شده باشد، مجموعه ابزار web موجود است و agent از `web_search` استفاده می‌کند — مهارت DuckDuckGo پنهان می‌ماند. اگر کلید API موجود نباشد، مجموعه ابزار web ناموجود است و مهارت DuckDuckGo به طور خودکار به عنوان fallback ظاهر می‌شود.
 
 `duckduckgo-search`
 `fallback_for_toolsets: [web]`
 `FIRECRAWL_API_KEY`
 `web_search`
 
-Skills without any conditional fields behave exactly as before — they're always shown.
+مهارت‌هایی بدون هیچ فیلد شرطی دقیقاً مانند قبل رفتار می‌کنند — همیشه نشان داده می‌شوند.
 
-## Secure Setup on Load​
+## راه‌اندازی امن هنگام بارگذاری
 
-Skills can declare required environment variables without disappearing from discovery:
+مهارت‌ها می‌توانند متغیرهای محیطی مورد نیاز را بدون ناپدید شدن از کشف اعلام کنند:
 
 ```
-required_environment_variables:  - name: TENOR_API_KEY    prompt: Tenor API key    help: Get a key from https://developers.google.com/tenor    required_for: full functionality
+required_environment_variables:
+  - name: TENOR_API_KEY
+    prompt: Tenor API key
+    help: Get a key from https://developers.google.com/tenor
+    required_for: full functionality
 ```
 
-When a missing value is encountered, Hermes asks for it securely only when the skill is actually loaded in the local CLI. You can skip setup and keep using the skill. Messaging surfaces never ask for secrets in chat — they tell you to usehermes setupor~/.hermes/.envlocally instead.
+هنگامی که مقداری موجود نباشد، Hermes فقط وقتی که مهارت واقعاً در CLI محلی بارگذاری شده از شما به طور امن درخواست می‌کند. می‌توانید راه‌اندازی را رد کرده و همچنان از مهارت استفاده کنید. سطوح پیام‌رسانی هرگز رازها را در چت درخواست نمی‌کنند — به شما می‌گویند به جای آن از `hermes setup` یا `~/.hermes/.env` به صورت محلی استفاده کنید.
 
 `hermes setup`
 `~/.hermes/.env`
 
-Once set, declared env vars areautomatically passed throughtoexecute_codeandterminalsandboxes — the skill's scripts can use$TENOR_API_KEYdirectly. For non-skill env vars, use theterminal.env_passthroughconfig option. SeeEnvironment Variable Passthroughfor details.
+پس از تنظیم، متغیرهای محیطی اعلام‌شده به طور خودکار به `execute_code` و جعبه‌های sandBox ترمینال **ارسال می‌شوند** — اسکریپت‌های مهارت می‌توانند مستقیماً از `$TENOR_API_KEY` استفاده کنند. برای متغیرهای محیطی غیرمهارت، از گزینه پیکربندی `terminal.env_passthrough` استفاده کنید. جزئیات بیشتر در «ارسال متغیرهای محیطی» را ببینید.
 
 `execute_code`
 `terminal`
 `$TENOR_API_KEY`
 `terminal.env_passthrough`
-[Environment Variable Passthrough](/docs/user-guide/security#environment-variable-passthrough)
+[ارسال متغیرهای محیطی](/docs/user-guide/security#environment-variable-passthrough)
 
-### Skill Config Settings​
+### تنظیمات پیکربندی مهارت
 
-Skills can also declare non-secret config settings (paths, preferences) stored inconfig.yaml:
+مهارت‌ها همچنین می‌توانند تنظیمات پیکربندی غیرراز (مسیرها، ترجیحات) ذخیره‌شده در `config.yaml` را اعلام کنند:
 
 `config.yaml`
 
 ```
-metadata:  hermes:    config:      - key: myplugin.path        description: Path to the plugin data directory        default: "~/myplugin-data"        prompt: Plugin data directory path
+metadata:
+  hermes:
+    config:
+      - key: myplugin.path
+        description: Path to the plugin data directory
+        default: "~/myplugin-data"
+        prompt: Plugin data directory path
 ```
 
-Settings are stored underskills.configin your config.yaml.hermes config migrateprompts for unconfigured settings, andhermes config showdisplays them. When a skill loads, its resolved config values are injected into the context so the agent knows the configured values automatically.
+تنظیمات در `skills.config` در `config.yaml` شما ذخیره می‌شوند. `hermes config migrate` برای تنظیمات پیکربندی‌نشده سؤال می‌کند و `hermes config show` آنها را نمایش می‌دهد. هنگامی که یک مهارت بارگذاری می‌شود، مقادیر پیکربندی حل‌شده آن در زمینه تزریق می‌شوند تا agent مقادیر پیکربندی‌شده را به طور خودکار بداند.
 
 `skills.config`
 `hermes config migrate`
 `hermes config show`
 
-SeeSkill SettingsandCreating Skills — Config Settingsfor details.
+جزئیات بیشتر در «تنظیمات مهارت» و «ایجاد مهارت‌ها — تنظیمات پیکربندی» را ببینید.
 
-[Skill Settings](/docs/user-guide/configuration#skill-settings)
-[Creating Skills — Config Settings](/docs/developer-guide/creating-skills#config-settings-configyaml)
+[تنظیمات مهارت](/docs/user-guide/configuration#skill-settings)
+[ایجاد مهارت‌ها — تنظیمات پیکربندی](/docs/developer-guide/creating-skills#config-settings-configyaml)
 
-## Skill Directory Structure​
+## ساختار دایرکتوری مهارت
 
 ```
-~/.hermes/skills/                  # Single source of truth├── mlops/                         # Category directory│   ├── axolotl/│   │   ├── SKILL.md               # Main instructions (required)│   │   ├── references/            # Additional docs│   │   ├── templates/             # Output formats│   │   ├── scripts/               # Helper scripts callable from the skill│   │   └── assets/                # Supplementary files│   └── vllm/│       └── SKILL.md├── devops/│   └── deploy-k8s/                # Agent-created skill│       ├── SKILL.md│       └── references/├── .hub/                          # Skills Hub state│   ├── lock.json│   ├── quarantine/│   └── audit.log└── .bundled_manifest              # Tracks seeded bundled skills
+~/.hermes/skills/                  # Single source of truth
+├── mlops/                         # Category directory
+│   ├── axolotl/
+│   │   ├── SKILL.md               # Main instructions (required)
+│   │   ├── references/            # Additional docs
+│   │   ├── templates/             # Output formats
+│   │   ├── scripts/               # Helper scripts callable from the skill
+│   │   └── assets/                # Supplementary files
+│   └── vllm/
+│       └── SKILL.md
+├── devops/
+│   └── deploy-k8s/                # Agent-created skill
+│       ├── SKILL.md
+│       └── references/
+├── .hub/                          # Skills Hub state
+│   ├── lock.json
+│   ├── quarantine/
+│   └── audit.log
+└── .bundled_manifest              # Tracks seeded bundled skills
 ```
 
-## External Skill Directories​
+## دایرکتوری‌های مهارت خارجی
 
-If you maintain skills outside of Hermes — for example, a shared~/.agents/skills/directory used by multiple AI tools — you can tell Hermes to scan those directories too.
+اگر مهارت‌هایی خارج از Hermes نگهداری می‌کنید — برای مثال یک دایرکتوری مشترک `~/.agents/skills/` که توسط چندین ابزار هوش مصنوعی استفاده می‌شود — می‌توانید به Hermes بگویید آن دایرکتوری‌ها را نیز اسکن کند.
 
 `~/.agents/skills/`
 
-Addexternal_dirsunder theskillssection in~/.hermes/config.yaml:
+`external_dirs` را در بخش `skills` در `~/.hermes/config.yaml` اضافه کنید:
 
 `external_dirs`
 `skills`
 `~/.hermes/config.yaml`
 
 ```
-skills:  external_dirs:    - ~/.agents/skills    - /home/shared/team-skills    - ${SKILLS_REPO}/skills
+skills:
+  external_dirs:
+    - ~/.agents/skills
+    - /home/shared/team-skills
+    - ${SKILLS_REPO}/skills
 ```
 
-Paths support~expansion and${VAR}environment variable substitution.
+مسیرها از گسترش `~` و جایگزینی متغیر محیطی `${VAR}` پشتیبانی می‌کنند.
 
 `~`
 `${VAR}`
 
-### How it works​
+### نحوه کار
 
-- Create locally, update in place: New agent-created skills are written to~/.hermes/skills/. Existing skills are modified where they are found, including skills underexternal_dirs, when the agent usesskill_manageactions such aspatch,edit,write_file,remove_file, ordelete.
-- External dirs are not a write-protection boundary: If an external skill directory is writable by the Hermes process, agent-managed skill updates can change files in that directory. Use filesystem permissions or a separate profile/toolset setup if shared external skills must stay read-only.
-- Local precedence: If the same skill name exists in both the local dir and an external dir, the local version wins.
-- Full integration: External skills appear in the system prompt index,skills_list,skill_view, and as/skill-nameslash commands — no different from local skills.
-- Non-existent paths are silently skipped: If a configured directory doesn't exist, Hermes ignores it without errors. Useful for optional shared directories that may not be present on every machine.
+- ایجاد محلی، به‌روزرسانی در جا: مهارت‌های جدید ایجادشده توسط agent در `~/.hermes/skills/` نوشته می‌شوند. مهارت‌های موجود در جایی که یافت می‌شوند تغییر می‌کنند، از جمله مهارت‌های زیر `external_dirs`، وقتی agent اقدامات `skill_manage` مانند `patch`، `edit`، `write_file`، `remove_file` یا `delete` را استفاده می‌کند.
+- دایرکتوری‌های خارجی مرز حفاظت از نوشتن نیستند: اگر دایرکتوری مهارت خارجی توسط فرآیند Hermes قابل نوشتن باشد، به‌روزرسانی‌های مهارت مدیریت‌شده توسط agent می‌توانند فایل‌های آن دایرکتوری را تغییر دهند. از مجوزهای فایل‌سیستم یا تنظیم پروفایل/مجموعه ابزار جداگانه استفاده کنید اگر مهارت‌های خارجی مشترک باید فقط-خواندنی باقی بمانند.
+- اولویت محلی: اگر نام مهارت یکسان هم در دایرکتوری محلی و هم در دایرکتوری خارجی وجود داشته باشد، نسخه محلی برنده است.
+- ادغام کامل: مهارت‌های خارجی در ایندکس پرامپت سیستم، `skills_list`، `skill_view` و به عنوان دستورات slash `/skill-name` ظاهر می‌شوند — تفاوتی با مهارت‌های محلی ندارند.
+- مسیرهای موجود ناپدیدشده به طور خاموش رد می‌شوند: اگر دایرکتوری پیکربندی‌شده وجود نداشته باشد، Hermes بدون خطا آن را نادیده می‌گیرد. برای دایرکتوری‌های مشترک اختیاری که ممکن است در هر ماشینی موجود نباشند مفید است.
 
 `~/.hermes/skills/`
 `external_dirs`
@@ -339,52 +419,75 @@ Paths support~expansion and${VAR}environment variable substitution.
 `skill_view`
 `/skill-name`
 
-### Example​
+### مثال
 
 ```
-~/.hermes/skills/               # Local (primary, read-write)├── devops/deploy-k8s/│   └── SKILL.md└── mlops/axolotl/    └── SKILL.md~/.agents/skills/               # External (shared, mutable if writable)├── my-custom-workflow/│   └── SKILL.md└── team-conventions/    └── SKILL.md
+~/.hermes/skills/               # Local (primary, read-write)
+├── devops/deploy-k8s/
+│   └── SKILL.md
+└── mlops/axolotl/
+    └── SKILL.md
+
+~/.agents/skills/               # External (shared, mutable if writable)
+├── my-custom-workflow/
+│   └── SKILL.md
+└── team-conventions/
+    └── SKILL.md
 ```
 
-All four skills appear in your skill index. If you create a new skill calledmy-custom-workflowlocally, it shadows the external version.
+هر چهار مهارت در فهرست مهارت‌های شما ظاهر می‌شوند. اگر مهارت جدیدی به نام `my-custom-workflow` به صورت محلی ایجاد کنید، نسخه خارجی را سایه می‌زند.
 
 `my-custom-workflow`
 
-## Skill Bundles​
+## بسته‌های مهارت (Skill Bundles)
 
-Skill bundles are tiny YAML files that group several skills under a single slash command. When you run/<bundle-name>, every skill listed in the bundle loads at once — useful when a particular task always benefits from the same set of skills together.
+بسته‌های مهارت فایل‌های YAML کوچکی هستند که چندین مهارت را در یک دستور slash واحد گروه‌بندی می‌کنند. هنگامی که `/<bundle-name>` را اجرا می‌کنید، هر مهارت فهرست‌شده در بسته همزمان بارگذاری می‌شود — مفید وقتی یک وظیفه خاص همیشه از مجموعه یکسانی مهارت با هم بهره می‌برد.
 
 `/<bundle-name>`
 
-### Quick example​
+### مثال سریع
 
 ```
-# Create a bundle for backend feature workhermes bundles create backend-dev \  --skill github-code-review \  --skill test-driven-development \  --skill github-pr-workflow \  -d "Backend feature work — review, test, PR workflow"
+# Create a bundle for backend feature work
+hermes bundles create backend-dev \
+  --skill github-code-review \
+  --skill test-driven-development \
+  --skill github-pr-workflow \
+  -d "Backend feature work — review, test, PR workflow"
 ```
 
-Then in the CLI or any gateway platform:
+سپس در CLI یا هر پلتفرم دروازه‌ای:
 
 ```
 /backend-dev refactor the auth middleware
 ```
 
-The agent receives all three skills loaded into one user message, with any text after the slash command attached as a user instruction.
+agent هر سه مهارت را در یک پیام کاربر بارگذاری‌شده دریافت می‌کند و هر متن پس از دستور slash به عنوان دستورالعمل کاربر پیوست می‌شود.
 
-### YAML schema​
+### طرح YAML
 
-Bundles live in~/.hermes/skill-bundles/<slug>.yamland look like this:
+بسته‌ها در `~/.hermes/skill-bundles/<slug>.yaml` زندگی می‌کنند و به این شکل هستند:
 
 `~/.hermes/skill-bundles/<slug>.yaml`
 
 ```
-name: backend-devdescription: Backend feature work — review, test, PR workflow.skills:  - github-code-review  - test-driven-development  - github-pr-workflowinstruction: |  Always start by writing failing tests, then implement.  Open the PR through the standard workflow with co-author tags.
+name: backend-dev
+description: Backend feature work — review, test, PR workflow.
+skills:
+  - github-code-review
+  - test-driven-development
+  - github-pr-workflow
+instruction: |
+  Always start by writing failing tests, then implement.
+  Open the PR through the standard workflow with co-author tags.
 ```
 
-Fields:
+فیلدها:
 
-- name(optional — defaults to the filename stem) — the bundle's display name. Normalized to a hyphen slug for the slash command (Backend Dev→/backend-dev).
-- description(optional) — short text shown in/bundlesandhermes bundles list.
-- skills(required, non-empty list) — skill names or paths relative to your skills directory. Use the same identifier you'd pass to/<skill-name>.
-- instruction(optional) — extra guidance prepended to the loaded skill content. Useful for codifying "how we always use these together."
+- `name` (اختیاری — به طور پیش‌فرض نام فایل) — نام نمایشی بسته. برای دستور slash به یک slug کوتاه نرمال‌سازی می‌شود (`Backend Dev` → `/backend-dev`).
+- `description` (اختیاری) — متن کوتاه نمایش‌شده در `/bundles` و `hermes bundles list`.
+- `skills` (الزامی، فهرست غیرخالی) — نام مهارت‌ها یا مسیرهای نسبی به دایرکتوری مهارت‌های شما. از همان شناسه‌ای استفاده کنید که به `/<skill-name>` منتقل می‌کنید.
+- `instruction` (اختیاری) — راهنمای اضافی که قبل از محتوای مهارت بارگذاری‌شده اضافه می‌شود. برای مستندسازی «چگونه همیشه اینها را با هم استفاده می‌کنیم» مفید است.
 
 `name`
 `Backend Dev`
@@ -396,22 +499,38 @@ Fields:
 `/<skill-name>`
 `instruction`
 
-### Managing bundles​
+### مدیریت بسته‌ها
 
 ```
-# List all installed bundleshermes bundles list# Inspect one bundlehermes bundles show backend-dev# Create a bundle interactively (omit --skill flags to enter them one per line)hermes bundles create research# Overwrite an existing bundlehermes bundles create backend-dev --skill ... --force# Delete a bundlehermes bundles delete backend-dev# Re-scan ~/.hermes/skill-bundles/ and report changeshermes bundles reload
+# List all installed bundles
+hermes bundles list
+
+# Inspect one bundle
+hermes bundles show backend-dev
+
+# Create a bundle interactively (omit --skill flags to enter them one per line)
+hermes bundles create research
+
+# Overwrite an existing bundle
+hermes bundles create backend-dev --skill ... --force
+
+# Delete a bundle
+hermes bundles delete backend-dev
+
+# Re-scan ~/.hermes/skill-bundles/ and report changes
+hermes bundles reload
 ```
 
-From inside a chat session,/bundleslists every installed bundle and its skills.
+از داخل یک نشست چت، `/bundles` هر بسته نصب‌شده و مهارت‌های آن را فهرست می‌کند.
 
 `/bundles`
 
-### Behavior​
+### رفتار
 
-- Bundles take precedence over individual skillswhen slugs collide. If you name a bundleresearchand you also have a skill calledresearch,/researchinvokes the bundle. This is intentional — you opted into the bundle by naming it.
-- Missing skills are skipped, not fatal.If a bundle listsskill-fooand you haven't installed it, the bundle still loads the skills that do resolve, and the agent gets a note listing what was skipped.
-- Bundles work in every surface— interactive CLI, TUI, dashboard chat, and every gateway platform (Telegram, Discord, Slack, …) — because dispatch is centralized in the same place as individual skill commands.
-- Bundles do not invalidate the prompt cache.They generate a fresh user message at invocation time, the same way/<skill-name>does — no system prompt mutation.
+- بسته‌ها **اولویت بالاتری نسبت به مهارت‌های منفرد** دارند وقتی slugها تداخل پیدا می‌کنند. اگر بسته‌ای به نام `research` نام‌گذاری کنید و مهارتی به نام `research` نیز داشته باشید، `/research` بسته را فراخوانی می‌کند. این عمدی است — شما با نام‌گذاری آن بسته را انتخاب کردید.
+- مهارت‌های موجود ناپدیدشده رد می‌شوند، کشنده نیستند. اگر بسته‌ای `skill-foo` را فهرست کند و آن را نصب نکرده باشید، بسته همچنان مهارت‌هایی که حل می‌شوند را بارگذاری می‌کند و agent یادداشتی با فهرست ردشدگان دریافت می‌کند.
+- بسته‌ها در هر سطحی کار می‌کنند — CLI تعاملی، TUI، چت داشبورد و هر پلتفرم دروازه‌ای (Telegram، Discord، Slack، …) — زیرا dispatch در همان مکان دستورات مهارت منفرد متمرکز است.
+- بسته‌ها کش پرامپت را باطل نمی‌کنند. آنها در زمان فراخوانی یک پیام کاربر تازه تولید می‌کنند، دقیقاً مانند `/<skill-name>` — بدون جهش پرامپت سیستم.
 
 `research`
 `research`
@@ -419,13 +538,13 @@ From inside a chat session,/bundleslists every installed bundle and its skills.
 `skill-foo`
 `/<skill-name>`
 
-### When bundles beat installing each skill manually​
+### کی بسته‌ها بهتر از نصب دستی هر مهارت هستند
 
-Use a bundle when:
+از بسته استفاده کنید وقتی:
 
-- You always pair the same skills for a recurring task (/backend-dev,/release-prep,/incident-response).
-- You want a one-character-shorter mental model than typing several/skillinvocations in a row.
-- You want to ship a team-wide "task profile" by checking the bundle YAML into a shared dotfiles repo and symlinking it into~/.hermes/skill-bundles/.
+- همیشه مهارت‌های یکسانی را برای یک وظیفه تکراری جفت می‌کنید (`/backend-dev`، `/release-prep`، `/incident-response`).
+- مدل ذهنی کوتاه‌تر از تایپ کردن چندین فراخوانی `/skill` متوالی می‌خواهید.
+- می‌خواهید یک «پروفایل وظیفه» سراسری تیم با چک کردن YAML بسته در یک مخزن dotfiles مشترک و symlink کردن آن به `~/.hermes/skill-bundles/` ارائه دهید.
 
 `/backend-dev`
 `/release-prep`
@@ -433,39 +552,35 @@ Use a bundle when:
 `/skill`
 `~/.hermes/skill-bundles/`
 
-A bundle is just a YAML alias — it doesn't install skills for you. The skills themselves must already be present (in~/.hermes/skills/or an external skill directory). Otherwise the bundle invocation just skips the missing ones.
+بسته فقط یک نام مستعار YAML است — مهارت‌ها را برای شما نصب نمی‌کند. خود مهارت‌ها باید از قبل موجود باشند (در `~/.hermes/skills/` یا یک دایرکتوری مهارت خارجی). در غیر این صورت فراخوانی بسته فقط مهارت‌های موجود ناپدیدشده را رد می‌کند.
 
 `~/.hermes/skills/`
 
-## Agent-Managed Skills (skill_manage tool)​
+## مهارت‌های مدیریت‌شده توسط Agent (ابزار skill_manage)
 
-The agent can create, update, and delete its own skills via theskill_managetool. This is the agent'sprocedural memory— when it figures out a non-trivial workflow, it saves the approach as a skill for future reuse.
+agent می‌تواند مهارت‌های خود را از طریق ابزار `skill_manage` ایجاد، به‌روزرسانی و حذف کند. این **حافظه رویه‌ای** agent است — وقتی یک گردش کار غیرساده را کشف می‌کند، رویکرد را به عنوان یک مهارت برای استفاده مجدد آینده ذخیره می‌کند.
 
 `skill_manage`
 
-Skills and memory work together in the self-improvement loop: memory stores
-small durable facts that should always be in context, while skills store longer
-procedures that should load only when relevant. The background review can
-suggest or stage skill changes after a session, but the write-approval gate
-below lets you require human review before those changes land.
+مهارت‌ها و حافظه در حلقه بهبود خود با هم کار می‌کنند: حافظه حقایق کوچک ماندگاری را ذخیره می‌کند که همیشه باید در زمینه باشند، در حالی که مهارت‌ها رویه‌های طولانی‌تری را ذخیره می‌کنند که فقط وقتی مرتبط باشند باید بارگذاری شوند. بررسی پس‌زمینه می‌تواند پس از نشست پیشنهادات یا مرحله‌بندی تغییرات مهارت ارائه دهد، اما دروازه تأیید نوشتن در زیر به شما اجازه می‌دهد بررسی انسانی را قبل از اعمال آن تغییرات الزامی کنید.
 
-### When the Agent Creates Skills​
+### وقتی Agent مهارت ایجاد می‌کند
 
-- After completing a complex task (5+ tool calls) successfully
-- When it hit errors or dead ends and found the working path
-- When the user corrected its approach
-- When it discovered a non-trivial workflow
+- پس از تکمیل موفقیت‌آمیز یک وظیفه پیچیده (۵+ فراخوانی ابزار)
+- وقتی به خطاها یا بن‌بست‌ها برخورد کرد و مسیر کاری را پیدا کرد
+- وقتی کاربر رویکرد آن را اصلاح کرد
+- وقتی یک گردش کار غیرساده کشف کرد
 
-### Actions​
+### اقدامات
 
-| Action | Use for | Key params |
+| اقدام | استفاده برای | پارامترهای کلیدی |
 | --- | --- | --- |
-| create | New skill from scratch | name,content(full SKILL.md), optionalcategory |
-| patch | Targeted fixes (preferred) | name,old_string,new_string |
-| edit | Major structural rewrites | name,content(full SKILL.md replacement) |
-| delete | Remove a skill entirely | name |
-| write_file | Add/update supporting files | name,file_path,file_content |
-| remove_file | Remove a supporting file | name,file_path |
+| create | مهارت جدید از صفر | `name`، `content` (SKILL.md کامل)، `category` اختیاری |
+| patch | اصلاحات هدفمند (ترجیحی) | `name`، `old_string`، `new_string` |
+| edit | بازنویسی‌های ساختاری بزرگ | `name`، `content` (جایگزینی SKILL.md کامل) |
+| delete | حذف کامل یک مهارت | `name` |
+| write_file | اضافه/به‌روزرسانی فایل‌های پشتیبان | `name`، `file_path`، `file_content` |
+| remove_file | حذف یک فایل پشتیبان | `name`، `file_path` |
 
 `create`
 `name`
@@ -488,82 +603,94 @@ below lets you require human review before those changes land.
 `name`
 `file_path`
 
-Thepatchaction is preferred for updates — it's more token-efficient thaneditbecause only the changed text appears in the tool call.
+اقدام `patch` برای به‌روزرسانی‌ها ترجیح داده می‌شود — نسبت به `edit` کارآمدتر از نظر توکن است زیرا فقط متن تغییر یافته در فراخوانی ابزار ظاهر می‌شود.
 
 `patch`
 `edit`
 
-### Gating agent skill writes (skills.write_approval)​
+### مدیریت نوشتن مهارت‌های agent (skills.write_approval)
 
 `skills.write_approval`
 
-By default the agent writes skills freely — including from thebackground
-self-improvement reviewthat runs after a turn. If you'd rather approve every skill write first
-(small models that misjudge what they learned, secure environments, or just
-wanting eyes on the self-improvement loop), turn on the write-approval gate:
+به طور پیش‌فرض agent آزادانه مهارت‌ها را می‌نویسد — از جمله از **بررسی بهبود خود پس‌زمینه** که پس از یک نوبت اجرا می‌شود. اگر ترجیح می‌دهید هر نوشتن مهارتی را ابتدا تأیید کنید (مدل‌های کوچکی که قضاوت اشتباهی درباره آموخته‌هایشان می‌کنند، محیط‌های امنیتی، یا فقط می‌خواهید چشم‌هایی روی حلقه بهبود خود داشته باشید)، دروازه تأیید نوشتن را فعال کنید:
 
-[background
-self-improvement review](/docs/user-guide/features/memory#controlling-memory-writes-write_approval)
+[بررسی بهبود خود پس‌زمینه](/docs/user-guide/features/memory#controlling-memory-writes-write_approval)
 
 ```
-skills:  write_approval: false     # false = write freely (default) | true = require approval
+skills:
+  write_approval: false     # false = write freely (default) | true = require approval
 ```
 
-Whenwrite_approval: true, everyskill_managewrite (create / edit /
-patch / delete / write_file / remove_file) isstagedinstead of committed —
-a SKILL.md is too large to review inline, so staging applies regardless of
-whether the write came from a foreground turn or the background review.
-Staged writes survive restarts under~/.hermes/pending/skills/and are
-reviewed with the same familiar approve/deny flow as dangerous commands:
+وقتی `write_approval: true` باشد، هر نوشتن `skill_manage` (create / edit / patch / delete / write_file / remove_file) به جای commit **مرحله‌بندی** می‌شود — یک SKILL.md برای بررسی درون‌خطی بسیار بزرگ است، بنابراین مرحله‌بندی صرف‌نظر از اینکه نوشتن از یک نوبت پیش‌زمینه یا بررسی پس‌زمینه آمده باشد اعمال می‌شود.
+نوشته‌های مرحله‌بندی‌شده پس از راه‌اندازی مجدد در `~/.hermes/pending/skills/` باقی می‌مانند و با همان جریان آشنای تأیید/رد کردن دستورات خطرناک بررسی می‌شوند:
 
 `write_approval: true`
 `skill_manage`
 `~/.hermes/pending/skills/`
 
 ```
-/skills pending             # list staged skill writes + a one-line gist each/skills diff <id>           # full unified diff (best viewed in CLI or dashboard)/skills approve <id>        # apply it (or 'all')/skills reject <id>         # drop it (or 'all')/skills approval on         # turn the gate on (or 'off') and persist it
+/skills pending             # list staged skill writes + a one-line gist each
+/skills diff <id>           # full unified diff (best viewed in CLI or dashboard)
+/skills approve <id>        # apply it (or 'all')
+/skills reject <id>         # drop it (or 'all')
+/skills approval on         # turn the gate on (or 'off') and persist it
 ```
 
-The review surface works in the interactive CLI and on messaging platforms
-(diff output is truncated for chat bubbles — read the full diff on the CLI or
-in the pending JSON file). Memory writes have the same gate undermemory.write_approval— seeControlling memory writes.
+سطح بررسی در CLI تعاملی و پلتفرم‌های پیام‌رسانی کار می‌کند (خروجی diff برای حباب‌های چت محدود شده است — diff کامل را در CLI یا فایل JSON pending بخوانید). نوشتن‌های حافظه همان دروازه را تحت `memory.write_approval` دارند — «کنترل نوشتن حافظه» را ببینید.
 
 `memory.write_approval`
-[Controlling memory writes](/docs/user-guide/features/memory#controlling-memory-writes-write_approval)
+[کنترل نوشتن حافظه](/docs/user-guide/features/memory#controlling-memory-writes-write_approval)
 
-> The separateskills.guard_agent_createdsetting is a content scanner
-(dangerous-pattern heuristics), not an approval gate — the two are
-independent. SeeGuard on agent-created skill writes.
+> تنظیم جداگانه `skills.guard_agent_created` یک اسکنر محتوا (هوریستیک‌های الگوی خطرناک) است، نه یک دروازه تأیید — این دو مستقل هستند. «محافظت در برابر نوشتن مهارت‌های ایجادشده توسط agent» را ببینید.
 
-The separateskills.guard_agent_createdsetting is a content scanner
-(dangerous-pattern heuristics), not an approval gate — the two are
-independent. SeeGuard on agent-created skill writes.
+تنظیم جداگانه `skills.guard_agent_created` یک اسکنر محتوا (هوریستیک‌های الگوی خطرناک) است، نه یک دروازه تأیید — این دو مستقل هستند. «محافظت در برابر نوشتن مهارت‌های ایجادشده توسط agent» را ببینید.
 
 `skills.guard_agent_created`
-[Guard on agent-created skill writes](/docs/user-guide/configuration#guard-on-agent-created-skill-writes)
+[محافظت در برابر نوشتن مهارت‌های ایجادشده توسط agent](/docs/user-guide/configuration#guard-on-agent-created-skill-writes)
 
-## Skills Hub​
+## هاب مهارت‌ها
 
-Browse, search, install, and manage skills from online registries,skills.sh, direct well-known skill endpoints, and official optional skills.
+مهارت‌ها را از ثبت‌نام‌های آنلاین، `skills.sh`، نقاط پایانی مهارت مستقیم شناخته‌شده و مهارت‌های رسمی اختیاری مرور، جستجو، نصب و مدیریت کنید.
 
 `skills.sh`
 
-### Common commands​
+### دستورات رایج
 
 ```
-hermes skills browse                              # Browse all hub skills (official first)hermes skills browse --source official            # Browse only official optional skillshermes skills search kubernetes                   # Search all sourceshermes skills search react --source skills-sh     # Search the skills.sh directoryhermes skills search https://mintlify.com/docs --source well-knownhermes skills inspect openai/skills/k8s           # Preview before installinghermes skills install openai/skills/k8s           # Install with security scanhermes skills install official/security/1passwordhermes skills install skills-sh/vercel-labs/json-render/json-render-react --forcehermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlifyhermes skills install https://sharethis.chat/SKILL.md              # Direct URL (single-file SKILL.md)hermes skills install https://example.com/SKILL.md --name my-skill # Override name when frontmatter has nonehermes skills list --source hub                   # List hub-installed skillshermes skills check                               # Check installed hub skills for upstream updateshermes skills update                              # Reinstall hub skills with upstream changes when neededhermes skills audit                               # Re-scan all hub skills for securityhermes skills uninstall k8s                       # Remove a hub skillhermes skills reset google-workspace              # Un-stick a bundled skill from "user-modified" (see below)hermes skills reset google-workspace --restore    # Also restore the bundled version, deleting your local editshermes skills publish skills/my-skill --to github --repo owner/repohermes skills snapshot export setup.json          # Export skill confighermes skills tap add myorg/skills-repo           # Add a custom GitHub source
+hermes skills browse                              # Browse all hub skills (official first)
+hermes skills browse --source official            # Browse only official optional skills
+hermes skills search kubernetes                   # Search all sources
+hermes skills search react --source skills-sh     # Search the skills.sh directory
+hermes skills search https://mintlify.com/docs --source well-known
+hermes skills inspect openai/skills/k8s           # Preview before installing
+hermes skills install openai/skills/k8s           # Install with security scan
+hermes skills install official/security/1password
+hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
+hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+hermes skills install https://sharethis.chat/SKILL.md              # Direct URL (single-file SKILL.md)
+hermes skills install https://example.com/SKILL.md --name my-skill # Override name when frontmatter has none
+hermes skills list --source hub                   # List hub-installed skills
+hermes skills check                               # Check installed hub skills for upstream updates
+hermes skills update                              # Reinstall hub skills with upstream changes when needed
+hermes skills audit                               # Re-scan all hub skills for security
+hermes skills uninstall k8s                       # Remove a hub skill
+hermes skills reset google-workspace              # Un-stick a bundled skill from "user-modified" (see below)
+hermes skills reset google-workspace --restore    # Also restore the bundled version, deleting your local edits
+hermes skills publish skills/my-skill --to github --repo owner/repo
+hermes skills snapshot export setup.json          # Export skill config
+hermes skills tap add myorg/skills-repo           # Add a custom GitHub source
 ```
 
-### Supported hub sources​
+### منابع Hub پشتیبانی‌شده
 
-| Source | Example | Notes |
+| منبع | مثال | توضیحات |
 | --- | --- | --- |
-| official | official/security/1password | Optional skills shipped with Hermes. |
-| skills-sh | skills-sh/vercel-labs/agent-skills/vercel-react-best-practices | Searchable viahermes skills search <query> --source skills-sh. Hermes resolves alias-style skills when the skills.sh slug differs from the repo folder. |
-| well-known | well-known:https://mintlify.com/docs/.well-known/skills/mintlify | Skills served directly from/.well-known/skills/index.jsonon a website. Search using the site or docs URL. |
-| url | https://sharethis.chat/SKILL.md | Direct HTTP(S) URL to a single-fileSKILL.md. Name resolution: frontmatter → URL slug → interactive prompt →--nameflag. |
-| github | openai/skills/k8s | Direct GitHub repo/path installs and custom taps. |
-| clawhub,lobehub,browse-sh | Source-specific identifiers | Community or marketplace integrations. |
+| official | official/security/1password | مهارت‌های اختیاری همراه Hermes ارائه می‌شوند. |
+| skills-sh | skills-sh/vercel-labs/agent-skills/vercel-react-best-practices | از طریق `hermes skills search <query> --source skills-sh` قابل جستجو. هنگامی که slug skills.sh با پوشه مخزن متفاوت است، Hermes مهارت‌های با نام مستعار را حل می‌کند. |
+| well-known | well-known:https://mintlify.com/docs/.well-known/skills/mintlify | مهارت‌هایی که مستقیماً از `/.well-known/skills/index.json` در یک وب‌سایت ارائه می‌شوند. با استفاده از سایت یا URL اسناد جستجو کنید. |
+| url | https://sharethis.chat/SKILL.md | URL HTTP(S) مستقیم به یک فایل `SKILL.md` تک‌فایلی. حل نام: frontmatter → URL slug → پرامپت تعاملی → پرچم `--name`. |
+| github | openai/skills/k8s | نصب مستقیم از مخزن/مسیر GitHub و tapهای سفارشی. |
+| clawhub، lobehub، browse-sh | شناسه‌های خاص منبع | ادغام‌های جامعه یا بازار. |
 
 `official`
 `official/security/1password`
@@ -583,111 +710,90 @@ hermes skills browse                              # Browse all hub skills (offic
 `lobehub`
 `browse-sh`
 
-### Integrated hubs and registries​
+### ادغام‌ها و ثبت‌نام‌های یکپارچه
 
-Hermes currently integrates with these skills ecosystems and discovery sources:
+Hermes در حال حاضر با این اکوسیستم‌های مهارت و منابع کشف ادغام شده است:
 
-#### 1. Official optional skills (official)​
+#### ۱. مهارت‌های رسمی اختیاری (official)
 
 `official`
 
-These are maintained in the Hermes repository itself and install with built-in trust.
+اینها در خود مخزن Hermes نگهداری می‌شوند و با اعتماد داخلی نصب می‌شوند.
 
-- Catalog:Official Optional Skills Catalog
-- Source in repo:optional-skills/
-- Example:
+- فهرست: فهرست رسمی مهارت‌های اختیاری
+- منبع در مخزن: `optional-skills/`
+- مثال:
 
-[Official Optional Skills Catalog](/docs/reference/optional-skills-catalog)
+[فهرست رسمی مهارت‌های اختیاری](/docs/reference/optional-skills-catalog)
 `optional-skills/`
 
 ```
-hermes skills browse --source officialhermes skills install official/security/1password
+hermes skills browse --source official
+hermes skills install official/security/1password
 ```
 
-#### 2. skills.sh (skills-sh)​
+#### ۲. skills.sh (skills-sh)
 
 `skills-sh`
 
-This is Vercel's public skills directory. Hermes can search it directly, inspect skill detail pages, resolve alias-style slugs, and install from the underlying source repo.
+این فهرست مهارت‌های عمومی Vercel است. Hermes می‌تواند مستقیماً آن را جستجو کند، صفحات جزئیات مهارت را بررسی کند، slugهای با نام مستعار را حل کند و از مخزن منبع زیربنایی نصب کند.
 
-- Directory:skills.sh
-- CLI/tooling repo:vercel-labs/skills
-- Official Vercel skills repo:vercel-labs/agent-skills
-- Example:
+- فهرست: [skills.sh](https://skills.sh/)
+- مخزن CLI/ابزار: [vercel-labs/skills](https://github.com/vercel-labs/skills)
+- مخزن رسمی مهارت‌های Vercel: [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
+- مثال:
 
 [skills.sh](https://skills.sh/)
 [vercel-labs/skills](https://github.com/vercel-labs/skills)
 [vercel-labs/agent-skills](https://github.com/vercel-labs/agent-skills)
 
 ```
-hermes skills search react --source skills-shhermes skills inspect skills-sh/vercel-labs/json-render/json-render-reacthermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
+hermes skills search react --source skills-sh
+hermes skills inspect skills-sh/vercel-labs/json-render/json-render-react
+hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
 ```
 
-#### 3. Well-known skill endpoints (well-known)​
+#### ۳. نقاط پایانی مهارت شناخته‌شده (well-known)
 
 `well-known`
 
-This is URL-based discovery from sites that publish/.well-known/skills/index.json. It is not a single centralized hub — it is a web discovery convention.
+این کشف مبتنی URL از سایت‌هایی است که `/.well-known/skills/index.json` را منتشر می‌کنند. یک hub متمرکز واحد نیست — یک قرارداد کشف وب است.
 
 `/.well-known/skills/index.json`
-- Example live endpoint:Mintlify docs skills index
-- Reference server implementation:vercel-labs/skills-handler
-- Example:
+- مثال نقطه پایانی زنده: [فهرست مهارت‌های Mintlify docs](https://mintlify.com/docs/.well-known/skills/index.json)
+- پیاده‌سازی مرجع سرور: [vercel-labs/skills-handler](https://github.com/vercel-labs/skills-handler)
+- مثال:
 
-[Mintlify docs skills index](https://mintlify.com/docs/.well-known/skills/index.json)
+[فهرست مهارت‌های Mintlify docs](https://mintlify.com/docs/.well-known/skills/index.json)
 [vercel-labs/skills-handler](https://github.com/vercel-labs/skills-handler)
 
 ```
-hermes skills search https://mintlify.com/docs --source well-knownhermes skills inspect well-known:https://mintlify.com/docs/.well-known/skills/mintlifyhermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+hermes skills search https://mintlify.com/docs --source well-known
+hermes skills inspect well-known:https://mintlify.com/docs/.well-known/skills/mintlify
+hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
 ```
 
-#### 4. Direct GitHub skills (github)​
+#### ۴. مهارت‌های مستقیم GitHub (github)
 
 `github`
 
-Hermes can install directly from GitHub repositories and GitHub-based taps. This is useful when you already know the repo/path or want to add your own custom source repo.
+Hermes می‌تواند مستقیماً از مخزن‌های GitHub و tapهای مبتنی GitHub نصب کند. این وقتی مفید است که از قبل مخزن/مسیر را می‌شناسید یا می‌خواهید مخزن منبع سفارشی خود را اضافه کنید.
 
-Default taps (browsable without any setup):
+tapهای پیش‌فرض (قابل مرور بدون هیچ تنظیمی):
 
-- openai/skills
-- anthropics/skills
-- huggingface/skills
-- NVIDIA/skills— NVIDIA-verified skills (signedskill.oms.sig+ governanceskill-card.md)
-- garrytan/gstack
-- Example:
-
-openai/skills
-
-[openai/skills](https://github.com/openai/skills)
-
-anthropics/skills
-
-[anthropics/skills](https://github.com/anthropics/skills)
-
-huggingface/skills
-
-[huggingface/skills](https://github.com/huggingface/skills)
-
-NVIDIA/skills— NVIDIA-verified skills (signedskill.oms.sig+ governanceskill-card.md)
-
-[NVIDIA/skills](https://github.com/NVIDIA/skills)
-`skill.oms.sig`
-`skill-card.md`
-
-garrytan/gstack
-
-[garrytan/gstack](https://github.com/garrytan/gstack)
-
-Example:
+- [openai/skills](https://github.com/openai/skills)
+- [anthropics/skills](https://github.com/anthropics/skills)
+- [huggingface/skills](https://github.com/huggingface/skills)
+- [NVIDIA/skills](https://github.com/NVIDIA/skills) — مهارت‌های تأییدشده توسط NVIDIA (امضاشده `skill.oms.sig` + حاکمیت `skill-card.md`)
+- [garrytan/gstack](https://github.com/garrytan/gstack)
+- مثال:
 
 ```
-hermes skills install openai/skills/k8shermes skills tap add myorg/skills-repo
+hermes skills install openai/skills/k8s
+hermes skills tap add myorg/skills-repo
 ```
 
-Category groupings (skills.sh.json).A GitHub tap may ship askills.sh.jsonfile at its repo root following theskills.sh schema. Itsgroupings(each with atitleand a list of skill names) are read at index
-time and become the category labels shown in theSkills Hubpage — instead of a
-tag-derived guess. This is generic: any tap that ships the file gets real
-categorization, no Hermes-side changes required.
+**گروه‌بندی‌های دسته‌بندی (skills.sh.json):** یک tap GitHub ممکن است فایل `skills.sh.json` را در ریشه مخزن خود طبق schema `skills.sh` ارائه دهد. `groupings` آن (هر کدام با `title` و لیستی از نام مهارت‌ها) در زمان ایندکس خوانده می‌شوند و به برچسب‌های دسته‌بندی نمایش‌شده در صفحه Skills Hub تبدیل می‌شوند — به جای حدس مبتنی بر tag. این عمومی است: هر tap که فایل را ارائه دهد دسته‌بندی واقعی دریافت می‌کند، بدون نیاز به تغییرات Hermes.
 
 `skills.sh.json`
 `skills.sh.json`
@@ -697,66 +803,69 @@ categorization, no Hermes-side changes required.
 [Skills Hub](https://hermes-agent.nousresearch.com/docs)
 
 ```
-{  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",  "groupings": [    { "title": "Inference AI", "skills": ["dynamo-recipe-runner", "dynamo-router-sla"] },    { "title": "Decision Optimization", "skills": ["cuopt-developer", "cuopt-install"] }  ]}
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "groupings": [
+    { "title": "Inference AI", "skills": ["dynamo-recipe-runner", "dynamo-router-sla"] },
+    { "title": "Decision Optimization", "skills": ["cuopt-developer", "cuopt-install"] }
+  ]
+}
 ```
 
-#### 5. ClawHub (clawhub)​
+#### ۵. ClawHub (clawhub)
 
 `clawhub`
 
-A third-party skills marketplace integrated as a community source.
+بازار مهارت‌های طرف سوم که به عنوان یک منبع جامعه ادغام شده است.
 
-- Site:clawhub.ai
-- Hermes source id:clawhub
+- سایت: [clawhub.ai](https://clawhub.ai/)
+- شناسه منبع Hermes: `clawhub`
 
 [clawhub.ai](https://clawhub.ai/)
 `clawhub`
 
-#### 6. Claude marketplace-style repos (claude-marketplace)​
+#### ۶. مخزن‌های بازار-مانند Claude (claude-marketplace)
 
 `claude-marketplace`
 
-Hermes supports marketplace repos that publish Claude-compatible plugin/marketplace manifests.
+Hermes از مخزن‌های بازاری که مانیفیست‌های plugin/بازار سازگار با Claude را منتشر می‌کنند پشتیبانی می‌کند.
 
-Known integrated sources include:
+منابع ادغام‌شده شناخته‌شده شامل موارد زیر هستند:
 
-- anthropics/skills
-- aiskillstore/marketplace
+- [anthropics/skills](https://github.com/anthropics/skills)
+- [aiskillstore/marketplace](https://github.com/aiskillstore/marketplace)
 
-[anthropics/skills](https://github.com/anthropics/skills)
-[aiskillstore/marketplace](https://github.com/aiskillstore/marketplace)
-
-Hermes source id:claude-marketplace
+شناسه منبع Hermes: `claude-marketplace`
 
 `claude-marketplace`
 
-#### 7. LobeHub (lobehub)​
+#### ۷. LobeHub (lobehub)
 
 `lobehub`
 
-Hermes can search and convert agent entries from LobeHub's public catalog into installable Hermes skills.
+Hermes می‌تواند مدخل‌های agent از فهرست عمومی LobeHub را جستجو کرده و به مهارت‌های قابل نصب Hermes تبدیل کند.
 
-- Site:LobeHub
-- Public agents index:chat-agents.lobehub.com
-- Backing repo:lobehub/lobe-chat-agents
-- Hermes source id:lobehub
+- سایت: [LobeHub](https://lobehub.com/)
+- ایندکس عمومی agentها: [chat-agents.lobehub.com](https://chat-agents.lobehub.com/)
+- مخزن زیربنایی: [lobehub/lobe-chat-agents](https://github.com/lobehub/lobe-chat-agents)
+- شناسه منبع Hermes: `lobehub`
 
 [LobeHub](https://lobehub.com/)
 [chat-agents.lobehub.com](https://chat-agents.lobehub.com/)
 [lobehub/lobe-chat-agents](https://github.com/lobehub/lobe-chat-agents)
 `lobehub`
 
-#### 8. browse.sh (browse-sh)​
+#### ۸. browse.sh (browse-sh)
 
 `browse-sh`
 
-Hermes integrates withbrowse.sh, Browserbase's catalog of 200+ site-specific browser-automation SKILL.md files (Airbnb, Amazon, arXiv, 12306.cn, Etsy, Xero, and many more). Each skill describes how to drive one website end-to-end and is suitable for use with Hermes' browser tools and any browser-automation skills you already have installed.
+Hermes با `browse.sh` ادغام شده است، فهرست Browserbase بیش از ۲۰۰ فایل SKILL.md اتوماسیون مرورگر خاص-سایت (Airbnb، Amazon، arXiv، 12306.cn، Etsy، Xero و بسیاری دیگر). هر مهارت توضیح می‌دهد چگونه یک وب‌سایت را از ابتدا تا انتها هدایت کند و برای استفاده با ابزارهای مرورگر Hermes و هر مهارت اتوماسیون مرورگری که از قبل نصب کرده‌اید مناسب است.
 
-[browse.sh](https://browse.sh)
-- Site:browse.sh
-- Catalog API:https://browse.sh/api/skills
-- Hermes source id:browse-sh
-- Trust level:community
+[browse.sh](https://browse.sh/)
+- سایت: [browse.sh](https://browse.sh/)
+- API فهرست: `https://browse.sh/api/skills`
+- شناسه منبع Hermes: `browse-sh`
+- سطح اعتماد: community
 
 [browse.sh](https://browse.sh/)
 `https://browse.sh/api/skills`
@@ -764,26 +873,28 @@ Hermes integrates withbrowse.sh, Browserbase's catalog of 200+ site-specific bro
 `community`
 
 ```
-hermes skills search airbnb --source browse-shhermes skills inspect browse-sh/airbnb.com/search-listings-ddgioahermes skills install browse-sh/airbnb.com/search-listings-ddgioa
+hermes skills search airbnb --source browse-sh
+hermes skills inspect browse-sh/airbnb.com/search-listings-ddgioa
+hermes skills install browse-sh/airbnb.com/search-listings-ddgioa
 ```
 
-Identifiers use the formbrowse-sh/<hostname>/<task-id>and match the slug exposed by the browse.sh catalog. Content is resolved through the per-skill detail endpoint (/api/skills/<slug>→skillMdUrl), not through the catalog's GitHubsourceUrl.
+شناسه‌ها از فرم `browse-sh/<hostname>/<task-id>` استفاده می‌کنند و با slug نمایش‌داده‌شده توسط فهرست browse.sh مطابقت دارند. محتوا از طریق نقطه پایانی جزئیات هر مهارت (`/api/skills/<slug>` → `skillMdUrl`) حل می‌شود، نه از طریق `sourceUrl` GitHub فهرست.
 
 `browse-sh/<hostname>/<task-id>`
 `/api/skills/<slug>`
 `skillMdUrl`
 `sourceUrl`
 
-#### 9. Direct URL (url)​
+#### ۹. URL مستقیم (url)
 
 `url`
 
-Install a single-fileSKILL.mddirectly from any HTTP(S) URL — useful when an author hosts a skill on their own site (no hub listing, no GitHub path to type). Hermes fetches the URL, parses the YAML frontmatter, security-scans it, and installs.
+یک فایل `SKILL.md` تک‌فایلی را مستقیماً از هر URL HTTP(S) نصب کنید — مفید وقتی یک نویسنده مهارتی را در سایت خود میزبانی می‌کند (بدون فهرست hub، بدون مسیر GitHub برای تایپ). Hermes URL را دریافت، YAML frontmatter را تجزیه، اسکن امنیتی انجام و نصب می‌کند.
 
 `SKILL.md`
-- Hermes source id:url
-- Identifier: the URL itself (no prefix needed)
-- Scope:single-fileSKILL.mdonly. Multi-file skills withreferences/orscripts/need a manifest and should be published via one of the other sources above.
+- شناسه منبع Hermes: `url`
+- شناسه: خود URL (بدون نیاز به پیشوند)
+- دامنه: فقط فایل `SKILL.md` تک‌فایلی. مهارت‌های چندفایلی با `references/` یا `scripts/` به یک مانیفست نیاز دارند و باید از طریق یکی از منابع دیگر بالا منتشر شوند.
 
 `url`
 `SKILL.md`
@@ -791,15 +902,16 @@ Install a single-fileSKILL.mddirectly from any HTTP(S) URL — useful when an au
 `scripts/`
 
 ```
-hermes skills install https://sharethis.chat/SKILL.mdhermes skills install https://example.com/my-skill/SKILL.md --category productivity
+hermes skills install https://sharethis.chat/SKILL.md
+hermes skills install https://example.com/my-skill/SKILL.md --category productivity
 ```
 
-Name resolution, in order:
+حل نام، به ترتیب:
 
-1. name:field in the SKILL.md YAML frontmatter (recommended — every well-formed skill has one).
-2. Parent directory name from the URL path (e.g..../my-skill/SKILL.md→my-skill, or.../my-skill.md→my-skill), when it's a valid identifier (^[a-z][a-z0-9_-]*$).
-3. Interactive prompt on a terminal with a TTY.
-4. On non-interactive surfaces (the/skills installslash command inside the TUI, gateway platforms, scripts), a clean error pointing at the--nameoverride.
+1. فیلد `name:` در YAML frontmatter فایل `SKILL.md` (توصیه‌شده — هر مهارت خوبی یکی دارد).
+2. نام دایرکتوری والد از مسیر URL (مثلاً `.../my-skill/SKILL.md` → `my-skill`، یا `.../my-skill.md` → `my-skill`)، وقتی یک شناسه معتبر باشد (`^[a-z][a-z0-9_-]*$`).
+3. پرامپت تعاملی در یک ترمینال با TTY.
+4. در سطوح غیرتعاملی (دستور slash `/skills install` در TUI، پلتفرم‌های دروازه، اسکریپت‌ها)، خطای تمیزی که به بازنویسی `--name` اشاره می‌کند.
 
 `name:`
 `.../my-skill/SKILL.md`
@@ -811,31 +923,35 @@ Name resolution, in order:
 `--name`
 
 ```
-# Frontmatter has no name and the URL slug is unhelpful — supply one:hermes skills install https://example.com/SKILL.md --name sharethis-chat# Or inside a chat session:/skills install https://example.com/SKILL.md --name sharethis-chat
+# Frontmatter has no name and the URL slug is unhelpful — supply one:
+hermes skills install https://example.com/SKILL.md --name sharethis-chat
+
+# Or inside a chat session:
+/skills install https://example.com/SKILL.md --name sharethis-chat
 ```
 
-Trust level is alwayscommunity— the same security scan runs as for every other source. The URL is stored as the install identifier, sohermes skills updatere-fetches from the same URL automatically when you want to refresh.
+سطح اعتماد همیشه `community` است — همان اسکن امنیتی که برای هر منبع دیگر اجرا می‌شود. URL به عنوان شناسه نصب ذخیره می‌شود، بنابراین `hermes skills update` وقتی می‌خواهید تازه‌سازی کنید به طور خودکار از همان URL دوباره دریافت می‌کند.
 
 `community`
 `hermes skills update`
 
-### Security scanning and--force​
+### اسکن امنیتی و `--force`
 
 `--force`
 
-All hub-installed skills go through asecurity scannerthat checks for data exfiltration, prompt injection, destructive commands, supply-chain signals, and other threats.
+همه مهارت‌های نصب‌شده از hub از یک **اسکنر امنیتی** عبور می‌کنند که نشت داده، تزریق پرامپت، دستورات مخرب، سیگنال‌های زنجیره تأمین و سایر تهدیدها را بررسی می‌کند.
 
-hermes skills inspect ...now also surfaces upstream metadata when available:
+`hermes skills inspect ...` اکنون هنگام موجود بودن متادیتای upstream را نیز نمایش می‌دهد:
 
 `hermes skills inspect ...`
-- repo URL
-- skills.sh detail page URL
-- install command
-- weekly installs
-- upstream security audit statuses
-- well-known index/endpoint URLs
+- URL مخزن
+- URL صفحه جزئیات skills.sh
+- دستور نصب
+- نصب‌های هفتگی
+- وضعیت‌های اسکن امنیتی upstream
+- URLهای فهرست/نقطه پایانی well-known
 
-Use--forcewhen you have reviewed a third-party skill and want to override a non-dangerous policy block:
+از `--force` استفاده کنید وقتی مهارتی طرف سوم را بررسی کرده‌اید و می‌خواهید یک مسدودیت سیاست غیرخطرناک را بازنویسی کنید:
 
 `--force`
 
@@ -843,25 +959,25 @@ Use--forcewhen you have reviewed a third-party skill and want to override a non-
 hermes skills install skills-sh/anthropics/skills/pdf --force
 ```
 
-Important behavior:
+رفتار مهم:
 
-- --forcecan override policy blocks for caution/warn-style findings.
-- --forcedoesnotoverride adangerousscan verdict.
-- Official optional skills (official/...) are treated as built-in trust and do not show the third-party warning panel.
+- `--force` می‌تواند مسدودیت‌های سیاست برای یافته‌های نوع caution/warn را بازنویسی کند.
+- `--force` حکم اسکن `dangerous` را **بازنویسی نمی‌کند**.
+- مهارت‌های رسمی اختیاری (`official/...`) به عنوان اعتماد داخلی رفتار شده و پنل هشدار طرف سوم را نشان نمی‌دهند.
 
 `--force`
 `--force`
 `dangerous`
 `official/...`
 
-### Trust levels​
+### سطوح اعتماد
 
-| Level | Source | Policy |
+| سطح | منبع | سیاست |
 | --- | --- | --- |
-| builtin | Ships with Hermes | Always trusted |
-| official | optional-skills/in the repo | Built-in trust, no third-party warning |
-| trusted | Trusted registries/repos such asopenai/skills,anthropics/skills,huggingface/skills,NVIDIA/skills | More permissive policy than community sources |
-| community | Everything else (skills.sh, well-known endpoints, custom GitHub repos, most marketplaces) | Non-dangerous findings can be overridden with--force;dangerousverdicts stay blocked |
+| builtin | همراه Hermes ارائه می‌شود | همیشه مورد اعتماد |
+| official | `optional-skills/` در مخزن | اعتماد داخلی، بدون هشدار طرف سوم |
+| trusted | ثبت‌نام‌ها/مخزن‌های مورد اعتماد مانند `openai/skills`، `anthropics/skills`، `huggingface/skills`، `NVIDIA/skills` | سیاست آزادتر از منابع community |
+| community | همه چیزهای دیگر (skills.sh، نقاط پایانی well-known، مخزن‌های GitHub سفارشی، بیشتر بازارها) | یافته‌های غیرخطرناک با `--force` قابل بازنویسی هستند؛ حکم `dangerous` همچنان مسدود باقی می‌ماند |
 
 `builtin`
 `official`
@@ -876,45 +992,58 @@ Important behavior:
 `--force`
 `dangerous`
 
-### Update lifecycle​
+### چرخه حیات به‌روزرسانی
 
-The hub now tracks enough provenance to re-check upstream copies of installed skills:
+Hub اکنون اطلاعات مبدأ کافی برای بازبررسی نسخه‌های upstream مهارت‌های نصب‌شده را ردیابی می‌کند:
 
 ```
-hermes skills check          # Report which installed hub skills changed upstreamhermes skills update         # Reinstall only the skills with updates availablehermes skills update react   # Update one specific installed hub skill
+hermes skills check          # Report which installed hub skills changed upstream
+hermes skills update         # Reinstall only the skills with updates available
+hermes skills update react   # Update one specific installed hub skill
 ```
 
-This uses the stored source identifier plus the current upstream bundle content hash to detect drift.
+این از شناسه منبع ذخیره‌شده به علاوه هش محتوای بسته upstream فعلی برای تشخیص انحراف استفاده می‌کند.
 
-Skills hub operations use the GitHub API, which has a rate limit of 60 requests/hour for unauthenticated users. If you see rate-limit errors during install or search, setGITHUB_TOKENin your.envfile to increase the limit to 5,000 requests/hour. The error message includes an actionable hint when this happens.
+عملیات hub از GitHub API استفاده می‌کند که محدودیت نرخ ۶۰ درخواست/ساعت برای کاربران احراز هویت‌نشده دارد. اگر خطاهای محدودیت نرخ در حین نصب یا جستجو مشاهده کردید، `GITHUB_TOKEN` را در فایل `.env` خود تنظیم کنید تا محدودیت را به ۵,۰۰۰ درخواست/ساعت افزایش دهید. پیام خطا هنگام وقوع این اتفاق یک راهنمای عملی نشان می‌دهد.
 
 `GITHUB_TOKEN`
 `.env`
 
-### Publishing a custom skill tap​
+### انتشار یک tap مهارت سفارشی
 
-If you want to share a curated set of skills — for your team, your org, or publicly — you can publish them as atap: a GitHub repository other Hermes users add withhermes skills tap add <owner/repo>. No server, no registry sign-up, no release pipeline. Just a directory ofSKILL.mdfiles.
+اگر می‌خواهید مجموعه‌ای گزینش‌شده از مهارت‌ها را به اشتراک بگذارید — برای تیم، سازمان یا عموم — می‌توانید آنها را به عنوان یک tap منتشر کنید: یک مخزن GitHub که کاربران دیگر Hermes با `hermes skills tap add <owner/repo>` اضافه می‌کنند. بدون سرور، بدون ثبت‌نام در ثبت‌نام، بدون pipeline انتشار. فقط یک دایرکتوری از فایل‌های `SKILL.md`.
 
 `hermes skills tap add <owner/repo>`
 `SKILL.md`
 
-#### Repo layout​
+#### چیدمان مخزن
 
-A tap is any GitHub repo (public or private — private needsGITHUB_TOKEN) laid out like this:
+tap هر مخزن GitHub (عمومی یا خصوصی — خصوصی به `GITHUB_TOKEN` نیاز دارد) است که به این شکل چیده شده:
 
 `GITHUB_TOKEN`
 
 ```
-owner/repo├── skills/                       # default path; configurable per-tap│   ├── my-workflow/│   │   ├── SKILL.md              # required│   │   ├── references/           # optional supporting files│   │   ├── templates/│   │   └── scripts/│   ├── another-skill/│   │   └── SKILL.md│   └── third-skill/│       └── SKILL.md└── README.md                     # optional but helpful
+owner/repo
+├── skills/                       # default path; configurable per-tap
+│   ├── my-workflow/
+│   │   ├── SKILL.md              # required
+│   │   ├── references/           # optional supporting files
+│   │   ├── templates/
+│   │   └── scripts/
+│   ├── another-skill/
+│   │   └── SKILL.md
+│   └── third-skill/
+│       └── SKILL.md
+└── README.md                     # optional but helpful
 ```
 
-Rules:
+قوانین:
 
-- Each skill lives in its own directory under the tap's root path (defaultskills/).
-- The directory name becomes the skill's install slug.
-- Each skill directory must contain aSKILL.mdwith standardSKILL.md frontmatter(name,description, plus optionalmetadata.hermes.tags,version,author,platforms,metadata.hermes.config).
-- Subdirectories likereferences/,templates/,scripts/,assets/are downloaded alongsideSKILL.mdat install time.
-- Skills whose directory name starts with.or_are ignored.
+- هر مهارت در دایرکتوری خود زیر مسیر ریشه tap (پیش‌فرض `skills/`) زندگی می‌کند.
+- نام دایرکتوری به slug نصب مهارت تبدیل می‌شود.
+- هر دایرکتوری مهارت باید یک `SKILL.md` با frontmatter استاندارد `SKILL.md` شامل `name`، `description` و اختیاری `metadata.hermes.tags`، `version`، `author`، `platforms`، `metadata.hermes.config` داشته باشد.
+- زیردایرکتوری‌هایی مانند `references/`، `templates/`، `scripts/`، `assets/` در زمان نصب همراه `SKILL.md` دانلود می‌شوند.
+- مهارت‌هایی که نام دایرکتوری آنها با `.` یا `_` شروع می‌شود نادیده گرفته می‌شوند.
 
 `skills/`
 `SKILL.md`
@@ -933,134 +1062,173 @@ Rules:
 `.`
 `_`
 
-Hermes discovers skills by listing every subdirectory of the tap path and probing each forSKILL.md.
+Hermes مهارت‌ها را با فهرست‌کردن هر زیردایرکتوری مسیر tap و بررسی هر کدام برای `SKILL.md` کشف می‌کند.
 
 `SKILL.md`
 
-#### Minimal tap example​
+#### مثال حداقلی tap
 
 ```
-my-org/hermes-skills└── skills/    └── deploy-runbook/        └── SKILL.md
+my-org/hermes-skills
+└── skills/
+    └── deploy-runbook/
+        └── SKILL.md
 ```
 
-skills/deploy-runbook/SKILL.md:
-
-`skills/deploy-runbook/SKILL.md`
+`skills/deploy-runbook/SKILL.md`:
 
 ```
----name: deploy-runbookdescription: Our deployment runbook — services, rollback, Slack channelsversion: 1.0.0author: My Org Platform Teammetadata:  hermes:    tags: [deployment, runbook, internal]---# Deploy RunbookStep 1: ...
+---
+name: deploy-runbook
+description: Our deployment runbook — services, rollback, Slack channels
+version: 1.0.0
+author: My Org Platform Team
+metadata:
+  hermes:
+    tags: [deployment, runbook, internal]
+---
+# Deploy Runbook
+Step 1: ...
 ```
 
-After pushing that to GitHub, any Hermes user can subscribe and install:
+پس از push کردن آن به GitHub، هر کاربر Hermes می‌تواند اشتراک و نصب کند:
 
 ```
-hermes skills tap add my-org/hermes-skillshermes skills search deployhermes skills install my-org/hermes-skills/deploy-runbook
+hermes skills tap add my-org/hermes-skills
+hermes skills search deploy
+hermes skills install my-org/hermes-skills/deploy-runbook
 ```
 
-#### Non-default paths​
+### مسیرهای غیرپیش‌فرض
 
-If your skills don't live underskills/(common when you're adding askills/subtree to an existing project), edit the tap entry in~/.hermes/.hub/taps.json:
+اگر مهارت‌های شما در `skills/` زندگی نمی‌کنند (رایج وقتی زیردایرکتوری `skills/` را به یک پروژه موجود اضافه می‌کنید)، ورودی tap در `~/.hermes/.hub/taps.json` را ویرایش کنید:
 
 `skills/`
 `skills/`
 `~/.hermes/.hub/taps.json`
 
 ```
-{  "taps": [    {"repo": "my-org/platform-docs", "path": "internal/skills/"}  ]}
+{
+  "taps": [
+    {"repo": "my-org/platform-docs", "path": "internal/skills/"}
+  ]
+}
 ```
 
-Thehermes skills tap addCLI defaults new taps topath: "skills/"; edit the file directly if you need a different path.hermes skills tap listshows the effective path per tap.
+CLI `hermes skills tap add` tapهای جدید را به طور پیش‌فرض به `path: "skills/"` اختصاص می‌دهد؛ فایل را مستقیماً ویرایش کنید اگر به مسیر متفاوتی نیاز دارید. `hermes skills tap list` مسیر مؤثر هر tap را نمایش می‌دهد.
 
 `hermes skills tap add`
 `path: "skills/"`
 `hermes skills tap list`
 
-#### Installing individual skills directly (without adding a tap)​
+### نصب مستقیم مهارت‌های منفرد (بدون اضافه کردن tap)
 
-Users can also install a single skill from any public GitHub repo without adding the whole repo as a tap:
+کاربران همچنین می‌توانند یک مهارت منفرد را از هر مخزن عمومی GitHub بدون اضافه کردن کل مخزن به عنوان tap نصب کنند:
 
 ```
 hermes skills install owner/repo/skills/my-workflow
 ```
 
-Useful when you want to share one skill without asking the user to subscribe to your whole registry.
+مفید وقتی می‌خواهید یک مهارت را بدون درخواست از کاربر برای اشتراک کل ثبت‌نام شما به اشتراک بگذارید.
 
-#### Trust levels for taps​
+### سطوح اعتماد برای tapها
 
-New taps are assignedcommunitytrust by default. Skills installed from them run through the standard security scan and show the third-party warning panel on first install. If your org or a widely-trusted source should get higher trust, add its repo toTRUSTED_REPOSintools/skills_hub.py(requires a Hermes core PR).
+tapهای جدید به طور پیش‌فرض سطح اعتماد `community` دریافت می‌کنند. مهارت‌های نصب‌شده از آنها از اسکن امنیتی استاندارد عبور می‌کنند و در اولین نصب پنل هشدار طرف سوم را نشان می‌دهند. اگر سازمان شما یا منبع مورد اعتماد گسترده باید اعتماد بالاتری دریافت کند، مخزن آن را به `TRUSTED_REPOS` در `tools/skills_hub.py` اضافه کنید (نیاز به PR هسته Hermes).
 
 `community`
 `TRUSTED_REPOS`
 `tools/skills_hub.py`
 
-#### Tap management​
+### مدیریت tap
 
 ```
-hermes skills tap list                                # show all configured tapshermes skills tap add myorg/skills-repo               # add (default path: skills/)hermes skills tap remove myorg/skills-repo            # remove
+hermes skills tap list                                # show all configured taps
+hermes skills tap add myorg/skills-repo               # add (default path: skills/)
+hermes skills tap remove myorg/skills-repo            # remove
 ```
 
-Inside a running session:
+در داخل یک نشست در حال اجرا:
 
 ```
-/skills tap list/skills tap add myorg/skills-repo/skills tap remove myorg/skills-repo
+/skills tap list
+/skills tap add myorg/skills-repo
+/skills tap remove myorg/skills-repo
 ```
 
-Taps are stored in~/.hermes/.hub/taps.json(created on demand).
+tapها در `~/.hermes/.hub/taps.json` ذخیره می‌شوند (در صورت نیاز ایجاد می‌شود).
 
 `~/.hermes/.hub/taps.json`
 
-## Bundled skill updates (hermes skills reset)​
+## به‌روزرسانی مهارت‌های bundled (hermes skills reset)
 
 `hermes skills reset`
 
-Hermes ships with a set of bundled skills inskills/inside the repo. On install and on everyhermes update, a sync pass copies those into~/.hermes/skills/and records a manifest at~/.hermes/skills/.bundled_manifestmapping each skill name to the content hash at the time it was synced (theorigin hash).
+Hermes با مجموعه‌ای از مهارت‌های bundled در `skills/` داخل مخزن ارائه می‌شود. در نصب و در هر `hermes update`، یک عبور همگام‌سازی آنها را به `~/.hermes/skills/` کپی می‌کند و یک مانیفست در `~/.hermes/skills/.bundled_manifest` ثبت می‌کند که هر نام مهارت را به هش محتوا در زمان همگام‌سازی (هش origin) نگاشت می‌کند.
 
 `skills/`
 `hermes update`
 `~/.hermes/skills/`
 `~/.hermes/skills/.bundled_manifest`
 
-On each sync, Hermes recomputes the hash of your local copy and compares it to the origin hash:
+در هر همگام‌سازی، Hermes هش نسخه محلی شما را دوباره محاسبه و با هش origin مقایسه می‌کند:
 
-- Unchanged→ safe to pull upstream changes, copy the new bundled version in, record the new origin hash.
-- Changed→ treated asuser-modifiedand skipped forever, so your edits never get stomped.
+- **تغییر نیافته** → ایمن برای کشیدن تغییرات upstream، کپی نسخه bundled جدید، ثبت هش origin جدید.
+- **تغییر یافته** → به عنوان **تغییریافته توسط کاربر** در نظر گرفته شده و برای همیشه رد می‌شود، بنابراین ویرایش‌های شما هرگز له نمی‌شوند.
 
-The protection is good, but it has one sharp edge. If you edit a bundled skill and then later want to abandon your changes and go back to the bundled version by just copy-pasting from~/.hermes/hermes-agent/skills/, the manifest still holds theoldorigin hash from whenever the last successful sync ran. Your fresh copy-paste contents (current bundled hash) won't match that stale origin hash, so sync keeps flagging it as user-modified.
+حفاظت خوب است، اما یک لبه تیز دارد. اگر یک مهارت bundled را ویرایش کنید و سپس بخواهید تغییرات خود را رها کرده و به نسخه bundled برگردید فقط با کپی-پیست از `~/.hermes/hermes-agent/skills/`، مانیفست همچنان هش origin قدیمی را از زمان آخرین همگام‌سازی موفق نگه می‌دارد. محتوای کپی-پیست تازه شما (هش bundled فعلی) با آن هش origin منقضی‌شده مطابقت نخواهد داشت، بنابراین همگام‌سازی همچنان آن را به عنوان تغییریافته توسط کاربر پرچم‌گذاری می‌کند.
 
 `~/.hermes/hermes-agent/skills/`
 
-hermes skills resetis the escape hatch:
+`hermes skills reset` دریچه فرار است:
 
 `hermes skills reset`
 
 ```
-# Safe: clears the manifest entry for this skill. Your current copy is preserved,# but the next sync re-baselines against it so future updates work normally.hermes skills reset google-workspace# Full restore: also deletes your local copy and re-copies the current bundled# version. Use this when you want the pristine upstream skill back.hermes skills reset google-workspace --restore# Non-interactive (e.g. in scripts or TUI mode) — skip the --restore confirmation.hermes skills reset google-workspace --restore --yes
+# Safe: clears the manifest entry for this skill. Your current copy is preserved,
+# but the next sync re-baselines against it so future updates work normally.
+hermes skills reset google-workspace
+
+# Full restore: also deletes your local copy and re-copies the current bundled
+# version. Use this when you want the pristine upstream skill back.
+hermes skills reset google-workspace --restore
+
+# Non-interactive (e.g. in scripts or TUI mode) — skip the --restore confirmation.
+hermes skills reset google-workspace --restore --yes
 ```
 
-The same command works in chat as a slash command:
+همان دستور در چت به عنوان دستور slash کار می‌کند:
 
 ```
-/skills reset google-workspace/skills reset google-workspace --restore
+/skills reset google-workspace
+/skills reset google-workspace --restore
 ```
 
-Each profile has its own.bundled_manifestunder its ownHERMES_HOME, sohermes -p coder skills reset <name>only affects that profile.
+هر پروفایل `bundled_manifest` خود را در `HERMES_HOME` خود دارد، بنابراین `hermes -p coder skills reset <name>` فقط بر آن پروفایل تأثیر می‌گذارد.
 
 `.bundled_manifest`
 `HERMES_HOME`
 `hermes -p coder skills reset <name>`
 
-### Slash commands (inside chat)​
+### دستورات slash (داخل چت)
 
-All the same commands work with/skills:
+همه دستورات مشابه با `/skills` کار می‌کنند:
 
 `/skills`
 
 ```
-/skills browse/skills search react --source skills-sh/skills search https://mintlify.com/docs --source well-known/skills inspect skills-sh/vercel-labs/json-render/json-render-react/skills install openai/skills/skill-creator --force/skills check/skills update/skills reset google-workspace/skills list
+/skills browse
+/skills search react --source skills-sh
+/skills search https://mintlify.com/docs --source well-known
+/skills inspect skills-sh/vercel-labs/json-render/json-render-react
+/skills install openai/skills/skill-creator --force
+/skills check
+/skills update
+/skills reset google-workspace
+/skills list
 ```
 
-Official optional skills still use identifiers likeofficial/security/1passwordandofficial/migration/openclaw-migration.
+مهارت‌های رسمی اختیاری همچنان از شناسه‌هایی مانند `official/security/1password` و `official/migration/openclaw-migration` استفاده می‌کنند.
 
 `official/security/1password`
 `official/migration/openclaw-migration`
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/skills.md)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/skills.md)

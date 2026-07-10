@@ -8,616 +8,228 @@ permalink: /user-guide/windows-native/
 - Using Hermes
 - Windows (Native)
 
-# Windows (Native) Guide
+# راهنمای ویندوز (بومی)
 
-Hermes runs natively on Windows 10 and Windows 11 — no WSL, no Cygwin, no Docker. This page is the deep dive: what works natively, what's WSL-only, what the installer actually does, and the Windows-specific knobs you might need to touch.
+Hermes به طور بومی روی Windows 10 و Windows 11 اجرا می‌شود — بدون WSL، بدون Cygwin، بدون Docker. این صفحه عمیق است: چه چیزی به طور بومی کار می‌کند، چه چیزی فقط WSL است، نصب‌کننده واقعاً چه کاری انجام می‌دهد و دکمه‌های مختص ویندوز که ممکن است نیاز به لمس داشته باشید.
 
-If you just want to install, the one-liner on thelanding pageorInstallation pageis all you need. Come back here when something surprises you.
+اگر فقط می‌خواهید نصب کنید، یک‌خطی در [صفحه اصلی](/docs/) یا [صفحه نصب](/docs/getting-started/installation#windows-native-powershell) همه چیزی است که نیاز دارید. وقتی چیزی شما را شگفت‌زده کرد برگردید.
 
-[landing page](/docs/)
-[Installation page](/docs/getting-started/installation#windows-native-powershell)
+اگر ترجیح می‌دهید محیط POSIX واقعی داشته باشید (برای ترمinal تعبیه‌شده داشبورد، معنای `fork`، ناظران فایل سبک Linux و غیره)، [راهنمای Windows (WSL2)](/docs/user-guide/windows-wsl-quickstart) را ببینید. هر دو تمیز با هم همزیستی می‌کنند: داده‌های بومی در `%LOCALAPPDATA%\hermes` و داده‌های WSL در `~/.hermes` قرار دارند.
 
-If you prefer a real POSIX environment (for the dashboard's embedded terminal,forksemantics, Linux-style file watchers, etc.), see theWindows (WSL2) Guide. Both coexist cleanly: native data lives under%LOCALAPPDATA%\hermes, WSL data lives under~/.hermes.
+## نصب سریع
 
-`fork`
-[Windows (WSL2) Guide](/docs/user-guide/windows-wsl-quickstart)
-`%LOCALAPPDATA%\hermes`
-`~/.hermes`
+PowerShell (یا Windows Terminal) را باز کنید و اجرا کنید:
 
-## Quick install​
-
-OpenPowerShell(or Windows Terminal) and run:
-
-```
+```powershell
 iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1)
 ```
 
-No admin rights required. The installer goes to%LOCALAPPDATA%\hermes\and addshermesto yourUser PATH— open a new terminal after it finishes.
+نیازی به حقوق admin نیست. نصب‌کننده به `%LOCALAPPDATA%\hermes\` می‌رود و `hermes` را به User PATH اضافه می‌کند — بعد از اتمام یک ترمinal جدید باز کنید.
 
-`%LOCALAPPDATA%\hermes\`
-`hermes`
+گزینه‌های نصب‌کننده (نیاز به فرم scriptblock برای ارسال پارامترها):
 
-Installer options(requires the scriptblock form to pass parameters):
-
-```
+```powershell
 & ([scriptblock]::Create((irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/scripts/install.ps1))) -NoVenv -SkipSetup -Branch main
 ```
 
-| Parameter | Default | Purpose |
+| پارامتر | پیش‌فرض | هدف |
 | --- | --- | --- |
-| -Branch | main | Clone a specific branch (useful for testing PRs) |
-| -Commit | unset | Pin install to a specific commit SHA (overrides-Branch) |
-| -Tag | unset | Pin install to a specific git tag (e.g.v0.14.0) |
-| -NoVenv | off | Skip venv creation (advanced — you manage Python yourself) |
-| -SkipSetup | off | Skip the post-installhermes setupwizard |
-| -HermesHome | %LOCALAPPDATA%\hermes | Override data directory |
-| -InstallDir | %LOCALAPPDATA%\hermes\hermes-agent | Override code location |
+| `-Branch` | main | Clone یک شاخه مشخص (مفید برای تست PR) |
+| `-Commit` | تنظیم نشده | نصب را به یک commit SHA مشخص ثابت کنید (`-Branch` را override می‌کند) |
+| `-Tag` | تنظیم نشده | نصب را به یک git tag مشخص ثابت کنید (مثلاً `v0.14.0`) |
+| `-NoVenv` | خاموش | ایجاد venv را رد کنید (پیشرفته — خودتان Python را مدیریت می‌کنید) |
+| `-SkipSetup` | خاموش | جادوگر post-install `hermes setup` را رد کنید |
+| `-HermesHome` | %LOCALAPPDATA%\hermes | دایرکتوری داده را override کنید |
+| `-InstallDir` | %LOCALAPPDATA%\hermes\hermes-agent | مکان کد را override کنید |
 
-`-Branch`
-`main`
-`-Commit`
-`-Branch`
-`-Tag`
-`v0.14.0`
-`-NoVenv`
-`-SkipSetup`
-`hermes setup`
-`-HermesHome`
-`%LOCALAPPDATA%\hermes`
-`-InstallDir`
-`%LOCALAPPDATA%\hermes\hermes-agent`
+نصب‌کننده fetchهای git ناپایدار را به طور خودکار مجدداً تلاش می‌کند و BOM را از هر payload `install.ps1` دانلود شده حذف می‌کند، بنابراین UTF-8 BOM که در حین انتقال HTTP دریافت می‌شود دیگر فرم `[scriptblock]::Create((irm ...))` را خراب نمی‌کند.
 
-The installer auto-retries flaky git fetches and strips BOM from any downloadedinstall.ps1payload, so a UTF-8 BOM picked up during HTTP transit no longer breaks the[scriptblock]::Create((irm ...))form.
+### نصب‌کننده دسکتاپ (جایگزین)
 
-`install.ps1`
-`[scriptblock]::Create((irm ...))`
+یک نصب‌کننده GUI نازک نیز موجود است — مفید اگر ترجیح می‌دهید روی یک `.exe` دوبار کلیک کنید تا PowerShell را باز کنید. Hermes Desktop را دانلود کنید، نصب‌کننده را اجرا کنید و در اولین راه‌اندازی GUI در زیر پوشش `install.ps1` را برای تأمین Python (از طریق `uv`)، Node، PortableGit و بقیه راه‌اندازی وابستگی‌ها فراخوانی می‌کند.
 
-### Desktop installer (alternative)​
+## نصب‌کننده واقعاً چه کاری انجام می‌دهد
 
-A thin GUI installer is also available — useful if you'd rather double-click an.exethan open PowerShell. Download Hermes Desktop, run the installer, and on first launch the GUI callsinstall.ps1under the hood to provision Python (viauv), Node, PortableGit, and the rest of the dependency bootstrap described below. After the first run, the desktop app and the PowerShell-installedhermesCLI share the same%LOCALAPPDATA%\hermes\hermes-agentinstall and%LOCALAPPDATA%\hermesdata directory — switch between the GUI and the CLI freely.
+از بالا به پایین، به ترتیب:
 
-`.exe`
-`install.ps1`
-`uv`
-`hermes`
-`%LOCALAPPDATA%\hermes\hermes-agent`
-`%LOCALAPPDATA%\hermes`
+1. **`uv` را راه‌اندازی می‌کند** — مدیر سریع Python Astral. در `%USERPROFILE%\.local\bin` نصب می‌شود.
+2. **Python 3.11 را نصب می‌کند** از طریق `uv`. به Python موجود نیاز نیست.
+3. **Node.js 22 را نصب می‌کند** (winget در صورت موجود بودن، در غیر این صورت بسته تار نصب پرتابل Node که در `%LOCALAPPDATA%\hermes\node` باز می‌شود). برای ابزار مرورگر و پل WhatsApp استفاده می‌شود.
+4. **Git پرتابل نصب می‌کند** — اگر `git` از قبل در PATH باشد نصب‌کننده از آن استفاده می‌کند؛ در غیر این صورت یک `PortableGit` فشرده و خودمختار (~۴۵ MB، از انتشار رسمی `git-for-windows`) را در `%LOCALAPPDATA%\hermes\git` دانلود می‌کند.
+5. **مخزن را در `%LOCALAPPDATA%\hermes\hermes-agent` clone می‌کند** و یک virtualenv در آن ایجاد می‌کند.
+6. **`uv pip install` پلکانی** — ابتدا `.[all]` را تلاش می‌کند، به مجموعه‌های کوچک‌تر تدریجی برمی‌گردد.
+7. **SDKهای پیام‌رسانی را به طور خودکار نصب می‌کند** — اگر `TELEGRAM_BOT_TOKEN`/`DISCORD_BOT_TOKEN`/`SLACK_BOT_TOKEN`/`SLACK_APP_TOKEN`/`WHATSAPP_ENABLED` موجود باشند.
+8. **`HERMES_GIT_BASH_PATH` را تنظیم می‌کند** به `bash.exe` رفع‌شده.
+9. **`%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` را به User PATH اضافه می‌کند** و `HERMES_HOME=%LOCALAPPDATA%\hermes` را تنظیم می‌کند.
+10. **`hermes setup` را اجرا می‌کند** — جادوگر اولین اجرای عادی. با `-SkipSetup` رد کنید.
 
-Use the desktop installer when you want a familiar Windows install experience or you're handing Hermes to a non-developer; use the PowerShell one-liner when you're already in a terminal.
+در Windows، تنظیم کلید API به ازای هر ابزار بیشترین اصطکاک را در دریافت یک agent کاربردی دارد. یک اشتراک [Nous Portal](/docs/user-guide/features/tool-gateway) مدل و تمام آن ابزارها را از طریق یک ورود OAuth پوشش می‌دهد. بعد از اتمام نصب‌کننده، `hermes setup --portal` را اجرا کنید تا همه چیز را وصل کنید.
 
-### Dependency bootstrap (dep_ensure)​
+## ماتریس ویژگی‌ها
 
-`dep_ensure`
+هر چیزی به جز ترمinal تعبیه‌شده داشبورد به طور بومی در Windows اجرا می‌شود.
 
-On first launch (and on demand when a missing tool is detected), Hermes runs a small Python bootstrapper —hermes_cli/dep_ensure.py— that checks for and lazily installs the non-Python dependencies it needs. On Windows, the relevant ones are:
-
-`hermes_cli/dep_ensure.py`
-
-| Dependency | Why Hermes needs it |
-| --- | --- |
-| PortableGit | Providesbash.exefor the terminal tool andgitfor in-session clones. Provisioned at install time, not bydep_ensure. |
-| Node.js 22 | Required for the browser tool (agent-browser), the TUI's web bridge, and the WhatsApp bridge. |
-| ffmpeg | Audio format conversion for TTS / voice messages. |
-| ripgrep | Fast file search — falls back togrepif unavailable. |
-| npm packages | agent-browser, Playwright Chromium, and any per-toolset Node deps are installed once at first browser-tool use. |
-
-`bash.exe`
-`git`
-`dep_ensure`
-`agent-browser`
-`grep`
-`agent-browser`
-
-Each dep has ashutil.which(...)-style check; if a binary is missing and the run is interactive,dep_ensureoffers to install it (deferring toscripts\install.ps1 -ensure <dep>for the actual install logic). Non-interactive runs (gateway, cron, headless desktop launches) skip the prompt and surface a clearthis feature needs <dep>error instead.
-
-`shutil.which(...)`
-`dep_ensure`
-`scripts\install.ps1 -ensure <dep>`
-`this feature needs <dep>`
-
-## What the installer actually does​
-
-Top-to-bottom, in order:
-
-1. Bootstrapsuv— Astral's fast Python manager. Installed to%USERPROFILE%\.local\bin.
-2. Installs Python 3.11viauv. No existing Python needed.
-3. Installs Node.js 22(winget if available, else a portable Node tarball unpacked under%LOCALAPPDATA%\hermes\node). Used for the browser tool and the WhatsApp bridge.
-4. Installs portable Git— ifgitis already on PATH the installer uses it; otherwise it downloads a trimmed, self-containedPortableGit(~45 MB, from the officialgit-for-windowsrelease) to%LOCALAPPDATA%\hermes\git. No admin, no Windows installer registry, no interference with anything else on the box.
-5. Clones the repoto%LOCALAPPDATA%\hermes\hermes-agentand creates a virtualenv inside it.
-6. Tiereduv pip install— tries.[all]first, falls back to progressively smaller sets ([messaging,dashboard,ext]→[messaging]→.) if agit+httpsdep flakes on rate-limited GitHub. Prevents "single flake drops you to a bare install" failure mode.
-7. Auto-installs messaging SDKskeyed off.env— ifTELEGRAM_BOT_TOKEN/DISCORD_BOT_TOKEN/SLACK_BOT_TOKEN/SLACK_APP_TOKEN/WHATSAPP_ENABLEDare present, runspython -m ensurepip --upgradeand targetedpip installcalls so each platform's SDK is actually importable.
-8. SetsHERMES_GIT_BASH_PATHto the resolvedbash.exeso Hermes finds it deterministically in fresh shells.
-9. Adds%LOCALAPPDATA%\hermes\hermes-agent\venv\Scriptsto User PATH and setsHERMES_HOME=%LOCALAPPDATA%\hermes— exposes thehermescommand (and points it at your data dir) after you open a new terminal.
-10. Runshermes setup— the normal first-run wizard (model, provider, toolsets). Skip with-SkipSetup.
-
-`uv`
-`%USERPROFILE%\.local\bin`
-`uv`
-`%LOCALAPPDATA%\hermes\node`
-`git`
-`git-for-windows`
-`%LOCALAPPDATA%\hermes\git`
-`%LOCALAPPDATA%\hermes\hermes-agent`
-`uv pip install`
-`.[all]`
-`[messaging,dashboard,ext]`
-`[messaging]`
-`.`
-`git+https`
-`.env`
-`TELEGRAM_BOT_TOKEN`
-`DISCORD_BOT_TOKEN`
-`SLACK_BOT_TOKEN`
-`SLACK_APP_TOKEN`
-`WHATSAPP_ENABLED`
-`python -m ensurepip --upgrade`
-`pip install`
-`HERMES_GIT_BASH_PATH`
-`bash.exe`
-`%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts`
-`HERMES_HOME=%LOCALAPPDATA%\hermes`
-`hermes`
-`hermes setup`
-`-SkipSetup`
-
-On Windows, per-tool API key setup (Firecrawl, FAL, Browser Use, OpenAI TTS) is the highest-friction part of getting a useful agent. ANous Portalsubscription covers the modelandall of those tools through one OAuth login. After the installer finishes, runhermes setup --portalto wire everything up.
-
-[Nous Portal](/docs/user-guide/features/tool-gateway)
-`hermes setup --portal`
-
-## Feature matrix​
-
-Everything except the dashboard's embedded terminal pane runs natively on Windows.
-
-| Feature | Native Windows | WSL2 |
+| ویژگی | Windows بومی | WSL2 |
 | --- | --- | --- |
-| CLI (hermes chat,hermes setup,hermes gateway, …) | ✓ | ✓ |
-| Interactive TUI (hermes --tui) | ✓ | ✓ |
-| Messaging gateway (Telegram, Discord, Slack, WhatsApp, 15+ platforms) | ✓ | ✓ |
-| Cron scheduler | ✓ | ✓ |
-| Browser tool (Chromium via Node) | ✓ | ✓ |
-| MCP servers (stdio and HTTP) | ✓ | ✓ |
-| Local Ollama / LM Studio / llama-server | ✓ | ✓ (via WSL networking) |
-| Web dashboard (sessions, jobs, metrics, config) | ✓ | ✓ |
-| Dashboard/chatembedded terminal pane | ✗ (needs POSIX PTY) | ✓ |
-| Auto-start at login | ✓ (schtasks) | ✓ (systemd) |
+| CLI (`hermes chat`، `hermes setup`، `hermes gateway` و غیره) | ✓ | ✓ |
+| TUI تعاملی (`hermes --tui`) | ✓ | ✓ |
+| Gateway پیام‌رسانی (Telegram، Discord، Slack، WhatsApp، ۱۵+ پلتفرم) | ✓ | ✓ |
+| زمان‌بند Cron | ✓ | ✓ |
+| ابزار مرورگر (Chromium از طریق Node) | ✓ | ✓ |
+| سرورهای MCP (stdio و HTTP) | ✓ | ✓ |
+| Ollama محلی / LM Studio / llama-server | ✓ | ✓ (از طریق شبکه WSL) |
+| داشبورد وب (sessionها، jobها، معیارها، پیکربندی) | ✓ | ✓ |
+| ترمinal تعبیه‌شده داشبورد/چت | ✗ (نیاز به POSIX PTY) | ✓ |
+| شروع خودکار هنگام login | ✓ (schtasks) | ✓ (systemd) |
 
-`hermes chat`
-`hermes setup`
-`hermes gateway`
-`hermes --tui`
-`/chat`
+تب `/chat` داشبورد یک ترمinal واقعی از طریق POSIX PTY (ptyprocess) درج می‌کند. Windows بومی معادل بومی ندارد؛ `pywinpty`/Windows ConPTY Python کار می‌کند ولی پیاده‌سازی جداگانه است — به عنوان کار آینده در نظر بگیرید. بقیه داشبورد به طور بومی اجرا می‌شود — فقط آن یک تب بنر «برای این WSL2 استفاده کنید» نشان می‌دهد.
 
-The dashboard's/chattab embeds a real terminal via a POSIX PTY (ptyprocess). Native Windows has no equivalent primitive; Python'spywinpty/ Windows ConPTY would work but is a separate implementation — treat as future work.The rest of the dashboard works natively— only that one tab shows a "use WSL2 for this" banner.
+## نحوه اجرای فرمان‌های shell توسط Hermes در Windows
 
-`/chat`
-`ptyprocess`
-`pywinpty`
+ابزار ترمinal Hermes فرمان‌ها را از طریق Git Bash اجرا می‌کند، همان استراتژی‌ای که Claude Code استفاده می‌کند.
 
-## How Hermes runs shell commands on Windows​
+ترتیب رفع `bash.exe`:
 
-Hermes's terminal tool runs commands throughGit Bash, same strategy Claude Code uses. This sidesteps the POSIX-vs-Windows gap without rewriting every tool.
+1. متغیر محیطی `HERMES_GIT_BASH_PATH` اگر تنظیم شده باشد.
+2. `%LOCALAPPDATA%\hermes\git\usr\bin\bash.exe` (PortableGit مدیریت‌شده توسط نصب‌کننده).
+3. `%LOCALAPPDATA%\hermes\git\bin\bash.exe` (چیدمان قدیمی‌تر Git-for-Windows).
+4. نصب سیستمی Git-for-Windows (`%ProgramFiles%\Git\bin\bash.exe` و غیره).
+5. MSYS2، Cygwin یا هر `bash.exe` در PATH به عنوان آخرین تلاش.
 
-Resolution order forbash.exe:
+نصب‌کننده `HERMES_GIT_BASH_PATH` را به طور صریح تنظیم می‌کند تا sessionهای PowerShell جدید نیازی به کشف مجدد نداشته باشند.
 
-`bash.exe`
-1. HERMES_GIT_BASH_PATHenvironment variable if set.
-2. %LOCALAPPDATA%\hermes\git\usr\bin\bash.exe(installer-managed PortableGit).
-3. %LOCALAPPDATA%\hermes\git\bin\bash.exe(older Git-for-Windows layout).
-4. System Git-for-Windows install (%ProgramFiles%\Git\bin\bash.exe, etc.).
-5. MSYS2, Cygwin, or anybash.exeon PATH as a last resort.
+**تله:** چیدمان MinGit با نصب‌کننده کامل Git-for-Windows متفاوت است — bash در `usr\bin\bash.exe` زندگی می‌کند، نه `bin\bash.exe`. Hermes هر دو را بررسی می‌کند. اگر آرشیو MinGit را به صورت دستی باز می‌کنید، مطمئن شوید نوع `non-busybox` (`MinGit-*-64-bit.zip`، نه `MinGit-*-busybox*.zip`) را انتخاب می‌کنید — بیلد‌های busybox به جای `bash`، `ash` ارائه می‌دهند و بیشتر coreutilsها موجود نیستند.
 
-`HERMES_GIT_BASH_PATH`
-`%LOCALAPPDATA%\hermes\git\usr\bin\bash.exe`
-`%LOCALAPPDATA%\hermes\git\bin\bash.exe`
-`%ProgramFiles%\Git\bin\bash.exe`
-`bash.exe`
+## کنسول UTF-8 در Windows
 
-The installer setsHERMES_GIT_BASH_PATHexplicitly so fresh PowerShell sessions don't have to re-discover. Override it if you want Hermes to use a specific bash — for example, your system Git Bash or a WSL-hosted bash via a symlink.
+stdio پیش‌فرض Python در Windows از صفحه کد فعال کنسول (معمولاً `cp1252` یا `cp437`) استفاده می‌کند. بنر Hermes، لیست فرمان‌های اسلش، فید ابزار، پنل‌های Rich و توضیحات skill همه شامل Unicode هستند. بدون مداخله، هر کدام با `UnicodeEncodeError: 'charmap' codec can't encode character…` خراب می‌شوند.
 
-`HERMES_GIT_BASH_PATH`
+راه‌حل در `hermes_cli/stdio.py::configure_windows_stdio()` است، که در هر entry point در ابتدای کار فراخوانی می‌شود.
 
-Pitfall:MinGit's layout is different from the full Git-for-Windows installer — bash lives underusr\bin\bash.exe, notbin\bash.exe. Hermes checks both. If you're manually unpacking a MinGit zip, make sure you pick thenon-busyboxvariant (MinGit-*-64-bit.zip, notMinGit-*-busybox*.zip) — busybox builds shipashinstead ofbashand most coreutils are missing.
+## ویرایشگر (Ctrl-X Ctrl-E، /edit)
 
-`usr\bin\bash.exe`
-`bin\bash.exe`
-`MinGit-*-64-bit.zip`
-`MinGit-*-busybox*.zip`
-`ash`
-`bash`
+قبل از #21561، فشار `Ctrl-X Ctrl-E` یا تایپ `/edit` در Windows بی‌صدا هیچ کاری انجام نمی‌داد. prompt_toolkit یک لیست fallback مطلق POSIX ثابت‌شده دارد که در Windows هرگز حل نمی‌شود.
 
-## UTF-8 console on Windows​
+ویرایشگر stdio shim Windows Hermes اکنون `EDITOR=notepad` را به عنوان پیش‌فرض تنظیم می‌کند. Notepad در هر نصب Windows موجود است و به عنوان ویرایشگر blocking عمل می‌کند.
 
-Python's default stdio on Windows uses the console's active code page (usually cp1252 or cp437). Hermes's banner, slash-command list, tool feed, Rich panels, and skill descriptions all contain Unicode. Without intervention, any of that crashes withUnicodeEncodeError: 'charmap' codec can't encode character….
+بازنویسی‌های کاربر همچنان اولویت دارند (قبل از `setdefault` بررسی می‌شوند):
 
-`UnicodeEncodeError: 'charmap' codec can't encode character…`
-
-The fix is inhermes_cli/stdio.py::configure_windows_stdio(), called early in every entry point (cli.py::main,hermes_cli/main.py::main,gateway/run.py::main). It:
-
-`hermes_cli/stdio.py::configure_windows_stdio()`
-`cli.py::main`
-`hermes_cli/main.py::main`
-`gateway/run.py::main`
-1. Flips the console code page to CP_UTF8 (65001) viakernel32.SetConsoleCP/SetConsoleOutputCP.
-2. Reconfiguressys.stdout/sys.stderr/sys.stdinto UTF-8 witherrors='replace'.
-3. SetsPYTHONIOENCODING=utf-8andPYTHONUTF8=1(viasetdefault, so explicit user values win) so child Python subprocesses inherit UTF-8.
-4. SetsEDITOR=notepadif neitherEDITORnorVISUALis set (see the Editor section below).
-
-`kernel32.SetConsoleCP`
-`SetConsoleOutputCP`
-`sys.stdout`
-`sys.stderr`
-`sys.stdin`
-`errors='replace'`
-`PYTHONIOENCODING=utf-8`
-`PYTHONUTF8=1`
-`setdefault`
-`EDITOR=notepad`
-`EDITOR`
-`VISUAL`
-
-Idempotent. No-op on non-Windows.
-
-Opt out:HERMES_DISABLE_WINDOWS_UTF8=1in the environment falls back to the legacy cp1252 stdio path. Useful for bisecting an encoding bug; unlikely to be the right setting in normal operation.
-
-`HERMES_DISABLE_WINDOWS_UTF8=1`
-
-## The editor (Ctrl-X Ctrl-E,/edit)​
-
-`Ctrl-X Ctrl-E`
-`/edit`
-
-Pre-#21561, pressingCtrl-X Ctrl-Eor typing/editsilently did nothing on Windows. prompt_toolkit has a hardcoded POSIX-absolute fallback list (/usr/bin/nano,/usr/bin/pico,/usr/bin/vi, …) that never resolves on Windows — even with full Git for Windows installed.
-
-`Ctrl-X Ctrl-E`
-`/edit`
-`/usr/bin/nano`
-`/usr/bin/pico`
-`/usr/bin/vi`
-
-Hermes's Windows stdio shim now setsEDITOR=notepadas a default. Notepad ships with every Windows install and works as a blocking editor —subprocess.call(["notepad", file])blocks until the window closes.
-
-`EDITOR=notepad`
-`subprocess.call(["notepad", file])`
-
-User overrides still win(they're checked before the setdefault):
-
-| Editor | PowerShell command |
+| ویرایشگر | فرمان PowerShell |
 | --- | --- |
-| VS Code | $env:EDITOR = "code --wait" |
-| Notepad++ | $env:EDITOR = "'C:\Program Files\Notepad++\notepad++.exe' -multiInst -nosession" |
-| Neovim | $env:EDITOR = "nvim" |
-| Helix | $env:EDITOR = "hx" |
+| VS Code | `$env:EDITOR = "code --wait"` |
+| Notepad++ | `$env:EDITOR = "'C:\Program Files\Notepad++\notepad++.exe' -multiInst -nosession"` |
+| Neovim | `$env:EDITOR = "nvim"` |
+| Helix | `$env:EDITOR = "hx"` |
 
-`$env:EDITOR = "code --wait"`
-`$env:EDITOR = "'C:\Program Files\Notepad++\notepad++.exe' -multiInst -nosession"`
-`$env:EDITOR = "nvim"`
-`$env:EDITOR = "hx"`
+پرچم `--wait` در VS Code حیاتی است — بدون آن ویرایشگر فوراً برمی‌گردد و Hermes یک بافر خالی دریافت می‌کند.
 
-The--waitflag on VS Code is critical — without it the editor returns immediately and Hermes gets a blank buffer back.
+## Ctrl+Enter برای خط جدید در CLI
 
-`--wait`
+Windows Terminal `Ctrl+Enter` را به عنوان توالی کلید اختصاصی عبور می‌دهد. Hermes آن را به «درج خط جدید» bind می‌کند تا بتوانید پرامپت‌های چندخطی در CLI ترکیب کنید بدون بازگشت به Escape سپس Enter.
 
-Set it permanently in your PowerShell profile:
+## اجرای gateway هنگام login Windows
 
-```
-# In $PROFILE$env:EDITOR = "code --wait"
-```
+`hermes gateway install` در Windows از Scheduled Tasks با fallback پوشه Startup استفاده می‌کند — نیازی به admin نیست.
 
-Or as a User environment variable in System Settings so every new shell picks it up.
+### نصب
 
-## Ctrl+Enterfor newline in the CLI​
-
-`Ctrl+Enter`
-
-Windows Terminal passesCtrl+Enterthrough as a dedicated key sequence. Hermes binds it to "insert newline" so you can compose multi-line prompts in the CLI without falling back toEsc-then-Enter. Works in Windows Terminal, VS Code integrated terminal, and any modern Windows console host that honors VT escape sequences.
-
-`Ctrl+Enter`
-`Esc`
-`Enter`
-
-On legacycmd.execonsolesCtrl+Entercollapses to plainEnter— useEsc Enterinstead, or upgrade to Windows Terminal (it's free and installed by default on Windows 11).
-
-`cmd.exe`
-`Ctrl+Enter`
-`Enter`
-`Esc Enter`
-
-## Running the gateway at Windows login​
-
-hermes gateway installon Windows usesScheduled Taskswith a Startup-folder fallback — no admin required.
-
-`hermes gateway install`
-
-### Install​
-
-```
+```bash
 hermes gateway install
 ```
 
-What happens under the hood:
+زیر پوشش چه اتفاقی می‌افتد:
 
-1. schtasks /Create /SC ONLOGON /RL LIMITED /TN HermesGateway— registers a task that runs at your login with standard (non-elevated) permissions. No UAC prompt.
-2. If schtasks is blocked by group policy, falls back to writing astart /min cmd.exe /d /c <wrapper>shortcut into%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup. Same effect, slightly cruder.
-3. Spawns the gatewaydetached viapythonw.exe— notpython.exe.pythonw.exehas no console attached, which immunizes it againstCTRL_C_EVENTbroadcasts from sibling processes (a real issue that used to kill the gateway when you Ctrl+C'd anything in the same process group).
+1. `schtasks /Create /SC ONLOGON /RL LIMITED /TN HermesGateway` — یک task ثبت می‌کند که با مجوزهای استاندارد (غیر ارتقاء یافته) هنگام login شما اجرا می‌شود.
+2. اگر `schtasks` توسط group policy مسدود شده باشد، یک میانبر `start /min cmd.exe /d /c <wrapper>` در `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup` می‌نویسد.
+3. gateway را جدا از طریق `pythonw.exe` ایجاد می‌کند — نه `python.exe`.
 
-`schtasks /Create /SC ONLOGON /RL LIMITED /TN HermesGateway`
-`start /min cmd.exe /d /c <wrapper>`
-`%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`
-`pythonw.exe`
-`python.exe`
-`pythonw.exe`
-`CTRL_C_EVENT`
+### مدیریت
 
-Flags used when spawning:DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB.
-
-`DETACHED_PROCESS | CREATE_NEW_PROCESS_GROUP | CREATE_NO_WINDOW | CREATE_BREAKAWAY_FROM_JOB`
-
-### Manage​
-
-```
-hermes gateway status      # Merged view: schtasks + Startup folder + running PIDhermes gateway start       # Starts the scheduled task nowhermes gateway stop        # Graceful SIGTERM equivalent (TerminateProcess via psutil)hermes gateway restarthermes gateway uninstall   # Removes schtasks entry, Startup shortcut, pid file
+```bash
+hermes gateway status      # نمای ادغام‌شده
+hermes gateway start       # task زمان‌بندی‌شده را الان شروع کنید
+hermes gateway stop        # معادل SIGTERM مودبانه
+hermes gateway restart
+hermes gateway uninstall   # entry schtasks، میانبر Startup، فایل pid را حذف می‌کند
 ```
 
-hermes gateway statusis idempotent — call it a thousand times in a row and it will never accidentally kill the gateway. (Pre-PR #21561 it silently did, viaos.kill(pid, 0)colliding withCTRL_C_EVENTat the C level — see "process management internals" below if you care about the story.)
+### چرا یک Windows Service نه؟
 
-`hermes gateway status`
-`os.kill(pid, 0)`
-`CTRL_C_EVENT`
+سرویس‌ها نیاز به حقوق admin برای نصب دارند و چرخه حیات gateway را به بوت ماشین متصل می‌کنند، نه login کاربر. کاربر معمولی Hermes می‌خواهد: login → gateway موجود، logout → gateway رفته. Scheduled Tasks دقیقاً همین کار را بدون ارتقاء انجام می‌دهند.
 
-### Why not a Windows Service?​
+## چیدمان داده
 
-Services require admin rights to install and tie the gateway's lifecycle to machine boot, not user login. The typical Hermes user wants: log in → gateway available, log out → gateway gone. Scheduled Tasks do exactly that without elevation. If you genuinely want a service, usenssmorsc createmanually — but you probably don't.
-
-`nssm`
-`sc create`
-
-## Data layout​
-
-| Path | Contents |
+| مسیر | محتوا |
 | --- | --- |
-| %LOCALAPPDATA%\hermes\hermes-agent\ | Git checkout + venv.venv\Scripts\hermes.exeis the command added to User PATH. Safe toRemove-Item -Recurseand reinstall. |
-| %LOCALAPPDATA%\hermes\git\ | PortableGit (only if the installer provisioned it). |
-| %LOCALAPPDATA%\hermes\node\ | Portable Node.js (only if the installer provisioned it). |
-| %LOCALAPPDATA%\hermes\bin\ | Hermes's manageduv.exe(the Python manager it uses for updates). |
-| %LOCALAPPDATA%\hermes\(root) | Your config, auth, skills, sessions, logs (config.yaml,.env,skills\,sessions\,logs\, …).Survives reinstalls. |
+| `%LOCALAPPDATA%\hermes\hermes-agent\` | Git checkout + venv. `venv\Scripts\hermes.exe` فرمان اضافه‌شده به User PATH است. |
+| `%LOCALAPPDATA%\hermes\git\` | PortableGit (فقط اگر نصب‌کننده تأمین کرده باشد). |
+| `%LOCALAPPDATA%\hermes\node\` | Node.js پرتابل (فقط اگر نصب‌کننده تأمین کرده باشد). |
+| `%LOCALAPPDATA%\hermes\bin\` | `uv.exe` مدیریت‌شده Hermes. |
+| `%LOCALAPPDATA%\hermes\` (ریشه) | پیکربندی، احراز هویت، skillها، sessionها، لاگ‌ها. از نصب‌های مجدد زنده می‌ماند. |
 
-`%LOCALAPPDATA%\hermes\hermes-agent\`
-`venv\Scripts\hermes.exe`
-`Remove-Item -Recurse`
-`%LOCALAPPDATA%\hermes\git\`
-`%LOCALAPPDATA%\hermes\node\`
-`%LOCALAPPDATA%\hermes\bin\`
-`uv.exe`
-`%LOCALAPPDATA%\hermes\`
-`config.yaml`
-`.env`
-`skills\`
-`sessions\`
-`logs\`
+در Windows بومی نصب‌کننده `HERMES_HOME=%LOCALAPPDATA%\hermes` را تنظیم می‌کند. فقط زیردایرکتوری `hermes-agent\` را حذف کنید، نه کل `%LOCALAPPDATA%\hermes` را.
 
-On native Windows the installer setsHERMES_HOME=%LOCALAPPDATA%\hermes, so your data and the disposable install live under thesame%LOCALAPPDATA%\hermesroot: the install/runtime is thehermes-agent\,git\,node\, andbin\subdirectories, while your data files sit directly in%LOCALAPPDATA%\hermes. Reinstalling only replaces thehermes-agent\checkout, so your data survives — but because the two share a root,don'tRemove-Item -Recurse %LOCALAPPDATA%\hermesif you want to keep your data; delete thehermes-agent\subdirectory instead. Your data directory is identical in shape to a Linux~/.hermes, so you can mirror it between machines.
+## ابزار مرورگر
 
-`HERMES_HOME=%LOCALAPPDATA%\hermes`
-`%LOCALAPPDATA%\hermes`
-`hermes-agent\`
-`git\`
-`node\`
-`bin\`
-`%LOCALAPPDATA%\hermes`
-`hermes-agent\`
-`Remove-Item -Recurse %LOCALAPPDATA%\hermes`
-`hermes-agent\`
-`~/.hermes`
+ابزار مرورگر از `agent-browser` (یک کمک Node) برای هدایت Chromium استفاده می‌کند. Playwright Chromium در اولین اجرا به طور خودکار نصب می‌شود (`npx playwright install chromium`). اگر نصب ناموفق باشد، `hermes doctor` آن را با راهنمای تعمیر نشان می‌دهد.
 
-OverrideHERMES_HOME:set the environment variable to point at a different data dir (e.g.%USERPROFILE%\.hermesto match a Linux/WSL layout). Works the same as on Linux.
+## اجرا کردن Hermes در Windows — نکات عملی
 
-`HERMES_HOME`
-`%USERPROFILE%\.hermes`
+### PATH بعد از نصب
 
-## Browser tool​
+نصب‌کننده `%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` را از طریق `[Environment]::SetEnvironmentVariable` به User PATH اضافه می‌کند. ترمinal‌های موجود این را دریافت نمی‌کنند — بعد از نصب یک پنجره PowerShell جدید (یا تب Windows Terminal) باز کنید.
 
-The browser tool usesagent-browser(a Node helper) to drive Chromium. On Windows:
-
-`agent-browser`
-- The installer putsagent-browseron PATH via npm.
-- shutil.which("agent-browser", path=...)picks up the.cmdshim automatically —CreateProcessWcan't execute an extensionless shebang, so Hermes always resolves to the.CMDwrapper. Don't manually invoke the shebang script; always go through the.cmd.
-- Playwright Chromium is auto-installed on first run (npx playwright install chromium). If installation fails,hermes doctorsurfaces it with a fix-it hint.
-
-`agent-browser`
-`shutil.which("agent-browser", path=...)`
-`.cmd`
-`CreateProcessW`
-`.CMD`
-`.cmd`
-`npx playwright install chromium`
-`hermes doctor`
-
-## Running Hermes on Windows — practical notes​
-
-### PATH after install​
-
-The installer adds%LOCALAPPDATA%\hermes\hermes-agent\venv\Scriptsto yourUser PATHvia[Environment]::SetEnvironmentVariable. Existing terminals don't pick this up — open a new PowerShell window (or Windows Terminal tab) after installation. Close-and-reopen, don't$env:PATH += …by hand unless you know what you're doing.
-
-`%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts`
-`[Environment]::SetEnvironmentVariable`
-`$env:PATH += …`
-
-Verify:
-
-```
-Get-Command hermes        # should print C:\Users\<you>\AppData\Local\hermes\hermes-agent\venv\Scripts\hermes.exehermes --version
+```powershell
+Get-Command hermes        # باید C:\Users\<you>\AppData\Local\hermes\hermes-agent\venv\Scripts\hermes.exe را چاپ کند
+hermes --version
 ```
 
-### Environment variables​
+### متغیرهای محیطی
 
-Hermes honors both$env:X(process-scope) and User environment variables (permanent, set in System Properties → Environment Variables). Setting API keys in%LOCALAPPDATA%\hermes\.env(yourHERMES_HOME) is the normal path — same as Linux:
+Hermes هم `$env:X` (محدوده فرآیند) و هم متغیرهای محیطی User (دائمی) را رعایت می‌کند. تنظیم کلیدهای API در `%LOCALAPPDATA%\hermes\.env` (`HERMES_HOME` شما) مسیر عادی است — مانند Linux.
 
-`$env:X`
-`%LOCALAPPDATA%\hermes\.env`
-`HERMES_HOME`
+## حذف
 
-```
-OPENROUTER_API_KEY=sk-or-...TELEGRAM_BOT_TOKEN=...
-```
+از PowerShell:
 
-Don't put secrets in User environment variables unless you specifically want every Windows process to see them (it isn't what you want).
-
-### Windows-specific env vars​
-
-These only affect native Windows installs:
-
-| Variable | Effect |
-| --- | --- |
-| HERMES_GIT_BASH_PATH | Override bash.exe discovery. Point at any bash — full Git-for-Windows, WSL bash via symlink, MSYS2, Cygwin. The installer sets this automatically. |
-| HERMES_DISABLE_WINDOWS_UTF8 | Set to1to disable the UTF-8 stdio shim and fall back to the locale code page. Useful for bisecting an encoding bug. |
-| EDITOR/VISUAL | Your editor for/editandCtrl-X Ctrl-E. Hermes defaults tonotepadif both are unset. |
-
-`HERMES_GIT_BASH_PATH`
-`HERMES_DISABLE_WINDOWS_UTF8`
-`1`
-`EDITOR`
-`VISUAL`
-`/edit`
-`Ctrl-X Ctrl-E`
-`notepad`
-
-## Uninstall​
-
-From PowerShell:
-
-```
+```bash
 hermes uninstall
 ```
 
-That's the clean path — removes the schtasks entry, Startup folder shortcut,hermes.cmdshim, deletes%LOCALAPPDATA%\hermes\hermes-agent\, and trims the User PATH. It leaves the rest of%LOCALAPPDATA%\hermes\alone (your config, auth, skills, sessions, logs) in case you're reinstalling.
+مسیر تمیز است — entry schtasks، میانبر پوشه Startup، میانبر `hermes.cmd`، `%LOCALAPPDATA%\hermes\hermes-agent\` را حذف و User PATH را کوتاه می‌کند. بقیه `%LOCALAPPDATA%\hermes\` را دست نخورده باقی می‌گذارد (پیکربندی، احراز هویت، skillها، sessionها، لاگ‌ها).
 
-`hermes.cmd`
-`%LOCALAPPDATA%\hermes\hermes-agent\`
-`%LOCALAPPDATA%\hermes\`
+برای حذف همه چیز:
 
-To nuke everything:
-
+```powershell
+hermes uninstall
+Remove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"
+# همچنین دایرکتوری داده CLI/WSL قدیمی را اگر قبلاً استفاده کرده‌اید حذف کنید:
+Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
 ```
-hermes uninstallRemove-Item -Recurse -Force "$env:LOCALAPPDATA\hermes"# Also remove a legacy CLI/WSL data dir if you ever used one:Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
-```
 
-Thehermes uninstallCLI subcommand also handles the case where the schtasks entry was registered under a different task name (older installs) — it searches by install path rather than by hardcoded task name.
+## مدیریت فرآیند داخلی
 
-`hermes uninstall`
+این مطالب پس‌زمینه است — مگر اینکه در حال دیباگ یک عجیبی «خودش را می‌کشد» باشید، رد کنید.
 
-## Process management internals​
+در Linux و macOS، اصطلاح POSIX `os.kill(pid, 0)` یک بررسی مجوز بدون عمل است. در Windows، `os.kill` Python `sig=0` را به `CTRL_C_EVENT` نگاشت می‌کند — در مقدار عددی ۰ تداخل دارند — و آن را از طریق `GenerateConsoleCtrlEvent(0, pid)` مسیریابی می‌کند.
 
-This is background material — skip unless you're debugging an "it's killing itself" weirdness.
+نتیجه: هر مسیر کدی که «بررسی کن آیا این PID زنده است» را از طریق `os.kill(pid, 0)` در Windows می‌گفت بی‌صدا هدف را می‌کشت. Hermes هر چنین سایتی را به `gateway.status._pid_exists()` مهاجرت داده که از `psutil.pid_exists()` استفاده می‌کند.
 
-On Linux and macOS, the POSIX idiomos.kill(pid, 0)is a no-op permission check: "is this PID alive and can I signal it?" On Windows, Python'sos.killmapssig=0toCTRL_C_EVENT— they collide at integer value 0 — and routes it throughGenerateConsoleCtrlEvent(0, pid), which broadcasts Ctrl+C to theentire console process groupcontaining the target PID. That'sbpo-14484, open since 2012. It won't be fixed because changing it would break scripts that depend on the current behavior.
+## مشکلات رایج
 
-`os.kill(pid, 0)`
-`os.kill`
-`sig=0`
-`CTRL_C_EVENT`
-`GenerateConsoleCtrlEvent(0, pid)`
-[bpo-14484](https://bugs.python.org/issue14484)
+- **`hermes: command not found`** بعد از نصب — یک پنجره PowerShell جدید باز کنید.
+- **`WinError 193: %1 is not a valid Win32 application`** — فراخوانی اسکریپت shebang از `.cmd` shim عبور کرد. از نسخه `.cmd` استفاده کنید (مثلاً `npx.cmd` نه `npx`).
+- **`[scriptblock]::Create(...)` با `The assignment expression is not valid` ناموفق است** — دانلود `install.ps1` شما UTF-8 BOM دریافت کرد. با فرم ساده `irm | iex` دوباره اجرا کنید.
+- **Gateway بعد از restart نمی‌ماند** — `hermes gateway status` را بررسی کنید. اگر `schtasks` ثبت شده ولی در حال اجرا نیست، group policy ممکن است triggerهای `ONLOGON` را مسدود کرده باشد.
+- **ابزار مرورگر راه‌اندازی می‌شود ولی ابزارها timeout می‌خورند** — Chromium در اولین اجرا به طور خودکار نصب می‌شود. اگر نصب ناموفق بوده، `hermes doctor` را اجرا کنید.
+- **کاراکترهای چینی/ژاپنی/عربی به صورت `?` در CLI نشان داده می‌شوند** — shim UTF-8 stdio فعال نشده. `HERMES_DISABLE_WINDOWS_UTF8` تنظیم نشده باشد.
 
-Consequence: any codepath that said "check if this PID is alive" viaos.kill(pid, 0)on Windows was silently killing the target. Hermes migrated every such site (14 across 11 files) togateway.status._pid_exists(), which usespsutil.pid_exists()(which in turn usesOpenProcess + GetExitCodeProcesson Windows — no signals). If you're writing a plugin or patch, usepsutil.pid_exists()directly orgateway.status._pid_exists()— neveros.kill(pid, 0).
+## قدم بعدی
 
-`os.kill(pid, 0)`
-`gateway.status._pid_exists()`
-`psutil.pid_exists()`
-`OpenProcess + GetExitCodeProcess`
-`psutil.pid_exists()`
-`gateway.status._pid_exists()`
-`os.kill(pid, 0)`
+- [نصب](/docs/getting-started/installation) — صفحه نصب کامل
+- [راهنمای Windows (WSL2)](/docs/user-guide/windows-wsl-quickstart) — اگر معنای POSIX یا ترمinal داشبورد می‌خواهید
+- [مرجع CLI](/docs/reference/cli-commands) — هر زیرفرمان `hermes`
+- [FAQ](/docs/reference/faq) — سوالات رایج غیرمختص Windows
+- [Gateway پیام‌رسانی](/docs/user-guide/messaging/) — اجرای Telegram/Discord/Slack در Windows
 
-scripts/check-windows-footguns.pyenforces this in CI: any newos.kill(pid, 0)call fails theWindows footguns (blocking)check unless the line carries a# windows-footgun: ok — <reason>marker.
-
-`scripts/check-windows-footguns.py`
-`os.kill(pid, 0)`
-`Windows footguns (blocking)`
-`# windows-footgun: ok — <reason>`
-
-## Common pitfalls​
-
-hermes: command not foundright after install.Open a new PowerShell window. The installer added%LOCALAPPDATA%\hermes\binto User PATH, but existing shells need to be restarted to pick it up. In the meantime you can run& "$env:LOCALAPPDATA\hermes\bin\hermes.cmd".
-
-`hermes: command not found`
-`%LOCALAPPDATA%\hermes\bin`
-`& "$env:LOCALAPPDATA\hermes\bin\hermes.cmd"`
-
-WinError 193: %1 is not a valid Win32 applicationwhen running a tool.You hit a shebang-script invocation that bypassed the.cmdshim. Hermes resolves commands throughshutil.which(cmd, path=local_bin)so PATHEXT picks up.CMD— if you're invoking the tool via a hardcoded path instead, switch to the.cmdvariant (e.g.,npx.cmd, notnpx).
-
-`WinError 193: %1 is not a valid Win32 application`
-`.cmd`
-`shutil.which(cmd, path=local_bin)`
-`.CMD`
-`.cmd`
-`npx.cmd`
-`npx`
-
-[scriptblock]::Create(...)fails withThe assignment expression is not valid.Your download ofinstall.ps1picked up a UTF-8 BOM. Theirm | iexform strips BOMs automatically;[scriptblock]::Create((irm ...))does not. Re-run with the simpleirm | iexform, or download the script manually and save it without a BOM via[IO.File]::WriteAllText($path, $text, (New-Object Text.UTF8Encoding $false)).
-
-`[scriptblock]::Create(...)`
-`The assignment expression is not valid`
-`install.ps1`
-`irm | iex`
-`[scriptblock]::Create((irm ...))`
-`irm | iex`
-`[IO.File]::WriteAllText($path, $text, (New-Object Text.UTF8Encoding $false))`
-
-Gateway won't stay running after restart.Checkhermes gateway status— it merges the schtasks entry, the Startup-folder shortcut (if used), and the live PID. If schtasks is registered but not running, group policy may be blockingONLOGONtriggers. Runschtasks /Query /TN HermesGateway /V /FO LISTto see the task's failure reason, or fall back to the Startup-folder path by uninstalling and reinstalling withHERMES_GATEWAY_FORCE_STARTUP=1.
-
-`hermes gateway status`
-`ONLOGON`
-`schtasks /Query /TN HermesGateway /V /FO LIST`
-`HERMES_GATEWAY_FORCE_STARTUP=1`
-
-/editstill does nothing after setting$env:EDITOR.You set it in the current process only; close and reopen the shell, or set it at User scope in System Properties → Environment Variables. Verify withecho $env:EDITORin a new PowerShell window.
-
-`/edit`
-`$env:EDITOR`
-`echo $env:EDITOR`
-
-Browser tool launches but tools time out.Chromium is auto-installed on first run. If the install failed (rate-limited GitHub, Playwright CDN hiccup), runhermes doctor— it will surface the missing Chromium and print the exactnpx playwright install chromiumcommand to fix it.
-
-`hermes doctor`
-`npx playwright install chromium`
-
-agent-browserfails with a weird Node version error.The installer provisions Node 22 at%LOCALAPPDATA%\hermes\nodebut your PATH may have an older system Node 18 first. Either move Hermes's node dir earlier on PATH, or delete the system install if you don't use Node elsewhere.
-
-`agent-browser`
-`%LOCALAPPDATA%\hermes\node`
-
-Chinese / Japanese / Arabic characters show as?in the CLI.The UTF-8 stdio shim didn't activate. Check thatHERMES_DISABLE_WINDOWS_UTF8is NOT set (Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8). If it's empty and you still see?, the console host (very oldcmd.exe) may not support UTF-8 at all — switch to Windows Terminal.
-
-`?`
-`HERMES_DISABLE_WINDOWS_UTF8`
-`Get-ChildItem env:HERMES_DISABLE_WINDOWS_UTF8`
-`?`
-`cmd.exe`
-
-Gateway can't send Telegram photos — "BadRequest: payload contains invalid characters".This is unrelated to Windows but sometimes surfaces first there. Usually it means your file path contains unescaped backslashes in a JSON body. Telegram should be receiving paths Hermes normalizes, not raw Windows paths — if you're seeing this inside a custom plugin, make sure you're passing the Hermes-provided path, notstr(Path(...))from user input.
-
-`BadRequest: payload contains invalid characters`
-`str(Path(...))`
-
-"Works on my other machine" encoding weirdness aftergit pull.If you edited Hermes config or a skill on Windows using a non-UTF-8 editor (Notepad on older Windows versions, some Chinese IMEs), the file may have been saved with a BOM. Hermes toleratesutf-8-sigon most config reads, but a BOM inside a folded YAML scalar (description: >) silently breaks YAML parsing. Re-save the file as plain UTF-8 without BOM.
-
-`git pull`
-`utf-8-sig`
-`description: >`
-
-## Where to go next​
-
-- Installation— the full install page, including Linux/macOS/WSL2/Termux.
-- Windows (WSL2) Guide— if you want POSIX semantics or the dashboard terminal pane.
-- CLI Reference— everyhermessubcommand.
-- FAQ— common non-Windows-specific questions.
-- Messaging Gateway— running Telegram/Discord/Slack on Windows.
-
-[Installation](/docs/getting-started/installation)
-[Windows (WSL2) Guide](/docs/user-guide/windows-wsl-quickstart)
-[CLI Reference](/docs/reference/cli-commands)
-`hermes`
-[FAQ](/docs/reference/faq)
-[Messaging Gateway](/docs/user-guide/messaging/)
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/windows-native.md)

@@ -1,7 +1,7 @@
 ---
 layout: docs
 title: "شخصیت"
-permalink: /user-guide/features/personality/
+permalink: /docs/user-guide/features/personality/
 ---
 
 - 
@@ -9,25 +9,25 @@ permalink: /user-guide/features/personality/
 - Core
 - Personality & SOUL.md
 
-# Personality & SOUL.md
+# شخصیت و SOUL.md
 
-Hermes Agent's personality is fully customizable.SOUL.mdis theprimary identity— it's the first thing in the system prompt and defines who the agent is.
+شخصیت Hermes Agent کاملاً قابل سفارشی‌سازی است. `SOUL.md` هویت اصلی است — اولین چیزی که در system prompt قرار می‌گیرد و تعریف می‌کند agent کیست.
 
 `SOUL.md`
-- SOUL.md— a durable persona file that lives inHERMES_HOMEand serves as the agent's identity (slot #1 in the system prompt)
-- built-in or custom/personalitypresets — session-level system-prompt overlays
+- SOUL.md — یک فایل هویت پایدار که در `HERMES_HOME` زندگی می‌کند و به عنوان هویت agent عمل می‌کند (جایگاه شماره ۱ در system prompt)
+- شخصیت‌های از پیش تعریف‌شده یا سفارشی (`/personality`) — overlayهای سطح نشست در system prompt
 
 `SOUL.md`
 `HERMES_HOME`
 `/personality`
 
-If you want to change who Hermes is — or replace it with an entirely different agent persona — editSOUL.md.
+اگر می‌خواهید هویت Hermes را تغییر دهید — یا آن را با یک شخصیت کاملاً متفاوت جایگزین کنید — `SOUL.md` را ویرایش کنید.
 
 `SOUL.md`
 
-## How SOUL.md works now​
+## نحوه کار SOUL.md در حال حاضر
 
-Hermes now seeds a defaultSOUL.mdautomatically in:
+Hermes در حال حاضر یک `SOUL.md` پیش‌فرض به صورت خودکار در مسیر زیر ایجاد می‌کند:
 
 `SOUL.md`
 
@@ -35,7 +35,7 @@ Hermes now seeds a defaultSOUL.mdautomatically in:
 ~/.hermes/SOUL.md
 ```
 
-More precisely, it uses the current instance'sHERMES_HOME, so if you run Hermes with a custom home directory, it will use:
+دقیق‌تر، از `HERMES_HOME` نمونه فعلی استفاده می‌کند، بنابراین اگر Hermes را با یک دایرکتوری خانه سفارشی اجرا کنید، از مسیر زیر استفاده خواهد کرد:
 
 `HERMES_HOME`
 
@@ -43,16 +43,16 @@ More precisely, it uses the current instance'sHERMES_HOME, so if you run Hermes 
 $HERMES_HOME/SOUL.md
 ```
 
-### Important behavior​
+### رفتار مهم
 
-- SOUL.md is the agent's primary identity.It occupies slot #1 in the system prompt, replacing the hardcoded default identity.
-- Hermes creates a starterSOUL.mdautomatically if one does not exist yet
-- Existing userSOUL.mdfiles are never overwritten
-- Hermes loadsSOUL.mdonly fromHERMES_HOME
-- Hermes does not look in the current working directory forSOUL.md
-- IfSOUL.mdexists but is empty, or cannot be loaded, Hermes falls back to a built-in default identity
-- IfSOUL.mdhas content, that content is injected verbatim after security scanning and truncation
-- SOUL.md isnotduplicated in the context files section — it appears only once, as the identity
+- SOUL.md هویت اصلی agent است. این فایل جایگاه شماره ۱ در system prompt را اشغال می‌کند و هویت پیش‌فرض سخت‌کد شده را جایگزین می‌کند.
+- Hermes در صورت عدم وجود SOUL.md، به صورت خودکار یک فایل شروع ایجاد می‌کند
+- فایل‌های SOUL.md موجود کاربر هرگز بازنویسی نمی‌شوند
+- Hermes فقط از `HERMES_HOME` فایل SOUL.md را بارگذاری می‌کند
+- Hermes در دایرکتوری کاری جاری به دنبال SOUL.md نمی‌گردد
+- اگر SOUL.md وجود داشته باشد اما خالی باشد، یا قابل بارگذاری نباشد، Hermes به هویت پیش‌فرض داخلی بازمی‌گردد
+- اگر SOUL.md دارای محتوا باشد، این محتوا پس از اسکن امنیتی و برش، عیناً تزریق می‌شود
+- SOUL.md در بخش فایل‌های context تکرار نمی‌شود — فقط یک بار به عنوان هویت ظاهر می‌شود
 
 `SOUL.md`
 `SOUL.md`
@@ -62,204 +62,204 @@ $HERMES_HOME/SOUL.md
 `SOUL.md`
 `SOUL.md`
 
-That makesSOUL.mda true per-user or per-instance identity, not just an additive layer.
+این باعث می‌شود SOUL.md یک هویت واقعی به ازای هر کاربر یا هر نمونه باشد، نه فقط یک لایه اضافی.
 
 `SOUL.md`
 
-## Why this design​
+## چرا این طراحی؟
 
-This keeps personality predictable.
+این کار شخصیت را قابل پیش‌بینی نگه می‌دارد.
 
-If Hermes loadedSOUL.mdfrom whatever directory you happened to launch it in, your personality could change unexpectedly between projects. By loading only fromHERMES_HOME, the personality belongs to the Hermes instance itself.
+اگر Hermes فایل SOUL.md را از هر دایرکتوری‌ای که اتفاقاً آن را راه‌اندازی کنید بارگذاری کند، شخصیت شما ممکن است به طور غیرمنتظره بین پروژه‌ها تغییر کند. با بارگذاری فقط از `HERMES_HOME`، شخصیت متعلق به خود نمونه Hermes است.
 
 `SOUL.md`
 `HERMES_HOME`
 
-That also makes it easier to teach users:
+این همچنین آموزش به کاربران را آسان‌تر می‌کند:
 
-- "Edit~/.hermes/SOUL.mdto change Hermes' default personality."
+- "~/.hermes/SOUL.md را ویرایش کنید تا شخصیت پیش‌فرض Hermes را تغییر دهید."
 
 `~/.hermes/SOUL.md`
 
-## Where to edit it​
+## کجا آن را ویرایش کنیم
 
-For most users:
+برای اکثر کاربران:
 
 ```
 ~/.hermes/SOUL.md
 ```
 
-If you use a custom home:
+اگر از یک home سفارشی استفاده می‌کنید:
 
 ```
 $HERMES_HOME/SOUL.md
 ```
 
-## What should go in SOUL.md?​
+## چه چیزی باید در SOUL.md قرار گیرد؟
 
-Use it for durable voice and personality guidance, such as:
+از آن برای راهنمایی‌های دائمی صدا و شخصیت استفاده کنید، مانند:
 
-- tone
-- communication style
-- level of directness
-- default interaction style
-- what to avoid stylistically
-- how Hermes should handle uncertainty, disagreement, or ambiguity
+- لحن
+- سبک ارتباط
+- سطح مستقیم بودن
+- سبک تعامل پیش‌فرض
+- آنچه باید از نظر سبک اجتناب شود
+- نحوه مدیریت عدم قطعیت، اختلاف نظر یا ابهام توسط Hermes
 
-Use it less for:
+از آن کمتر برای موارد زیر استفاده کنید:
 
-- one-off project instructions
-- file paths
-- repo conventions
-- temporary workflow details
+- دستورالعمل‌های پروژه یک‌بار مصرف
+- مسیرهای فایل
+- قراردادهای repo
+- جزئیات موقتی workflow
 
-Those belong inAGENTS.md, notSOUL.md.
+اینها به `AGENTS.md` تعلق دارند، نه `SOUL.md`.
 
 `AGENTS.md`
 `SOUL.md`
 
-## Good SOUL.md content​
+## محتوای خوب SOUL.md
 
-A good SOUL file is:
+یک فایل SOUL خوب:
 
-- stable across contexts
-- broad enough to apply in many conversations
-- specific enough to materially shape the voice
-- focused on communication and identity, not task-specific instructions
+- در سراسر contextها پایدار است
+- به اندازه کافی گسترده است تا در بسیاری از مکالمات اعمال شود
+- به اندازه کافی خاص است تا صدا را به طور مادی شکل دهد
+- بر ارتباطات و هویت متمرکز است، نه دستورالعمل‌های مرتبط با تسک
 
-### Example​
+### مثال
 
 ```
 # PersonalityYou are a pragmatic senior engineer with strong taste.You optimize for truth, clarity, and usefulness over politeness theater.## Style- Be direct without being cold- Prefer substance over filler- Push back when something is a bad idea- Admit uncertainty plainly- Keep explanations compact unless depth is useful## What to avoid- Sycophancy- Hype language- Repeating the user's framing if it's wrong- Overexplaining obvious things## Technical posture- Prefer simple systems over clever systems- Care about operational reality, not idealized architecture- Treat edge cases as part of the design, not cleanup
 ```
 
-## What Hermes injects into the prompt​
+## آنچه Hermes در prompt تزریق می‌کند
 
-SOUL.mdcontent goes directly into slot #1 of the system prompt — the agent identity position. No wrapper language is added around it.
+محتوای SOUL.md مستقیماً به جایگاه شماره ۱ system prompt — موقعیت هویت agent — می‌رود. هیچ زبان بسته‌بندی اطراف آن اضافه نمی‌شود.
 
 `SOUL.md`
 
-The content goes through:
+محتوا از مراحل زیر عبور می‌کند:
 
-- prompt-injection scanning
-- truncation if it is too large
+- اسکن prompt injection
+- برش در صورت بزرگ بودن
 
-If the file is empty, whitespace-only, or cannot be read, Hermes falls back to a built-in default identity ("You are Hermes Agent, an intelligent AI assistant created by Nous Research..."). This fallback also applies whenskip_context_filesis set (e.g., in subagent/delegation contexts).
+اگر فایل خالی باشد، فقط شامل فاصله باشد، یا قابل خواندن نباشد، Hermes به هویت پیش‌فرض داخلی بازمی‌گردد («شما Hermes Agent، یک دستیار هوش مصنوعی هوشمند ساخته شده توسط Nous Research هستید...»). این بازگشت همچنین زمانی اعمال می‌شود که `skip_context_files` تنظیم شده باشد (مثلاً در contextهای subagent/delegation).
 
 `skip_context_files`
 
-## Security scanning​
+## اسکن امنیتی
 
-SOUL.mdis scanned like other context-bearing files for prompt injection patterns before inclusion.
+SOUL.md مانند سایر فایل‌های حاوی context قبل از درج برای الگوهای prompt injection اسکن می‌شود.
 
 `SOUL.md`
 
-That means you should still keep it focused on persona/voice rather than trying to sneak in strange meta-instructions.
+این به این معنی است که همچنان باید آن را بر روی شخصیت/صدا متمرکز نگه دارید و سعی نکنید دستورالعمل‌های عجیب متا را در آن قرار دهید.
 
-## SOUL.md vs AGENTS.md​
+## SOUL.md در مقابل AGENTS.md
 
-This is the most important distinction.
+این مهم‌ترین تمایز است.
 
-### SOUL.md​
+### SOUL.md
 
-Use for:
+برای موارد زیر استفاده کنید:
 
-- identity
-- tone
-- style
-- communication defaults
-- personality-level behavior
+- هویت
+- لحن
+- سبک
+- پیش‌فرض‌های ارتباطی
+- رفتار در سطح شخصیت
 
-### AGENTS.md​
+### AGENTS.md
 
-Use for:
+برای موارد زیر استفاده کنید:
 
-- project architecture
-- coding conventions
-- tool preferences
-- repo-specific workflows
-- commands, ports, paths, deployment notes
+- معماری پروژه
+- قراردادهای کدنویسی
+- ترجیحات ابزار
+- workflowهای خاص repo
+- دستورات، پورت‌ها، مسیرها، یادداشت‌های استقرار
 
-A useful rule:
+یک قانون مفید:
 
-- if it should follow you everywhere, it belongs inSOUL.md
-- if it belongs to a project, it belongs inAGENTS.md
+- اگر باید همه جا همراه شما باشد، به SOUL.md تعلق دارد
+- اگر به یک پروژه تعلق دارد، به AGENTS.md تعلق دارد
 
 `SOUL.md`
 `AGENTS.md`
 
-## SOUL.md vs/personality​
+## SOUL.md در مقابل `/personality`
 
 `/personality`
 
-SOUL.mdis your durable default personality.
+SOUL.md شخصیت پیش‌فرض پایدار شماست.
 
 `SOUL.md`
 
-/personalityis a session-level overlay that changes or supplements the current system prompt.
+`/personality` یک overlay سطح نشست است که system prompt فعلی را تغییر یا تکمیل می‌کند.
 
 `/personality`
 
-So:
+پس:
 
-- SOUL.md= baseline voice
-- /personality= temporary mode switch
+- SOUL.md = صدای پایه
+- `/personality` = تغییر حالت موقت
 
 `SOUL.md`
 `/personality`
 
-Examples:
+مثال‌ها:
 
-- keep a pragmatic default SOUL, then use/personality teacherfor a tutoring conversation
-- keep a concise SOUL, then use/personality creativefor brainstorming
+- یک SOUL پیش‌فرض عملی نگه دارید، سپس از `/personality teacher` برای مکالمه آموزشی استفاده کنید
+- یک SOUL مختصر نگه دارید، سپس از `/personality creative` برای طوفان فکری استفاده کنید
 
 `/personality teacher`
 `/personality creative`
 
-## Built-in personalities​
+## شخصیت‌های داخلی
 
-Hermes ships with built-in personalities you can switch to with/personality.
+Hermes با شخصیت‌های داخلی ارائه می‌شود که می‌توانید با `/personality` به آنها سوئیچ کنید.
 
 `/personality`
 
-| Name | Description |
+| نام | توضیحات |
 | --- | --- |
-| helpful | Friendly, general-purpose assistant |
-| concise | Brief, to-the-point responses |
-| technical | Detailed, accurate technical expert |
-| creative | Innovative, outside-the-box thinking |
-| teacher | Patient educator with clear examples |
-| kawaii | Cute expressions, sparkles, and enthusiasm ★ |
-| catgirl | Neko-chan with cat-like expressions, nya~ |
-| pirate | Captain Hermes, tech-savvy buccaneer |
-| shakespeare | Bardic prose with dramatic flair |
-| surfer | Totally chill bro vibes |
-| noir | Hard-boiled detective narration |
-| uwu | Maximum cute with uwu-speak |
-| philosopher | Deep contemplation on every query |
-| hype | MAXIMUM ENERGY AND ENTHUSIASM!!! |
+| helpful | دستیار دوستانه و همه‌کاره |
+| concise | پاسخ‌های مختصر و مستقیم |
+| technical | متخصص فنی دقیق و مفصل |
+| creative | نوآورانه و خلاقانه |
+| teacher | مربی صبور با مثال‌های واضح |
+| kawaii | بیانات بامزه، درخشش و شور و شوق ★ |
+| catgirl | Neko-chan با بیانات گربه‌ای، nya~ |
+| pirate | کاپیتان هرمس، دزد دریایی فنی |
+| shakespeare | نثر شاعرانه با جذابیت نمایشی |
+| surfer | وibes خونسرد برادرانه |
+| noir | روایت کارآگاه سرسخت |
+| uwu | حداکثر بامزگی با uwu-speak |
+| philosopher | تأمل عمیق در هر پرسش |
+| hype | حداکثر انرژی و شور و شوق!!! |
 
-## Switching personalities with commands​
+## سوئیچ بین شخصیت‌ها با دستورات
 
-### CLI​
+### CLI
 
 ```
 /personality/personality concise/personality technical
 ```
 
-### Messaging platforms​
+### پلتفرم‌های پیام‌رسانی
 
 ```
 /personality teacher
 ```
 
-These are convenient overlays, but your globalSOUL.mdstill gives Hermes its persistent default personality unless the overlay meaningfully changes it.
+اینها overlayهای راحتی هستند، اما SOUL.md جهانی شما همچنان به Hermes شخصیت پیش‌فرض ماندگار آن را می‌دهد مگر اینکه overlay آن را به طور معناداری تغییر دهد.
 
 `SOUL.md`
 
-## Custom personalities in config​
+## شخصیت‌های سفارشی در config
 
-You can also define named custom personalities in~/.hermes/config.yamlunderagent.personalities.
+همچنین می‌توانید شخصیت‌های سفارشی نام‌دار را در `~/.hermes/config.yaml` تحت `agent.personalities` تعریف کنید.
 
 `~/.hermes/config.yaml`
 `agent.personalities`
@@ -268,70 +268,70 @@ You can also define named custom personalities in~/.hermes/config.yamlunderagent
 agent:  personalities:    codereviewer: >      You are a meticulous code reviewer. Identify bugs, security issues,      performance concerns, and unclear design choices. Be precise and constructive.
 ```
 
-Then switch to it with:
+سپس برای سوئیچ به آن:
 
 ```
 /personality codereviewer
 ```
 
-## Recommended workflow​
+## workflow پیشنهادی
 
-A strong default setup is:
+یک تنظیم قوی پیش‌فرض:
 
-1. Keep a thoughtful globalSOUL.mdin~/.hermes/SOUL.md
-2. Put project instructions inAGENTS.md
-3. Use/personalityonly when you want a temporary mode shift
+1. یک SOUL.md جهانی با دقت در `~/.hermes/SOUL.md` نگه دارید
+2. دستورالعمل‌های پروژه را در AGENTS.md قرار دهید
+3. فقط زمانی از `/personality` استفاده کنید که به یک تغییر حالت موقت نیاز دارید
 
 `SOUL.md`
 `~/.hermes/SOUL.md`
 `AGENTS.md`
 `/personality`
 
-That gives you:
+این به شما می‌دهد:
 
-- a stable voice
-- project-specific behavior where it belongs
-- temporary control when needed
+- یک صدای پایدار
+- رفتار مختص پروژه در جای خود
+- کنترل موقت در صورت نیاز
 
-## How personality interacts with the full prompt​
+## نحوه تعامل شخصیت با prompt کامل
 
-At a high level, the prompt stack includes:
+در سطح بالا، پشته prompt شامل موارد زیر است:
 
-1. SOUL.md(agent identity — or built-in fallback if SOUL.md is unavailable)
-2. tool-aware behavior guidance
-3. memory/user context
-4. skills guidance
-5. context files (AGENTS.md,.cursorrules)
-6. timestamp
-7. platform-specific formatting hints
-8. optional system-prompt overlays such as/personality
+1. SOUL.md (هویت agent — یا بازگشت داخلی اگر SOUL.md در دسترس نباشد)
+2. راهنمایی رفتار مبتنی بر ابزار
+3. حافظه / context کاربر
+4. راهنمایی مهارت‌ها
+5. فایل‌های context (AGENTS.md، .cursorrules)
+6. برچسب زمانی
+7. نکات قالب‌بندی خاص پلتفرم
+8. overlayهای اختیاری system prompt مانند `/personality`
 
 `AGENTS.md`
 `.cursorrules`
 `/personality`
 
-SOUL.mdis the foundation — everything else builds on top of it.
+SOUL.md پایه است — همه چیزهای دیگر بر روی آن ساخته می‌شود.
 
 `SOUL.md`
 
-## Related docs​
+## اسناد مرتبط
 
-- Context Files
-- Configuration
-- Tips & Best Practices
-- SOUL.md Guide
+- فایل‌های Context
+- پیکربندی
+- نکات و بهترین شیوه‌ها
+- راهنمای SOUL.md
 
-[Context Files](/docs/user-guide/features/context-files)
-[Configuration](/docs/user-guide/configuration)
-[Tips & Best Practices](/docs/guides/tips)
-[SOUL.md Guide](/docs/guides/use-soul-with-hermes)
+[فایل‌های Context](/docs/user-guide/features/context-files)
+[پیکربندی](/docs/user-guide/configuration)
+[نکات و بهترین شیوه‌ها](/docs/guides/tips)
+[راهنمای SOUL.md](/docs/guides/use-soul-with-hermes)
 
-## CLI appearance vs conversational personality​
+## ظاهر CLI در مقابل شخصیت مکالمه‌ای
 
-Conversational personality and CLI appearance are separate:
+شخصیت مکالمه‌ای و ظاهر CLI از هم جدا هستند:
 
-- SOUL.md,agent.system_prompt, and/personalityaffect how Hermes speaks
-- display.skinand/skinaffect how Hermes looks in the terminal
+- SOUL.md، `agent.system_prompt` و `/personality` بر نحوه صحبت کردن Hermes تأثیر می‌گذارند
+- `display.skin` و `/skin` بر نحوه ظاهر شدن Hermes در ترمینال تأثیر می‌گذارند
 
 `SOUL.md`
 `agent.system_prompt`
@@ -339,7 +339,7 @@ Conversational personality and CLI appearance are separate:
 `display.skin`
 `/skin`
 
-For terminal appearance, seeSkins & Themes.
+برای ظاهر ترمینال، به پوسته‌ها و تم‌ها مراجعه کنید.
 
-[Skins & Themes](/docs/user-guide/features/skins)
-[Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/personality.md)
+[پوسته‌ها و تم‌ها](/docs/user-guide/features/skins)
+[ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/personality.md)
