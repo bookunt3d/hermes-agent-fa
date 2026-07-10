@@ -234,10 +234,6 @@ code {
   font-size: 0.85em;
   color: var(--accent-3);
   border: 1px solid var(--border);
-  /* Force LTR */
-  direction: ltr;
-  unicode-bidi: isolate-override;
-  text-align: left;
   display: inline;
 }
 pre {
@@ -247,26 +243,17 @@ pre {
   padding: 18px 20px;
   overflow-x: auto;
   margin-bottom: 18px;
-  /* Force LTR */
-  direction: ltr;
-  unicode-bidi: isolate-override;
   text-align: left;
+  direction: ltr;
 }
 pre code {
   background: none; padding: 0; border: none;
   color: var(--text-primary);
   font-size: 13px; line-height: 1.7;
-  direction: ltr;
-  unicode-bidi: isolate-override;
   text-align: left;
 }
-/* Inline code in Persian text */
-p code, li code, td code, th code, blockquote code {
-  direction: ltr;
-  unicode-bidi: isolate-override;
-  text-align: left;
-  display: inline;
-}
+p code, li code, blockquote code { display: inline; }
+td code, th code { text-align: left; }
 
 /* ═══ Lists ═══ */
 ul, ol { margin-bottom: 16px; padding-right: 24px; }
