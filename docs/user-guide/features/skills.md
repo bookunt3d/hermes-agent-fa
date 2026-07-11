@@ -26,8 +26,8 @@ permalink: /docs/user-guide/features/skills/
 - فهرست مهارت‌های Bundled
 - فهرست رسمی مهارت‌های اختیاری
 
-[فهرست مهارت‌های Bundled](/docs/reference/skills-catalog)
-[فهرست رسمی مهارت‌های اختیاری](/docs/reference/optional-skills-catalog)
+[فهرست مهارت‌های Bundled](/docs/reference/skills-catalog/)
+[فهرست رسمی مهارت‌های اختیاری](/docs/reference/optional-skills-catalog/)
 
 ## شروع از صفحه خالی
 
@@ -724,7 +724,7 @@ Hermes در حال حاضر با این اکوسیستم‌های مهارت و 
 - منبع در مخزن: `optional-skills/`
 - مثال:
 
-[فهرست رسمی مهارت‌های اختیاری](/docs/reference/optional-skills-catalog)
+[فهرست رسمی مهارت‌های اختیاری](/docs/reference/optional-skills-catalog/)
 `optional-skills/`
 
 ```

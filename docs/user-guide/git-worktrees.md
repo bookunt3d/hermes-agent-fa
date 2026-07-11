@@ -43,7 +43,7 @@ Hermes **دایرکتوری کاری فعلی** را به عنوان ریشه پ
 
 `/rollback`
 
-همچنین ببینید: [نقاط بازیابی و /rollback](/docs/user-guide/checkpoints-and-rollback).
+همچنین ببینید: [نقاط بازیابی و /rollback](/docs/user-guide/checkpoints-and-rollback/).
 
 ## شروع سریع: ایجاد یک Worktree
 
@@ -167,7 +167,7 @@ git worktree remove ../repo-feature
 - از git commits برای نقاط عطف سطح بالا استفاده کنید.
 - از checkpoints و `/rollback` به عنوان شبکه ایمنی برای ویرایش‌های ابزارمحور در بین آن‌ها استفاده کنید.
 
-[checkpoints و /rollback](/docs/user-guide/checkpoints-and-rollback)
+[checkpoints و /rollback](/docs/user-guide/checkpoints-and-rollback/)
 - دایرکتوری‌های worktree را ترجیح دهید تا هر عامل دامنه مشخصی داشته باشد.
 
 ## استفاده از `hermes -w` (حالت Worktree خودکار)

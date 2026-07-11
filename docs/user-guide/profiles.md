@@ -41,10 +41,10 @@ coder chat                        # start chatting
 
 ## ایجاد پروفایل
 
-سریع‌ترین راه‌اندازی: `hermes setup --portal` را داخل پروفایل جدید اجرا کنید تا مدل‌ها + ابزارها را یکجا راه‌اندازی کنید. به [Nous Portal](/docs/integrations/nous-portal) مراجعه کنید.
+سریع‌ترین راه‌اندازی: `hermes setup --portal` را داخل پروفایل جدید اجرا کنید تا مدل‌ها + ابزارها را یکجا راه‌اندازی کنید. به [Nous Portal](/docs/integrations/nous-portal/) مراجعه کنید.
 
 `hermes setup --portal`
-[Nous Portal](/docs/integrations/nous-portal)
+[Nous Portal](/docs/integrations/nous-portal/)
 
 ### پروفایل خالی
 
@@ -449,7 +449,7 @@ hermes profile install github.com/you/research-bot --alias
 hermes profile update research-bot
 ```
 
-به [توزیع‌های پروفایل: به اشتراک گذاری یک عامل کامل](/docs/user-guide/profile-distributions) برای راهنمای کامل — نگارش، انتشار، معناشناسی به‌روزرسانی، مدل امنیتی و موارد استفاده مراجعه کنید.
+به [توزیع‌های پروفایل: به اشتراک گذاری یک عامل کامل](/docs/user-guide/profile-distributions/) برای راهنمای کامل — نگارش، انتشار، معناشناسی به‌روزرسانی، مدل امنیتی و موارد استفاده مراجعه کنید.
 
-[توزیع‌های پروفایل: به اشتراک گذاری یک عامل کامل](/docs/user-guide/profile-distributions)
+[توزیع‌های پروفایل: به اشتراک گذاری یک عامل کامل](/docs/user-guide/profile-distributions/)
 [ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/profiles.md)

@@ -55,7 +55,7 @@ approvals:  mode: manual                    # manual | smart | off  timeout: 60 
 `60`
 `cron_mode`
 `deny`
-[cron jobs](/docs/user-guide/features/cron)
+[cron jobs](/docs/user-guide/features/cron/)
 `deny`
 `approve`
 `mcp_reload_confirm`

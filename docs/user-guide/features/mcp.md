@@ -917,8 +917,8 @@ hermes mcp serve --verbose    # گزارش اشکال‌زایی در stderr
 - دستورات اسلش
 - سؤالات متداول
 
-[استفاده از MCP با Hermes](/docs/guides/use-mcp-with-hermes)
-[دستورات CLI](/docs/reference/cli-commands)
-[دستورات اسلش](/docs/reference/slash-commands)
-[سؤالات متداول](/docs/reference/faq)
+[استفاده از MCP با Hermes](/docs/guides/use-mcp-with-hermes/)
+[دستورات CLI](/docs/reference/cli-commands/)
+[دستورات اسلش](/docs/reference/slash-commands/)
+[سؤالات متداول](/docs/reference/faq/)
 [ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/mcp.md)

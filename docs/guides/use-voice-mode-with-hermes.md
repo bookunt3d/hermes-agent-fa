@@ -12,13 +12,13 @@ permalink: /docs/guides/use-voice-mode-with-hermes/
 
 این راهنما همراه عملی مرجع ویژگی حالت صوتی است.
 
-[مرجع ویژگی حالت صوتی](/docs/user-guide/features/voice-mode)
+[مرجع ویژگی حالت صوتی](/docs/user-guide/features/voice-mode/)
 
 اگر صفحه ویژگی توضیح می‌دهد حالت صوتی چه کاری می‌تواند انجام دهد، این راهنما نشان می‌دهد چگونه واقعاً به خوبی از آن استفاده کنید.
 
 Nous Portal هر دو LLM و TTS را از طریق یک OAuth بسته‌بندی می‌کند — حالت صوتی از ابتدا تا انتها بدون اعتبارنامه اضافی کار می‌کند.
 
-[Nous Portal](/docs/integrations/nous-portal)
+[Nous Portal](/docs/integrations/nous-portal/)
 
 ## حالت صوتی برای چه چیزی خوب است
 
@@ -506,9 +506,9 @@ Hermes به یک VC Discord می‌پیوندد، به گفتار کاربران
 - راه‌اندازی Telegram
 - پیکربندی
 
-[مرجع ویژگی حالت صوتی](/docs/user-guide/features/voice-mode)
-[دروازه پیام‌رسانی](/docs/user-guide/messaging)
-[راه‌اندازی Discord](/docs/user-guide/messaging/discord)
-[راه‌اندازی Telegram](/docs/user-guide/messaging/telegram)
-[پیکربندی](/docs/user-guide/configuration)
+[مرجع ویژگی حالت صوتی](/docs/user-guide/features/voice-mode/)
+[دروازه پیام‌رسانی](/docs/user-guide/messaging/)
+[راه‌اندازی Discord](/docs/user-guide/messaging/discord/)
+[راه‌اندازی Telegram](/docs/user-guide/messaging/telegram/)
+[پیکربندی](/docs/user-guide/configuration/)
 [ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/use-voice-mode-with-hermes.md)

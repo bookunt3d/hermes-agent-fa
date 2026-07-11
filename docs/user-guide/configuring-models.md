@@ -19,7 +19,7 @@ Hermes از دو نوع اسلات مدل استفاده می‌کند:
 
 **Nous Portal** بیش از 300 مدل را تحت یک اشتراک ارائه می‌دهد. در یک نصب جدید، `hermes setup --portal` را اجرا کنید تا وارد شوید و Nous را به عنوان ارائه‌دهنده خود با یک دستور تنظیم کنید. با `hermes portal info` بررسی کنید چه چیزی متصل است.
 
-[Nous Portal](/docs/user-guide/features/tool-gateway)
+[Nous Portal](/docs/user-guide/features/tool-gateway/)
 `hermes setup --portal`
 `hermes portal info`
 - مشترکان Portal همچنین **10% تخفیف** برای ارائه‌دهندگان صورتحساب توکن دریافت می‌کنند.
@@ -35,9 +35,9 @@ Hermes از دو نوع اسلات مدل استفاده می‌کند:
 `default`
 `base_url`
 `api_mode`
-[profiles.md](/docs/user-guide/profiles)
+[profiles.md](/docs/user-guide/profiles/)
 `profiles.md`
-[configuration.md](/docs/user-guide/configuration)
+[configuration.md](/docs/user-guide/configuration/)
 `configuration.md`
 `config.yaml`
 `hermes model`
@@ -82,8 +82,8 @@ Hermes از دو نوع اسلات مدل استفاده می‌کند:
 کش‌های Prompt به مدلی که درخواست را سرویس‌دهی می‌کند کلید خورده‌اند، بنابراین هر تغییر مدل در حین مکالمه — یک تغییر صریح `/model`، یک **فال‌بک خودکار**، یا چرخش **استخر اعتبار** روی حساب متفاوت — به این معنی است که پیام بعدی کل مکالمه را با قیمت کامل توکن ورودی (به جای نرخ تخفیف‌خورده کش (~75-90%)) بازخوانی می‌کند. در یک جلسه طولانی، این بازخوانی یک‌باره می‌تواند از تفاوت به ازای توکن بین دو مدل بزرگ‌تر باشد. در صورت نیاز تعویض کنید، اما ترجیحاً در ابتدای مکالمه یا بلافاصله پس از شروع یک جلسه جدید.
 
 `/model`
-[فال‌بک خودکار](/docs/user-guide/features/fallback-providers)
-[استخر اعتبار](/docs/user-guide/features/credential-pools)
+[فال‌بک خودکار](/docs/user-guide/features/fallback-providers/)
+[استخر اعتبار](/docs/user-guide/features/credential-pools/)
 
 ## تنظیم مدل‌های کمکی
 
@@ -358,10 +358,10 @@ hermes model            # Interactive provider + model picker (the canonical way
 
 ### ویرایش مستقیم پیکربندی
 
-`~/.hermes/config.yaml` را ویرایش کنید و هر چیزی که آن را می‌خواند ری‌استارت کنید. به [مرجع پیکربندی](/docs/user-guide/configuration) برای کل schema مراجعه کنید.
+`~/.hermes/config.yaml` را ویرایش کنید و هر چیزی که آن را می‌خواند ری‌استارت کنید. به [مرجع پیکربندی](/docs/user-guide/configuration/) برای کل schema مراجعه کنید.
 
 `~/.hermes/config.yaml`
-[مرجع پیکربندی](/docs/user-guide/configuration)
+[مرجع پیکربندی](/docs/user-guide/configuration/)
 
 ### REST API
 

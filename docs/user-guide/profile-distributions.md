@@ -14,7 +14,7 @@ permalink: /docs/user-guide/profile-distributions/
 
 اگر **profile** یک agent محلی است، **distribution** آن agent قابل اشتراک‌گذاری شده است.
 
-[profile](/docs/user-guide/profiles)
+[profile](/docs/user-guide/profiles/)
 
 ## این یعنی چه​
 
@@ -535,19 +535,19 @@ Cron jobهای از یک distribution **به طور خودکار زمان‌بن
 
 ## همچنین ببینید​
 
-- [Profileها: اجرای چندین Agent](/docs/user-guide/profiles) — مفهوم پایه
-- [مرجع Profile Commands](/docs/reference/profile-commands) — هر flag، هر گزینه
+- [Profileها: اجرای چندین Agent](/docs/user-guide/profiles/) — مفهوم پایه
+- [مرجع Profile Commands](/docs/reference/profile-commands/) — هر flag، هر گزینه
 - [hermes profile export/import](/docs/reference/profile-commands#hermes-profile-export) — پشتیبان / بازیابی محلی (نه distribution)
-- [استفاده از SOUL با Hermes](/docs/guides/use-soul-with-hermes) — نوشتن شخصیت‌ها
-- [شخصیت و SOUL](/docs/user-guide/features/personality) — چگونه SOUL در agent جا می‌شود
-- [کاتالوگ Skillها](/docs/reference/skills-catalog) — skillهایی که می‌توانید بسته‌بندی کنید
+- [استفاده از SOUL با Hermes](/docs/guides/use-soul-with-hermes/) — نوشتن شخصیت‌ها
+- [شخصیت و SOUL](/docs/user-guide/features/personality/) — چگونه SOUL در agent جا می‌شود
+- [کاتالوگ Skillها](/docs/reference/skills-catalog/) — skillهایی که می‌توانید بسته‌بندی کنید
 
-[Profileها: اجرای چندین Agent](/docs/user-guide/profiles)
-[مرجع Profile Commands](/docs/reference/profile-commands)
+[Profileها: اجرای چندین Agent](/docs/user-guide/profiles/)
+[مرجع Profile Commands](/docs/reference/profile-commands/)
 [hermes profile export/import](/docs/reference/profile-commands#hermes-profile-export)
 `hermes profile export`
 `import`
-[استفاده از SOUL با Hermes](/docs/guides/use-soul-with-hermes)
-[شخصیت و SOUL](/docs/user-guide/features/personality)
-[کاتالوگ Skillها](/docs/reference/skills-catalog)
+[استفاده از SOUL با Hermes](/docs/guides/use-soul-with-hermes/)
+[شخصیت و SOUL](/docs/user-guide/features/personality/)
+[کاتالوگ Skillها](/docs/reference/skills-catalog/)
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/profile-distributions.md)

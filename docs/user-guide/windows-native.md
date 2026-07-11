@@ -14,7 +14,7 @@ Hermes به طور بومی روی Windows 10 و Windows 11 اجرا می‌شو
 
 اگر فقط می‌خواهید نصب کنید، یک‌خطی در [صفحه اصلی](/docs/) یا [صفحه نصب](/docs/getting-started/installation#windows-native-powershell) همه چیزی است که نیاز دارید. وقتی چیزی شما را شگفت‌زده کرد برگردید.
 
-اگر ترجیح می‌دهید محیط POSIX واقعی داشته باشید (برای ترمinal تعبیه‌شده داشبورد، معنای `fork`، ناظران فایل سبک Linux و غیره)، [راهنمای Windows (WSL2)](/docs/user-guide/windows-wsl-quickstart) را ببینید. هر دو تمیز با هم همزیستی می‌کنند: داده‌های بومی در `%LOCALAPPDATA%\hermes` و داده‌های WSL در `~/.hermes` قرار دارند.
+اگر ترجیح می‌دهید محیط POSIX واقعی داشته باشید (برای ترمinal تعبیه‌شده داشبورد، معنای `fork`، ناظران فایل سبک Linux و غیره)، [راهنمای Windows (WSL2)](/docs/user-guide/windows-wsl-quickstart/) را ببینید. هر دو تمیز با هم همزیستی می‌کنند: داده‌های بومی در `%LOCALAPPDATA%\hermes` و داده‌های WSL در `~/.hermes` قرار دارند.
 
 ## نصب سریع
 
@@ -63,7 +63,7 @@ iex (irm https://raw.githubusercontent.com/NousResearch/hermes-agent/main/script
 9. **`%LOCALAPPDATA%\hermes\hermes-agent\venv\Scripts` را به User PATH اضافه می‌کند** و `HERMES_HOME=%LOCALAPPDATA%\hermes` را تنظیم می‌کند.
 10. **`hermes setup` را اجرا می‌کند** — جادوگر اولین اجرای عادی. با `-SkipSetup` رد کنید.
 
-در Windows، تنظیم کلید API به ازای هر ابزار بیشترین اصطکاک را در دریافت یک agent کاربردی دارد. یک اشتراک [Nous Portal](/docs/user-guide/features/tool-gateway) مدل و تمام آن ابزارها را از طریق یک ورود OAuth پوشش می‌دهد. بعد از اتمام نصب‌کننده، `hermes setup --portal` را اجرا کنید تا همه چیز را وصل کنید.
+در Windows، تنظیم کلید API به ازای هر ابزار بیشترین اصطکاک را در دریافت یک agent کاربردی دارد. یک اشتراک [Nous Portal](/docs/user-guide/features/tool-gateway/) مدل و تمام آن ابزارها را از طریق یک ورود OAuth پوشش می‌دهد. بعد از اتمام نصب‌کننده، `hermes setup --portal` را اجرا کنید تا همه چیز را وصل کنید.
 
 ## ماتریس ویژگی‌ها
 
@@ -226,10 +226,10 @@ Remove-Item -Recurse -Force "$env:USERPROFILE\.hermes"
 
 ## قدم بعدی
 
-- [نصب](/docs/getting-started/installation) — صفحه نصب کامل
-- [راهنمای Windows (WSL2)](/docs/user-guide/windows-wsl-quickstart) — اگر معنای POSIX یا ترمinal داشبورد می‌خواهید
-- [مرجع CLI](/docs/reference/cli-commands) — هر زیرفرمان `hermes`
-- [FAQ](/docs/reference/faq) — سوالات رایج غیرمختص Windows
-- [Gateway پیام‌رسانی](/docs/user-guide/messaging/) — اجرای Telegram/Discord/Slack در Windows
+- [نصب](/docs/getting-started/installation/) — صفحه نصب کامل
+- [راهنمای Windows (WSL2)](/docs/user-guide/windows-wsl-quickstart/) — اگر معنای POSIX یا ترمinal داشبورد می‌خواهید
+- [مرجع CLI](/docs/reference/cli-commands/) — هر زیرفرمان `hermes`
+- [FAQ](/docs/reference/faq/) — سوالات رایج غیرمختص Windows
+- [Gateway پیام‌رسانی](/docs/user-guide/messaging//) — اجرای Telegram/Discord/Slack در Windows
 
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/windows-native.md)

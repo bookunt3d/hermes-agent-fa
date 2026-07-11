@@ -10,9 +10,9 @@ permalink: /docs/user-guide/windows-wsl-quickstart/
 
 # راهنمای Windows (WSL2)
 
-Hermes Agent اکنون هم از Windows بومی و هم از WSL2 پشتیبانی می‌کند. این صفحه مسیر WSL2 را پوشش می‌دهد؛ برای نصب PowerShell بومی به [راهنمای Windows (بومی)](/docs/user-guide/windows-native) مراجعه کنید.
+Hermes Agent اکنون هم از Windows بومی و هم از WSL2 پشتیبانی می‌کند. این صفحه مسیر WSL2 را پوشش می‌دهد؛ برای نصب PowerShell بومی به [راهنمای Windows (بومی)](/docs/user-guide/windows-native/) مراجعه کنید.
 
-[راهنمای Windows (بومی)](/docs/user-guide/windows-native)
+[راهنمای Windows (بومی)](/docs/user-guide/windows-native/)
 
 چه زمانی WSL2 را به جای نصب بومی انتخاب کنید:
 
@@ -84,10 +84,10 @@ Hermes روی WSL1 به طور قابل اعتماد کار نمی‌کند — 
 
 ### انتخاب Distro​
 
-Ubuntu (LTS) همان چیزی است که ما روی آن تست می‌کنیم. Debian کار می‌کند. Arch و NixOS برای افرادی که می‌خواهند کار می‌کنند، اما نصب‌کننده یک‌خطی فرض سیستم `apt` مشتق‌شده از Debian را دارد — برای آن مسیر به [راهنمای تنظیم Nix](/docs/getting-started/nix-setup) مراجعه کنید.
+Ubuntu (LTS) همان چیزی است که ما روی آن تست می‌کنیم. Debian کار می‌کند. Arch و NixOS برای افرادی که می‌خواهند کار می‌کنند، اما نصب‌کننده یک‌خطی فرض سیستم `apt` مشتق‌شده از Debian را دارد — برای آن مسیر به [راهنمای تنظیم Nix](/docs/getting-started/nix-setup/) مراجعه کنید.
 
 `apt`
-[راهنمای تنظیم Nix](/docs/getting-started/nix-setup)
+[راهنمای تنظیم Nix](/docs/getting-started/nix-setup/)
 
 ### فعال‌سازی systemd (توصیه شده)​
 
@@ -122,9 +122,9 @@ wsl --shutdown
 curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bashsource ~/.bashrchermes
 ```
 
-نصب‌کننده WSL2 را مانند Linux معمولی رفتار می‌کند — چیز خاصی برای WSL لازم نیست. برای چیدمان کامل به [نصب](/docs/getting-started/installation) مراجعه کنید.
+نصب‌کننده WSL2 را مانند Linux معمولی رفتار می‌کند — چیز خاصی برای WSL لازم نیست. برای چیدمان کامل به [نصب](/docs/getting-started/installation/) مراجعه کنید.
 
-[نصب](/docs/getting-started/installation)
+[نصب](/docs/getting-started/installation/)
 
 ## فایل‌سیستم: عبور از مرز Windows ↔ WSL2​
 
@@ -294,7 +294,7 @@ WSL2 در یک VM سبک با پشته شبکه خاص خود اجرا می‌ش
 
 `hermes gateway`
 `API_SERVER_ENABLED=true`
-[صفحه ویژگی API Server](/docs/user-guide/features/api-server)
+[صفحه ویژگی API Server](/docs/user-guide/features/api-server/)
 `cloudflared`
 `ngrok`
 
@@ -341,17 +341,17 @@ WSL2 در یک VM سبک با پشته شبکه خاص خود اجرا می‌ش
 
 `wsl --shutdown`
 
-برای webhookهای از ارائه‌دهندگان پیام‌رسانی ابری (`setWebhook` Telegram، رویدادهای Slack و غیره)، با port fighting نجنگید — از تونل‌های `cloudflared` استفاده کنید. [راهنمای webhooks](/docs/user-guide/messaging/webhooks) را ببینید.
+برای webhookهای از ارائه‌دهندگان پیام‌رسانی ابری (`setWebhook` Telegram، رویدادهای Slack و غیره)، با port fighting نجنگید — از تونل‌های `cloudflared` استفاده کنید. [راهنمای webhooks](/docs/user-guide/messaging/webhooks/) را ببینید.
 
 `setWebhook`
 `cloudflared`
-[راهنمای webhooks](/docs/user-guide/messaging/webhooks)
+[راهنمای webhooks](/docs/user-guide/messaging/webhooks/)
 
 ## اجرای طولانی‌مدت سرویس‌های Hermes در Windows​
 
 **Tool Gateway** و سرور API Hermes فرآیندهای طولانی‌مدت هستند. در WSL2 چند گزینه برای نگه داشتن آن‌ها دارید.
 
-[Tool Gateway](/docs/user-guide/features/tool-gateway)
+[Tool Gateway](/docs/user-guide/features/tool-gateway/)
 
 ### میانبر دسکتاپ برای باز کردن سریع Hermes​
 
@@ -498,14 +498,14 @@ sudo hwclock -s
 
 ## قدم بعدی کجاست​
 
-- [نصب](/docs/getting-started/installation) — مراحل نصب واقعی (Linux/WSL2/Termux همه از همان نصب‌کننده استفاده می‌کنند).
+- [نصب](/docs/getting-started/installation/) — مراحل نصب واقعی (Linux/WSL2/Termux همه از همان نصب‌کننده استفاده می‌کنند).
 - [Integrations → Providers → WSL2 Networking](/docs/integrations/providers#wsl2-networking-windows-users) — بررسی عمیق شبکه‌سازی استاندارد برای سرورهای مدل محلی.
 - [MCP guide → WSL → Windows Chrome](/docs/guides/use-mcp-with-hermes#wsl2-bridge-hermes-in-wsl-to-windows-chrome) — کنترل Chrome Windows ورود شده از Hermes در WSL.
-- [Tool Gateway](/docs/user-guide/features/tool-gateway) و [Web Dashboard](/docs/user-guide/features/web-dashboard) — سرویس‌های طولانی‌مدتی که بیشتر می‌خواهید از WSL به بقیه شبکه خود در معرض بگذارید.
+- [Tool Gateway](/docs/user-guide/features/tool-gateway/) و [Web Dashboard](/docs/user-guide/features/web-dashboard/) — سرویس‌های طولانی‌مدتی که بیشتر می‌خواهید از WSL به بقیه شبکه خود در معرض بگذارید.
 
-[نصب](/docs/getting-started/installation)
+[نصب](/docs/getting-started/installation/)
 [Integrations → Providers → WSL2 Networking](/docs/integrations/providers#wsl2-networking-windows-users)
 [MCP guide → WSL → Windows Chrome](/docs/guides/use-mcp-with-hermes#wsl2-bridge-hermes-in-wsl-to-windows-chrome)
-[Tool Gateway](/docs/user-guide/features/tool-gateway)
-[Web Dashboard](/docs/user-guide/features/web-dashboard)
+[Tool Gateway](/docs/user-guide/features/tool-gateway/)
+[Web Dashboard](/docs/user-guide/features/web-dashboard/)
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/windows-wsl-quickstart.md)

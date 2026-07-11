@@ -19,7 +19,7 @@ permalink: /docs/reference/faq/
 Hermes Agent با هر API سازگار با OpenAI کار می‌کند. ارائه‌دهندگان پشتیبانی شده عبارتند از:
 
 - [OpenRouter](https://openrouter.ai/) — دسترسی به صدها مدل از طریق یک API key (توصیه شده برای انعطاف‌پذیری)
-- [Nous Portal](/docs/integrations/nous-portal) — دروازه اشتراک Nous Research — بیش از ۳۰۰ مدل به همراه وب/تصویر/TTS/مرورگر از طریق یک ورود OAuth (توصیه شده برای تازه‌کاران)
+- [Nous Portal](/docs/integrations/nous-portal/) — دروازه اشتراک Nous Research — بیش از ۳۰۰ مدل به همراه وب/تصویر/TTS/مرورگر از طریق یک ورود OAuth (توصیه شده برای تازه‌کاران)
 - OpenAI — GPT-5.4, GPT-5-codex, GPT-4.1, GPT-4o, و غیره
 - Anthropic — مدل‌های Claude (API مستقیم، OAuth از طریق `hermes auth add anthropic`، OpenRouter، یا هر پروکسی سازگار)
 - Google — مدل‌های Gemini (API مستقیم از طریق ارائه‌دهنده `gemini`، OpenRouter، یا پروکسی سازگار)
@@ -28,11 +28,11 @@ Hermes Agent با هر API سازگار با OpenAI کار می‌کند. ارا
 - MiniMax — نقاط پایانی جهانی و چین
 - مدل‌های محلی — از طریق [Ollama](https://ollama.com/)، [vLLM](https://docs.vllm.ai/)، [llama.cpp](https://github.com/ggerganov/llama.cpp)، [SGLang](https://github.com/sgl-project/sglang)، یا هر سرور سازگار با OpenAI
 
-ارائه‌دهنده خود را با `hermes model` یا ویرایش `~/.hermes/.env` تنظیم کنید. برای کلیدهای تمام ارائه‌دهندگان به مرجع [Environment Variables](/docs/reference/environment-variables) مراجعه کنید.
+ارائه‌دهنده خود را با `hermes model` یا ویرایش `~/.hermes/.env` تنظیم کنید. برای کلیدهای تمام ارائه‌دهندگان به مرجع [Environment Variables](/docs/reference/environment-variables/) مراجعه کنید.
 
 ### آیا روی Windows/Android/Termux/پلتفرم من کار می‌کند؟
 
-برای ماتریکس کامل پشتیبانی پلتفرم به [Platform Support](/docs/getting-started/platform-support) مراجعه کنید.
+برای ماتریکس کامل پشتیبانی پلتفرم به [Platform Support](/docs/getting-started/platform-support/) مراجعه کنید.
 
 ### Hermes را در WSL2 اجرا می‌کنم. بهترین راه کنترل Chrome معمولی Windows من چیست؟
 
@@ -72,7 +72,7 @@ model:  default: qwen3.5:27b  provider: custom  base_url: http://localhost:11434
 
 Hermes نقطه پایانی، ارائه‌دهنده و base URL را در `config.yaml` ذخیره می‌کند تا پس از راه‌اندازی مجدد حفظ شود. اگر سرور محلی شما دقیقاً یک مدل بارگذاری کرده باشد، `/model custom` آن را به صورت خودکار تشخیص می‌دهد. همچنین می‌توانید `provider: custom` را در config.yaml تنظیم کنید — این یک ارائه‌دهنده درجه اول است، نه یک نام مستعار.
 
-این با Ollama، vLLM، llama.cpp server، SGLang، LocalAI و سایرین کار می‌کند. برای جزئیات به [Configuration guide](/docs/user-guide/configuration) مراجعه کنید.
+این با Ollama، vLLM، llama.cpp server، SGLang، LocalAI و سایرین کار می‌کند. برای جزئیات به [Configuration guide](/docs/user-guide/configuration/) مراجعه کنید.
 
 اگر `num_ctx` سفارشی در Ollama تنظیم کرده‌اید (مثلاً `ollama run --num_ctx 64000`)، مطمئن شوید طول context مطابق در Hermes تنظیم شده باشد — `/api/show` Ollama حداکثر context مدل را گزارش می‌دهد، نه `num_ctx` مؤثری که شما پیکربندی کرده‌اید.
 
@@ -84,12 +84,12 @@ Hermes Agent خود رایگان و open-source است (مجوز MIT). شما ف
 
 ### آیا چند نفر می‌توانند از یک نمونه استفاده کنند؟
 
-بله. [messaging gateway](/docs/user-guide/messaging/) به چندین کاربر اجازه می‌دهد با همان نمونه Hermes Agent از طریق Telegram، Discord، Slack، WhatsApp یا Home Assistant تعامل کنند. دسترسی از طریق allowlistها (شناسه‌های کاربری خاص) و جفت‌سازی DM (اولین کاربری که پیام می‌دهد دسترسی را ادعا می‌کند) کنترل می‌شود.
+بله. [messaging gateway](/docs/user-guide/messaging//) به چندین کاربر اجازه می‌دهد با همان نمونه Hermes Agent از طریق Telegram، Discord، Slack، WhatsApp یا Home Assistant تعامل کنند. دسترسی از طریق allowlistها (شناسه‌های کاربری خاص) و جفت‌سازی DM (اولین کاربری که پیام می‌دهد دسترسی را ادعا می‌کند) کنترل می‌شود.
 
 ### تفاوت memory و skills چیست؟
 
-- [Memory](/docs/user-guide/features/memory) حقایق را ذخیره می‌کند — چیزهایی که agent درباره شما، پروژه‌های شما و ترجیحات می‌داند. خاطرات بر اساس ارتباط به صورت خودکار بازیابی می‌شوند.
-- [Skills](/docs/user-guide/features/skills) رویه‌ها را ذخیره می‌کند — دستورالعمل‌های گام‌به‌گام برای نحوه انجام کارها. مهارت‌ها وقتی agent با یک کار مشابه مواجه می‌شود بازیابی می‌شوند.
+- [Memory](/docs/user-guide/features/memory/) حقایق را ذخیره می‌کند — چیزهایی که agent درباره شما، پروژه‌های شما و ترجیحات می‌داند. خاطرات بر اساس ارتباط به صورت خودکار بازیابی می‌شوند.
+- [Skills](/docs/user-guide/features/skills/) رویه‌ها را ذخیره می‌کند — دستورالعمل‌های گام‌به‌گام برای نحوه انجام کارها. مهارت‌ها وقتی agent با یک کار مشابه مواجه می‌شود بازیابی می‌شوند.
 
 هر دو در جلسات پایدار می‌مانند.
 
@@ -101,7 +101,7 @@ Hermes Agent خود رایگان و open-source است (مجوز MIT). شما ف
 from run_agent import AIAgentagent = AIAgent(model="anthropic/claude-opus-4.7")response = agent.chat("Explain quantum computing briefly")
 ```
 
-برای استفاده کامل API به [Python Library guide](/docs/user-guide/features/code-execution) مراجعه کنید.
+برای استفاده کامل API به [Python Library guide](/docs/user-guide/features/code-execution/) مراجعه کنید.
 
 ## عیب‌یابی
 
@@ -265,7 +265,7 @@ custom_providers:  - name: "My Server"    base_url: "http://localhost:11434/v1" 
 راه‌حل: وقتی از شما خواسته شد، دستور را بررسی کنید و `y` تایپ کنید تا تأیید شود. همچنین می‌توانید:
 
 - از agent بخواهید از یک جایگزین ایمن‌تر استفاده کند
-- لیست کامل الگوهای خطرناک را در [Security docs](/docs/user-guide/security) ببینید
+- لیست کامل الگوهای خطرناک را در [Security docs](/docs/user-guide/security/) ببینید
 
 این طراحی شده است — Hermes هرگز دستورات مخرب را به صورت بی‌صدا اجرا نمی‌کند. پرامپت تأیید دقیقاً به شما نشان می‌دهد چه چیزی اجرا خواهد شد.
 
@@ -323,7 +323,7 @@ custom_providers:  - name: "My Server"    base_url: "http://localhost:11434/v1" 
 | DM pairing | اولین کاربری که در DM پیام می‌دهد دسترسی انحصاری را ادعا می‌کند |
 | Open | هر کسی می‌تواند تعامل کند (توصیه نشده برای production) |
 
-در `~/.hermes/config.yaml` تحت تنظیمات gateway خود پیکربندی کنید. به [Messaging docs](/docs/user-guide/messaging/) مراجعه کنید.
+در `~/.hermes/config.yaml` تحت تنظیمات gateway خود پیکربندی کنید. به [Messaging docs](/docs/user-guide/messaging//) مراجعه کنید.
 
 #### Gateway شروع نمی‌شود
 
@@ -449,9 +449,9 @@ mcp_servers:  filesystem:    command: "npx"    args: ["-y", "@modelcontextprotoc
 
 همچنین ببینید:
 
-- [MCP (Model Context Protocol)](/docs/user-guide/features/mcp)
-- [Use MCP with Hermes](/docs/guides/use-mcp-with-hermes)
-- [MCP Config Reference](/docs/reference/mcp-config-reference)
+- [MCP (Model Context Protocol)](/docs/user-guide/features/mcp/)
+- [Use MCP with Hermes](/docs/guides/use-mcp-with-hermes/)
+- [MCP Config Reference](/docs/reference/mcp-config-reference/)
 
 #### خطاهای timeout MCP
 
@@ -511,7 +511,7 @@ delegation:  model: "google/gemini-3-flash-preview"   # subagents use this model
 
 هر تغییر `/model` cache پرامپت را ریست می‌کند — کلید cache شامل مدل است، بنابراین اولین پیام پس از هر تغییر کل مکالمه را با قیمت کامل input دوباره می‌خواند. در جلسات طولانی، delegation (subagentها context تازه خود را دارند) یا session جدید را بر تغییر مکرر عقب و جلو ترجیح دهید.
 
-برای جزئیات بیشتر درباره نحوه کار delegation به [Subagent Delegation](/docs/user-guide/features/delegation) مراجعه کنید.
+برای جزئیات بیشتر درباره نحوه کار delegation به [Subagent Delegation](/docs/user-guide/features/delegation/) مراجعه کنید.
 
 ### اجرای چند agent روی یک شماره WhatsApp (جفت‌سازی per-chat)
 
@@ -526,7 +526,7 @@ delegation:  model: "google/gemini-3-flash-preview"   # subagents use this model
 3. **از شماره‌های جداگانه استفاده کنید.** اگر به agentهای واقعاً مستقل نیاز دارید، هر profile را با شماره WhatsApp خودش جفت کنید. شماره‌های مجازی از سرویس‌هایی مانند Google Voice برای این کار کار می‌کنند.
 4. **به جای آن از Telegram یا Discord استفاده کنید.** این پلتفرم‌ها جفت‌سازی per-chat را طبیعی‌تر پشتیبانی می‌کنند — هر گروه Telegram یا کانال Discord session خودش را دارد و می‌توانید چندین توکن ربات (یکی به ازای هر profile) روی یک حساب اجرا کنید.
 
-برای جزئیات بیشتر به [Profiles](/docs/user-guide/profiles) و [WhatsApp setup](/docs/user-guide/messaging/whatsapp) مراجعه کنید.
+برای جزئیات بیشتر به [Profiles](/docs/user-guide/profiles/) و [WhatsApp setup](/docs/user-guide/messaging/whatsapp/) مراجعه کنید.
 
 ### کنترل نمایش در Telegram (مخفی کردن لاگ‌ها و استدلال)
 

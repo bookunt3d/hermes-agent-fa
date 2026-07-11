@@ -318,6 +318,6 @@ hermes checkpoints clear-legacy
 `git reset`
 `hermes checkpoints status`
 
-برای اجرای عوامل متعدد به صورت موازی روی همان مخزن، به راهنمای [Git worktrees](/docs/user-guide/git-worktrees) مراجعه کنید.
+برای اجرای عوامل متعدد به صورت موازی روی همان مخزن، به راهنمای [Git worktrees](/docs/user-guide/git-worktrees/) مراجعه کنید.
 
 [ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/checkpoints-and-rollback.md)

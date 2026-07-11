@@ -178,7 +178,7 @@ hermes gateway restart
 
 ### یادداشت برای کاربران Nix
 
-Nix دیگر یک مسیر نصب پشتیبانی‌شده به طور رسمی نیست (فقط بهترین تلاش) — [Nix Setup](/docs/getting-started/nix-setup) را ببینید. اگر از طریق Nix flake نصب کرده‌اید، به‌روزرسانی‌ها از طریق مدیر بسته Nix مدیریت می‌شوند:
+Nix دیگر یک مسیر نصب پشتیبانی‌شده به طور رسمی نیست (فقط بهترین تلاش) — [Nix Setup](/docs/getting-started/nix-setup/) را ببینید. اگر از طریق Nix flake نصب کرده‌اید، به‌روزرسانی‌ها از طریق مدیر بسته Nix مدیریت می‌شوند:
 
 ```bash
 # به‌روزرسانی ورودی flake
@@ -193,7 +193,7 @@ nix profile upgrade hermes-agent
 nix profile rollback
 ```
 
-جزئیات بیشتر در [Nix Setup](/docs/getting-started/nix-setup).
+جزئیات بیشتر در [Nix Setup](/docs/getting-started/nix-setup/).
 
 ## حذف
 

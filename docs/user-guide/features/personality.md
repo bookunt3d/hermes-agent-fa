@@ -321,10 +321,10 @@ SOUL.md پایه است — همه چیزهای دیگر بر روی آن ساخ
 - نکات و بهترین شیوه‌ها
 - راهنمای SOUL.md
 
-[فایل‌های Context](/docs/user-guide/features/context-files)
-[پیکربندی](/docs/user-guide/configuration)
-[نکات و بهترین شیوه‌ها](/docs/guides/tips)
-[راهنمای SOUL.md](/docs/guides/use-soul-with-hermes)
+[فایل‌های Context](/docs/user-guide/features/context-files/)
+[پیکربندی](/docs/user-guide/configuration/)
+[نکات و بهترین شیوه‌ها](/docs/guides/tips/)
+[راهنمای SOUL.md](/docs/guides/use-soul-with-hermes/)
 
 ## ظاهر CLI در مقابل شخصیت مکالمه‌ای
 
@@ -341,5 +341,5 @@ SOUL.md پایه است — همه چیزهای دیگر بر روی آن ساخ
 
 برای ظاهر ترمینال، به پوسته‌ها و تم‌ها مراجعه کنید.
 
-[پوسته‌ها و تم‌ها](/docs/user-guide/features/skins)
+[پوسته‌ها و تم‌ها](/docs/user-guide/features/skins/)
 [ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/features/personality.md)

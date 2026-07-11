@@ -34,9 +34,9 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 ```
 
-راهنمای کامل [نصب](/docs/getting-started/installation) را ببینید. برای جدول پشتیبانی پلتفرم‌ها، [پشتیبانی از پلتفرم‌ها](/docs/getting-started/platform-support) را مشاهده کنید.
+راهنمای کامل [نصب](/docs/getting-started/installation/) را ببینید. برای جدول پشتیبانی پلتفرم‌ها، [پشتیبانی از پلتفرم‌ها](/docs/getting-started/platform-support/) را مشاهده کنید.
 
-> **سریع‌ترین مسیر به یک agent کارا:** بعد از نصب، `hermes setup --portal` را اجرا کنید — یک OAuth هم مدل و هم چهار ابزار Tool Gateway (جستجوی وب، تولید تصویر، TTS، مرورگر) را پوشش می‌دهد. [Nous Portal](/docs/integrations/nous-portal) را ببینید.
+> **سریع‌ترین مسیر به یک agent کارا:** بعد از نصب، `hermes setup --portal` را اجرا کنید — یک OAuth هم مدل و هم چهار ابزار Tool Gateway (جستجوی وب، تولید تصویر، TTS، مرورگر) را پوشش می‌دهد. [Nous Portal](/docs/integrations/nous-portal/) را ببینید.
 
 ---
 
@@ -50,9 +50,9 @@ iex (irm https://hermes-agent.nousresearch.com/install.ps1)
 
 | لینک | توضیح |
 |------|-------|
-| 🚀 [نصب](/docs/getting-started/installation) | نصب در ۶۰ ثانیه روی Linux، macOS، WSL2، ویندوز بومی یا اندروید |
-| 📖 [راهنمای شروع سریع](/docs/getting-started/quickstart) | اولین مکالمه و ویژگی‌های کلیدی |
-| 🗺️ [مسیر یادگیری](/docs/getting-started/learning-path) | مستندات مناسب سطح تجربه شما |
-| ⚙️ [پیکربندی](/docs/user-guide/configuration) | تنظیم مدل‌ها، API keys و رفتار agent |
-| 💡 [نکات و ترفندها](/docs/guides/tips) | ترفندها و بهترین شیوه‌ها |
-| 🔧 [دستورات CLI](/docs/reference/cli-commands) | مرجع کامل دستورات |
+| 🚀 [نصب](/docs/getting-started/installation/) | نصب در ۶۰ ثانیه روی Linux، macOS، WSL2، ویندوز بومی یا اندروید |
+| 📖 [راهنمای شروع سریع](/docs/getting-started/quickstart/) | اولین مکالمه و ویژگی‌های کلیدی |
+| 🗺️ [مسیر یادگیری](/docs/getting-started/learning-path/) | مستندات مناسب سطح تجربه شما |
+| ⚙️ [پیکربندی](/docs/user-guide/configuration/) | تنظیم مدل‌ها، API keys و رفتار agent |
+| 💡 [نکات و ترفندها](/docs/guides/tips/) | ترفندها و بهترین شیوه‌ها |
+| 🔧 [دستورات CLI](/docs/reference/cli-commands/) | مرجع کامل دستورات |

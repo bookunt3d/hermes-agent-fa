@@ -60,15 +60,15 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 9. فشرده‌سازی context و کش prompt — فشرده‌سازی و کشینگ
 10. ساختار داخلی ACP — ادغام IDE
 
-[ساختار داخلی حلقه agent](/docs/developer-guide/agent-loop)
-[مونتاژ prompt](/docs/developer-guide/prompt-assembly)
-[حل زمان‌بند runtime ارائه‌دهنده](/docs/developer-guide/provider-runtime)
-[اضافه کردن ارائه‌دهندگان](/docs/developer-guide/adding-providers)
-[زمان‌بند ابزار](/docs/developer-guide/tools-runtime)
-[ذخیره‌سازی نشست](/docs/developer-guide/session-storage)
-[ساختار داخلی Gateway](/docs/developer-guide/gateway-internals)
-[فشرده‌سازی context و کش prompt](/docs/developer-guide/context-compression-and-caching)
-[ساختار داخلی ACP](/docs/developer-guide/acp-internals)
+[ساختار داخلی حلقه agent](/docs/developer-guide/agent-loop/)
+[مونتاژ prompt](/docs/developer-guide/prompt-assembly/)
+[حل زمان‌بند runtime ارائه‌دهنده](/docs/developer-guide/provider-runtime/)
+[اضافه کردن ارائه‌دهندگان](/docs/developer-guide/adding-providers/)
+[زمان‌بند ابزار](/docs/developer-guide/tools-runtime/)
+[ذخیره‌سازی نشست](/docs/developer-guide/session-storage/)
+[ساختار داخلی Gateway](/docs/developer-guide/gateway-internals/)
+[فشرده‌سازی context و کش prompt](/docs/developer-guide/context-compression-and-caching/)
+[ساختار داخلی ACP](/docs/developer-guide/acp-internals/)
 
 ## زیرسیستم‌های اصلی
 
@@ -81,7 +81,7 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → ساختار داخلی حلقه agent
 
-[ساختار داخلی حلقه agent](/docs/developer-guide/agent-loop)
+[ساختار داخلی حلقه agent](/docs/developer-guide/agent-loop/)
 
 ### سیستم Prompt
 
@@ -101,8 +101,8 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → مونتاژ prompt، فشرده‌سازی context و کش prompt
 
-[مونتاژ prompt](/docs/developer-guide/prompt-assembly)
-[فشرده‌سازی context و کش prompt](/docs/developer-guide/context-compression-and-caching)
+[مونتاژ prompt](/docs/developer-guide/prompt-assembly/)
+[فشرده‌سازی context و کش prompt](/docs/developer-guide/context-compression-and-caching/)
 
 ### حل ارائه‌دهنده
 
@@ -113,7 +113,7 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → حل زمان‌بند runtime ارائه‌دهنده
 
-[حل زمان‌بند runtime ارائه‌دهنده](/docs/developer-guide/provider-runtime)
+[حل زمان‌بند runtime ارائه‌دهنده](/docs/developer-guide/provider-runtime/)
 
 ### سیستم ابزار
 
@@ -123,7 +123,7 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → زمان‌بند ابزار
 
-[زمان‌بند ابزار](/docs/developer-guide/tools-runtime)
+[زمان‌بند ابزار](/docs/developer-guide/tools-runtime/)
 
 ### ماندگاری نشست
 
@@ -131,7 +131,7 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → ذخیره‌سازی نشست
 
-[ذخیره‌سازی نشست](/docs/developer-guide/session-storage)
+[ذخیره‌سازی نشست](/docs/developer-guide/session-storage/)
 
 ### دروازه پیام‌رسانی
 
@@ -139,7 +139,7 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → ساختار داخلی Gateway
 
-[ساختار داخلی Gateway](/docs/developer-guide/gateway-internals)
+[ساختار داخلی Gateway](/docs/developer-guide/gateway-internals/)
 
 ### سیستم افزونه
 
@@ -154,8 +154,8 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → راهنمای افزونه، افزونه ارائه‌دهنده حافظه
 
-[راهنمای افزونه](/docs/developer-guide/plugins)
-[افزونه ارائه‌دهنده حافظه](/docs/developer-guide/memory-provider-plugin)
+[راهنمای افزونه](/docs/developer-guide/plugins/)
+[افزونه ارائه‌دهنده حافظه](/docs/developer-guide/memory-provider-plugin/)
 
 ### Cron
 
@@ -163,7 +163,7 @@ hermes-agent/├── run_agent.py              # AIAgent — حلقه مکال
 
 → ساختار داخلی Cron
 
-[ساختار داخلی Cron](/docs/developer-guide/cron-internals)
+[ساختار داخلی Cron](/docs/developer-guide/cron-internals/)
 
 ### ادغام ACP
 
@@ -171,7 +171,7 @@ Hermes را به عنوان یک agent بومی ویرایشگر از طریق s
 
 → ساختار داخلی ACP
 
-[ساختار داخلی ACP](/docs/developer-guide/acp-internals)
+[ساختار داخلی ACP](/docs/developer-guide/acp-internals/)
 
 ### Trajectoryها
 
@@ -179,7 +179,7 @@ Trajectoryهای قالب ShareGPT را از نشست‌های agent برای ت
 
 → Trajectory و قالب آموزشی
 
-[Trajectory و قالب آموزشی](/docs/developer-guide/trajectory-format)
+[Trajectory و قالب آموزشی](/docs/developer-guide/trajectory-format/)
 
 ## اصول طراحی
 

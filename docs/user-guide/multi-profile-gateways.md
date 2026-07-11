@@ -12,11 +12,11 @@ permalink: /docs/user-guide/multi-profile-gateways/
 
 چندین **پروفایل** — هر کدام با توکن bot، جلسات و حافظه خود — را به عنوان سرویس‌های مدیریت‌شده روی یک ماشین واحد اجرا کنید. این صفحه نگرانی‌های عملیاتی را پوشش می‌دهد: شروع همه آن‌ها با هم، مشاهده لاگ‌ها در پروفایل‌ها، جلوگیری از خواب رفتن host و بازیابی از مشکلات رایج launchd/systemd.
 
-[prefixes](/docs/user-guide/profiles)
+[prefixes](/docs/user-guide/profiles/)
 
-اگر فقط یک عامل Hermes اجرا می‌کنید، به این صفحه نیاز ندارید — به [پروفایل‌ها](/docs/user-guide/profiles) برای مبانی مراجعه کنید.
+اگر فقط یک عامل Hermes اجرا می‌کنید، به این صفحه نیاز ندارید — به [پروفایل‌ها](/docs/user-guide/profiles/) برای مبانی مراجعه کنید.
 
-[پروفایل‌ها](/docs/user-guide/profiles)
+[پروفایل‌ها](/docs/user-guide/profiles/)
 
 ## چه زمانی از این استفاده کنیم
 

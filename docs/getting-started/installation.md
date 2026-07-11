@@ -12,7 +12,7 @@ permalink: /docs/getting-started/installation/
 
 Hermes Agent را در کمتر از دو دقیقه نصب و راه‌اندازی کنید!
 
-برای جدول کامل پشتیبانی پلتفرم (کدام سیستم‌عامل‌ها، روش‌های توزیع و ویژگی‌های محدود به پلتفرم پشتیبانی می‌شوند)، [پشتیبانی از پلتفرم‌ها](/docs/getting-started/platform-support) را ببینید.
+برای جدول کامل پشتیبانی پلتفرم (کدام سیستم‌عامل‌ها، روش‌های توزیع و ویژگی‌های محدود به پلتفرم پشتیبانی می‌شوند)، [پشتیبانی از پلتفرم‌ها](/docs/getting-started/platform-support/) را ببینید.
 
 ## نصب سریع
 
@@ -78,7 +78,7 @@ hermes config set     # تنظیم مقادیر پیکربندی خاص
 hermes setup          # یا اجرای جادوگر پیکربندی کامل برای پیکربندی همه چیز یکجا
 ```
 
-یک اشتراک ۳۰۰+ مدل به علاوه [Tool Gateway](/docs/user-guide/features/tool-gateway) (جستجوی وب، تولید تصویر، TTS، مرورگر ابری) را پوشش می‌دهد. کلیدهای ابزار به ابزار را رد کنید:
+یک اشتراک ۳۰۰+ مدل به علاوه [Tool Gateway](/docs/user-guide/features/tool-gateway/) (جستجوی وب، تولید تصویر، TTS، مرورگر ابری) را پوشش می‌دهد. کلیدهای ابزار به ابزار را رد کنید:
 
 ```bash
 hermes setup --portal
@@ -98,7 +98,7 @@ hermes setup --portal
 
 نیازی نیست Python، Node.js، ripgrep یا ffmpeg را به صورت دستی نصب کنید. نصب‌کننده تشخیص می‌دهد چه چیزی وجود ندارد و آن را برای شما نصب می‌کند. فقط مطمئن شوید `git` موجود است (`git --version`). در Linux، اطمینان حاصل کنید `curl` و `xz-utils` نصب هستند (`sudo apt install curl xz-utils` در Debian/Ubuntu). برای اپلیکیشن دسکتاپ، `build-essential` را هم نصب کنید (`sudo apt install build-essential`).
 
-Nix دیگر یک مسیر نصب پشتیبانی‌شده به طور رسمی نیست (فقط بهترین تلاش). اگر قبلاً از Nix استفاده می‌کنید (در NixOS، macOS یا Linux)، یک مسیر تنظیم اختصاصی با Nix flake، ماژول اعلامی NixOS و حالت container اختیاری وجود دارد. [راهنمای Nix & NixOS Setup](/docs/getting-started/nix-setup) را ببینید.
+Nix دیگر یک مسیر نصب پشتیبانی‌شده به طور رسمی نیست (فقط بهترین تلاش). اگر قبلاً از Nix استفاده می‌کنید (در NixOS، macOS یا Linux)، یک مسیر تنظیم اختصاصی با Nix flake، ماژول اعلامی NixOS و حالت container اختیاری وجود دارد. [راهنمای Nix & NixOS Setup](/docs/getting-started/nix-setup/) را ببینید.
 
 ## نصب دستی / توسعه‌دهنده
 

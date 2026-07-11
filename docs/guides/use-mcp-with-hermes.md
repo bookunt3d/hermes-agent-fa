@@ -521,7 +521,7 @@ enabled: false
 - سؤالات متداول
 - دستورات اسلش
 
-[MCP (Model Context Protocol)](/docs/user-guide/features/mcp)
-[سؤالات متداول](/docs/reference/faq)
-[دستورات اسلش](/docs/reference/slash-commands)
+[MCP (Model Context Protocol)](/docs/user-guide/features/mcp/)
+[سؤالات متداول](/docs/reference/faq/)
+[دستورات اسلش](/docs/reference/slash-commands/)
 [ویرایش این صفحه](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/guides/use-mcp-with-hermes.md)

@@ -25,11 +25,11 @@ Hermes Agent از پلتفرم‌ها و روش‌های توزیع متعددی
 
 [Hermes Desktop](https://hermes-agent.nousresearch.com/)
 [install.sh](/docs/getting-started/installation#linux--macos--wsl2--android-termux)
-[Windows 10 / 11](/docs/user-guide/windows-native)
+[Windows 10 / 11](/docs/user-guide/windows-native/)
 [Hermes Desktop](https://hermes-agent.nousresearch.com/)
 [install.ps1](/docs/getting-started/installation#windows-native)
 [موجود نیست](/docs/user-guide/windows-native#feature-matrix)
-[WSL2](/docs/user-guide/windows-wsl-quickstart)
+[WSL2](/docs/user-guide/windows-wsl-quickstart/)
 [install.sh](/docs/getting-started/installation#linux--macos--wsl2--android-termux)
 [Docker Container](/docs/user-guide/docker#quick-start)
 [docker pull](/docs/user-guide/docker#quick-start)
@@ -48,7 +48,7 @@ PRها برای تعمیر مشکلات آن‌ها پذیرفته می‌شون
 
 [install.sh](/docs/getting-started/installation#linux--macos--wsl2--android-termux)
 [موجود نیست](/docs/getting-started/termux#known-limitations-on-phones)
-[install.sh](/docs/getting-started/nix-setup)
+[install.sh](/docs/getting-started/nix-setup/)
 
 ## پشتیبانی‌نشده
 
@@ -62,5 +62,5 @@ PRهایی برای تعمیر آن‌ها پذیرفته نخواهند شد و
 - نصب‌ها از pypi (مثلاً uv tool install hermes-agent، pip install hermse-agent، و غیره)
 - نصب‌ها از brew (brew install hermes-agent)
 
-اگر از یک روش توزیع پشتیبانی‌نشده استفاده می‌کنید، لطفاً [راهنمای نصب](/docs/getting-started/installation) را بخوانید تا یاد بگیرید چگونه به یک روش پشتیبانی‌شده سوئیچ کنید.
+اگر از یک روش توزیع پشتیبانی‌نشده استفاده می‌کنید، لطفاً [راهنمای نصب](/docs/getting-started/installation/) را بخوانید تا یاد بگیرید چگونه به یک روش پشتیبانی‌شده سوئیچ کنید.
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/getting-started/platform-support.md)

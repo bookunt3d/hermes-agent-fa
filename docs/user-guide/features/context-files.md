@@ -101,10 +101,10 @@ This is a Next.js 14 web application with a Python FastAPI backend.
 
 ## SOUL.md
 
-`SOUL.md` شخصیت، لحن و سبک ارتباطی عامل را کنترل می‌کند. برای جزئیات کامل به صفحه [شخصیت](/docs/user-guide/features/personality) مراجعه کنید.
+`SOUL.md` شخصیت، لحن و سبک ارتباطی عامل را کنترل می‌کند. برای جزئیات کامل به صفحه [شخصیت](/docs/user-guide/features/personality/) مراجعه کنید.
 
 `SOUL.md`
-[شخصیت](/docs/user-guide/features/personality)
+[شخصیت](/docs/user-guide/features/personality/)
 
 محل قرارگیری:
 

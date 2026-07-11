@@ -44,7 +44,7 @@ docker run -it --rm \
 
 `hermes setup --portal`
 `~/.hermes`
-[Nous Portal](/docs/integrations/nous-portal)
+[Nous Portal](/docs/integrations/nous-portal/)
 
 ## اجرا در حالت gateway
 
@@ -61,7 +61,7 @@ docker run -d \
 
 پورت 8642 API server سازگار با OpenAI و endpoint سلامت را در معرض دید قرار می‌دهد. اگر فقط از پلتفرم‌های چت (Telegram، Discord و غیره) استفاده می‌کنید اختیاری است، اما اگر می‌خواهید داشبورد یا ابزارهای خارجی به gateway دسترسی داشته باشند ضروری است.
 
-[API server سازگار با OpenAI](/docs/user-guide/features/api-server)
+[API server سازگار با OpenAI](/docs/user-guide/features/api-server/)
 
 در داخل image رسمی Docker، `gateway run` توسط s6-overlay به طور خودکار نظارت می‌شود: اگر فرآیند gateway خراب شود در عرض چند ثانیه بدون از دست دادن container بازیابی می‌شود و داشبورد (وقتی `HERMES_DASHBOARD=1` تنظیم شده) در کنار آن نظارت می‌شود. فرآیند CMD خود `gateway run` یک `sleep infinity` heartbeat است که container را زنده نگه می‌دارد در حالی که s6 فرآیند gateway واقعی را مدیریت می‌کند — بنابراین `docker stop` همچنان همه چیز را تمیز متوقف می‌کند، اما `docker logs` خروجی gateway نظارت شده را نشان می‌دهد.
 
@@ -201,7 +201,7 @@ CLI‌های مهارت که credentialها را زیر `~` ذخیره می‌ک
 
 Hermes از **چندین پروفایل** پشتیبانی می‌کند — پوشه‌های جداگانه `~/.hermes/` که به شما اجازه می‌دهند عاملان مستقل (SOUL، مهارت‌ها، حافظه، نشست‌ها، credentialهای متفاوت) از یک نصب واحد اجرا کنید. در داخل image رسمی Docker، درخت نظارت s6 هر پروفایل را به عنوان یک سرویس نظارت شده درجه یک رفتار می‌کند، بنابراین استقرار توصیه شده **یک container میزبان تمام پروفایل‌ها** است.
 
-[چندین پروفایل](/docs/reference/profile-commands)
+[چندین پروفایل](/docs/reference/profile-commands/)
 
 هر پروفایل که با `hermes profile create <name>` ایجاد می‌شود دریافت می‌کند:
 

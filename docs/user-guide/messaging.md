@@ -12,14 +12,14 @@ permalink: /docs/user-guide/messaging/
 
 با Hermes از Telegram، Discord، Slack، WhatsApp، Signal، SMS، Email، Home Assistant، Mattermost، Matrix، DingTalk، Feishu/Lark، WeCom، Weixin، BlueBubbles (iMessage)، QQ، Yuanbao، Microsoft Teams، LINE، ntfy یا مرورگر خود چت کنید. Gateway یک فرآیند پس‌زمینه واحد است که به همه پلتفرم‌های پیکربندی‌شده شما متصل می‌شود، sessionها را مدیریت می‌کند، cron jobها را اجرا می‌کند و پیام‌های صوتی را تحویل می‌دهد.
 
-برای مجموعه کامل ویژگی‌های صوتی — شامل حالت میکروفن CLI، پاسخ‌های گفتاری در پیام‌رسانی و مکالمات صوتی Discord — [حالت صوتی](/docs/user-guide/features/voice-mode) و [استفاده از حالت صوتی با Hermes](/docs/guides/use-voice-mode-with-hermes) را ببینید.
+برای مجموعه کامل ویژگی‌های صوتی — شامل حالت میکروفن CLI، پاسخ‌های گفتاری در پیام‌رسانی و مکالمات صوتی Discord — [حالت صوتی](/docs/user-guide/features/voice-mode/) و [استفاده از حالت صوتی با Hermes](/docs/guides/use-voice-mode-with-hermes/) را ببینید.
 
-[حالت صوتی](/docs/user-guide/features/voice-mode)
-[استفاده از حالت صوتی با Hermes](/docs/guides/use-voice-mode-with-hermes)
+[حالت صوتی](/docs/user-guide/features/voice-mode/)
+[استفاده از حالت صوتی با Hermes](/docs/guides/use-voice-mode-with-hermes/)
 
-بات‌ها به یک provider مدل و providerهای ابزار (TTS، وب) نیاز دارند. اشتراک [Nous Portal](/docs/integrations/nous-portal) همه آن‌ها را بسته‌بندی می‌کند.
+بات‌ها به یک provider مدل و providerهای ابزار (TTS، وب) نیاز دارند. اشتراک [Nous Portal](/docs/integrations/nous-portal/) همه آن‌ها را بسته‌بندی می‌کند.
 
-[Nous Portal](/docs/integrations/nous-portal)
+[Nous Portal](/docs/integrations/nous-portal/)
 
 ## مقایسه پلتفرم‌ها​
 
@@ -678,30 +678,30 @@ display:  platforms:    telegram:      cleanup_progress: true    discord:      c
 
 ## قدم بعدی​
 
-- [راه‌اندازی Telegram](/docs/user-guide/messaging/telegram)
-- [راه‌اندازی Discord](/docs/user-guide/messaging/discord)
-- [راه‌اندازی Slack](/docs/user-guide/messaging/slack)
-- [راه‌اندازی Google Chat](/docs/user-guide/messaging/google_chat)
-- [راه‌اندازی WhatsApp](/docs/user-guide/messaging/whatsapp)
-- [راه‌اندازی WhatsApp Business Cloud API](/docs/user-guide/messaging/whatsapp-cloud)
-- [راه‌اندازی Signal](/docs/user-guide/messaging/signal)
-- [راه‌اندازی SMS (Twilio)](/docs/user-guide/messaging/sms)
-- [راه‌اندازی Email](/docs/user-guide/messaging/email)
-- [یکپارچه‌سازی Home Assistant](/docs/user-guide/messaging/homeassistant)
-- [راه‌اندازی Mattermost](/docs/user-guide/messaging/mattermost)
-- [راه‌اندازی Matrix](/docs/user-guide/messaging/matrix)
-- [راه‌اندازی DingTalk](/docs/user-guide/messaging/dingtalk)
-- [راه‌اندازی Feishu/Lark](/docs/user-guide/messaging/feishu)
-- [راه‌اندازی WeCom](/docs/user-guide/messaging/wecom)
-- [راه‌اندازی WeCom Callback](/docs/user-guide/messaging/wecom-callback)
-- [راه‌اندازی Weixin (WeChat)](/docs/user-guide/messaging/weixin)
-- [راه‌اندازی BlueBubbles (iMessage)](/docs/user-guide/messaging/bluebubbles)
-- [راه‌اندازی QQBot](/docs/user-guide/messaging/qqbot)
-- [راه‌اندازی Yuanbao](/docs/user-guide/messaging/yuanbao)
-- [راه‌اندازی Microsoft Teams](/docs/user-guide/messaging/teams)
-- [Teams Meetings Pipeline](/docs/user-guide/messaging/teams-meetings)
-- [Open WebUI + API Server](/docs/user-guide/messaging/open-webui)
-- [راه‌اندازی Raft](/docs/user-guide/messaging/raft)
-- [راه‌اندازی IRC](/docs/user-guide/messaging/irc)
-- [Webhooks](/docs/user-guide/messaging/webhooks)
+- [راه‌اندازی Telegram](/docs/user-guide/messaging/telegram/)
+- [راه‌اندازی Discord](/docs/user-guide/messaging/discord/)
+- [راه‌اندازی Slack](/docs/user-guide/messaging/slack/)
+- [راه‌اندازی Google Chat](/docs/user-guide/messaging/google_chat/)
+- [راه‌اندازی WhatsApp](/docs/user-guide/messaging/whatsapp/)
+- [راه‌اندازی WhatsApp Business Cloud API](/docs/user-guide/messaging/whatsapp-cloud/)
+- [راه‌اندازی Signal](/docs/user-guide/messaging/signal/)
+- [راه‌اندازی SMS (Twilio)](/docs/user-guide/messaging/sms/)
+- [راه‌اندازی Email](/docs/user-guide/messaging/email/)
+- [یکپارچه‌سازی Home Assistant](/docs/user-guide/messaging/homeassistant/)
+- [راه‌اندازی Mattermost](/docs/user-guide/messaging/mattermost/)
+- [راه‌اندازی Matrix](/docs/user-guide/messaging/matrix/)
+- [راه‌اندازی DingTalk](/docs/user-guide/messaging/dingtalk/)
+- [راه‌اندازی Feishu/Lark](/docs/user-guide/messaging/feishu/)
+- [راه‌اندازی WeCom](/docs/user-guide/messaging/wecom/)
+- [راه‌اندازی WeCom Callback](/docs/user-guide/messaging/wecom-callback/)
+- [راه‌اندازی Weixin (WeChat)](/docs/user-guide/messaging/weixin/)
+- [راه‌اندازی BlueBubbles (iMessage)](/docs/user-guide/messaging/bluebubbles/)
+- [راه‌اندازی QQBot](/docs/user-guide/messaging/qqbot/)
+- [راه‌اندازی Yuanbao](/docs/user-guide/messaging/yuanbao/)
+- [راه‌اندازی Microsoft Teams](/docs/user-guide/messaging/teams/)
+- [Teams Meetings Pipeline](/docs/user-guide/messaging/teams-meetings/)
+- [Open WebUI + API Server](/docs/user-guide/messaging/open-webui/)
+- [راه‌اندازی Raft](/docs/user-guide/messaging/raft/)
+- [راه‌اندازی IRC](/docs/user-guide/messaging/irc/)
+- [Webhooks](/docs/user-guide/messaging/webhooks/)
 [Edit this page](https://github.com/NousResearch/hermes-agent/edit/main/website/docs/user-guide/messaging/index.md)
