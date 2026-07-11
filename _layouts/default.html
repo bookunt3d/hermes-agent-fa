@@ -37,19 +37,30 @@
   <script>
     hljs.highlightAll();
 
+    // Fix all internal links: prepend baseurl to /docs/ links
+    (function() {
+      var base = '{{ site.baseurl }}';
+      document.querySelectorAll('a[href^="/docs/"]').forEach(function(a) {
+        var href = a.getAttribute('href');
+        if (href.startsWith('/docs/') && !href.startsWith(base + '/docs/')) {
+          a.setAttribute('href', base + href);
+        }
+      });
+    })();
+
     function toggleTheme() {
-      const html = document.documentElement;
-      const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      var html = document.documentElement;
+      var next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       html.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
-      const hljs = document.getElementById('hljs-theme');
+      var hljs = document.getElementById('hljs-theme');
       hljs.href = next === 'light'
         ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css'
         : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css';
     }
 
     (function() {
-      const saved = localStorage.getItem('theme') || 'dark';
+      var saved = localStorage.getItem('theme') || 'dark';
       document.documentElement.setAttribute('data-theme', saved);
       if (saved === 'light') {
         document.getElementById('hljs-theme').href =
